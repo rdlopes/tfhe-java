@@ -38,6 +38,3 @@ jobs:
         run: |
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           mvn package
-
-      - name: Live documentation with Maven
-        run: mvn verify
