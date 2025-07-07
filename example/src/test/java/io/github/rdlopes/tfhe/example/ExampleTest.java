@@ -1,16 +1,17 @@
 package io.github.rdlopes.tfhe.example;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Basic test class for example module.
  */
 public class ExampleTest {
 
-    @Test
-    public void testBasicAssertion() {
-        assertTrue(true, "This should always pass");
-        assertEquals(2, 1 + 1, "Basic math should work");
-    }
+  @Test
+  public void testBasicAssertion() {
+    assertThat(true).isTrue();
+    assertThat(1 + 1).isEqualTo(2);
+  }
 }
