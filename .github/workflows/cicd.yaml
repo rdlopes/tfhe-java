@@ -36,7 +36,7 @@ jobs:
 
       - name: Build with Maven
         run: |
-          export PATH=$PATH:./jextract-22/bin
+          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           mvn package
 
       - name: Live documentation with Maven
