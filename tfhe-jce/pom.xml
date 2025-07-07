@@ -26,6 +26,8 @@
     <dependency>
       <groupId>io.github.rdlopes.tfhe</groupId>
       <artifactId>tfhe-native</artifactId>
+      <!--suppress MavenModelInspection -->
+      <classifier>${os.detected.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

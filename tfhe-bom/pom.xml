@@ -7,10 +7,9 @@
     <artifactId>tfhe-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-
   <artifactId>tfhe-bom</artifactId>
-  <packaging>pom</packaging>
 
+  <packaging>pom</packaging>
   <description>Bill of Materials (BOM) for TFHE Java library dependency management</description>
 
   <dependencyManagement>
@@ -20,6 +19,8 @@
         <groupId>io.github.rdlopes.tfhe</groupId>
         <artifactId>tfhe-native</artifactId>
         <version>${project.version}</version>
+        <!--suppress MavenModelInspection -->
+        <classifier>${os.detected.classifier}</classifier>
       </dependency>
       <dependency>
         <groupId>io.github.rdlopes.tfhe</groupId>

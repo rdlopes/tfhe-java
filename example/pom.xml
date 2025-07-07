@@ -25,10 +25,6 @@
   <dependencies>
     <dependency>
       <groupId>io.github.rdlopes.tfhe</groupId>
-      <artifactId>tfhe-native</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.rdlopes.tfhe</groupId>
       <artifactId>tfhe-jce</artifactId>
     </dependency>
     <dependency>
