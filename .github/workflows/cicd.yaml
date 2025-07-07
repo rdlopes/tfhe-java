@@ -30,7 +30,7 @@ jobs:
           cache: 'maven'
 
       - name: Download jextract
-        run: curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-aarch64_bin.tar.gz --output jextract.tar.gz
+        run: curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
       - name: Decompress jextract
         uses: somaz94/compress-decompress@v1
         with:
