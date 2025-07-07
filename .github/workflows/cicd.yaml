@@ -38,7 +38,9 @@ jobs:
           source: jextract.tar.gz
           format: tgz
       - name: Test jextract presence
-        run: ./jextract-22/bin/jextract --help
+        run: |
+          ls -lart
+          ./jextract-22/bin/jextract --help
         env:
           PATH: ./jextract-22/bin:${PATH}
 
