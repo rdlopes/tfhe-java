@@ -1,7 +1,7 @@
 name: CI/CD
 
 env:
-  JAVA_VERSION: '25-ea'
+  JAVA_VERSION: '25.0.0-beta+22.0.ea'
   JAVA_DISTRIBUTION: 'adopt'
 
 on:
