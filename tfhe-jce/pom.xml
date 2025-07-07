@@ -8,9 +8,19 @@
   </parent>
 
   <artifactId>tfhe-jce</artifactId>
-  <packaging>jar</packaging>
-
   <description>JCE extension for TFHE cryptography scheme integration with Java cryptography</description>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.github.rdlopes.tfhe</groupId>
+        <artifactId>tfhe-bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>

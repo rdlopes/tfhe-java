@@ -8,8 +8,6 @@
   </parent>
 
   <artifactId>tfhe-native</artifactId>
-  <packaging>jar</packaging>
-
   <description>Native TFHE library wrapper for packaging and distribution</description>
 
 </project>

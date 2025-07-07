@@ -15,6 +15,7 @@
   <description>Uber POM for a Java wrapper around TFHE library by Zama to allow homomorphic encryption.</description>
 
   <modules>
+    <module>tfhe-bom</module>
     <module>tfhe-native</module>
     <module>tfhe-jce</module>
     <module>example</module>
@@ -23,15 +24,5 @@
   <properties>
     <java.version>24</java.version>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>io.github.rdlopes.tfhe</groupId>
-        <artifactId>tfhe-native</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
 </project>

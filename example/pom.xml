@@ -8,9 +8,19 @@
   </parent>
 
   <artifactId>example</artifactId>
-  <packaging>jar</packaging>
-
   <description>Example project demonstrating usage of tfhe-java library</description>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.github.rdlopes.tfhe</groupId>
+        <artifactId>tfhe-bom</artifactId>
+        <version>${project.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -20,7 +30,6 @@
     <dependency>
       <groupId>io.github.rdlopes.tfhe</groupId>
       <artifactId>tfhe-jce</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
