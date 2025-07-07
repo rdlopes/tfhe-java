@@ -29,18 +29,10 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: 'maven'
 
-      - name: Download jextract
-        run: curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
-      - name: Decompress jextract
-        uses: somaz94/compress-decompress@v1
-        with:
-          command: decompress
-          source: jextract.tar.gz
-          format: tgz
-      - name: Test jextract presence
+      - name: Setup jextract
         run: |
-          export PATH=$PATH:./jextract-22/bin
-          jextract --help
+          curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
+          tar -xzf ./jextract.tar.gz -C .
 
       - name: Build with Maven
         run: |
