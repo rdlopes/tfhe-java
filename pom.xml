@@ -21,7 +21,7 @@
   </modules>
 
   <properties>
-    <java.version>25</java.version>
+    <java.version>24</java.version>
   </properties>
 
   <dependencyManagement>
