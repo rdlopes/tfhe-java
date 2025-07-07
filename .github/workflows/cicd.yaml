@@ -38,16 +38,14 @@ jobs:
           source: jextract.tar.gz
           format: tgz
       - name: Test jextract presence
-        run: |
-          ls -lart
-          ./jextract-22/bin/jextract --help
+        run: jextract --help
         env:
-          PATH: ./jextract-22/bin:${PATH}
+          PATH: ./jextract-22/bin:$PATH
 
       - name: Build with Maven
         run: mvn package
         env:
-          PATH: ./jextract-22/bin:${PATH}
+          PATH: ./jextract-22/bin:$PATH
 
       - name: Live documentation with Maven
         run: mvn verify
