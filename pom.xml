@@ -64,7 +64,6 @@
           <version>${maven-release-plugin.version}</version>
           <configuration>
             <localCheckout>true</localCheckout>
-            <localRepoDirectory>${env.GITHUB_WORKSPACE}</localRepoDirectory>
           </configuration>
         </plugin>
       </plugins>
