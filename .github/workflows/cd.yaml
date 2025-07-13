@@ -32,6 +32,7 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - run: |
+          git config --global credential.helper osxkeychain
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions"
       - uses: actions-rust-lang/setup-rust-toolchain@v1

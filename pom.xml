@@ -58,6 +58,14 @@
               -Djava.library.path=${project.build.outputDirectory}/native</argLine>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${maven-release-plugin.version}</version>
+          <configuration>
+            <scmShallowClone>false</scmShallowClone>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
