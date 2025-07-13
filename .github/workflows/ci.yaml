@@ -31,7 +31,7 @@ jobs:
 
       - name: Setup jextract
         run: |
-          curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
+          curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
           tar -xzf ./jextract.tar.gz -C .
           sudo xattr -r -d com.apple.quarantine ${GITHUB_WORKSPACE}/jextract-22/
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
