@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.rdlopes</groupId>
@@ -7,26 +8,171 @@
     <version>1.5.3</version>
   </parent>
 
-  <groupId>io.github.rdlopes.tfhe</groupId>
   <artifactId>tfhe-java</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
-
-  <description>Uber POM for a Java wrapper around TFHE library by Zama to allow homomorphic encryption.</description>
-
-  <modules>
-    <module>tfhe-bom</module>
-    <module>tfhe-native</module>
-    <module>tfhe-jce</module>
-    <module>example</module>
-  </modules>
 
   <properties>
-    <java.version>24</java.version>
+    <java.version>25</java.version>
     <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
+    <tfhe-rs.buildDirectory>${project.basedir}/tfhe-rs/target/release</tfhe-rs.buildDirectory>
+    <tfhe-rs.outputDirectory>${project.build.directory}/generated-sources/tfhe-rs</tfhe-rs.outputDirectory>
+    <tfhe-rs.packageName>${project.groupId}.tfhe.lib</tfhe-rs.packageName>
   </properties>
 
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <environmentVariables>
+              <RUST_BACKTRACE>full</RUST_BACKTRACE>
+            </environmentVariables>
+            <argLine>--enable-native-access=ALL-UNNAMED
+              -Djava.library.path=${project.build.outputDirectory}/native
+            </argLine>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-c-api</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <workingDirectory>${project.basedir}/tfhe-rs</workingDirectory>
+              <executable>cargo</executable>
+              <environmentVariables>
+                <RUSTFLAGS>-C target-cpu=native</RUSTFLAGS>
+              </environmentVariables>
+              <arguments>
+                <argument>+nightly</argument>
+                <argument>build</argument>
+                <argument>--release</argument>
+                <argument>--features=high-level-c-api</argument>
+                <argument>-p</argument>
+                <argument>tfhe</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>generate-bindings</id>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <workingDirectory>${tfhe-rs.buildDirectory}</workingDirectory>
+              <executable>jextract</executable>
+              <arguments>
+                <argument>tfhe.h</argument>
+                <argument>--header-class-name</argument>
+                <argument>TfheNative</argument>
+                <argument>--target-package</argument>
+                <argument>${tfhe-rs.packageName}</argument>
+                <argument>--output</argument>
+                <argument>${tfhe-rs.outputDirectory}</argument>
+                <argument>--use-system-load-library</argument>
+                <argument>--include-dir</argument>
+                <argument>.</argument>
+                <argument>--include-dir</argument>
+                <argument>deps</argument>
+                <argument>--library</argument>
+                <argument>tfhe</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <sources>
+                <source>${tfhe-rs.outputDirectory}</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-native-libraries</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>process-sources</phase>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${tfhe-rs.buildDirectory}</directory>
+                  <includes>
+                    <include>*.h</include>
+                    <include>*.dylib</include>
+                    <include>*.so</include>
+                    <include>*.dll</include>
+                    <include>*.a</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <!--suppress MavenModelInspection -->
+              <classifier>${os.detected.classifier}</classifier>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
     <extensions>
       <extension>
         <groupId>kr.motd.maven</groupId>

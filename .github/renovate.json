@@ -3,10 +3,15 @@
     "config:base",
     ":disableDependencyDashboard"
   ],
-  "labels": [":robot: dependencies"],
+  "labels": [
+    ":robot: dependencies"
+  ],
   "packageRules": [
     {
-      "updateTypes": ["minor", "patch"],
+      "updateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true,
       "automergeType": "branch"
     }
