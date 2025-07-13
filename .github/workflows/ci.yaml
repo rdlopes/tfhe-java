@@ -1,12 +1,9 @@
-name: CI/CD
-
-env:
-  JAVA_VERSION: '24'
-  JAVA_DISTRIBUTION: 'temurin'
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.ref }}
@@ -32,6 +29,7 @@ jobs:
         run: |
           curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
           tar -xzf ./jextract.tar.gz -C .
+          sudo xattr -r -d com.apple.quarantine ${GITHUB_WORKSPACE}/jextract-22/
 
       - name: Build with Maven
         run: |

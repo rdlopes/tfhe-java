@@ -11,6 +11,13 @@
   <artifactId>tfhe-java</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
+  <scm>
+    <connection>scm:git:https://github.com/rdlopes/${project.artifactId}.git</connection>
+    <developerConnection>scm:git:https://github.com/rdlopes/${project.artifactId}.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/rdlopes/${project.artifactId}</url>
+  </scm>
+
   <properties>
     <java.version>24</java.version>
     <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
