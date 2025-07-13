@@ -19,6 +19,8 @@ jobs:
     name: Release To Central
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
