@@ -1,5 +1,9 @@
 name: CD
 
+env:
+  JAVA_VERSION: '24'
+  JAVA_DISTRIBUTION: 'temurin'
+
 on:
   workflow_dispatch:
     inputs:
