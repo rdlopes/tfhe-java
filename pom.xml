@@ -12,7 +12,7 @@
   <version>0.0.1-SNAPSHOT</version>
 
   <properties>
-    <java.version>25</java.version>
+    <java.version>24</java.version>
     <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
     <tfhe-rs.buildDirectory>${project.basedir}/tfhe-rs/target/release</tfhe-rs.buildDirectory>
     <tfhe-rs.outputDirectory>${project.build.directory}/generated-sources/tfhe-rs</tfhe-rs.outputDirectory>
