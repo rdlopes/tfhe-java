@@ -19,6 +19,7 @@
 
   <properties>
     <java.version>24</java.version>
+    <git-submodule-maven-plugin.version>1.1.1</git-submodule-maven-plugin.version>
     <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
     <tfhe-rs.buildDirectory>${project.basedir}/tfhe-rs/target/release</tfhe-rs.buildDirectory>
     <tfhe-rs.outputDirectory>${project.build.directory}/generated-sources/tfhe-rs</tfhe-rs.outputDirectory>
@@ -60,6 +61,18 @@
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <groupId>ch.usi.si.seart</groupId>
+        <artifactId>git-submodule-maven-plugin</artifactId>
+        <version>${git-submodule-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>update</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>

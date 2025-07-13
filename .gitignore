@@ -8,6 +8,10 @@ pom.xml.versionsBackup
 .junie/
 *.iml
 
+### Jextract CICD ###
+jextract-22/
+jextract.tar.gz
+
 ### VS Code ###
 .vscode/
 
