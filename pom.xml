@@ -8,12 +8,12 @@
   </parent>
 
   <artifactId>tfhe-java</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.3</version>
 
   <scm>
     <connection>scm:git:https://github.com/rdlopes/${project.artifactId}.git</connection>
     <developerConnection>scm:git:https://github.com/rdlopes/${project.artifactId}.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>tfhe-java-0.0.3</tag>
     <url>https://github.com/rdlopes/${project.artifactId}</url>
   </scm>
 
