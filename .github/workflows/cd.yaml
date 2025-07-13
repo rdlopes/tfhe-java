@@ -15,7 +15,7 @@ jobs:
   release:
     permissions:
       contents: write
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     name: Release To Central
     steps:
       - uses: actions/checkout@v4
@@ -32,8 +32,19 @@ jobs:
       - run: |
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions"
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: Setup jextract
+        run: |
+          curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
+          tar -xzf ./jextract.tar.gz -C .
+          sudo xattr -r -d com.apple.quarantine ${GITHUB_WORKSPACE}/jextract-22/
+          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
+          jextract --version
+          jextract --help
 
-      - run: mvn -Prelease release:prepare release:perform -DreleaseVersion=${{ github.event.inputs.version }}
+      - run: |
+          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
+          mvn -Prelease release:prepare release:perform -DreleaseVersion=${{ github.event.inputs.version }}
         if: ${{ github.event.inputs.version != '' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -41,7 +52,9 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_PASSPHRASE }}
 
-      - run: mvn -Prelease release:prepare release:perform
+      - run: |
+          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
+          mvn -Prelease release:prepare release:perform
         if: ${{ github.event.inputs.version == '' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
