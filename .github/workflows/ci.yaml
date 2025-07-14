@@ -38,6 +38,7 @@ jobs:
           tar -xzf ./jextract.tar.gz -C .
           echo "${GITHUB_WORKSPACE}/jextract-22/bin" >> $GITHUB_PATH
       - run: jextract --version
+        shell: bash
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
