@@ -32,11 +32,12 @@ jobs:
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - name: Setup jextract
-        run: |
-          curl ${{ matrix.jextract }} --output jextract.tar.gz
-          tar -xzf ./jextract.tar.gz -C .
-          echo "${GITHUB_WORKSPACE}/jextract-22/bin" >> $GITHUB_PATH
+      - uses: supplypike/setup-bin@v4
+        with:
+          uri: ${{ matrix.jextract }}
+          name: 'jextract'
+          version: '22'
+          subPath: 'jextract-22/bin/jextract'
       - run: jextract --version
         shell: bash
       - uses: actions/setup-java@v4
