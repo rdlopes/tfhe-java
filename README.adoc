@@ -10,8 +10,6 @@
 :linkedin:      https://www.linkedin.com/in/rdlopes-fr
 :badges:        https://img.shields.io/badge
 :license:       https://opensource.org/licenses/MIT
-:toc:
-:toclevels: 3
 
 image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License]
 image:{ci}/badge.svg[link={ci},window=_blank]
