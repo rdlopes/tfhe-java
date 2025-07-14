@@ -1,4 +1,4 @@
-= {documentation}[TFHE Java] image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License] image:{cicd}/badge.svg[link={cicd},window=_blank]
+= {documentation}[TFHE Java]
 :author:        Rui LOPES
 :owner:         rdlopes
 :email:         mailto:rui.d.lopes@me.com
@@ -6,10 +6,15 @@
 :key:           {owner}_{project}
 :repo:          https://github.com/{owner}/{project}
 :documentation: https://{owner}.github.io/{project}
-:cicd:          {repo}/actions/workflows/cicd.yaml
+:ci:            {repo}/actions/workflows/ci.yaml
+:cd:            {repo}/actions/workflows/cd.yaml
 :linkedin:      https://www.linkedin.com/in/rdlopes-fr
 :badges:        https://img.shields.io/badge
 :license:       https://opensource.org/licenses/MIT
+
+image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License]
+image:{ci}/badge.svg[link={ci},window=_blank]
+image:{cd}/badge.svg[link={cd},window=_blank]
 
 https://docs.zama.ai/tfhe-rs[Zama TFHE^] wrapper enabling homomorphic encryption in Java.
 
