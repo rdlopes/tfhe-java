@@ -55,6 +55,7 @@ jobs:
 
   package:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Merge Native Libraries
         uses: actions/upload-artifact/merge@v4
