@@ -6,10 +6,6 @@ env:
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version'
-        required: false
 
 jobs:
 
@@ -40,26 +36,19 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Versioned Release ${{ github.event.inputs.version }}
-        run: |
-          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
-          git config --global user.email "bot@github.com"
-          git config --global user.name "GitHub Actions"
-          ./mvnw -Prelease release:prepare release:perform -DreleaseVersion=${{ github.event.inputs.version }}
-        if: ${{ github.event.inputs.version != '' }}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_PASSPHRASE }}
+      - name: Download Native Libraries
+        uses: actions/download-artifact@v4
+        with:
+          pattern: 'native-libs-*'
+          path: target/native
+          merge-multiple: 'true'
+          github-token: ${{ github.token }}
 
-      - name: Default Release
+      - name: Release With Maven
         run: |
-          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions"
-          ./mvnw -Prelease release:prepare release:perform -Dusername=${GITHUB_ACTOR}
-        if: ${{ github.event.inputs.version == '' }}
+          ./mvnw release:prepare release:perform -Dusername=${GITHUB_ACTOR}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
