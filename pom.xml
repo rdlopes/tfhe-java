@@ -27,6 +27,9 @@
     <tfhe-rs.buildDirectory>${project.basedir}/tfhe-rs/target/release</tfhe-rs.buildDirectory>
     <tfhe-rs.outputDirectory>${project.build.directory}/generated-sources/tfhe-rs</tfhe-rs.outputDirectory>
     <tfhe-rs.packageName>${project.groupId}.tfhe.lib</tfhe-rs.packageName>
+    <!--suppress XmlUnresolvedReference -->
+    <tfhe-rs.libraryPath>${project.build.outputDirectory}/native/${os.detected.name}/${os.detected.arch}
+    </tfhe-rs.libraryPath>
   </properties>
 
   <dependencies>
@@ -57,8 +60,9 @@
             <environmentVariables>
               <RUST_BACKTRACE>full</RUST_BACKTRACE>
             </environmentVariables>
-            <argLine>--enable-native-access=ALL-UNNAMED
-              -Djava.library.path=${project.build.outputDirectory}/native</argLine>
+            <argLine>-Djava.library.path=${tfhe-rs.libraryPath}
+              --enable-native-access=ALL-UNNAMED
+            </argLine>
           </configuration>
         </plugin>
       </plugins>
@@ -160,7 +164,7 @@
             </goals>
             <phase>process-sources</phase>
             <configuration>
-              <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
+              <outputDirectory>${tfhe-rs.libraryPath}</outputDirectory>
               <resources>
                 <resource>
                   <directory>${tfhe-rs.buildDirectory}</directory>
@@ -169,7 +173,6 @@
                     <include>*.dylib</include>
                     <include>*.so</include>
                     <include>*.dll</include>
-                    <include>*.a</include>
                   </includes>
                 </resource>
               </resources>
@@ -178,5 +181,12 @@
         </executions>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>${os-maven-plugin.version}</version>
+      </extension>
+    </extensions>
   </build>
 </project>

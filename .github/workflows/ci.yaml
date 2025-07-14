@@ -16,19 +16,27 @@ concurrency:
 jobs:
 
   build:
-    runs-on: macos-latest
-    steps:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz
+          - os: ubuntu-latest
+            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-aarch64_bin.tar.gz
+          - os: windows-latest
+            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
+    runs-on: ${{ matrix.os }}
 
+    steps:
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Setup jextract
         run: |
-          curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
+          curl ${{ matrix.jextract }} --output jextract.tar.gz
           tar -xzf ./jextract.tar.gz -C .
-          sudo xattr -r -d com.apple.quarantine ${GITHUB_WORKSPACE}/jextract-22/
-          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
+          echo "${GITHUB_WORKSPACE}/jextract-22/bin" >> $GITHUB_PATH
           jextract --version
       - uses: actions/setup-java@v4
         with:
@@ -37,6 +45,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: |
-          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
-          ./mvnw package
+        run: ./mvnw package
