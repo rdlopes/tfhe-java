@@ -40,7 +40,7 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Release ${{ github.event.inputs.version }}
+      - name: Versioned Release ${{ github.event.inputs.version }}
         run: |
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           git config --global user.email "bot@github.com"
@@ -53,7 +53,7 @@ jobs:
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_PASSPHRASE }}
 
-      - name: Release default version
+      - name: Default Release
         run: |
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           git config --global user.email "bot@github.com"

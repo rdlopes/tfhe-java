@@ -22,8 +22,11 @@ public class TfheNativeTest {
 
         MemorySegment result = U128.allocate(arena);
         assertThat(fhe_uint128_decrypt(resultEncrypted.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), result)).isZero();
-        assertThat(U128.w0(result)).isEqualTo(99);
-        assertThat(U128.w1(result)).isEqualTo(0);
+
+        long w0 = U128.w0(result);
+        long w1 = U128.w1(result);
+        assertThat(w0).isEqualTo(99);
+        assertThat(w1).isEqualTo(0);
       });
   }
 
