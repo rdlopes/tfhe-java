@@ -191,6 +191,12 @@
             <goals>
               <goal>jar</goal>
             </goals>
+          </execution>
+          <execution>
+            <id>classified-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
             <configuration>
               <!--suppress MavenModelInspection -->
               <classifier>${os.detected.classifier}</classifier>
