@@ -44,11 +44,30 @@ jobs:
           merge-multiple: 'true'
           github-token: ${{ github.token }}
 
-      - name: Release With Maven
+      - name: Prepare Release With Maven
         run: |
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions"
-          ./mvnw release:prepare release:perform -Dusername=${GITHUB_ACTOR}
+          ./mvnw release:prepare -Dusername=${GITHUB_ACTOR}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_PASSPHRASE }}
+
+      - name: Download Native Libraries
+        uses: actions/download-artifact@v4
+        with:
+          pattern: 'native-libs-*'
+          path: target/checkout/target/native
+          merge-multiple: 'true'
+          github-token: ${{ github.token }}
+
+      - name: Perform Release With Maven
+        run: |
+          git config --global user.email "bot@github.com"
+          git config --global user.name "GitHub Actions"
+          ./mvnw release:perform -Dusername=${GITHUB_ACTOR}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
