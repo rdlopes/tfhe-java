@@ -37,7 +37,7 @@ jobs:
           curl ${{ matrix.jextract }} --output jextract.tar.gz
           tar -xzf ./jextract.tar.gz -C .
           echo "${GITHUB_WORKSPACE}/jextract-22/bin" >> $GITHUB_PATH
-          jextract --version
+      - run: jextract --version
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
