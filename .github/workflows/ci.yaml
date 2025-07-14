@@ -37,7 +37,7 @@ jobs:
           id: 'jextract'
           download_url: ${{ matrix.jextract }}
           version: '22+6-47'
-          bin_path: 'jextract-22/bin/jextract'
+          bin_path: 'jextract-22/bin'
       - name: Check jextract
         run: |
           echo "jextract path=${{ steps.install-tool.outputs.path }}"
