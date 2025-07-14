@@ -58,6 +58,22 @@ jobs:
     needs: build
     steps:
 
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: jcwillox/install-tool-action@v1
+        with:
+          id: 'jextract'
+          download_url: ${{ matrix.jextract }}
+          version: '22+6-47'
+          bin_path: 'jextract-22/bin'
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: 'maven'
+
       - name: Download Native Libraries
         uses: actions/download-artifact@v4
         with:
