@@ -12,6 +12,7 @@ on:
         required: false
 
 jobs:
+
   release:
     permissions:
       contents: write
@@ -22,13 +23,12 @@ jobs:
         with:
           submodules: 'recursive'
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - name: Setup jextract
-        run: |
-          curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
-          tar -xzf ./jextract.tar.gz -C .
-          sudo xattr -r -d com.apple.quarantine ${GITHUB_WORKSPACE}/jextract-22/
-          export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
-          jextract --version
+      - uses: jcwillox/install-tool-action@v1
+        with:
+          id: 'jextract'
+          download_url: 'https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz'
+          version: '22+6-47'
+          bin_path: 'jextract-22/bin'
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}

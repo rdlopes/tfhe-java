@@ -28,8 +28,7 @@
     <tfhe-rs.outputDirectory>${project.build.directory}/generated-sources/tfhe-rs</tfhe-rs.outputDirectory>
     <tfhe-rs.packageName>${project.groupId}.tfhe.lib</tfhe-rs.packageName>
     <!--suppress XmlUnresolvedReference -->
-    <tfhe-rs.libraryPath>${project.build.outputDirectory}/native/${os.detected.name}/${os.detected.arch}
-    </tfhe-rs.libraryPath>
+    <tfhe-rs.libraryPath>${project.build.directory}/native/${os.detected.name}/${os.detected.arch}</tfhe-rs.libraryPath>
   </properties>
 
   <dependencies>
@@ -140,7 +139,7 @@
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>add-source</id>
+            <id>add-ffm-api</id>
             <goals>
               <goal>add-source</goal>
             </goals>
@@ -158,11 +157,11 @@
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-native-libraries</id>
+            <id>store-native-libraries</id>
             <goals>
               <goal>copy-resources</goal>
             </goals>
-            <phase>process-sources</phase>
+            <phase>generate-resources</phase>
             <configuration>
               <outputDirectory>${tfhe-rs.libraryPath}</outputDirectory>
               <resources>
@@ -173,6 +172,27 @@
                     <include>*.dylib</include>
                     <include>*.so</include>
                     <include>*.dll</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>include-native-libraries</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/native</directory>
+                  <includes>
+                    <include>**/*.h</include>
+                    <include>**/*.dylib</include>
+                    <include>**/*.so</include>
+                    <include>**/*.dll</include>
                   </includes>
                 </resource>
               </resources>
