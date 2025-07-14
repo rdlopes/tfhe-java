@@ -45,7 +45,7 @@ jobs:
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions"
-          mvn -Prelease release:prepare release:perform -DreleaseVersion=${{ github.event.inputs.version }}
+          ./mvnw -Prelease release:prepare release:perform -DreleaseVersion=${{ github.event.inputs.version }}
         if: ${{ github.event.inputs.version != '' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -58,7 +58,7 @@ jobs:
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
           git config --global user.email "bot@github.com"
           git config --global user.name "GitHub Actions"
-          mvn -Prelease release:prepare release:perform -Dusername=${GITHUB_ACTOR} -Darguments="-DskipTests"
+          ./mvnw -Prelease release:prepare release:perform -Dusername=${GITHUB_ACTOR}
         if: ${{ github.event.inputs.version == '' }}
         env:
           GITHUB_TOKEN: ${{ github.token }}

@@ -39,4 +39,4 @@ jobs:
       - name: Build with Maven
         run: |
           export PATH=$PATH:${GITHUB_WORKSPACE}/jextract-22/bin
-          mvn package
+          ./mvnw package
