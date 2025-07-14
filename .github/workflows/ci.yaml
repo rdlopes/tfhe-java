@@ -65,7 +65,7 @@ jobs:
       - uses: jcwillox/install-tool-action@v1
         with:
           id: 'jextract'
-          download_url: ${{ matrix.jextract }}
+          download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
           version: '22+6-47'
           bin_path: 'jextract-22/bin'
       - uses: actions/setup-java@v4
