@@ -34,9 +34,9 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-libs'
-          path: target/native
-      - name: Contents of target/native
-        run: ls -R target/native
+          path: ${{github.workspace}}/target/native
+      - name: Contents of ${{github.workspace}}/target/native
+        run: ls -R ${{github.workspace}}/target/native
 
       - name: Download Native Bindings
         uses: dawidd6/action-download-artifact@v11
@@ -44,9 +44,9 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-bindings'
-          path: target/generated-sources/tfhe-rs
-      - name: Contents of target/generated-sources/tfhe-rs
-        run: ls -R target/generated-sources/tfhe-rs
+          path: ${{github.workspace}}/target/generated-sources/tfhe-rs
+      - name: Contents of ${{github.workspace}}/target/generated-sources/tfhe-rs
+        run: ls -R ${{github.workspace}}/target/generated-sources/tfhe-rs
 
       - name: Compile with Maven
         run: ./mvnw package
