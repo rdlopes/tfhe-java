@@ -6,7 +6,7 @@ on:
       - main
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{github.ref}}
   cancel-in-progress: true
 
 jobs:
@@ -24,10 +24,12 @@ jobs:
           - os: windows-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
             classifier: windows-x86_64
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     steps:
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          cache-shared-key: ${{matrix.os}}
       - uses: jcwillox/install-tool-action@v1
         with:
           id: 'jextract'
