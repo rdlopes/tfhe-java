@@ -16,6 +16,8 @@ concurrency:
 jobs:
 
   build:
+    permissions:
+      actions: read
     runs-on: ubuntu-latest
     name: Package With Maven
     steps:
