@@ -35,16 +35,17 @@ jobs:
           version: '22+6-47'
           bin_path: 'jextract-22/bin'
 
-      - run: gh repo clone zama-ai/tfhe-rs .
+      - run: gh repo clone zama-ai/tfhe-rs
         env:
           GH_TOKEN: ${{github.token}}
       - run: make build_c_api
+        working-directory: tfhe-rs
 
       - name: Jextract Dump includes
         run: |
           jextract \
           --dump-includes jextract-includes.txt \
-          target/release/tfhe.h
+          tfhe-rs/target/release/tfhe.h
       - name: Jextract filter Includes
         run: grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
       - name: Jextract Bindings
@@ -55,10 +56,10 @@ jobs:
           --target-package ai.zama.tfhe \
           --output bindings \
           --use-system-load-library \
-          --include-dir target/release \
-          --include-dir target/release/deps \
+          --include-dir tfhe-rs/target/release \
+          --include-dir tfhe-rs/target/release/deps \
           --library tfhe \
-          target/release/tfhe.h
+          tfhe-rs/target/release/tfhe.h
 
       - name: Upload Bindings
         uses: actions/upload-artifact@v4
