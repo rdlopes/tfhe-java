@@ -27,6 +27,9 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
 
+      - run: gh repo clone zama-ai/tfhe-rs .
+        env:
+          GH_TOKEN: ${{github.token}}
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           cache-shared-key: ${{matrix.os}}
@@ -37,31 +40,29 @@ jobs:
           version: '22+6-47'
           bin_path: 'jextract-22/bin'
 
-      - run: gh repo clone zama-ai/tfhe-rs
-        env:
-          GH_TOKEN: ${{github.token}}
       - run: make build_c_api
-        working-directory: tfhe-rs
 
       - name: Jextract Dump includes
         run: |
           jextract \
           --dump-includes jextract-includes.txt \
-          tfhe-rs/target/release/tfhe.h
+          target/release/tfhe.h
+
       - name: Jextract filter Includes
         run: grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
+
       - name: Jextract Bindings
         run: |
           jextract \
-          @jextract-includes-filtered.txt
+          @jextract-includes-filtered.txt \
           --header-class-name TfheNative \
           --target-package ai.zama.tfhe \
           --output bindings \
           --use-system-load-library \
-          --include-dir tfhe-rs/target/release \
-          --include-dir tfhe-rs/target/release/deps \
+          --include-dir target/release \
+          --include-dir target/release/deps \
           --library tfhe \
-          tfhe-rs/target/release/tfhe.h
+          target/release/tfhe.h
 
       - name: Upload Bindings
         uses: actions/upload-artifact@v4
