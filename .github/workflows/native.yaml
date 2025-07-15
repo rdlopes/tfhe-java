@@ -17,10 +17,13 @@ jobs:
         include:
           - os: macos-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz
+            classifier: osx-aarch_64
           - os: ubuntu-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
+            classifier: linux-x86_64
           - os: windows-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
+            classifier: windows-x86_64
     runs-on: ${{ matrix.os }}
     steps:
 
@@ -41,8 +44,7 @@ jobs:
         run: |
           jextract \
           --dump-includes jextract-includes.txt \
-          tfhe.h
-        working-directory: target/release
+          target/release/tfhe.h
       - name: Jextract filter Includes
         run: grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
       - name: Jextract Bindings
@@ -53,16 +55,15 @@ jobs:
           --target-package ai.zama.tfhe \
           --output bindings \
           --use-system-load-library \
-          --include-dir . \
-          --include-dir deps \
+          --include-dir target/release \
+          --include-dir target/release/deps \
           --library tfhe \
-          tfhe.h
-        working-directory: target/release
+          target/release/tfhe.h
 
       - name: Upload Bindings
         uses: actions/upload-artifact@v4
         with:
-          name: native-bindings-${{ matrix.os }}
+          name: native-bindings-${{ matrix.classifier }}
           path: target/release
 
   bundle:
