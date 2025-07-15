@@ -49,10 +49,7 @@ jobs:
 
       - name: Release With Maven
         run: |
-          ./mvnw \
-          -Dnative-bindings.basedir=${{github.workspace}}/target/generated-sources/tfhe-rs \
-          -Dnative-libs.basedir=${{github.workspace}}/target/native \
-          release:prepare release:perform
+          ./mvnw package release:prepare release:perform
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
