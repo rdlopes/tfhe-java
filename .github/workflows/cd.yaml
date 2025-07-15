@@ -49,10 +49,10 @@ jobs:
 
       - name: Release With Maven
         run: |
-          ./mvnw \
+          ./mvnw release:prepare release:perform \
+          -Darguments="\
           -Dnative-libs.basedir=${{github.workspace}}/native-libs \
-          -Dnative-bindings.basedir=${{github.workspace}}/native-bindings \
-          release:prepare release:perform
+          -Dnative-bindings.basedir=${{github.workspace}}/native-bindings"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
