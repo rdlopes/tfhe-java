@@ -58,7 +58,7 @@ Add the following dependency to your `pom.xml`:
 
 * **Java 24** or later (requires Foreign Function & Memory API support)
 * **JVM Arguments**: `--enable-native-access=ALL-UNNAMED`
-* **Native Libraries**: Automatically included in the JAR
+* **Native Libraries**: Automatically included in the JAR (macOS ARM64 currently supported)
 
 == Quick Start
 
@@ -66,6 +66,8 @@ Here's a simple example of performing homomorphic addition:
 
 [source,java]
 ----
+package com.example.tfhe;
+
 import ai.zama.tfhe.U128;
 
 import java.lang.foreign.Arena;
@@ -73,46 +75,65 @@ import java.lang.foreign.MemorySegment;
 
 import static ai.zama.tfhe.TfheNative.*;
 
-public static void main(String... args) {
-  // Generate configuration and keys
-  try (Arena arena = Arena.ofConfined()) {
-      // Create configuration
-      MemorySegment configBuilder = arena.allocate(C_POINTER);
-      config_builder_default(configBuilder);
+public class HomomorphicAdditionExample {
 
-      MemorySegment config = arena.allocate(C_POINTER);
-      config_builder_build(configBuilder.get(C_POINTER, 0), config);
+    public static void main(String[] args) {
+        // Generate configuration and keys
+        try (Arena arena = Arena.ofConfined()) {
+            // Create configuration
+            MemorySegment configBuilder = arena.allocate(C_POINTER);
+            if (config_builder_default(configBuilder) != 0) {
+                throw new RuntimeException("Failed to create config builder");
+            }
 
-      // Generate client and server keys
-      MemorySegment clientKey = arena.allocate(C_POINTER);
-      MemorySegment serverKey = arena.allocate(C_POINTER);
-      generate_keys(config.get(C_POINTER, 0), clientKey, serverKey);
-      set_server_key(serverKey.get(C_POINTER, 0));
+            MemorySegment config = arena.allocate(C_POINTER);
+            if (config_builder_build(configBuilder.get(C_POINTER, 0), config) != 0) {
+                throw new RuntimeException("Failed to build config");
+            }
 
-      // Prepare values to encrypt
-      MemorySegment value1 = U128.allocate(arena);
-      U128.w0(value1, 42);
-      U128.w1(value1, 0);
-      MemorySegment value2 = U128.allocate(arena);
-      U128.w0(value2, 57);
-      U128.w1(value2, 0);
+            // Generate client and server keys
+            MemorySegment clientKey = arena.allocate(C_POINTER);
+            MemorySegment serverKey = arena.allocate(C_POINTER);
+            if (generate_keys(config.get(C_POINTER, 0), clientKey, serverKey) != 0) {
+                throw new RuntimeException("Failed to generate keys");
+            }
+            if (set_server_key(serverKey.get(C_POINTER, 0)) != 0) {
+                throw new RuntimeException("Failed to set server key");
+            }
 
-      // Encrypt the values
-      MemorySegment encrypted1 = U128.allocate(arena);
-      fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1);
-      MemorySegment encrypted2 = U128.allocate(arena);
-      fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2);
+            // Prepare values to encrypt
+            MemorySegment value1 = U128.allocate(arena);
+            U128.w0(value1, 42);
+            U128.w1(value1, 0);
+            MemorySegment value2 = U128.allocate(arena);
+            U128.w0(value2, 57);
+            U128.w1(value2, 0);
 
-      // Perform homomorphic addition
-      MemorySegment result = U128.allocate(arena);
-      fhe_uint128_add(encrypted1, encrypted2, result);
+            // Encrypt the values
+            MemorySegment encrypted1 = U128.allocate(arena);
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1) != 0) {
+                throw new RuntimeException("Failed to encrypt first value");
+            }
+            MemorySegment encrypted2 = U128.allocate(arena);
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2) != 0) {
+                throw new RuntimeException("Failed to encrypt second value");
+            }
 
-      // Decrypt result
-      MemorySegment decrypted = U128.allocate(arena);
-      fhe_uint128_decrypt(result, clientKey.get(C_POINTER, 0), decrypted);
+            // Perform homomorphic addition
+            MemorySegment result = U128.allocate(arena);
+            if (fhe_uint128_add(encrypted1.get(C_POINTER, 0), encrypted2.get(C_POINTER, 0), result) != 0) {
+                throw new RuntimeException("Failed to perform addition");
+            }
 
-      System.out.println("Result: " + U128.w0(decrypted)); // Prints: 99
-  }
+            // Decrypt result
+            MemorySegment decrypted = U128.allocate(arena);
+            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), decrypted) != 0) {
+                throw new RuntimeException("Failed to decrypt result");
+            }
+
+            System.out.println("Result: " + U128.w0(decrypted)); // Prints: 99
+        }
+    }
 }
 ----
 
@@ -127,7 +148,7 @@ tfhe-java/
 ├── target/
 │   ├── classes/native/                      # Native libraries (runtime)
 │   └── generated-sources/tfhe-rs/           # Generated Java bindings
-├── tfhe-rs/                                 # Rust TFHE implementation (submodule)
+├── target/tfhe-rs/                          # Downloaded TFHE-rs source (build-time)
 ├── pom.xml                                  # Maven configuration
 └── README.adoc                              # This documentation
 ----
@@ -158,15 +179,17 @@ Generated class containing all TFHE operations:
 * **Boolean**: Boolean circuit operations
 * **Memory Segments**: Direct memory access for performance
 
-=== TFHE-rs Submodule
+=== TFHE-rs Integration
 
-The project includes the complete Zama TFHE-rs library as a Git submodule:
+The project automatically downloads and builds the complete Zama TFHE-rs library during the build process:
 
 * **Core Library** (`tfhe/`): Main TFHE implementation
 * **FFT Operations** (`tfhe-fft/`): Fast Fourier Transform optimizations
 * **Number Theory** (`tfhe-ntt/`): Number Theoretic Transform
 * **Zero-Knowledge** (`tfhe-zk-pok/`): Zero-knowledge proofs
 * **Benchmarks** (`tfhe-benchmark/`): Performance testing
+
+The TFHE-rs source is cloned from the official Zama repository during the Maven build process and compiled locally to generate the required native libraries and Java bindings.
 
 == Building from Source
 
@@ -205,31 +228,54 @@ Here's how to perform homomorphic boolean operations:
 
 [source,java]
 ----
+package com.example.tfhe;
+
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+
 import static ai.zama.tfhe.TfheNative.*;
 
-public void booleanExample() {
-    try (Arena arena = Arena.ofConfined()) {
-        // Generate boolean keys
-        MemorySegment clientKey = arena.allocate(C_POINTER);
-        MemorySegment serverKey = arena.allocate(C_POINTER);
-        boolean_generate_keys(clientKey, serverKey);
-        boolean_set_server_key(serverKey.get(C_POINTER, 0));
+public class BooleanOperationsExample {
 
-        // Encrypt boolean values
-        MemorySegment encryptedTrue = arena.allocate(C_POINTER);
-        MemorySegment encryptedFalse = arena.allocate(C_POINTER);
-        boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), true, encryptedTrue);
-        boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), false, encryptedFalse);
+    public static void main(String[] args) {
+        booleanExample();
+    }
 
-        // Perform XOR operation
-        MemorySegment result = arena.allocate(C_POINTER);
-        boolean_server_key_xor(encryptedTrue.get(C_POINTER, 0), encryptedFalse.get(C_POINTER, 0), result);
+    public static void booleanExample() {
+        try (Arena arena = Arena.ofConfined()) {
+            // Generate boolean keys
+            MemorySegment clientKey = arena.allocate(C_POINTER);
+            MemorySegment serverKey = arena.allocate(C_POINTER);
+            if (boolean_gen_keys_with_default_parameters(clientKey, serverKey) != 0) {
+                throw new RuntimeException("Failed to generate boolean keys");
+            }
 
-        // Decrypt result
-        boolean decrypted = boolean_client_key_decrypt(clientKey.get(C_POINTER, 0), result.get(C_POINTER, 0));
-        System.out.println("XOR result: " + decrypted); // true
+            // Encrypt boolean values
+            MemorySegment encryptedTrue = arena.allocate(C_POINTER);
+            MemorySegment encryptedFalse = arena.allocate(C_POINTER);
+            if (boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), true, encryptedTrue) != 0) {
+                throw new RuntimeException("Failed to encrypt true value");
+            }
+            if (boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), false, encryptedFalse) != 0) {
+                throw new RuntimeException("Failed to encrypt false value");
+            }
+
+            // Perform XOR operation
+            MemorySegment result = arena.allocate(C_POINTER);
+            if (boolean_server_key_xor(serverKey.get(C_POINTER, 0), encryptedTrue.get(C_POINTER, 0),
+                    encryptedFalse.get(C_POINTER, 0), result) != 0) {
+                throw new RuntimeException("Failed to perform XOR operation");
+            }
+
+            // Decrypt result
+            MemorySegment decryptedResult = arena.allocate(C_BOOL);
+            if (boolean_client_key_decrypt(clientKey.get(C_POINTER, 0), result.get(C_POINTER, 0), decryptedResult) != 0) {
+                throw new RuntimeException("Failed to decrypt result");
+            }
+
+            boolean decrypted = decryptedResult.get(C_BOOL, 0);
+            System.out.println("XOR result: " + decrypted); // true
+        }
     }
 }
 ----
@@ -240,46 +286,75 @@ Perform arithmetic operations on encrypted integers:
 
 [source,java]
 ----
+package com.example.tfhe;
+
 import ai.zama.tfhe.U128;
+
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+
 import static ai.zama.tfhe.TfheNative.*;
 
-public void integerArithmetic() {
-    try (Arena arena = Arena.ofConfined()) {
-        // Setup configuration and keys
-        MemorySegment configBuilder = arena.allocate(C_POINTER);
-        config_builder_default(configBuilder);
-        MemorySegment config = arena.allocate(C_POINTER);
-        config_builder_build(configBuilder.get(C_POINTER, 0), config);
+public class IntegerArithmeticExample {
 
-        MemorySegment clientKey = arena.allocate(C_POINTER);
-        MemorySegment serverKey = arena.allocate(C_POINTER);
-        generate_keys(config.get(C_POINTER, 0), clientKey, serverKey);
-        set_server_key(serverKey.get(C_POINTER, 0));
+    public static void main(String[] args) {
+        integerArithmetic();
+    }
 
-        // Encrypt values
-        MemorySegment value1 = U128.allocate(arena);
-        U128.w0(value1, 100);
-        U128.w1(value1, 0);
+    public static void integerArithmetic() {
+        try (Arena arena = Arena.ofConfined()) {
+            // Setup configuration and keys
+            MemorySegment configBuilder = arena.allocate(C_POINTER);
+            if (config_builder_default(configBuilder) != 0) {
+                throw new RuntimeException("Failed to create config builder");
+            }
 
-        MemorySegment value2 = U128.allocate(arena);
-        U128.w0(value2, 25);
-        U128.w1(value2, 0);
+            MemorySegment config = arena.allocate(C_POINTER);
+            if (config_builder_build(configBuilder.get(C_POINTER, 0), config) != 0) {
+                throw new RuntimeException("Failed to build config");
+            }
 
-        MemorySegment encrypted1 = U128.allocate(arena);
-        MemorySegment encrypted2 = U128.allocate(arena);
-        fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1);
-        fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2);
+            MemorySegment clientKey = arena.allocate(C_POINTER);
+            MemorySegment serverKey = arena.allocate(C_POINTER);
+            if (generate_keys(config.get(C_POINTER, 0), clientKey, serverKey) != 0) {
+                throw new RuntimeException("Failed to generate keys");
+            }
+            if (set_server_key(serverKey.get(C_POINTER, 0)) != 0) {
+                throw new RuntimeException("Failed to set server key");
+            }
 
-        // Perform subtraction
-        MemorySegment result = U128.allocate(arena);
-        fhe_uint128_sub(encrypted1, encrypted2, result);
+            // Encrypt values
+            MemorySegment value1 = U128.allocate(arena);
+            U128.w0(value1, 100);
+            U128.w1(value1, 0);
 
-        // Decrypt and display result
-        MemorySegment decrypted = U128.allocate(arena);
-        fhe_uint128_decrypt(result, clientKey.get(C_POINTER, 0), decrypted);
-        System.out.println("Subtraction result: " + U128.w0(decrypted)); // 75
+            MemorySegment value2 = U128.allocate(arena);
+            U128.w0(value2, 25);
+            U128.w1(value2, 0);
+
+            MemorySegment encrypted1 = U128.allocate(arena);
+            MemorySegment encrypted2 = U128.allocate(arena);
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1) != 0) {
+                throw new RuntimeException("Failed to encrypt first value");
+            }
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2) != 0) {
+                throw new RuntimeException("Failed to encrypt second value");
+            }
+
+            // Perform subtraction
+            MemorySegment result = U128.allocate(arena);
+            if (fhe_uint128_sub(encrypted1.get(C_POINTER, 0), encrypted2.get(C_POINTER, 0), result) != 0) {
+                throw new RuntimeException("Failed to perform subtraction");
+            }
+
+            // Decrypt and display result
+            MemorySegment decrypted = U128.allocate(arena);
+            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), decrypted) != 0) {
+                throw new RuntimeException("Failed to decrypt result");
+            }
+
+            System.out.println("Subtraction result: " + U128.w0(decrypted)); // 75
+        }
     }
 }
 ----
@@ -290,10 +365,23 @@ Always use `Arena.ofConfined()` for automatic memory cleanup:
 
 [source,java]
 ----
-try (Arena arena = Arena.ofConfined()) {
-    MemorySegment data = arena.allocate(C_POINTER);
-    // Use data for TFHE operations...
-} // Automatic cleanup when arena closes
+package com.example.tfhe;
+
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+
+import static ai.zama.tfhe.TfheNative.*;
+
+public class MemoryManagementExample {
+
+    public static void demonstrateMemoryManagement() {
+        try (Arena arena = Arena.ofConfined()) {
+            MemorySegment data = arena.allocate(C_POINTER);
+            // Use data for TFHE operations...
+            // All memory allocated with this arena will be automatically cleaned up
+        } // Automatic cleanup when arena closes
+    }
+}
 ----
 
 === Error Handling
@@ -302,9 +390,20 @@ TFHE native functions return 0 for success, non-zero for errors:
 
 [source,java]
 ----
-int result = fhe_uint128_add(lhs, rhs, output);
-if (result != 0) {
-    throw new RuntimeException("TFHE operation failed with code: " + result);
+package com.example.tfhe;
+
+import java.lang.foreign.MemorySegment;
+
+import static ai.zama.tfhe.TfheNative.*;
+
+public class ErrorHandlingExample {
+
+    public static void demonstrateErrorHandling(MemorySegment lhs, MemorySegment rhs, MemorySegment output) {
+        int result = fhe_uint128_add(lhs, rhs, output);
+        if (result != 0) {
+            throw new RuntimeException("TFHE operation failed with code: " + result);
+        }
+    }
 }
 ----
 
