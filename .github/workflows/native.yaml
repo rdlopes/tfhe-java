@@ -93,10 +93,6 @@ jobs:
           merge-multiple: 'true'
           path: native-libs
           github-token: ${{github.token}}
-      - name: Delete Native Libraries Artifacts
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: 'native-libs-*'
       - name: Create Bundle Folder
         run: |
           mkdir native-bundle
@@ -118,4 +114,8 @@ jobs:
         with:
           name: native-libs
           path: native-bundle
+      - name: Delete Native Libraries Specific Artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: 'native-libs-*'
 
