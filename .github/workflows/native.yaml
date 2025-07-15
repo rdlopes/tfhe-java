@@ -40,16 +40,6 @@ jobs:
           path: target/release
           retention-days: 1
 
-  bundle-native-libs:
-    runs-on: ubuntu-latest
-    needs: native-libs
-    steps:
-      - name: Bundle Native Libraries
-        uses: actions/upload-artifact/merge@v4
-        with:
-          name: 'native-libs'
-          pattern: 'native-libs-*'
-
   bindings:
     runs-on: ubuntu-latest
     needs: native-libs
@@ -60,7 +50,7 @@ jobs:
           download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
           version: '22+6-47'
           bin_path: 'jextract-22/bin'
-      - name: Download Native Libraries
+      - name: Download Linux Libraries
         uses: actions/download-artifact@v4
         with:
           name: native-libs-ubuntu-latest
@@ -91,3 +81,35 @@ jobs:
         with:
           name: bindings
           path: bindings
+
+  bundle-native-libs:
+    runs-on: ubuntu-latest
+    needs: bindings
+    steps:
+      - name: Download Native Libraries
+        uses: actions/download-artifact@v4
+        with:
+          pattern: 'native-libs-*'
+          merge-multiple: 'true'
+          path: native-libs
+          github-token: ${{github.token}}
+
+      - name: Create Bundle Folder
+        run: |
+          mkdir native-bundle
+          cp native-libs/tfhe.h native-bundle
+      - name: Pack OSX Library
+        run: cp native-libs/libtfhe.dylib native-bundle/osx/aarch64
+      - name: Pack Linux Library
+        run: cp native-libs/libtfhe.so native-bundle/linux/x86_64
+      - name: Pack Windows Library
+        run: cp native-libs/tfhe.dll native-bundle/windows/x86_64
+      - name: Upload Native Bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-bundle
+          path: native-bundle
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+          name: 'native-libs-*'
+
