@@ -5,6 +5,7 @@
 :project:       tfhe-java
 :key:           {owner}_{project}
 :repo:          https://github.com/{owner}/{project}
+:native:        {repo}/actions/workflows/native.yaml
 :ci:            {repo}/actions/workflows/ci.yaml
 :cd:            {repo}/actions/workflows/cd.yaml
 :linkedin:      https://www.linkedin.com/in/rdlopes-fr
@@ -12,6 +13,7 @@
 :license:       https://opensource.org/licenses/MIT
 
 image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License]
+image:{native}/badge.svg[link={native},window=_blank]
 image:{ci}/badge.svg[link={ci},window=_blank]
 image:{cd}/badge.svg[link={cd},window=_blank]
 
@@ -56,7 +58,7 @@ Add the following dependency to your `pom.xml`:
 
 * **Java 24** or later (requires Foreign Function & Memory API support)
 * **JVM Arguments**: `--enable-native-access=ALL-UNNAMED`
-* **Native Libraries**: Automatically included in the JAR (macOS ARM64 currently supported)
+* **Native Libraries**: Automatically included in the JAR
 
 == Quick Start
 
@@ -64,12 +66,12 @@ Here's a simple example of performing homomorphic addition:
 
 [source,java]
 ----
-import io.github.rdlopes.tfhe.lib.U128;
+import ai.zama.tfhe.U128;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.lib.TfheNative.*;
+import static ai.zama.tfhe.TfheNative.*;
 
 public static void main(String... args) {
   // Generate configuration and keys
@@ -121,11 +123,10 @@ public static void main(String... args) {
 [source]
 ----
 tfhe-java/
-├── src/
-│   └── test/java/io/github/rdlopes/tfhe/    # Test classes and examples
+├── src/                                     # Java source code
 ├── target/
 │   ├── classes/native/                      # Native libraries (runtime)
-│   └── generated-sources/tfhe-rs/          # Generated Java bindings
+│   └── generated-sources/tfhe-rs/           # Generated Java bindings
 ├── tfhe-rs/                                 # Rust TFHE implementation (submodule)
 ├── pom.xml                                  # Maven configuration
 └── README.adoc                              # This documentation
@@ -135,7 +136,7 @@ tfhe-java/
 
 The build process automatically generates Java bindings from the TFHE-rs C API:
 
-* **Package**: `io.github.rdlopes.tfhe.lib`
+* **Package**: `ai.zama.tfhe`
 * **Main Class**: `TfheNative` - Contains all native function bindings
 * **Data Types**: `U128`, `Boolean` - Wrapper classes for TFHE data types
 * **Memory Management**: Uses Java's Foreign Function & Memory API
@@ -150,14 +151,6 @@ Generated class containing all TFHE operations:
 * **Encryption**: `fhe_uint128_encrypt()`, `boolean_client_key_encrypt()`
 * **Decryption**: `fhe_uint128_decrypt()`, `boolean_client_key_decrypt()`
 * **Operations**: `fhe_uint128_add()`, `fhe_uint128_sub()`, `boolean_server_key_xor()`
-
-==== Test Helpers (`TfheNativeTestHelper.java`)
-
-Utility classes for testing and examples:
-
-* **Scheme Setup**: `usingU128Scheme()`, `usingBooleanScheme()`
-* **Memory Management**: Automatic arena cleanup
-* **Key Management**: Automated key generation and cleanup
 
 ==== Data Type Wrappers
 
@@ -177,10 +170,24 @@ The project includes the complete Zama TFHE-rs library as a Git submodule:
 
 == Building from Source
 
-=== Prerequisites
+For most users, the library is available through Maven Central and doesn't require building from source.
+However, if you need to build locally:
 
-1. **Java 24** (Temurin distribution recommended)
-+
+=== Standard Build
+
+[source,bash]
+----
+# Clone the repository
+git clone https://github.com/rdlopes/tfhe-java.git
+cd tfhe-java
+
+# Build the project
+./mvnw package
+----
+
+**Prerequisites:**
+* **Java 24** (Temurin distribution recommended)
+
 [source,bash]
 ----
 # Using SDKMAN
@@ -188,55 +195,96 @@ sdk install java 24-tem
 sdk use java 24-tem
 ----
 
-2. **Rust Toolchain** with nightly support
-+
-[source,bash]
+The build process automatically downloads pre-built native libraries and Java bindings, making it simple to get started without complex toolchain setup.
+
+== Usage Examples
+
+=== Boolean Operations
+
+Here's how to perform homomorphic boolean operations:
+
+[source,java]
 ----
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup toolchain install nightly
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+import static ai.zama.tfhe.TfheNative.*;
+
+public void booleanExample() {
+    try (Arena arena = Arena.ofConfined()) {
+        // Generate boolean keys
+        MemorySegment clientKey = arena.allocate(C_POINTER);
+        MemorySegment serverKey = arena.allocate(C_POINTER);
+        boolean_generate_keys(clientKey, serverKey);
+        boolean_set_server_key(serverKey.get(C_POINTER, 0));
+
+        // Encrypt boolean values
+        MemorySegment encryptedTrue = arena.allocate(C_POINTER);
+        MemorySegment encryptedFalse = arena.allocate(C_POINTER);
+        boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), true, encryptedTrue);
+        boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), false, encryptedFalse);
+
+        // Perform XOR operation
+        MemorySegment result = arena.allocate(C_POINTER);
+        boolean_server_key_xor(encryptedTrue.get(C_POINTER, 0), encryptedFalse.get(C_POINTER, 0), result);
+
+        // Decrypt result
+        boolean decrypted = boolean_client_key_decrypt(clientKey.get(C_POINTER, 0), result.get(C_POINTER, 0));
+        System.out.println("XOR result: " + decrypted); // true
+    }
+}
 ----
 
-3. **jextract Tool** (version 22)
-+
-[source,bash]
+=== Integer Arithmetic
+
+Perform arithmetic operations on encrypted integers:
+
+[source,java]
 ----
-# Download and setup jextract (macOS ARM64)
-curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
-tar -xzf ./jextract.tar.gz -C .
-sudo xattr -r -d com.apple.quarantine ./jextract-22/
-export PATH=$PATH:$(pwd)/jextract-22/bin
+import ai.zama.tfhe.U128;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+import static ai.zama.tfhe.TfheNative.*;
+
+public void integerArithmetic() {
+    try (Arena arena = Arena.ofConfined()) {
+        // Setup configuration and keys
+        MemorySegment configBuilder = arena.allocate(C_POINTER);
+        config_builder_default(configBuilder);
+        MemorySegment config = arena.allocate(C_POINTER);
+        config_builder_build(configBuilder.get(C_POINTER, 0), config);
+
+        MemorySegment clientKey = arena.allocate(C_POINTER);
+        MemorySegment serverKey = arena.allocate(C_POINTER);
+        generate_keys(config.get(C_POINTER, 0), clientKey, serverKey);
+        set_server_key(serverKey.get(C_POINTER, 0));
+
+        // Encrypt values
+        MemorySegment value1 = U128.allocate(arena);
+        U128.w0(value1, 100);
+        U128.w1(value1, 0);
+
+        MemorySegment value2 = U128.allocate(arena);
+        U128.w0(value2, 25);
+        U128.w1(value2, 0);
+
+        MemorySegment encrypted1 = U128.allocate(arena);
+        MemorySegment encrypted2 = U128.allocate(arena);
+        fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1);
+        fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2);
+
+        // Perform subtraction
+        MemorySegment result = U128.allocate(arena);
+        fhe_uint128_sub(encrypted1, encrypted2, result);
+
+        // Decrypt and display result
+        MemorySegment decrypted = U128.allocate(arena);
+        fhe_uint128_decrypt(result, clientKey.get(C_POINTER, 0), decrypted);
+        System.out.println("Subtraction result: " + U128.w0(decrypted)); // 75
+    }
+}
 ----
 
-4. **macOS** (currently required for native dependencies)
-
-=== Build Process
-
-[source,bash]
-----
-# Clone with submodules
-git clone --recursive https://github.com/rdlopes/tfhe-java.git
-cd tfhe-java
-
-# Or initialize submodules if already cloned
-git submodule update --init --recursive
-
-# Build the project
-./mvnw package
-----
-
-=== Build Phases
-
-The build process involves several automated phases:
-
-1. **Submodule Update**: Updates the tfhe-rs Rust submodule
-2. **Rust Compilation**: Compiles TFHE library with C API using `cargo +nightly build --release --features=high-level-c-api`
-3. **Binding Generation**: Uses jextract to generate Java bindings from C headers
-4. **Java Compilation**: Compiles Java code including generated bindings
-5. **Native Library Packaging**: Copies native libraries to `target/classes/native/`
-
-== Development Guidelines
-
-=== Memory Management
+=== Memory Management Best Practices
 
 Always use `Arena.ofConfined()` for automatic memory cleanup:
 
@@ -244,8 +292,8 @@ Always use `Arena.ofConfined()` for automatic memory cleanup:
 ----
 try (Arena arena = Arena.ofConfined()) {
     MemorySegment data = arena.allocate(C_POINTER);
-    // Use data...
-} // Automatic cleanup
+    // Use data for TFHE operations...
+} // Automatic cleanup when arena closes
 ----
 
 === Error Handling
@@ -255,22 +303,17 @@ TFHE native functions return 0 for success, non-zero for errors:
 [source,java]
 ----
 int result = fhe_uint128_add(lhs, rhs, output);
-assertThat(result).isZero(); // Verify success
+if (result != 0) {
+    throw new RuntimeException("TFHE operation failed with code: " + result);
+}
 ----
 
-=== Performance Considerations
+=== Performance Tips
 
-* **Key Reuse**: Generate keys once and reuse them
-* **Memory Efficiency**: Use appropriate data types (U128 vs Boolean)
-* **Batch Operations**: Group operations when possible
-* **Native Optimization**: TFHE operations are CPU-intensive
-
-=== Debugging
-
-* **Rust Backtraces**: Set `RUST_BACKTRACE=full` environment variable
-* **Native Access**: Ensure `--enable-native-access=ALL-UNNAMED` JVM flag
-* **Library Path**: Verify native libraries are accessible
-* **Memory Leaks**: Use Arena for automatic memory management
+* **Key Reuse**: Generate keys once and reuse them across operations
+* **Memory Efficiency**: Use appropriate data types (U128 for integers, Boolean for binary operations)
+* **Batch Operations**: Group multiple operations when possible to reduce overhead
+* **Resource Management**: Always use try-with-resources for Arena management
 
 == License
 
