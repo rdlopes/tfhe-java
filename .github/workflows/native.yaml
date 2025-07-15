@@ -11,50 +11,70 @@ concurrency:
 
 jobs:
 
-  bindings:
+  native-libs:
     strategy:
       matrix:
         include:
           - os: macos-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz
-            classifier: osx-aarch_64
+            output: native-libs/osx/aarch64
           - os: ubuntu-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
-            classifier: linux-x86_64
+            output: native-libs/linux/x86_64
           - os: windows-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
-            classifier: windows-x86_64
+            output: native-libs/windows/x86_64
     runs-on: ${{matrix.os}}
     steps:
-
       - run: gh repo clone zama-ai/tfhe-rs .
         env:
           GH_TOKEN: ${{github.token}}
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           cache-shared-key: ${{matrix.os}}
+      - run: make build_c_api
+      - name: Upload Native Libraries
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-libs-${{matrix.os}}
+          path: target/release
+          retention-days: 1
+
+  bundle-native-libs:
+    runs-on: ubuntu-latest
+    needs: native-libs
+    steps:
+      - name: Bundle Native Libraries
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: 'native-libs'
+          pattern: 'native-libs-*'
+
+  bindings:
+    runs-on: ubuntu-latest
+    needs: native-libs
+    steps:
       - uses: jcwillox/install-tool-action@v1
         with:
           id: 'jextract'
-          download_url: ${{ matrix.jextract }}
+          download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
           version: '22+6-47'
           bin_path: 'jextract-22/bin'
-
-      - run: make build_c_api
-
+      - name: Download Native Libraries
+        uses: actions/download-artifact@v4
+        with:
+          name: native-libs-ubuntu-latest
+          github-token: ${{github.token}}
       - name: Jextract Dump includes
-        shell: bash
         run: |
           jextract \
           --dump-includes jextract-includes.txt \
-          target/release/tfhe.h
-
+          tfhe.h
       - name: Jextract filter Includes
-        shell: bash
-        run: grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
-
+        run: |
+          grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
+          cat jextract-includes-filtered.txt
       - name: Jextract Bindings
-        shell: bash
         run: |
           jextract \
           @jextract-includes-filtered.txt \
@@ -62,45 +82,12 @@ jobs:
           --target-package ai.zama.tfhe \
           --output bindings \
           --use-system-load-library \
-          --include-dir target/release \
-          --include-dir target/release/deps \
+          --include-dir . \
+          --include-dir deps \
           --library tfhe \
-          target/release/tfhe.h
-
-      - name: Upload Native Libraries
-        uses: actions/upload-artifact@v4
-        with:
-          name: native-libs-${{ matrix.classifier }}
-          path: |
-            target/release/tfhe.h
-            target/release/*.a
-            target/release/*.dll
-            target/release/*.so
-            target/release/*.dylib
-
+          tfhe.h
       - name: Upload FFM Bindings
         uses: actions/upload-artifact@v4
         with:
-          name: ffm-bindings-${{ matrix.classifier }}
+          name: bindings
           path: bindings
-
-  bundle:
-    runs-on: ubuntu-latest
-    needs: bindings
-    steps:
-
-      - name: Bundle Native Libraries
-        uses: actions/upload-artifact/merge@v4
-        with:
-          name: 'native-libs'
-          pattern: 'native-libs-*'
-          delete-merged: 'true'
-          retention-days: 1
-
-      - name: Bundle FFM Bindings
-        uses: actions/upload-artifact/merge@v4
-        with:
-          name: 'ffm-bindings'
-          pattern: 'ffm-bindings-*'
-          delete-merged: 'true'
-          retention-days: 1
