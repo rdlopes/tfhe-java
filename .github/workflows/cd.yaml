@@ -13,18 +13,9 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    name: Release To Central
+    name: Release To Maven Central
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - uses: jcwillox/install-tool-action@v1
-        with:
-          id: 'jextract'
-          download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
-          version: '22+6-47'
-          bin_path: 'jextract-22/bin'
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ env.JAVA_VERSION }}
@@ -42,27 +33,31 @@ jobs:
       - name: Download Native Libraries
         uses: actions/download-artifact@v4
         with:
-          name: native
-          path: target
-          github-token: ${{ github.token }}
+          name: 'native-libs'
+          path: target/native
+          github-token: ${{github.token}}
+      - name: Contents of target/native
+        run: ls -alrt target/native
+      - name: Copy Native Libraries To Release folder
+        run: cp -r target/native/* target/checkout/target/native
+      - name: Contents of target/checkout/target/native
+        run: ls -alrt target/native
 
-      - name: Prepare Release With Maven
-        run: ./mvnw release:prepare -Dusername=${GITHUB_ACTOR}
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_PASSPHRASE }}
-
-      - name: Download Native Libraries
+      - name: Download Native Bindings
         uses: actions/download-artifact@v4
         with:
-          name: native
-          path: target/checkout/target
-          github-token: ${{ github.token }}
+          name: 'native-bindings'
+          path: target/generated-sources/tfhe-rs
+          github-token: ${{github.token}}
+      - name: Contents of target/generated-sources/tfhe-rs
+        run: ls -alrt target/generated-sources/tfhe-rs
+      - name: Copy Native Bindings To Release folder
+        run: cp -r target/generated-sources/tfhe-rs/* target/checkout/target/generated-sources/tfhe-rs
+      - name: Contents of target/checkout/target/generated-sources/tfhe-rs
+        run: ls -alrt target/generated-sources/tfhe-rs
 
-      - name: Perform Release With Maven
-        run: ./mvnw release:perform -Dusername=${GITHUB_ACTOR}
+      - name: Release With Maven
+        run: ./mvnw release:prepare release:perform
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
