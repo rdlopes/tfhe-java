@@ -42,7 +42,9 @@ jobs:
         run: ls -R target/native
 
       - name: Copy Native Libraries To Release folder
-        run: cp -r target/native/* target/checkout/target/native
+        run: |
+          mkdir -p target/checkout/target/native
+          cp -r target/native/* target/checkout/target/native
       - name: Contents of target/checkout/target/native
         run: ls -R target/native
 
@@ -57,7 +59,9 @@ jobs:
         run: ls -R target/generated-sources/tfhe-rs
 
       - name: Copy Native Bindings To Release folder
-        run: cp -r target/generated-sources/tfhe-rs/* target/checkout/target/generated-sources/tfhe-rs
+        run: |
+          mkdir -p target/checkout/target/generated-sources/tfhe-rs
+          cp -r target/generated-sources/tfhe-rs/* target/checkout/target/generated-sources/tfhe-rs
       - name: Contents of target/checkout/target/generated-sources/tfhe-rs
         run: ls -R target/generated-sources/tfhe-rs
 
