@@ -103,14 +103,20 @@ jobs:
           mkdir native-bundle
           cp native-libs/tfhe.h native-bundle
       - name: Pack OSX Library
-        run: cp native-libs/libtfhe.dylib native-bundle/osx/aarch64
+        run: |
+          mkdir -p native-bundle/osx/aarch64
+          cp native-libs/libtfhe.dylib native-bundle/osx/aarch64
       - name: Pack Linux Library
-        run: cp native-libs/libtfhe.so native-bundle/linux/x86_64
+        run: |
+          mkdir -p native-bundle/linux/x86_64
+          cp native-libs/libtfhe.so native-bundle/linux/x86_64
       - name: Pack Windows Library
-        run: cp native-libs/tfhe.dll native-bundle/windows/x86_64
+        run: |
+          mkdir -p native-bundle/windows/x86_64
+          cp native-libs/tfhe.dll native-bundle/windows/x86_64
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v4
         with:
           name: native-libs
-          path: native-libs
+          path: native-bundle
 
