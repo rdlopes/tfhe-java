@@ -43,15 +43,18 @@ jobs:
       - run: make build_c_api
 
       - name: Jextract Dump includes
+        shell: bash
         run: |
           jextract \
           --dump-includes jextract-includes.txt \
           target/release/tfhe.h
 
       - name: Jextract filter Includes
+        shell: bash
         run: grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
 
       - name: Jextract Bindings
+        shell: bash
         run: |
           jextract \
           @jextract-includes-filtered.txt \
@@ -64,11 +67,22 @@ jobs:
           --library tfhe \
           target/release/tfhe.h
 
-      - name: Upload Bindings
+      - name: Upload Native Libraries
         uses: actions/upload-artifact@v4
         with:
-          name: native-bindings-${{ matrix.classifier }}
-          path: target/release
+          name: native-libs-${{ matrix.classifier }}
+          path: |
+            target/release/tfhe.h
+            target/release/*.a
+            target/release/*.dll
+            target/release/*.so
+            target/release/*.dylib
+
+      - name: Upload FFM Bindings
+        uses: actions/upload-artifact@v4
+        with:
+          name: ffm-bindings-${{ matrix.classifier }}
+          path: bindings
 
   bundle:
     runs-on: ubuntu-latest
@@ -78,5 +92,11 @@ jobs:
       - name: Bundle Native Libraries
         uses: actions/upload-artifact/merge@v4
         with:
-          name: 'native-bindings'
-          pattern: 'native-bindings-*'
+          name: 'native-libs'
+          pattern: 'native-libs-*'
+
+      - name: Bundle FFM Bindings
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: 'ffm-bindings'
+          pattern: 'ffm-bindings-*'
