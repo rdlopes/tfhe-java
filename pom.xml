@@ -22,13 +22,13 @@
 
   <properties>
     <java.version>24</java.version>
-    <git-submodule-maven-plugin.version>1.1.1</git-submodule-maven-plugin.version>
     <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
-    <tfhe-rs.buildDirectory>${project.basedir}/tfhe-rs/target/release</tfhe-rs.buildDirectory>
-    <tfhe-rs.outputDirectory>${project.build.directory}/generated-sources/tfhe-rs</tfhe-rs.outputDirectory>
-    <tfhe-rs.packageName>${project.groupId}.tfhe.lib</tfhe-rs.packageName>
+    <tfhe-rs.basedir>${project.build.directory}/tfhe-rs</tfhe-rs.basedir>
+    <tfhe-rs.build.directory>${tfhe-rs.basedir}/target/release</tfhe-rs.build.directory>
+    <native-bindings.basedir>${project.build.directory}/generated-sources/tfhe-rs</native-bindings.basedir>
+    <native-libs.basedir>${project.build.directory}/native</native-libs.basedir>
     <!--suppress XmlUnresolvedReference -->
-    <tfhe-rs.libraryPath>${project.build.directory}/native/${os.detected.name}/${os.detected.arch}</tfhe-rs.libraryPath>
+    <native-libs.libraryPath>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</native-libs.libraryPath>
   </properties>
 
   <dependencies>
@@ -59,7 +59,7 @@
             <environmentVariables>
               <RUST_BACKTRACE>full</RUST_BACKTRACE>
             </environmentVariables>
-            <argLine>-Djava.library.path=${tfhe-rs.libraryPath}
+            <argLine>-Djava.library.path=${native-libs.libraryPath}
               --enable-native-access=ALL-UNNAMED</argLine>
           </configuration>
         </plugin>
@@ -67,85 +67,18 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>ch.usi.si.seart</groupId>
-        <artifactId>git-submodule-maven-plugin</artifactId>
-        <version>${git-submodule-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>update</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-c-api</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>generate-sources</phase>
-            <configuration>
-              <workingDirectory>${project.basedir}/tfhe-rs</workingDirectory>
-              <executable>cargo</executable>
-              <environmentVariables>
-                <RUSTFLAGS>-C target-cpu=native</RUSTFLAGS>
-              </environmentVariables>
-              <arguments>
-                <argument>+nightly</argument>
-                <argument>build</argument>
-                <argument>--release</argument>
-                <argument>--features=high-level-c-api</argument>
-                <argument>-p</argument>
-                <argument>tfhe</argument>
-              </arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>generate-bindings</id>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <phase>generate-sources</phase>
-            <configuration>
-              <workingDirectory>${tfhe-rs.buildDirectory}</workingDirectory>
-              <executable>jextract</executable>
-              <arguments>
-                <argument>tfhe.h</argument>
-                <argument>--header-class-name</argument>
-                <argument>TfheNative</argument>
-                <argument>--target-package</argument>
-                <argument>${tfhe-rs.packageName}</argument>
-                <argument>--output</argument>
-                <argument>${tfhe-rs.outputDirectory}</argument>
-                <argument>--use-system-load-library</argument>
-                <argument>--include-dir</argument>
-                <argument>.</argument>
-                <argument>--include-dir</argument>
-                <argument>deps</argument>
-                <argument>--library</argument>
-                <argument>tfhe</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>add-ffm-api</id>
+            <id>add-native-bindings</id>
             <goals>
               <goal>add-source</goal>
             </goals>
             <phase>process-sources</phase>
             <configuration>
               <sources>
-                <source>${tfhe-rs.outputDirectory}</source>
+                <source>${native-bindings.basedir}</source>
               </sources>
             </configuration>
           </execution>
@@ -156,27 +89,6 @@
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
-            <id>store-native-libraries</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>generate-resources</phase>
-            <configuration>
-              <outputDirectory>${tfhe-rs.libraryPath}</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${tfhe-rs.buildDirectory}</directory>
-                  <includes>
-                    <include>*.h</include>
-                    <include>*.dylib</include>
-                    <include>*.so</include>
-                    <include>*.dll</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          <execution>
             <id>include-native-libraries</id>
             <goals>
               <goal>copy-resources</goal>
@@ -186,9 +98,8 @@
               <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${project.build.directory}/native</directory>
+                  <directory>${native-libs.libraryPath}</directory>
                   <includes>
-                    <include>**/*.h</include>
                     <include>**/*.dylib</include>
                     <include>**/*.so</include>
                     <include>**/*.dll</include>
@@ -208,4 +119,112 @@
       </extension>
     </extensions>
   </build>
+
+  <profiles>
+    <profile>
+      <id>local</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>clone-tfhe-rs</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>initialize</phase>
+                <configuration>
+                  <executable>git</executable>
+                  <arguments>
+                    <argument>clone</argument>
+                    <argument>https://github.com/zama-ai/tfhe-rs.git</argument>
+                    <argument>${tfhe-rs.basedir}</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>generate-native-library</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
+                  <executable>cargo</executable>
+                  <environmentVariables>
+                    <RUSTFLAGS>-C target-cpu=native</RUSTFLAGS>
+                  </environmentVariables>
+                  <arguments>
+                    <argument>+nightly</argument>
+                    <argument>build</argument>
+                    <argument>--release</argument>
+                    <argument>--features=high-level-c-api</argument>
+                    <argument>-p</argument>
+                    <argument>tfhe</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>generate-bindings</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
+                  <executable>jextract</executable>
+                  <arguments>
+                    <argument>target/release/tfhe.h</argument>
+                    <argument>--header-class-name</argument>
+                    <argument>TfheNative</argument>
+                    <argument>--target-package</argument>
+                    <argument>ai.zama.tfhe</argument>
+                    <argument>--output</argument>
+                    <argument>${native-bindings.basedir}</argument>
+                    <argument>--use-system-load-library</argument>
+                    <argument>--include-dir</argument>
+                    <argument>target/release</argument>
+                    <argument>--include-dir</argument>
+                    <argument>target/release/deps</argument>
+                    <argument>--library</argument>
+                    <argument>tfhe</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>prepare-native-libraries</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>generate-resources</phase>
+                <configuration>
+                  <outputDirectory>${native-libs.libraryPath}</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${tfhe-rs.build.directory}</directory>
+                      <includes>
+                        <include>*.h</include>
+                        <include>*.dylib</include>
+                        <include>*.so</include>
+                        <include>*.dll</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 </project>

@@ -1,11 +1,11 @@
 package io.github.rdlopes.tfhe;
 
-import io.github.rdlopes.tfhe.lib.U128;
+import ai.zama.tfhe.U128;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.lib.TfheNative.*;
+import static ai.zama.tfhe.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TfheNativeTestHelper {

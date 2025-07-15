@@ -93,21 +93,20 @@ jobs:
           merge-multiple: 'true'
           path: native-libs
           github-token: ${{github.token}}
-      - name: Create Bundle Folder
-        run: |
-          mkdir native-bundle
-          cp native-libs/tfhe.h native-bundle
       - name: Pack OSX Library
         run: |
           mkdir -p native-bundle/osx/aarch64
+          cp native-libs/tfhe.h native-bundle/osx/aarch64
           cp native-libs/*.dylib native-bundle/osx/aarch64
       - name: Pack Linux Library
         run: |
           mkdir -p native-bundle/linux/x86_64
+          cp native-libs/tfhe.h native-bundle/linux/x86_64
           cp native-libs/*.so native-bundle/linux/x86_64
       - name: Pack Windows Library
         run: |
           mkdir -p native-bundle/windows/x86_64
+          cp native-libs/tfhe.h native-bundle/windows/x86_64
           cp native-libs/*.dll native-bundle/windows/x86_64
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v4

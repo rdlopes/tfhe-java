@@ -1,13 +1,13 @@
 package io.github.rdlopes.tfhe;
 
-import io.github.rdlopes.tfhe.lib.U128;
+import ai.zama.tfhe.U128;
 import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
+import static ai.zama.tfhe.TfheNative.*;
 import static io.github.rdlopes.tfhe.TfheNativeTestHelper.usingBooleanScheme;
 import static io.github.rdlopes.tfhe.TfheNativeTestHelper.usingU128Scheme;
-import static io.github.rdlopes.tfhe.lib.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TfheNativeTest {
