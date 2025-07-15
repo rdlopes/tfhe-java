@@ -35,20 +35,19 @@ jobs:
           server-password: OSSRH_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - run: |
+          git config --global user.email "bot@github.com"
+          git config --global user.name "GitHub Actions"
 
       - name: Download Native Libraries
         uses: actions/download-artifact@v4
         with:
-          pattern: 'native-libs-*'
-          path: target/native
-          merge-multiple: 'true'
+          name: native
+          path: target
           github-token: ${{ github.token }}
 
       - name: Prepare Release With Maven
-        run: |
-          git config --global user.email "bot@github.com"
-          git config --global user.name "GitHub Actions"
-          ./mvnw release:prepare -Dusername=${GITHUB_ACTOR}
+        run: ./mvnw release:prepare -Dusername=${GITHUB_ACTOR}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -58,16 +57,12 @@ jobs:
       - name: Download Native Libraries
         uses: actions/download-artifact@v4
         with:
-          pattern: 'native-libs-*'
-          path: target/checkout/target/native
-          merge-multiple: 'true'
+          name: native
+          path: target/checkout/target
           github-token: ${{ github.token }}
 
       - name: Perform Release With Maven
-        run: |
-          git config --global user.email "bot@github.com"
-          git config --global user.name "GitHub Actions"
-          ./mvnw release:perform -Dusername=${GITHUB_ACTOR}
+        run: ./mvnw release:perform -Dusername=${GITHUB_ACTOR}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}

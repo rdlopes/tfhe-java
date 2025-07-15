@@ -1,0 +1,77 @@
+name: Native Libraries Bundle
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  bindings:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz
+          - os: ubuntu-latest
+            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
+          - os: windows-latest
+            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
+    runs-on: ${{ matrix.os }}
+    steps:
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: jcwillox/install-tool-action@v1
+        with:
+          id: 'jextract'
+          download_url: ${{ matrix.jextract }}
+          version: '22+6-47'
+          bin_path: 'jextract-22/bin'
+
+      - run: gh repo clone zama-ai/tfhe-rs .
+        env:
+          GH_TOKEN: ${{github.token}}
+      - run: make build_c_api
+
+      - name: Jextract Dump includes
+        run: |
+          jextract \
+          --dump-includes jextract-includes.txt \
+          tfhe.h
+        working-directory: target/release
+      - name: Jextract filter Includes
+        run: grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
+      - name: Jextract Bindings
+        run: |
+          jextract \
+          @jextract-includes-filtered.txt
+          --header-class-name TfheNative \
+          --target-package ai.zama.tfhe \
+          --output bindings \
+          --use-system-load-library \
+          --include-dir . \
+          --include-dir deps \
+          --library tfhe \
+          tfhe.h
+        working-directory: target/release
+
+      - name: Upload Bindings
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-bindings-${{ matrix.os }}
+          path: target/release
+
+  bundle:
+    runs-on: ubuntu-latest
+    needs: bindings
+    steps:
+
+      - name: Bundle Native Libraries
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: 'native-bindings'
+          pattern: 'native-bindings-*'
