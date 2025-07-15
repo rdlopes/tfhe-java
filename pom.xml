@@ -98,8 +98,9 @@
               <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${native-libs.libraryPath}</directory>
+                  <directory>${native-libs.basedir}</directory>
                   <includes>
+                    <include>**/*.h</include>
                     <include>**/*.dylib</include>
                     <include>**/*.so</include>
                     <include>**/*.dll</include>
