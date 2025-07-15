@@ -29,22 +29,24 @@ jobs:
           cache: 'maven'
 
       - name: Download Native Libraries
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v11
         with:
+          github_token: ${{github.token}}
+          workflow: native.yaml
           name: 'native-libs'
           path: target/native
-          github-token: ${{github.token}}
       - name: Contents of target/native
-        run: ls -alrt target/native
+        run: ls -R target/native
 
       - name: Download Native Bindings
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v11
         with:
+          github_token: ${{github.token}}
+          workflow: native.yaml
           name: 'native-bindings'
           path: target/generated-sources/tfhe-rs
-          github-token: ${{github.token}}
       - name: Contents of target/generated-sources/tfhe-rs
-        run: ls -alrt target/generated-sources/tfhe-rs
+        run: ls -R target/generated-sources/tfhe-rs
 
       - name: Compile with Maven
         run: ./mvnw package
