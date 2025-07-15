@@ -95,6 +95,7 @@ jobs:
           name: 'native-libs'
           pattern: 'native-libs-*'
           delete-merged: 'true'
+          retention-days: 1
 
       - name: Bundle FFM Bindings
         uses: actions/upload-artifact/merge@v4
@@ -102,3 +103,4 @@ jobs:
           name: 'ffm-bindings'
           pattern: 'ffm-bindings-*'
           delete-merged: 'true'
+          retention-days: 1
