@@ -1,4 +1,4 @@
-= TFHE Java
+= TFHE Java image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License]
 :author:        Rui LOPES
 :owner:         rdlopes
 :email:         mailto:rui.d.lopes@me.com
@@ -12,7 +12,6 @@
 :badges:        https://img.shields.io/badge
 :license:       https://opensource.org/licenses/MIT
 
-image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License]
 image:{native}/badge.svg[link={native},window=_blank]
 image:{ci}/badge.svg[link={ci},window=_blank]
 image:{cd}/badge.svg[link={cd},window=_blank]
@@ -58,7 +57,7 @@ Add the following dependency to your `pom.xml`:
 
 * **Java 24** or later (requires Foreign Function & Memory API support)
 * **JVM Arguments**: `--enable-native-access=ALL-UNNAMED`
-* **Native Libraries**: Automatically included in the JAR (macOS ARM64 currently supported)
+* **Native Libraries**: Automatically included in the JAR (supports macOS ARM64, Linux x86_64, Windows x86_64)
 
 == Quick Start
 
@@ -219,6 +218,68 @@ sdk use java 24-tem
 ----
 
 The build process automatically downloads pre-built native libraries and Java bindings, making it simple to get started without complex toolchain setup.
+
+=== Building for Unsupported Platforms
+
+The library includes pre-built native libraries for **macOS ARM64**, **Linux x86_64**, and **Windows x86_64**.
+If your development platform is not among these supported platforms, you can build the library from source using the `local` maven profile to create a native wrapper that suits your specific platform.
+
+This approach is also useful for:
+
+* Local development with custom modifications
+* Building on architectures not covered by the pre-built binaries
+* Creating optimized builds for specific hardware configurations
+
+[source,bash]
+----
+# Build with local profile (builds from TFHE-rs source)
+./mvnw package -Plocal
+----
+
+**Additional Prerequisites for Local Build:**
+* **Rust toolchain** with nightly support * **jextract** tool (version 22) for generating Java bindings from C headers
+
+==== Installing Prerequisites
+
+**Rust Installation (all platforms):**
+
+[source,bash]
+----
+# Install Rust with nightly toolchain
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup toolchain install nightly
+----
+
+**jextract Installation:**
+
+Choose the appropriate download for your platform:
+
+[source,bash]
+----
+# macOS ARM64
+curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
+tar -xzf ./jextract.tar.gz -C .
+sudo xattr -r -d com.apple.quarantine ./jextract-22/
+export PATH=$PATH:$(pwd)/jextract-22/bin
+
+# macOS x64
+curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-x64_bin.tar.gz --output jextract.tar.gz
+tar -xzf ./jextract.tar.gz -C .
+sudo xattr -r -d com.apple.quarantine ./jextract-22/
+export PATH=$PATH:$(pwd)/jextract-22/bin
+
+# Linux x64
+curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
+tar -xzf ./jextract.tar.gz -C .
+export PATH=$PATH:$(pwd)/jextract-22/bin
+
+# Windows x64
+curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.zip --output jextract.zip
+# Extract and add to PATH as appropriate for your system
+----
+
+The `local` profile performs the following steps:
+1. **TFHE-rs download**: Downloads the tfhe-rs source from GitHub 2. **Rust compilation**: Compiles the TFHE Rust library with C API 3. **Binding generation**: Uses jextract to generate Java bindings from C headers 4. **Java compilation**: Compiles Java code including generated bindings 5. **Native library packaging**: Copies native libraries to target/classes/native
 
 == Usage Examples
 
