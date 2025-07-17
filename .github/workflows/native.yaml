@@ -18,13 +18,10 @@ jobs:
         include:
           - os: macos-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz
-            output: native-libs/osx/aarch64
           - os: ubuntu-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
-            output: native-libs/linux/x86_64
           - os: windows-latest
             jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
-            output: native-libs/windows/x86_64
     runs-on: ${{matrix.os}}
     steps:
       - run: gh repo clone zama-ai/tfhe-rs .

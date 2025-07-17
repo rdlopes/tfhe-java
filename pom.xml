@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.github.rdlopes</groupId>
     <artifactId>maven-root-pom</artifactId>
-    <version>1.6.0</version>
+    <version>1.7.0</version>
   </parent>
 
   <artifactId>tfhe-java</artifactId>
@@ -153,18 +153,42 @@
                 <phase>generate-sources</phase>
                 <configuration>
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
-                  <executable>cargo</executable>
-                  <environmentVariables>
-                    <RUSTFLAGS>-C target-cpu=native</RUSTFLAGS>
-                  </environmentVariables>
+                  <executable>make</executable>
                   <arguments>
-                    <argument>+nightly</argument>
-                    <argument>build</argument>
-                    <argument>--release</argument>
-                    <argument>--features=high-level-c-api</argument>
-                    <argument>-p</argument>
-                    <argument>tfhe</argument>
+                    <argument>build_c_api</argument>
                   </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>generate-bindings-includes</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
+                  <executable>jextract</executable>
+                  <arguments>
+                    <argument>target/release/tfhe.h</argument>
+                    <argument>--dump-includes</argument>
+                    <argument>jextract-includes.txt</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>filter-bindings-includes</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
+                  <executable>grep</executable>
+                  <arguments>
+                    <argument>tfhe</argument>
+                    <argument>jextract-includes.txt</argument>
+                  </arguments>
+                  <outputFile>${tfhe-rs.basedir}/jextract-includes-filtered.txt</outputFile>
                 </configuration>
               </execution>
               <execution>
@@ -177,6 +201,7 @@
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
                   <executable>jextract</executable>
                   <arguments>
+                    <argument>@jextract-includes-filtered.txt</argument>
                     <argument>target/release/tfhe.h</argument>
                     <argument>--header-class-name</argument>
                     <argument>TfheNative</argument>
