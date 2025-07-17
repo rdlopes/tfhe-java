@@ -22,7 +22,7 @@
 
   <properties>
     <java.version>24</java.version>
-    <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
+    <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <tfhe-rs.basedir>${project.build.directory}/tfhe-rs</tfhe-rs.basedir>
     <tfhe-rs.build.directory>${tfhe-rs.basedir}/target/release</tfhe-rs.build.directory>
     <native-bindings.basedir>${project.build.directory}/generated-sources/tfhe-rs</native-bindings.basedir>
