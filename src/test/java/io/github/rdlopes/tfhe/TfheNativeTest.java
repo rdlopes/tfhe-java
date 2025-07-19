@@ -27,6 +27,8 @@ public class TfheNativeTest {
         long w1 = U128.w1(result);
         assertThat(w0).isEqualTo(99);
         assertThat(w1).isEqualTo(0);
+
+        assertThat(fhe_uint128_destroy(resultEncrypted.get(C_POINTER, 0))).isZero();
       });
   }
 
@@ -43,6 +45,8 @@ public class TfheNativeTest {
 
         boolean resultValue = result.get(C_BOOL, 0);
         assertThat(resultValue).isFalse();
+
+        assertThat(boolean_destroy_ciphertext(resultEncrypted.get(C_POINTER, 0))).isZero();
       });
   }
 }

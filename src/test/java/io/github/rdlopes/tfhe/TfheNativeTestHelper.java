@@ -29,12 +29,19 @@ public class TfheNativeTestHelper {
       MemorySegment rhs = U128.allocate(arena);
       U128.w0(rhs, rhsValue);
       U128.w1(rhs, 0);
-      MemorySegment encrypted1 = U128.allocate(arena);
-      assertThat(fhe_uint128_try_encrypt_with_client_key_u128(lhs, clientKey.get(C_POINTER, 0), encrypted1)).isZero();
-      MemorySegment encrypted = U128.allocate(arena);
-      assertThat(fhe_uint128_try_encrypt_with_client_key_u128(rhs, clientKey.get(C_POINTER, 0), encrypted)).isZero();
+      MemorySegment lhsEncrypted = U128.allocate(arena);
+      assertThat(fhe_uint128_try_encrypt_with_client_key_u128(lhs, clientKey.get(C_POINTER, 0), lhsEncrypted)).isZero();
+      MemorySegment rhsEncrypted = U128.allocate(arena);
+      assertThat(fhe_uint128_try_encrypt_with_client_key_u128(rhs, clientKey.get(C_POINTER, 0), rhsEncrypted)).isZero();
 
-      tester.test(arena, clientKey, serverKey, encrypted1, encrypted);
+      try {
+        tester.test(arena, clientKey, serverKey, lhsEncrypted, rhsEncrypted);
+      } finally {
+        assertThat(fhe_uint128_destroy(rhsEncrypted.get(C_POINTER, 0))).isZero();
+        assertThat(fhe_uint128_destroy(lhsEncrypted.get(C_POINTER, 0))).isZero();
+        assertThat(server_key_destroy(serverKey.get(C_POINTER, 0))).isZero();
+        assertThat(client_key_destroy(clientKey.get(C_POINTER, 0))).isZero();
+      }
     }
   }
 
@@ -49,7 +56,15 @@ public class TfheNativeTestHelper {
       MemorySegment rhsEncrypted = arena.allocate(C_POINTER);
       assertThat(boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), rhsValue, rhsEncrypted)).isZero();
 
-      tester.test(arena, clientKey, serverKey, lhsEncrypted, rhsEncrypted);
+      try {
+        tester.test(arena, clientKey, serverKey, lhsEncrypted, rhsEncrypted);
+      } finally {
+        // Destroy only the encrypted values created by encrypt functions
+        assertThat(boolean_destroy_ciphertext(rhsEncrypted.get(C_POINTER, 0))).isZero();
+        assertThat(boolean_destroy_ciphertext(lhsEncrypted.get(C_POINTER, 0))).isZero();
+        boolean_destroy_client_key(clientKey.get(C_POINTER, 0));
+        boolean_destroy_server_key(serverKey.get(C_POINTER, 0));
+      }
     }
   }
 
