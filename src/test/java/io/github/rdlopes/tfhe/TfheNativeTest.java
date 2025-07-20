@@ -194,4 +194,49 @@ public class TfheNativeTest {
       assertThat(fhe_uint128_destroy(resultEncrypted.get(C_POINTER, 0))).isZero();
     });
   }
+
+  @Test
+  void serializePublicKeySafelyAndPerformBooleanOperation() {
+    long sizeLimit = 4L * 1024L * 1024L * 1024L; // 4GB limit for safe serialization
+
+    doWithKeys((arena, clientKey, _) -> {
+      MemorySegment publicKey = arena.allocate(C_POINTER);
+      assertThat(public_key_new(clientKey.get(C_POINTER, 0), publicKey)).isZero();
+
+      MemorySegment publicKeyBuffer = DynamicBuffer.allocate(arena);
+      assertThat(public_key_safe_serialize(publicKey.get(C_POINTER, 0), publicKeyBuffer, sizeLimit)).isZero();
+
+      // Create DynamicBufferView directly from the DynamicBuffer without copying to Java byte array
+      MemorySegment publicKeyPointer = DynamicBuffer.pointer(publicKeyBuffer);
+      long publicKeyLength = DynamicBuffer.length(publicKeyBuffer);
+      assertThat(publicKeyLength).isGreaterThan(0);
+
+      MemorySegment publicKeyView = DynamicBufferView.allocate(arena);
+      DynamicBufferView.pointer(publicKeyView, publicKeyPointer);
+      DynamicBufferView.length(publicKeyView, publicKeyLength);
+
+      MemorySegment deserializedPublicKey = arena.allocate(C_POINTER);
+      assertThat(public_key_safe_deserialize(publicKeyView, sizeLimit, deserializedPublicKey)).isZero();
+
+      MemorySegment lhsEncrypted = arena.allocate(C_POINTER);
+      assertThat(fhe_bool_try_encrypt_with_public_key_bool(true, deserializedPublicKey.get(C_POINTER, 0), lhsEncrypted)).isZero();
+      MemorySegment rhsEncrypted = arena.allocate(C_POINTER);
+      assertThat(fhe_bool_try_encrypt_with_public_key_bool(false, deserializedPublicKey.get(C_POINTER, 0), rhsEncrypted)).isZero();
+
+      MemorySegment resultEncrypted = arena.allocate(C_POINTER);
+      assertThat(fhe_bool_bitand(lhsEncrypted.get(C_POINTER, 0), rhsEncrypted.get(C_POINTER, 0), resultEncrypted)).isZero();
+
+      MemorySegment result = arena.allocate(C_BOOL);
+      assertThat(fhe_bool_decrypt(resultEncrypted.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), result)).isZero();
+
+      boolean resultValue = result.get(C_BOOL, 0);
+      assertThat(resultValue).isFalse();
+
+      assertThat(fhe_bool_destroy(lhsEncrypted.get(C_POINTER, 0))).isZero();
+      assertThat(fhe_bool_destroy(rhsEncrypted.get(C_POINTER, 0))).isZero();
+      assertThat(fhe_bool_destroy(resultEncrypted.get(C_POINTER, 0))).isZero();
+      assertThat(destroy_dynamic_buffer(publicKeyBuffer)).isZero();
+      assertThat(public_key_destroy(publicKey.get(C_POINTER, 0))).isZero();
+    });
+  }
 }
