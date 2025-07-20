@@ -8,15 +8,14 @@ import org.junit.jupiter.api.Test;
 import java.lang.foreign.MemorySegment;
 
 import static ai.zama.tfhe.TfheNative.*;
-import static io.github.rdlopes.tfhe.TfheNativeTestHelper.doWithBooleanConfig;
-import static io.github.rdlopes.tfhe.TfheNativeTestHelper.doWithIntegerConfig;
+import static io.github.rdlopes.tfhe.TfheNativeTestHelper.doWithKeys;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TfheNativeTest {
 
   @Test
   void addsTwoEncryptedIntegers() {
-    doWithIntegerConfig((arena, clientKey, _) -> {
+    doWithKeys((arena, clientKey, _) -> {
       MemorySegment lhs = U128.allocate(arena);
       U128.w0(lhs, 42);
       U128.w1(lhs, 0);
@@ -45,18 +44,18 @@ public class TfheNativeTest {
 
   @Test
   void xorTwoEncryptedBooleans() {
-    doWithBooleanConfig(
-      (arena, clientKey, serverKey) -> {
+    doWithKeys(
+      (arena, clientKey, _) -> {
         MemorySegment lhsEncrypted = arena.allocate(C_POINTER);
-        assertThat(boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), true, lhsEncrypted)).isZero();
+        assertThat(fhe_bool_try_encrypt_with_client_key_bool(true, clientKey.get(C_POINTER, 0), lhsEncrypted)).isZero();
         MemorySegment rhsEncrypted = arena.allocate(C_POINTER);
-        assertThat(boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), true, rhsEncrypted)).isZero();
+        assertThat(fhe_bool_try_encrypt_with_client_key_bool(true, clientKey.get(C_POINTER, 0), rhsEncrypted)).isZero();
 
         MemorySegment resultEncrypted = arena.allocate(C_POINTER);
-        assertThat(boolean_server_key_xor(serverKey.get(C_POINTER, 0), lhsEncrypted.get(C_POINTER, 0), rhsEncrypted.get(C_POINTER, 0), resultEncrypted)).isZero();
+        assertThat(fhe_bool_bitxor(lhsEncrypted.get(C_POINTER, 0), rhsEncrypted.get(C_POINTER, 0), resultEncrypted)).isZero();
 
         MemorySegment result = arena.allocate(C_BOOL);
-        assertThat(boolean_client_key_decrypt(clientKey.get(C_POINTER, 0), resultEncrypted.get(C_POINTER, 0), result)).isZero();
+        assertThat(fhe_bool_decrypt(resultEncrypted.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), result)).isZero();
 
         boolean resultValue = result.get(C_BOOL, 0);
         assertThat(resultValue).isFalse();
@@ -67,7 +66,7 @@ public class TfheNativeTest {
 
   @Test
   void serializesKeyPairToDynamicBufferAndExtractsBytes() {
-    doWithIntegerConfig((arena, clientKey, serverKey) -> {
+    doWithKeys((arena, clientKey, serverKey) -> {
       // Serialize client key using DynamicBuffer
       MemorySegment clientKeyBuffer = DynamicBuffer.allocate(arena);
       assertThat(client_key_serialize(clientKey.get(C_POINTER, 0), clientKeyBuffer)).isZero();
@@ -103,7 +102,7 @@ public class TfheNativeTest {
 
   @Test
   void deserializesKeysAndPerformsHomomorphicOperation() {
-    doWithIntegerConfig((arena, clientKey, serverKey) -> {
+    doWithKeys((arena, clientKey, serverKey) -> {
       // Serialize client key using DynamicBuffer
       MemorySegment clientKeyBuffer = DynamicBuffer.allocate(arena);
       assertThat(client_key_serialize(clientKey.get(C_POINTER, 0), clientKeyBuffer)).isZero();
