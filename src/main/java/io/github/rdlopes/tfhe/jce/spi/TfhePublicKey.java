@@ -9,4 +9,8 @@ public class TfhePublicKey extends TfheKey implements PublicKey {
     super(classicalPublicKeyEncoded, true);
     this.serverKeyEncoded = serverKeyEncoded;
   }
+
+  public byte[] getServerKeyEncoded() {
+    return serverKeyEncoded;
+  }
 }

@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.api;
+package io.github.rdlopes.tfhe.ffm;
 
 import ai.zama.tfhe.DynamicBuffer;
 
@@ -9,11 +9,11 @@ import java.util.function.Supplier;
 
 import static ai.zama.tfhe.TfheNative.*;
 
-public class FfmWrapper {
+public class MemorySegmentWrapper {
   private final Arena arena;
   private final MemorySegment pointer;
 
-  public FfmWrapper(Arena arena, MemorySegment pointer) {
+  public MemorySegmentWrapper(Arena arena, MemorySegment pointer) {
     this.arena = arena;
     this.pointer = pointer;
   }
@@ -55,6 +55,5 @@ public class FfmWrapper {
     MemorySegment.copy(dynamicBufferPointer, 0, dynamicBufferBytesSegment, 0, dynamicBufferLength);
 
     return dynamicBufferBytes;
-
   }
 }

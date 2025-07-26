@@ -68,35 +68,30 @@ Here's a simple example of performing homomorphic addition:
 package com.example.tfhe;
 
 import ai.zama.tfhe.U128;
+import io.github.rdlopes.tfhe.ffm.*;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.util.Map;
 
 import static ai.zama.tfhe.TfheNative.*;
 
 public class HomomorphicAdditionExample {
 
     public static void main(String[] args) {
-        // Generate configuration and keys
+        // Generate configuration and keys using the new API
         try (Arena arena = Arena.ofConfined()) {
-            // Create configuration
-            MemorySegment configBuilder = arena.allocate(C_POINTER);
-            if (config_builder_default(configBuilder) != 0) {
-                throw new RuntimeException("Failed to create config builder");
-            }
+            // Create configuration using the new API
+            ConfigBuilder configBuilder = new ConfigBuilder(arena);
+            Config config = configBuilder.build();
 
-            MemorySegment config = arena.allocate(C_POINTER);
-            if (config_builder_build(configBuilder.get(C_POINTER, 0), config) != 0) {
-                throw new RuntimeException("Failed to build config");
-            }
-
-            // Generate client and server keys
-            MemorySegment clientKey = arena.allocate(C_POINTER);
-            MemorySegment serverKey = arena.allocate(C_POINTER);
-            if (generate_keys(config.get(C_POINTER, 0), clientKey, serverKey) != 0) {
-                throw new RuntimeException("Failed to generate keys");
-            }
-            if (set_server_key(serverKey.get(C_POINTER, 0)) != 0) {
+            // Generate client and server keys using the new API
+            Map.Entry<ClientKey, ServerKey> keys = config.generateKeys();
+            ClientKey clientKey = keys.getKey();
+            ServerKey serverKey = keys.getValue();
+            
+            // Set the server key for homomorphic operations (requires decompressed server key)
+            if (set_server_key(serverKey.value()) != 0) {
                 throw new RuntimeException("Failed to set server key");
             }
 
@@ -110,11 +105,11 @@ public class HomomorphicAdditionExample {
 
             // Encrypt the values
             MemorySegment encrypted1 = U128.allocate(arena);
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1) != 0) {
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.value(), encrypted1) != 0) {
                 throw new RuntimeException("Failed to encrypt first value");
             }
             MemorySegment encrypted2 = U128.allocate(arena);
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2) != 0) {
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.value(), encrypted2) != 0) {
                 throw new RuntimeException("Failed to encrypt second value");
             }
 
@@ -126,7 +121,7 @@ public class HomomorphicAdditionExample {
 
             // Decrypt result
             MemorySegment decrypted = U128.allocate(arena);
-            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), decrypted) != 0) {
+            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.value(), decrypted) != 0) {
                 throw new RuntimeException("Failed to decrypt result");
             }
 
@@ -156,16 +151,30 @@ tfhe-java/
 
 The build process automatically generates Java bindings from the TFHE-rs C API:
 
-* **Package**: `ai.zama.tfhe`
-* **Main Class**: `TfheNative` - Contains all native function bindings
-* **Data Types**: `U128`, `Boolean` - Wrapper classes for TFHE data types
-* **Memory Management**: Uses Java's Foreign Function & Memory API
+* **Native Package**: `ai.zama.tfhe`
+- **Main Class**: `TfheNative` - Contains all native function bindings
+- **Data Types**: `U128`, `Boolean` - Wrapper classes for TFHE data types
+* **High-Level API Package**: `ffm`
+- **Key Management**: `ConfigBuilder`, `Config`, `ClientKey`, `CompressedServerKey`
+- **Error Handling**: Automatic error checking and exception throwing
+- **Memory Management**: Uses Java's Foreign Function & Memory API with simplified interface
 
 === Key Codebase Parts
 
+==== High-Level API Classes (`io.github.rdlopes.tfhe.ffm`)
+
+Object-oriented wrapper providing simplified TFHE operations:
+
+* **ConfigBuilder**: Creates TFHE configuration with default parameters
+* **Config**: Immutable configuration for key generation
+* **ClientKey**: Client-side key for encryption/decryption operations
+* **CompressedServerKey**: Server-side key for homomorphic operations
+* **CompressedCompactPublicKey**: Public key for encryption operations
+* **MemorySegmentWrapper**: Base class providing automatic error handling and memory management
+
 ==== Native Function Bindings (`TfheNative.java`)
 
-Generated class containing all TFHE operations:
+Generated class containing all low-level TFHE operations:
 
 * **Key Generation**: `generate_keys()`, `boolean_generate_keys()`
 * **Encryption**: `fhe_uint128_encrypt()`, `boolean_client_key_encrypt()`
@@ -285,7 +294,10 @@ The `local` profile performs the following steps:
 
 === Boolean Operations
 
-Here's how to perform homomorphic boolean operations:
+Here's how to perform homomorphic boolean operations using the native functions directly:
+
+NOTE: The high-level API currently focuses on integer operations.
+Boolean operations use the native function bindings directly.
 
 [source,java]
 ----
@@ -304,7 +316,7 @@ public class BooleanOperationsExample {
 
     public static void booleanExample() {
         try (Arena arena = Arena.ofConfined()) {
-            // Generate boolean keys
+            // Generate boolean keys using native functions
             MemorySegment clientKey = arena.allocate(C_POINTER);
             MemorySegment serverKey = arena.allocate(C_POINTER);
             if (boolean_gen_keys_with_default_parameters(clientKey, serverKey) != 0) {
@@ -350,9 +362,11 @@ Perform arithmetic operations on encrypted integers:
 package com.example.tfhe;
 
 import ai.zama.tfhe.U128;
+import io.github.rdlopes.tfhe.ffm.*;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.util.Map;
 
 import static ai.zama.tfhe.TfheNative.*;
 
@@ -364,23 +378,16 @@ public class IntegerArithmeticExample {
 
     public static void integerArithmetic() {
         try (Arena arena = Arena.ofConfined()) {
-            // Setup configuration and keys
-            MemorySegment configBuilder = arena.allocate(C_POINTER);
-            if (config_builder_default(configBuilder) != 0) {
-                throw new RuntimeException("Failed to create config builder");
-            }
+            // Setup configuration and keys using the new API
+            ConfigBuilder configBuilder = new ConfigBuilder(arena);
+            Config config = configBuilder.build();
 
-            MemorySegment config = arena.allocate(C_POINTER);
-            if (config_builder_build(configBuilder.get(C_POINTER, 0), config) != 0) {
-                throw new RuntimeException("Failed to build config");
-            }
-
-            MemorySegment clientKey = arena.allocate(C_POINTER);
-            MemorySegment serverKey = arena.allocate(C_POINTER);
-            if (generate_keys(config.get(C_POINTER, 0), clientKey, serverKey) != 0) {
-                throw new RuntimeException("Failed to generate keys");
-            }
-            if (set_server_key(serverKey.get(C_POINTER, 0)) != 0) {
+            Map.Entry<ClientKey, ServerKey> keys = config.generateKeys();
+            ClientKey clientKey = keys.getKey();
+            ServerKey serverKey = keys.getValue();
+            
+            // Set the server key for homomorphic operations (requires decompressed server key)
+            if (set_server_key(serverKey.value()) != 0) {
                 throw new RuntimeException("Failed to set server key");
             }
 
@@ -395,10 +402,10 @@ public class IntegerArithmeticExample {
 
             MemorySegment encrypted1 = U128.allocate(arena);
             MemorySegment encrypted2 = U128.allocate(arena);
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.get(C_POINTER, 0), encrypted1) != 0) {
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.value(), encrypted1) != 0) {
                 throw new RuntimeException("Failed to encrypt first value");
             }
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.get(C_POINTER, 0), encrypted2) != 0) {
+            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.value(), encrypted2) != 0) {
                 throw new RuntimeException("Failed to encrypt second value");
             }
 
@@ -410,7 +417,7 @@ public class IntegerArithmeticExample {
 
             // Decrypt and display result
             MemorySegment decrypted = U128.allocate(arena);
-            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.get(C_POINTER, 0), decrypted) != 0) {
+            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.value(), decrypted) != 0) {
                 throw new RuntimeException("Failed to decrypt result");
             }
 
@@ -422,24 +429,30 @@ public class IntegerArithmeticExample {
 
 === Memory Management Best Practices
 
-Always use `Arena.ofConfined()` for automatic memory cleanup:
+Always use `Arena.ofConfined()` for automatic memory cleanup.
+The high-level API simplifies memory management:
 
 [source,java]
 ----
 package com.example.tfhe;
 
+import io.github.rdlopes.tfhe.ffm.*;
 import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-
-import static ai.zama.tfhe.TfheNative.*;
+import java.util.Map;
 
 public class MemoryManagementExample {
 
     public static void demonstrateMemoryManagement() {
         try (Arena arena = Arena.ofConfined()) {
-            MemorySegment data = arena.allocate(C_POINTER);
-            // Use data for TFHE operations...
+            // High-level API handles memory allocation internally
+            ConfigBuilder configBuilder = new ConfigBuilder(arena);
+            Config config = configBuilder.build();
+            Map.Entry<ClientKey, ServerKey> keys = config.generateKeys();
+            ClientKey clientKey = keys.getKey();
+            ServerKey serverKey = keys.getValue();
+            
             // All memory allocated with this arena will be automatically cleaned up
+            // The API classes handle their own memory management internally
         } // Automatic cleanup when arena closes
     }
 }
@@ -447,22 +460,36 @@ public class MemoryManagementExample {
 
 === Error Handling
 
-TFHE native functions return 0 for success, non-zero for errors:
+The high-level API provides automatic error handling, eliminating manual error checking:
 
 [source,java]
 ----
 package com.example.tfhe;
 
+import io.github.rdlopes.tfhe.ffm.*;
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static ai.zama.tfhe.TfheNative.*;
 
 public class ErrorHandlingExample {
 
-    public static void demonstrateErrorHandling(MemorySegment lhs, MemorySegment rhs, MemorySegment output) {
-        int result = fhe_uint128_add(lhs, rhs, output);
-        if (result != 0) {
-            throw new RuntimeException("TFHE operation failed with code: " + result);
+    public static void demonstrateErrorHandling() {
+        try (Arena arena = Arena.ofConfined()) {
+            // High-level API automatically handles errors and throws exceptions
+            ConfigBuilder configBuilder = new ConfigBuilder(arena); // Automatic error checking
+            Config config = configBuilder.build(); // Automatic error checking
+            ClientKey clientKey = new ClientKey(arena, config); // Automatic error checking
+            
+            // For native functions, manual error checking is still required
+            MemorySegment lhs = arena.allocate(C_POINTER);
+            MemorySegment rhs = arena.allocate(C_POINTER);
+            MemorySegment output = arena.allocate(C_POINTER);
+            
+            int result = fhe_uint128_add(lhs, rhs, output);
+            if (result != 0) {
+                throw new RuntimeException("TFHE operation failed with code: " + result);
+            }
         }
     }
 }
