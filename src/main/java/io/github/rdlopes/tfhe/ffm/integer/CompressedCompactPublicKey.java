@@ -1,4 +1,6 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.integer;
+
+import io.github.rdlopes.tfhe.ffm.MemorySegmentWrapper;
 
 import java.lang.foreign.Arena;
 
@@ -13,14 +15,14 @@ public class CompressedCompactPublicKey extends MemorySegmentWrapper {
   public PublicKey decompress() {
     PublicKey publicKey = new PublicKey(arena());
 
-    executeAndCheckError(() ->
+    executeSafely(() ->
       compressed_compact_public_key_decompress(value(), publicKey.pointer()));
 
     return publicKey;
   }
 
   public byte[] getBytes() {
-    return copyBytesFrom((buffer) ->
+    return executeSafelyToDynamicBuffer((buffer) ->
       compressed_compact_public_key_safe_serialize(value(), buffer, Integer.MAX_VALUE));
   }
 }

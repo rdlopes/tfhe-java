@@ -68,7 +68,10 @@ Here's a simple example of performing homomorphic addition:
 package com.example.tfhe;
 
 import ai.zama.tfhe.U128;
-import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.ffm.integer.ClientKey;
+import io.github.rdlopes.tfhe.ffm.integer.Config;
+import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;
+import io.github.rdlopes.tfhe.ffm.integer.ServerKey;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -362,7 +365,7 @@ Perform arithmetic operations on encrypted integers:
 package com.example.tfhe;
 
 import ai.zama.tfhe.U128;
-import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.ffm.integer.ClientKey;import io.github.rdlopes.tfhe.ffm.integer.Config;import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;import io.github.rdlopes.tfhe.ffm.integer.ServerKey;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -436,7 +439,7 @@ The high-level API simplifies memory management:
 ----
 package com.example.tfhe;
 
-import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.ffm.integer.ClientKey;import io.github.rdlopes.tfhe.ffm.integer.Config;import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;import io.github.rdlopes.tfhe.ffm.integer.ServerKey;
 import java.lang.foreign.Arena;
 import java.util.Map;
 
@@ -466,7 +469,7 @@ The high-level API provides automatic error handling, eliminating manual error c
 ----
 package com.example.tfhe;
 
-import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.ffm.integer.ClientKey;import io.github.rdlopes.tfhe.ffm.integer.Config;import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 

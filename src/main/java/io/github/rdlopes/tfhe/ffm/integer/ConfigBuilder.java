@@ -1,5 +1,7 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.integer;
 
+
+import io.github.rdlopes.tfhe.ffm.MemorySegmentWrapper;
 
 import java.lang.foreign.Arena;
 
@@ -11,13 +13,13 @@ public class ConfigBuilder extends MemorySegmentWrapper {
 
   public ConfigBuilder(Arena arena) {
     super(arena, arena.allocate(C_POINTER));
-    executeAndCheckError(() ->
+    executeSafely(() ->
       config_builder_default(pointer()));
   }
 
   public Config build() {
     Config config = new Config(arena());
-    executeAndCheckError(() ->
+    executeSafely(() ->
       config_builder_build(value(), config.pointer()));
     return config;
   }

@@ -1,4 +1,6 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.integer;
+
+import io.github.rdlopes.tfhe.ffm.MemorySegmentWrapper;
 
 import java.lang.foreign.Arena;
 
@@ -9,20 +11,20 @@ public class CompressedServerKey extends MemorySegmentWrapper {
 
   public CompressedServerKey(Arena arena, ClientKey clientKey) {
     super(arena, arena.allocate(C_POINTER));
-    executeAndCheckError(() ->
+    executeSafely(() ->
       compressed_server_key_new(clientKey.value(), pointer()));
   }
 
   public ServerKey decompress() {
     ServerKey serverKey = new ServerKey(arena());
-    executeAndCheckError(() ->
+    executeSafely(() ->
       compressed_server_key_decompress(value(), serverKey.pointer()));
 
     return serverKey;
   }
 
   public byte[] getBytes() {
-    return copyBytesFrom(buffer ->
+    return executeSafelyToDynamicBuffer(buffer ->
       compressed_server_key_safe_serialize(value(), buffer, Integer.MAX_VALUE));
   }
 }

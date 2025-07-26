@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.jce.spi;
 
-import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.ffm.integer.*;
 
 import java.lang.foreign.Arena;
 import java.security.KeyPair;

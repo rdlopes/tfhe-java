@@ -1,4 +1,6 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.integer;
+
+import io.github.rdlopes.tfhe.ffm.MemorySegmentWrapper;
 
 import java.lang.foreign.Arena;
 

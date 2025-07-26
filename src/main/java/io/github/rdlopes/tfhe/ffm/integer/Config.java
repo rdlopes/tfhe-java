@@ -1,4 +1,6 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.integer;
+
+import io.github.rdlopes.tfhe.ffm.MemorySegmentWrapper;
 
 import java.lang.foreign.Arena;
 import java.util.Map;
@@ -16,7 +18,7 @@ public final class Config extends MemorySegmentWrapper {
   public ClientKey generateClientKey() {
     ClientKey clientKey = new ClientKey(arena());
 
-    executeAndCheckError(() ->
+    executeSafely(() ->
       client_key_generate(value(), clientKey.pointer()));
 
     return clientKey;
@@ -26,7 +28,7 @@ public final class Config extends MemorySegmentWrapper {
     ClientKey clientKey = new ClientKey(arena());
     ServerKey serverKey = new ServerKey(arena());
 
-    executeAndCheckError(() ->
+    executeSafely(() ->
       generate_keys(value(), clientKey.pointer(), serverKey.pointer()));
 
     return Map.entry(clientKey, serverKey);

@@ -30,7 +30,7 @@ public class MemorySegmentWrapper {
     return pointer.get(C_POINTER, 0);
   }
 
-  protected void executeAndCheckError(Supplier<Integer> ffmCall) {
+  protected void executeSafely(Supplier<Integer> ffmCall) {
     tfhe_error_clear();
     int callResult = ffmCall.get();
     if (callResult != 0) {
@@ -43,9 +43,11 @@ public class MemorySegmentWrapper {
     }
   }
 
-  protected byte[] copyBytesFrom(Function<MemorySegment, Integer> ffmCall) {
+  protected byte[] executeSafelyToDynamicBuffer(Function<MemorySegment, Integer> ffmCall) {
     MemorySegment dynamicBuffer = DynamicBuffer.allocate(arena());
-    executeAndCheckError(() -> ffmCall.apply(dynamicBuffer));
+
+    executeSafely(() ->
+      ffmCall.apply(dynamicBuffer));
 
     MemorySegment dynamicBufferPointer = DynamicBuffer.pointer(dynamicBuffer);
     long dynamicBufferLength = DynamicBuffer.length(dynamicBuffer);
