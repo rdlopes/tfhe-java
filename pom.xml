@@ -60,6 +60,7 @@
               <RUST_BACKTRACE>full</RUST_BACKTRACE>
             </environmentVariables>
             <argLine>-Djava.library.path=${native-libs.libraryPath}
+              --sun-misc-unsafe-memory-access=allow
               --enable-native-access=ALL-UNNAMED</argLine>
           </configuration>
         </plugin>
