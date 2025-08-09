@@ -1,0 +1,58 @@
+package ai.zama.tfhe;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import java.lang.foreign.MemorySegment;
+
+import static ai.zama.tfhe.TfheNative.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Tag("native")
+class ConfigBuilderTest {
+
+  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
+  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
+
+  @BeforeEach
+  void setUp() {
+    int rcDefault = config_builder_default(configBuilderPtr);
+    assertThat(rcDefault).isZero();
+  }
+
+  @AfterEach
+  void tearDown() {
+    // FIXME Causes crashes when running all tests
+    // int rcDestroyBuilder = config_builder_destroy(configBuilderPtr.get(C_POINTER, 0));
+    // assertThat(rcDestroyBuilder).isZero();
+    // int rcDestroyConfig = config_destroy(configPtr.get(C_POINTER, 0));
+    // assertThat(rcDestroyConfig).isZero();
+  }
+
+  @Test
+  void buildsConfigWithDefaultParameters() {
+    int rcBuild = config_builder_build(configBuilderPtr.get(C_POINTER, 0), configPtr);
+    assertThat(rcBuild).isZero();
+  }
+
+  @Test
+  void buildsConfigWithCustomParameters() {
+    int rcCustom = config_builder_use_custom_parameters(configBuilderPtr, SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+    assertThat(rcCustom).isZero();
+
+    int rcBuild = config_builder_build(configBuilderPtr.get(C_POINTER, 0), configPtr);
+    assertThat(rcBuild).isZero();
+  }
+
+  @Test
+  void buildsConfigWithDedicatedCompactPublicKeyParameters() {
+    int rcDedicated = use_dedicated_compact_public_key_parameters(configBuilderPtr, SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+    assertThat(rcDedicated).isZero();
+
+    int rcBuild = config_builder_build(configBuilderPtr.get(C_POINTER, 0), configPtr);
+    assertThat(rcBuild).isZero();
+  }
+
+}

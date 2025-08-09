@@ -36,7 +36,7 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-libs'
-          path: ${NATIVE_LIBS_DIR}
+          path: $NATIVE_LIBS_DIR
 
       - name: Download Native Bindings
         uses: dawidd6/action-download-artifact@v11
@@ -44,10 +44,10 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-bindings'
-          path: ${NATIVE_BINDINGS_DIR}
+          path: $NATIVE_BINDINGS_DIR
 
       - name: Compile with Maven
         run: |
           ./mvnw package \
-          -Dnative-libs.basedir=${NATIVE_LIBS_DIR} \
-          -Dnative-bindings.basedir=${NATIVE_BINDINGS_DIR}
+          -Dnative-libs.basedir=$NATIVE_LIBS_DIR \
+          -Dnative-bindings.basedir=$NATIVE_BINDINGS_DIR
