@@ -23,23 +23,6 @@ https://docs.zama.ai/tfhe-rs[Zama TFHE^] wrapper enabling homomorphic encryption
 TFHE Java is a Java wrapper for the https://github.com/zama-ai/tfhe-rs[Zama TFHE-rs library], providing access to Torus Fully Homomorphic Encryption (TFHE) operations directly from Java applications.
 This library enables developers to perform computations on encrypted data without decrypting it first, ensuring privacy and security in cloud computing scenarios.
 
-=== What is TFHE?
-
-TFHE (Torus Fully Homomorphic Encryption) is a cryptographic scheme that allows arbitrary computations to be performed on encrypted data without revealing the underlying plaintext.
-Key features include:
-
-* **Fully Homomorphic**: Supports both addition and multiplication operations on encrypted data
-* **Bootstrapping**: Automatic noise management to enable unlimited operations
-* **Fast Operations**: Optimized for practical performance in real-world applications
-* **Boolean and Integer Support**: Works with both boolean circuits and integer arithmetic
-
-=== Key Benefits
-
-* **Privacy-Preserving Computing**: Perform calculations on sensitive data without exposing it
-* **Cloud Security**: Enable secure outsourced computation to untrusted servers
-* **Zero-Knowledge Processing**: Process data without learning anything about its content
-* **Regulatory Compliance**: Meet strict data protection requirements (GDPR, HIPAA, etc.)
-
 == Installation
 
 Add the following dependency to your `pom.xml`:
@@ -56,151 +39,20 @@ Add the following dependency to your `pom.xml`:
 === Requirements
 
 * **Java 24** or later (requires Foreign Function & Memory API support)
-* **JVM Arguments**: `--enable-native-access=ALL-UNNAMED`
+* **JVM Arguments**: `--enable-native-access=ALL-UNNAMED` (or provide a named module)
 * **Native Libraries**: Automatically included in the JAR (supports macOS ARM64, Linux x86_64, Windows x86_64)
 
-== Quick Start
-
-Here's a simple example of performing homomorphic addition:
-
-[source,java]
-----
-package com.example.tfhe;
-
-import ai.zama.tfhe.U128;
-import io.github.rdlopes.tfhe.ffm.integer.ClientKey;
-import io.github.rdlopes.tfhe.ffm.integer.Config;
-import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;
-import io.github.rdlopes.tfhe.ffm.integer.ServerKey;
-
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-import java.util.Map;
-
-import static ai.zama.tfhe.TfheNative.*;
-
-public class HomomorphicAdditionExample {
-
-    public static void main(String[] args) {
-        // Generate configuration and keys using the new API
-        try (Arena arena = Arena.ofConfined()) {
-            // Create configuration using the new API
-            ConfigBuilder configBuilder = new ConfigBuilder(arena);
-            Config config = configBuilder.build();
-
-            // Generate client and server keys using the new API
-            Map.Entry<ClientKey, ServerKey> keys = config.generateKeys();
-            ClientKey clientKey = keys.getKey();
-            ServerKey serverKey = keys.getValue();
-            
-            // Set the server key for homomorphic operations (requires decompressed server key)
-            if (set_server_key(serverKey.value()) != 0) {
-                throw new RuntimeException("Failed to set server key");
-            }
-
-            // Prepare values to encrypt
-            MemorySegment value1 = U128.allocate(arena);
-            U128.w0(value1, 42);
-            U128.w1(value1, 0);
-            MemorySegment value2 = U128.allocate(arena);
-            U128.w0(value2, 57);
-            U128.w1(value2, 0);
-
-            // Encrypt the values
-            MemorySegment encrypted1 = U128.allocate(arena);
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.value(), encrypted1) != 0) {
-                throw new RuntimeException("Failed to encrypt first value");
-            }
-            MemorySegment encrypted2 = U128.allocate(arena);
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.value(), encrypted2) != 0) {
-                throw new RuntimeException("Failed to encrypt second value");
-            }
-
-            // Perform homomorphic addition
-            MemorySegment result = U128.allocate(arena);
-            if (fhe_uint128_add(encrypted1.get(C_POINTER, 0), encrypted2.get(C_POINTER, 0), result) != 0) {
-                throw new RuntimeException("Failed to perform addition");
-            }
-
-            // Decrypt result
-            MemorySegment decrypted = U128.allocate(arena);
-            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.value(), decrypted) != 0) {
-                throw new RuntimeException("Failed to decrypt result");
-            }
-
-            System.out.println("Result: " + U128.w0(decrypted)); // Prints: 99
-        }
-    }
-}
-----
-
-== Project Structure
-
-=== Core Components
-
-[source]
-----
-tfhe-java/
-├── src/                                     # Java source code
-├── target/
-│   ├── classes/native/                      # Native libraries (runtime)
-│   └── generated-sources/tfhe-rs/           # Generated Java bindings
-├── target/tfhe-rs/                          # Downloaded TFHE-rs source (build-time)
-├── pom.xml                                  # Maven configuration
-└── README.adoc                              # This documentation
-----
+WARNING: Native libraries are included but need to be extracted first and added to your `LD_LIBRARY_PATH` or `DYLD_LIBRARY_PATH` or `java.library.path`
+system property.
 
 === Generated Bindings
 
 The build process automatically generates Java bindings from the TFHE-rs C API:
 
-* **Native Package**: `ai.zama.tfhe`
+- **Native Package**: `ai.zama.tfhe`
 - **Main Class**: `TfheNative` - Contains all native function bindings
-- **Data Types**: `U128`, `Boolean` - Wrapper classes for TFHE data types
-* **High-Level API Package**: `ffm`
 - **Key Management**: `ConfigBuilder`, `Config`, `ClientKey`, `CompressedServerKey`
-- **Error Handling**: Automatic error checking and exception throwing
-- **Memory Management**: Uses Java's Foreign Function & Memory API with simplified interface
-
-=== Key Codebase Parts
-
-==== High-Level API Classes (`io.github.rdlopes.tfhe.ffm`)
-
-Object-oriented wrapper providing simplified TFHE operations:
-
-* **ConfigBuilder**: Creates TFHE configuration with default parameters
-* **Config**: Immutable configuration for key generation
-* **ClientKey**: Client-side key for encryption/decryption operations
-* **CompressedServerKey**: Server-side key for homomorphic operations
-* **CompressedCompactPublicKey**: Public key for encryption operations
-* **MemorySegmentWrapper**: Base class providing automatic error handling and memory management
-
-==== Native Function Bindings (`TfheNative.java`)
-
-Generated class containing all low-level TFHE operations:
-
-* **Key Generation**: `generate_keys()`, `boolean_generate_keys()`
-* **Encryption**: `fhe_uint128_encrypt()`, `boolean_client_key_encrypt()`
-* **Decryption**: `fhe_uint128_decrypt()`, `boolean_client_key_decrypt()`
-* **Operations**: `fhe_uint128_add()`, `fhe_uint128_sub()`, `boolean_server_key_xor()`
-
-==== Data Type Wrappers
-
-* **U128**: 128-bit unsigned integer operations
-* **Boolean**: Boolean circuit operations
-* **Memory Segments**: Direct memory access for performance
-
-=== TFHE-rs Integration
-
-The project automatically downloads and builds the complete Zama TFHE-rs library during the build process:
-
-* **Core Library** (`tfhe/`): Main TFHE implementation
-* **FFT Operations** (`tfhe-fft/`): Fast Fourier Transform optimizations
-* **Number Theory** (`tfhe-ntt/`): Number Theoretic Transform
-* **Zero-Knowledge** (`tfhe-zk-pok/`): Zero-knowledge proofs
-* **Benchmarks** (`tfhe-benchmark/`): Performance testing
-
-The TFHE-rs source is cloned from the official Zama repository during the Maven build process and compiled locally to generate the required native libraries and Java bindings.
+- **Memory Management**: Uses Java's Foreign Function & Memory API with a simplified interface
 
 == Building from Source
 
@@ -251,252 +103,8 @@ This approach is also useful for:
 **Additional Prerequisites for Local Build:**
 * **Rust toolchain** with nightly support * **jextract** tool (version 22) for generating Java bindings from C headers
 
-==== Installing Prerequisites
-
-**Rust Installation (all platforms):**
-
-[source,bash]
-----
-# Install Rust with nightly toolchain
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup toolchain install nightly
-----
-
-**jextract Installation:**
-
-Choose the appropriate download for your platform:
-
-[source,bash]
-----
-# macOS ARM64
-curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz --output jextract.tar.gz
-tar -xzf ./jextract.tar.gz -C .
-sudo xattr -r -d com.apple.quarantine ./jextract-22/
-export PATH=$PATH:$(pwd)/jextract-22/bin
-
-# macOS x64
-curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-x64_bin.tar.gz --output jextract.tar.gz
-tar -xzf ./jextract.tar.gz -C .
-sudo xattr -r -d com.apple.quarantine ./jextract-22/
-export PATH=$PATH:$(pwd)/jextract-22/bin
-
-# Linux x64
-curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz --output jextract.tar.gz
-tar -xzf ./jextract.tar.gz -C .
-export PATH=$PATH:$(pwd)/jextract-22/bin
-
-# Windows x64
-curl https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.zip --output jextract.zip
-# Extract and add to PATH as appropriate for your system
-----
-
 The `local` profile performs the following steps:
 1. **TFHE-rs download**: Downloads the tfhe-rs source from GitHub 2. **Rust compilation**: Compiles the TFHE Rust library with C API 3. **Binding generation**: Uses jextract to generate Java bindings from C headers 4. **Java compilation**: Compiles Java code including generated bindings 5. **Native library packaging**: Copies native libraries to target/classes/native
-
-== Usage Examples
-
-=== Boolean Operations
-
-Here's how to perform homomorphic boolean operations using the native functions directly:
-
-NOTE: The high-level API currently focuses on integer operations.
-Boolean operations use the native function bindings directly.
-
-[source,java]
-----
-package com.example.tfhe;
-
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-
-import static ai.zama.tfhe.TfheNative.*;
-
-public class BooleanOperationsExample {
-
-    public static void main(String[] args) {
-        booleanExample();
-    }
-
-    public static void booleanExample() {
-        try (Arena arena = Arena.ofConfined()) {
-            // Generate boolean keys using native functions
-            MemorySegment clientKey = arena.allocate(C_POINTER);
-            MemorySegment serverKey = arena.allocate(C_POINTER);
-            if (boolean_gen_keys_with_default_parameters(clientKey, serverKey) != 0) {
-                throw new RuntimeException("Failed to generate boolean keys");
-            }
-
-            // Encrypt boolean values
-            MemorySegment encryptedTrue = arena.allocate(C_POINTER);
-            MemorySegment encryptedFalse = arena.allocate(C_POINTER);
-            if (boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), true, encryptedTrue) != 0) {
-                throw new RuntimeException("Failed to encrypt true value");
-            }
-            if (boolean_client_key_encrypt(clientKey.get(C_POINTER, 0), false, encryptedFalse) != 0) {
-                throw new RuntimeException("Failed to encrypt false value");
-            }
-
-            // Perform XOR operation
-            MemorySegment result = arena.allocate(C_POINTER);
-            if (boolean_server_key_xor(serverKey.get(C_POINTER, 0), encryptedTrue.get(C_POINTER, 0),
-                    encryptedFalse.get(C_POINTER, 0), result) != 0) {
-                throw new RuntimeException("Failed to perform XOR operation");
-            }
-
-            // Decrypt result
-            MemorySegment decryptedResult = arena.allocate(C_BOOL);
-            if (boolean_client_key_decrypt(clientKey.get(C_POINTER, 0), result.get(C_POINTER, 0), decryptedResult) != 0) {
-                throw new RuntimeException("Failed to decrypt result");
-            }
-
-            boolean decrypted = decryptedResult.get(C_BOOL, 0);
-            System.out.println("XOR result: " + decrypted); // true
-        }
-    }
-}
-----
-
-=== Integer Arithmetic
-
-Perform arithmetic operations on encrypted integers:
-
-[source,java]
-----
-package com.example.tfhe;
-
-import ai.zama.tfhe.U128;
-import io.github.rdlopes.tfhe.ffm.integer.ClientKey;import io.github.rdlopes.tfhe.ffm.integer.Config;import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;import io.github.rdlopes.tfhe.ffm.integer.ServerKey;
-
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-import java.util.Map;
-
-import static ai.zama.tfhe.TfheNative.*;
-
-public class IntegerArithmeticExample {
-
-    public static void main(String[] args) {
-        integerArithmetic();
-    }
-
-    public static void integerArithmetic() {
-        try (Arena arena = Arena.ofConfined()) {
-            // Setup configuration and keys using the new API
-            ConfigBuilder configBuilder = new ConfigBuilder(arena);
-            Config config = configBuilder.build();
-
-            Map.Entry<ClientKey, ServerKey> keys = config.generateKeys();
-            ClientKey clientKey = keys.getKey();
-            ServerKey serverKey = keys.getValue();
-            
-            // Set the server key for homomorphic operations (requires decompressed server key)
-            if (set_server_key(serverKey.value()) != 0) {
-                throw new RuntimeException("Failed to set server key");
-            }
-
-            // Encrypt values
-            MemorySegment value1 = U128.allocate(arena);
-            U128.w0(value1, 100);
-            U128.w1(value1, 0);
-
-            MemorySegment value2 = U128.allocate(arena);
-            U128.w0(value2, 25);
-            U128.w1(value2, 0);
-
-            MemorySegment encrypted1 = U128.allocate(arena);
-            MemorySegment encrypted2 = U128.allocate(arena);
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value1, clientKey.value(), encrypted1) != 0) {
-                throw new RuntimeException("Failed to encrypt first value");
-            }
-            if (fhe_uint128_try_encrypt_with_client_key_u128(value2, clientKey.value(), encrypted2) != 0) {
-                throw new RuntimeException("Failed to encrypt second value");
-            }
-
-            // Perform subtraction
-            MemorySegment result = U128.allocate(arena);
-            if (fhe_uint128_sub(encrypted1.get(C_POINTER, 0), encrypted2.get(C_POINTER, 0), result) != 0) {
-                throw new RuntimeException("Failed to perform subtraction");
-            }
-
-            // Decrypt and display result
-            MemorySegment decrypted = U128.allocate(arena);
-            if (fhe_uint128_decrypt(result.get(C_POINTER, 0), clientKey.value(), decrypted) != 0) {
-                throw new RuntimeException("Failed to decrypt result");
-            }
-
-            System.out.println("Subtraction result: " + U128.w0(decrypted)); // 75
-        }
-    }
-}
-----
-
-=== Memory Management Best Practices
-
-Always use `Arena.ofConfined()` for automatic memory cleanup.
-The high-level API simplifies memory management:
-
-[source,java]
-----
-package com.example.tfhe;
-
-import io.github.rdlopes.tfhe.ffm.integer.ClientKey;import io.github.rdlopes.tfhe.ffm.integer.Config;import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;import io.github.rdlopes.tfhe.ffm.integer.ServerKey;
-import java.lang.foreign.Arena;
-import java.util.Map;
-
-public class MemoryManagementExample {
-
-    public static void demonstrateMemoryManagement() {
-        try (Arena arena = Arena.ofConfined()) {
-            // High-level API handles memory allocation internally
-            ConfigBuilder configBuilder = new ConfigBuilder(arena);
-            Config config = configBuilder.build();
-            Map.Entry<ClientKey, ServerKey> keys = config.generateKeys();
-            ClientKey clientKey = keys.getKey();
-            ServerKey serverKey = keys.getValue();
-            
-            // All memory allocated with this arena will be automatically cleaned up
-            // The API classes handle their own memory management internally
-        } // Automatic cleanup when arena closes
-    }
-}
-----
-
-=== Error Handling
-
-The high-level API provides automatic error handling, eliminating manual error checking:
-
-[source,java]
-----
-package com.example.tfhe;
-
-import io.github.rdlopes.tfhe.ffm.integer.ClientKey;import io.github.rdlopes.tfhe.ffm.integer.Config;import io.github.rdlopes.tfhe.ffm.integer.ConfigBuilder;
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
-
-import static ai.zama.tfhe.TfheNative.*;
-
-public class ErrorHandlingExample {
-
-    public static void demonstrateErrorHandling() {
-        try (Arena arena = Arena.ofConfined()) {
-            // High-level API automatically handles errors and throws exceptions
-            ConfigBuilder configBuilder = new ConfigBuilder(arena); // Automatic error checking
-            Config config = configBuilder.build(); // Automatic error checking
-            ClientKey clientKey = new ClientKey(arena, config); // Automatic error checking
-            
-            // For native functions, manual error checking is still required
-            MemorySegment lhs = arena.allocate(C_POINTER);
-            MemorySegment rhs = arena.allocate(C_POINTER);
-            MemorySegment output = arena.allocate(C_POINTER);
-            
-            int result = fhe_uint128_add(lhs, rhs, output);
-            if (result != 0) {
-                throw new RuntimeException("TFHE operation failed with code: " + result);
-            }
-        }
-    }
-}
-----
 
 === Performance Tips
 
@@ -507,16 +115,16 @@ public class ErrorHandlingExample {
 
 == License
 
-This project is licensed under the MIT License - see the link:{license}[LICENSE] for details.
-
-== Author
-
-image:{badges}/By_Mail-white?style=social&logo=icloud&label=Rui_LOPES[link={email},window=_blank]
-
-image:{badges}/On_LinkedIn-white?style=social&logo=logmein&label=Rui_LOPES[link={linkedin},window=_blank]
+This project is licensed under the link:{license}[MIT License].
 
 == Acknowledgments
 
 * https://www.zama.ai/[Zama] for the excellent TFHE-rs library
 * OpenJDK Project Panama for Foreign Function & Memory API
 * The homomorphic encryption research community
+
+== Author
+
+image:{badges}/By_Mail-white?style=social&logo=icloud&label=Rui_LOPES[link={email},window=_blank]
+
+image:{badges}/On_LinkedIn-white?style=social&logo=logmein&label=Rui_LOPES[link={linkedin},window=_blank]

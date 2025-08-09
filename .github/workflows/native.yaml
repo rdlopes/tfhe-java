@@ -31,6 +31,7 @@ jobs:
         with:
           cache-shared-key: ${{matrix.os}}
       - run: make build_c_api
+      - run: cp tfhe/LICENSE target/release
       - name: Upload Native Libraries
         uses: actions/upload-artifact@v4
         with:
@@ -109,6 +110,7 @@ jobs:
           mkdir -p native-bundle/windows/x86_64
           cp native-libs/tfhe.h native-bundle/windows/x86_64
           cp native-libs/*.dll native-bundle/windows/x86_64
+      - run: cp native-libs/LICENSE native-bundle
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v4
         with:

@@ -3,6 +3,8 @@ name: CI
 env:
   JAVA_VERSION: '24'
   JAVA_DISTRIBUTION: 'temurin'
+  NATIVE_LIBS_DIR: ${{github.workspace}}/native-libs
+  NATIVE_BINDINGS_DIR: ${{github.workspace}}/native-bindings
 
 on:
   push:
@@ -34,7 +36,7 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-libs'
-          path: ${{github.workspace}}/target/native
+          path: ${NATIVE_LIBS_DIR}
 
       - name: Download Native Bindings
         uses: dawidd6/action-download-artifact@v11
@@ -42,7 +44,10 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-bindings'
-          path: ${{github.workspace}}/target/generated-sources/tfhe-rs
+          path: ${NATIVE_BINDINGS_DIR}
 
       - name: Compile with Maven
-        run: ./mvnw package
+        run: |
+          ./mvnw package \
+          -Dnative-libs.basedir=${NATIVE_LIBS_DIR} \
+          -Dnative-bindings.basedir=${NATIVE_BINDINGS_DIR}
