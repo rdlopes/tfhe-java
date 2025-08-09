@@ -7,6 +7,7 @@ env:
   NATIVE_BINDINGS_DIR: ${{github.workspace}}/native-bindings
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
