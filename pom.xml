@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.rdlopes</groupId>
@@ -68,9 +69,14 @@
           <environmentVariables>
             <RUST_BACKTRACE>full</RUST_BACKTRACE>
           </environmentVariables>
-          <argLine combine.children="append">-Djava.library.path=${native-libs.libraryPath}
+          <systemPropertyVariables>
+            <jextract.trace.downcalls>true</jextract.trace.downcalls>
+          </systemPropertyVariables>
+          <argLine combine.children="append">
             --sun-misc-unsafe-memory-access=allow
-            --enable-native-access=ALL-UNNAMED</argLine>
+            --enable-native-access=ALL-UNNAMED
+            -Djava.library.path=${native-libs.libraryPath}
+          </argLine>
         </configuration>
       </plugin>
       <plugin>
