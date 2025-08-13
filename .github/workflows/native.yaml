@@ -51,7 +51,7 @@ jobs:
           version: '22+6-47'
           bin_path: 'jextract-22/bin'
       - name: Download Linux Libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: native-libs-ubuntu-latest
           github-token: ${{github.token}}
@@ -89,7 +89,7 @@ jobs:
     needs: bindings
     steps:
       - name: Download Native Libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: 'native-libs-*'
           merge-multiple: 'true'
