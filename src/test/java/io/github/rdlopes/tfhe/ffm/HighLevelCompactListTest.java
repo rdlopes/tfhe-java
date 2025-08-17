@@ -1,22 +1,27 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class HighLevelCompactListTest {
 
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @Test
   void compactPublicKeyUseCase() {
     // Create config with default parameters
-    MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcBuilder = config_builder_default(configBuilderPtr);
     assertThat(rcBuilder).isZero();
@@ -30,8 +35,8 @@ class HighLevelCompactListTest {
   @Test
   void compactPublicKeyUseCaseWithCustomParameters() {
     // Create config with custom parameters
-    MemorySegment customConfigBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment customConfigPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment customConfigBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment customConfigPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcBuilder = config_builder_default(customConfigBuilderPtr);
     assertThat(rcBuilder).isZero();
@@ -56,9 +61,9 @@ class HighLevelCompactListTest {
 
   private void testCompactPublicKeyUseCaseWithConfig(MemorySegment config) {
     // Create dedicated keys for this test execution
-    MemorySegment testClientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment testServerKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment testPublicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment testClientKeyPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment testServerKeyPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment testPublicKeyPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcKeys = generate_keys(config, testClientKeyPtr, testServerKeyPtr);
     assertThat(rcKeys).isZero();
@@ -70,8 +75,8 @@ class HighLevelCompactListTest {
     assertThat(rcPublicKey).isZero();
 
     // Create the compact list
-    MemorySegment compactListPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment builderPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment compactListPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment builderPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcBuilderNew = compact_ciphertext_list_builder_new(testPublicKeyPtr.get(C_POINTER, 0), builderPtr);
     assertThat(rcBuilderNew).isZero();
@@ -97,17 +102,17 @@ class HighLevelCompactListTest {
     assertThat(rcDestroyBuilder).isZero();
 
     // Now expand values
-    MemorySegment expanderPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment expanderPtr = TfheWrapper.createPointer(C_POINTER);
     int rcExpand = compact_ciphertext_list_expand(compactListPtr.get(C_POINTER, 0), expanderPtr);
     assertThat(rcExpand).isZero();
 
-    MemorySegment lenPtr = LIBRARY_ARENA.allocate(C_LONG);
+    MemorySegment lenPtr = TfheWrapper.createPointer(C_LONG);
     int rcLen = compact_ciphertext_list_expander_len(expanderPtr.get(C_POINTER, 0), lenPtr);
     assertThat(rcLen).isZero();
     assertThat(lenPtr.get(C_LONG, 0)).isEqualTo(4L);
 
     // Check types of slots
-    MemorySegment typePtr = LIBRARY_ARENA.allocate(C_INT);
+    MemorySegment typePtr = TfheWrapper.createPointer(C_INT);
 
     int rcType0 = compact_ciphertext_list_expander_get_kind_of(expanderPtr.get(C_POINTER, 0), 0, typePtr);
     assertThat(rcType0).isZero();
@@ -126,10 +131,10 @@ class HighLevelCompactListTest {
     assertThat(typePtr.get(C_INT, 0)).isEqualTo(Type_FheUint2());
 
     // Get the values
-    MemorySegment aPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment bPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment cPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment dPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment aPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment bPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment cPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment dPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcGetA = compact_ciphertext_list_expander_get_fhe_uint32(expanderPtr.get(C_POINTER, 0), 0, aPtr);
     assertThat(rcGetA).isZero();
@@ -148,22 +153,22 @@ class HighLevelCompactListTest {
     assertThat(rcDestroyExpander).isZero();
 
     // Decrypt and verify values
-    MemorySegment clearA = LIBRARY_ARENA.allocate(C_INT);
+    MemorySegment clearA = TfheWrapper.createPointer(C_INT);
     int rcDecryptA = fhe_uint32_decrypt(aPtr.get(C_POINTER, 0), testClientKeyPtr.get(C_POINTER, 0), clearA);
     assertThat(rcDecryptA).isZero();
     assertThat(clearA.get(C_INT, 0)).isEqualTo(38382);
 
-    MemorySegment clearB = LIBRARY_ARENA.allocate(C_LONG);
+    MemorySegment clearB = TfheWrapper.createPointer(C_LONG);
     int rcDecryptB = fhe_int64_decrypt(bPtr.get(C_POINTER, 0), testClientKeyPtr.get(C_POINTER, 0), clearB);
     assertThat(rcDecryptB).isZero();
     assertThat(clearB.get(C_LONG, 0)).isEqualTo(-1L);
 
-    MemorySegment clearC = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearC = TfheWrapper.createPointer(C_BOOL);
     int rcDecryptC = fhe_bool_decrypt(cPtr.get(C_POINTER, 0), testClientKeyPtr.get(C_POINTER, 0), clearC);
     assertThat(rcDecryptC).isZero();
     assertThat(clearC.get(C_BOOL, 0)).isTrue();
 
-    MemorySegment clearD = LIBRARY_ARENA.allocate(C_CHAR);
+    MemorySegment clearD = TfheWrapper.createPointer(C_CHAR);
     int rcDecryptD = fhe_uint2_decrypt(dPtr.get(C_POINTER, 0), testClientKeyPtr.get(C_POINTER, 0), clearD);
     assertThat(rcDecryptD).isZero();
     assertThat(clearD.get(C_CHAR, 0)).isEqualTo((byte) 3);

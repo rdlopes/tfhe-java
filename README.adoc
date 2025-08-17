@@ -42,9 +42,6 @@ Add the following dependency to your `pom.xml`:
 * **JVM Arguments**: `--enable-native-access=ALL-UNNAMED` (or provide a named module)
 * **Native Libraries**: Automatically included in the JAR (supports macOS ARM64, Linux x86_64, Windows x86_64)
 
-WARNING: Native libraries are included but need to be extracted first and added to your `LD_LIBRARY_PATH` or `DYLD_LIBRARY_PATH` or `java.library.path`
-system property.
-
 === Generated Bindings
 
 The build process automatically generates Java bindings from the TFHE-rs C API:

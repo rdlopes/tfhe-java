@@ -1,22 +1,25 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class HighLevel128BitsTest {
-  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment serverKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment publicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+
+  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
+
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @BeforeEach
   void setUp() {
@@ -53,9 +56,9 @@ class HighLevel128BitsTest {
 
   @Test
   void uint128ClientKeyTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U128 values: lhs = {10, 20}, rhs = {1, 2}
     MemorySegment lhsClear = U128.allocate(LIBRARY_ARENA);
@@ -93,9 +96,9 @@ class HighLevel128BitsTest {
 
   @Test
   void uint128EncryptTrivialTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U128 values: lhs = {10, 20}, rhs = {1, 2}
     MemorySegment lhsClear = U128.allocate(LIBRARY_ARENA);
@@ -133,9 +136,9 @@ class HighLevel128BitsTest {
 
   @Test
   void uint128PublicKeyTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U128 values: lhs = {10, 20}, rhs = {1, 2}
     MemorySegment lhsClear = U128.allocate(LIBRARY_ARENA);

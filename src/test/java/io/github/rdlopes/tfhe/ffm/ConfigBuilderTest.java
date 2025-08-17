@@ -1,23 +1,28 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class ConfigBuilderTest {
 
-  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
+  private MemorySegment configBuilderPtr;
+  private MemorySegment configPtr;
+
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @BeforeEach
   void setUp() {
+    configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+    configPtr = TfheWrapper.createPointer(C_POINTER);
+
     int rcDefault = config_builder_default(configBuilderPtr);
     assertThat(rcDefault).isZero();
   }

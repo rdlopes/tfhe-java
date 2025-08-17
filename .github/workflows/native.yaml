@@ -69,7 +69,7 @@ jobs:
           jextract \
           @jextract-includes-filtered.txt \
           --header-class-name TfheNative \
-          --target-package ai.zama.tfhe \
+          --target-package io.github.rdlopes.tfhe.ffm \
           --output native-bindings \
           --use-system-load-library \
           --include-dir . \

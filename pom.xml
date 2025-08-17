@@ -22,17 +22,50 @@
   </scm>
 
   <properties>
+    <!-- Project properties -->
     <java.version>24</java.version>
-    <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
     <tfhe-rs.basedir>${project.build.directory}/tfhe-rs</tfhe-rs.basedir>
     <tfhe-rs.build.directory>${tfhe-rs.basedir}/target/release</tfhe-rs.build.directory>
     <native-bindings.basedir>${project.build.directory}/generated-sources/tfhe-rs</native-bindings.basedir>
     <native-libs.basedir>${project.build.directory}/native</native-libs.basedir>
     <!--suppress XmlUnresolvedReference -->
     <native-libs.libraryPath>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</native-libs.libraryPath>
+    <!-- Library dependencies -->
+    <commons-io.version>2.15.1</commons-io.version>
+    <commons-lang3.version>3.18.0</commons-lang3.version>
+    <!-- Plugin dependencies-->
+    <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${commons-io.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -46,11 +79,6 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -72,9 +100,8 @@
           <systemPropertyVariables>
             <jextract.trace.downcalls>true</jextract.trace.downcalls>
           </systemPropertyVariables>
-          <argLine combine.children="append">
+          <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
             --sun-misc-unsafe-memory-access=allow
-            --enable-native-access=ALL-UNNAMED
             -Djava.library.path=${native-libs.libraryPath}
           </argLine>
         </configuration>
@@ -106,7 +133,7 @@
             <goals>
               <goal>copy-resources</goal>
             </goals>
-            <phase>prepare-package</phase>
+            <phase>process-resources</phase>
             <configuration>
               <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
               <resources>
@@ -220,16 +247,13 @@
                     <argument>--header-class-name</argument>
                     <argument>TfheNative</argument>
                     <argument>--target-package</argument>
-                    <argument>ai.zama.tfhe</argument>
+                    <argument>io.github.rdlopes.tfhe.ffm</argument>
                     <argument>--output</argument>
                     <argument>${native-bindings.basedir}</argument>
-                    <argument>--use-system-load-library</argument>
                     <argument>--include-dir</argument>
                     <argument>target/release</argument>
                     <argument>--include-dir</argument>
                     <argument>target/release/deps</argument>
-                    <argument>--library</argument>
-                    <argument>tfhe</argument>
                   </arguments>
                 </configuration>
               </execution>

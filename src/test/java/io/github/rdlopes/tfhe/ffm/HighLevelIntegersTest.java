@@ -1,22 +1,25 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class HighLevelIntegersTest {
-  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment serverKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment publicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+
+  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
+
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @BeforeEach
   void setUp() {
@@ -53,9 +56,9 @@ class HighLevelIntegersTest {
 
   @Test
   void uint8ClientKeyTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     byte lhsClear = (byte) 123;
     byte rhsClear = (byte) 14;
@@ -71,7 +74,7 @@ class HighLevelIntegersTest {
       int rcAdd = fhe_uint8_add(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
       assertThat(rcAdd).isZero();
 
-      MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
       int rcDecrypt = fhe_uint8_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -82,15 +85,15 @@ class HighLevelIntegersTest {
 
     // Check sum
     {
-      MemorySegment sumResultPtr = LIBRARY_ARENA.allocate(C_POINTER);
-      MemorySegment dataArray = LIBRARY_ARENA.allocate(C_POINTER, 2);
+      MemorySegment sumResultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment dataArray = TfheWrapper.createPointer(C_POINTER, 2);
       dataArray.setAtIndex(C_POINTER, 0, lhsPtr.get(C_POINTER, 0));
       dataArray.setAtIndex(C_POINTER, 1, rhsPtr.get(C_POINTER, 0));
 
       int rcSum = fhe_uint8_sum(dataArray, 2, sumResultPtr);
       assertThat(rcSum).isZero();
 
-      MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
       int rcDecrypt = fhe_uint8_decrypt(sumResultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -112,10 +115,10 @@ class HighLevelIntegersTest {
 
   @Test
   void testUint8OverflowingAdd() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment overflowedPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment overflowedPtr = TfheWrapper.createPointer(C_POINTER);
 
     byte lhsClear = (byte) 0xFF; // UINT8_MAX
     byte rhsClear = (byte) 1;
@@ -130,11 +133,11 @@ class HighLevelIntegersTest {
       resultPtr, overflowedPtr);
     assertThat(rcOverflowingAdd).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
     int rcDecrypt = fhe_uint8_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
-    MemorySegment clearOverflowed = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearOverflowed = TfheWrapper.createPointer(C_BOOL);
     int rcDecryptOverflowed = fhe_bool_decrypt(overflowedPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearOverflowed);
     assertThat(rcDecryptOverflowed).isZero();
 
@@ -153,10 +156,10 @@ class HighLevelIntegersTest {
 
   @Test
   void testUint8OverflowingSub() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment overflowedPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment overflowedPtr = TfheWrapper.createPointer(C_POINTER);
 
     byte lhsClear = (byte) 0;
     byte rhsClear = (byte) 1;
@@ -171,11 +174,11 @@ class HighLevelIntegersTest {
       resultPtr, overflowedPtr);
     assertThat(rcOverflowingSub).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
     int rcDecrypt = fhe_uint8_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
-    MemorySegment clearOverflowed = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearOverflowed = TfheWrapper.createPointer(C_BOOL);
     int rcDecryptOverflowed = fhe_bool_decrypt(overflowedPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearOverflowed);
     assertThat(rcDecryptOverflowed).isZero();
 
@@ -195,10 +198,10 @@ class HighLevelIntegersTest {
 
   @Test
   void testUint8OverflowingMul() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment overflowedPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment overflowedPtr = TfheWrapper.createPointer(C_POINTER);
 
     byte lhsClear = (byte) 123;
     byte rhsClear = (byte) 3;
@@ -213,11 +216,11 @@ class HighLevelIntegersTest {
       resultPtr, overflowedPtr);
     assertThat(rcOverflowingMul).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
     int rcDecrypt = fhe_uint8_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
-    MemorySegment clearOverflowed = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearOverflowed = TfheWrapper.createPointer(C_BOOL);
     int rcDecryptOverflowed = fhe_bool_decrypt(overflowedPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearOverflowed);
     assertThat(rcDecryptOverflowed).isZero();
 
@@ -237,10 +240,10 @@ class HighLevelIntegersTest {
 
   @Test
   void testInt8OverflowingAdd() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment overflowedPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment overflowedPtr = TfheWrapper.createPointer(C_POINTER);
 
     byte lhsClear = (byte) 127; // INT8_MAX
     byte rhsClear = (byte) 1;
@@ -255,11 +258,11 @@ class HighLevelIntegersTest {
       resultPtr, overflowedPtr);
     assertThat(rcOverflowingAdd).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
     int rcDecrypt = fhe_int8_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
-    MemorySegment clearOverflowed = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearOverflowed = TfheWrapper.createPointer(C_BOOL);
     int rcDecryptOverflowed = fhe_bool_decrypt(overflowedPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearOverflowed);
     assertThat(rcDecryptOverflowed).isZero();
 
@@ -280,9 +283,9 @@ class HighLevelIntegersTest {
 
   @Test
   void uint8PublicKeyTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     byte lhsClear = (byte) 123;
     byte rhsClear = (byte) 14;
@@ -296,7 +299,7 @@ class HighLevelIntegersTest {
     int rcSub = fhe_uint8_sub(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcSub).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_CHAR);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
     int rcDecrypt = fhe_uint8_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
@@ -316,16 +319,16 @@ class HighLevelIntegersTest {
   void testTryDecryptTrivial() {
     short clear = (short) (65535 - 2); // UINT16_MAX - 2
 
-    MemorySegment trivialPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment trivialPtr = TfheWrapper.createPointer(C_POINTER);
     int rcTrivial = fhe_uint16_try_encrypt_trivial_u16(clear, trivialPtr);
     assertThat(rcTrivial).isZero();
 
-    MemorySegment nonTrivialPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment nonTrivialPtr = TfheWrapper.createPointer(C_POINTER);
     int rcNonTrivial = fhe_uint16_try_encrypt_with_client_key_u16(clear, clientKeyPtr.get(C_POINTER, 0), nonTrivialPtr);
     assertThat(rcNonTrivial).isZero();
 
     // Example of decrypting a trivial ciphertext
-    MemorySegment decryptedResult = LIBRARY_ARENA.allocate(C_SHORT);
+    MemorySegment decryptedResult = TfheWrapper.createPointer(C_SHORT);
     int rcDecryptTrivial = fhe_uint16_try_decrypt_trivial(trivialPtr.get(C_POINTER, 0), decryptedResult);
     assertThat(rcDecryptTrivial).isZero();
     assertThat(decryptedResult.get(C_SHORT, 0)).isEqualTo(clear);

@@ -1,22 +1,25 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class HighLevelBooleanTest {
-  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment serverKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment publicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+
+  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
+
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @BeforeEach
   void setUp() {
@@ -53,9 +56,9 @@ class HighLevelBooleanTest {
 
   @Test
   void clientKeyTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     boolean lhsClear = false;
     boolean rhsClear = true;
@@ -69,7 +72,7 @@ class HighLevelBooleanTest {
     int rcBitand = fhe_bool_bitand(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcBitand).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
@@ -86,9 +89,9 @@ class HighLevelBooleanTest {
 
   @Test
   void publicKeyTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     boolean lhsClear = false;
     boolean rhsClear = true;
@@ -102,7 +105,7 @@ class HighLevelBooleanTest {
     int rcBitand = fhe_bool_bitand(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcBitand).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
@@ -119,9 +122,9 @@ class HighLevelBooleanTest {
 
   @Test
   void trivialEncryptTest() {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     boolean lhsClear = false;
     boolean rhsClear = true;
@@ -135,7 +138,7 @@ class HighLevelBooleanTest {
     int rcBitand = fhe_bool_bitand(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcBitand).isZero();
 
-    MemorySegment clearResult = LIBRARY_ARENA.allocate(C_BOOL);
+    MemorySegment clearResult = TfheWrapper.createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 

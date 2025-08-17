@@ -1,21 +1,24 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class HighLevelErrorTest {
-  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment serverKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+
+  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
+
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @BeforeEach
   void setUp() {
@@ -51,16 +54,16 @@ class HighLevelErrorTest {
     // The setUp() method generates keys but doesn't call set_server_key() for this test
 
     // Create test values
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U128 structures {10, 20} and {1, 2}
-    MemorySegment clearLhs = LIBRARY_ARENA.allocate(16); // 2 * 8 bytes
+    MemorySegment clearLhs = TfheWrapper.createPointer(16); // 2 * 8 bytes
     clearLhs.set(C_LONG, 0, 10L);
     clearLhs.set(C_LONG, 8, 20L);
 
-    MemorySegment clearRhs = LIBRARY_ARENA.allocate(16);
+    MemorySegment clearRhs = TfheWrapper.createPointer(16);
     clearRhs.set(C_LONG, 0, 1L);
     clearRhs.set(C_LONG, 8, 2L);
 
@@ -110,16 +113,16 @@ class HighLevelErrorTest {
     assertThat(rcSetServerKey).isZero();
 
     // Create test values
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U128 structures {10, 20} and {1, 2}
-    MemorySegment clearLhs = LIBRARY_ARENA.allocate(16);
+    MemorySegment clearLhs = TfheWrapper.createPointer(16);
     clearLhs.set(C_LONG, 0, 10L);
     clearLhs.set(C_LONG, 8, 20L);
 
-    MemorySegment clearRhs = LIBRARY_ARENA.allocate(16);
+    MemorySegment clearRhs = TfheWrapper.createPointer(16);
     clearRhs.set(C_LONG, 0, 1L);
     clearRhs.set(C_LONG, 8, 2L);
 
@@ -134,7 +137,7 @@ class HighLevelErrorTest {
     assertThat(rcSub).isZero();
 
     // Verify the result
-    MemorySegment resultClear = LIBRARY_ARENA.allocate(16);
+    MemorySegment resultClear = TfheWrapper.createPointer(16);
     int rcDecrypt = fhe_uint128_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 

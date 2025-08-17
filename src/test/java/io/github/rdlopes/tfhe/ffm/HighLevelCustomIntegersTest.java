@@ -1,21 +1,24 @@
-package ai.zama.tfhe;
+package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.lang.foreign.MemorySegment;
 
-import static ai.zama.tfhe.TfheNative.*;
+import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("native")
 class HighLevelCustomIntegersTest {
-  private final MemorySegment configBuilderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment configPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-  private final MemorySegment serverKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+
+  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
+
+  @BeforeAll
+  static void beforeAll() {
+    TfheWrapper.loadNativeLibrary();
+  }
 
   @BeforeEach
   void setUp() {
@@ -48,7 +51,7 @@ class HighLevelCustomIntegersTest {
 
   @Test
   void compactPublicKeyTest() {
-    MemorySegment compressedPublicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment compressedPublicKeyPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcCompressedPublicKey = compressed_compact_public_key_new(clientKeyPtr.get(C_POINTER, 0), compressedPublicKeyPtr);
     assertThat(rcCompressedPublicKey).isZero();
@@ -62,19 +65,19 @@ class HighLevelCustomIntegersTest {
   }
 
   private void testUint256ClientKey(MemorySegment clientKey) {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment castResultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment castResultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U256 structures {1, 2, 3, 4} and {5, 6, 7, 8}
-    MemorySegment lhsClear = LIBRARY_ARENA.allocate(32); // 4 * 8 bytes
+    MemorySegment lhsClear = TfheWrapper.createPointer(32); // 4 * 8 bytes
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 2L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 3L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 4L);
 
-    MemorySegment rhsClear = LIBRARY_ARENA.allocate(32);
+    MemorySegment rhsClear = TfheWrapper.createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, 5L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, 6L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, 7L);
@@ -89,7 +92,7 @@ class HighLevelCustomIntegersTest {
     int rcAdd = fhe_uint256_add(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcAdd).isZero();
 
-    MemorySegment resultClear = LIBRARY_ARENA.allocate(32);
+    MemorySegment resultClear = TfheWrapper.createPointer(32);
     int rcDecrypt = fhe_uint256_decrypt(resultPtr.get(C_POINTER, 0), clientKey, resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -103,7 +106,7 @@ class HighLevelCustomIntegersTest {
     int rcCast = fhe_uint256_cast_into_fhe_uint64(resultPtr.get(C_POINTER, 0), castResultPtr);
     assertThat(rcCast).isZero();
 
-    MemorySegment u64Clear = LIBRARY_ARENA.allocate(C_LONG_LONG);
+    MemorySegment u64Clear = TfheWrapper.createPointer(C_LONG_LONG);
     int rcDecryptCast = fhe_uint64_decrypt(castResultPtr.get(C_POINTER, 0), clientKey, u64Clear);
     assertThat(rcDecryptCast).isZero();
     assertThat(u64Clear.get(C_LONG_LONG, 0)).isEqualTo(6L);
@@ -120,18 +123,18 @@ class HighLevelCustomIntegersTest {
   }
 
   private void testUint256EncryptTrivial(MemorySegment clientKey) {
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     // Create U256 structures {1, 2, 3, 4} and {5, 6, 7, 8}
-    MemorySegment lhsClear = LIBRARY_ARENA.allocate(32);
+    MemorySegment lhsClear = TfheWrapper.createPointer(32);
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 2L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 3L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 4L);
 
-    MemorySegment rhsClear = LIBRARY_ARENA.allocate(32);
+    MemorySegment rhsClear = TfheWrapper.createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, 5L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, 6L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, 7L);
@@ -146,7 +149,7 @@ class HighLevelCustomIntegersTest {
     int rcAdd = fhe_uint256_add(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcAdd).isZero();
 
-    MemorySegment resultClear = LIBRARY_ARENA.allocate(32);
+    MemorySegment resultClear = TfheWrapper.createPointer(32);
     int rcDecrypt = fhe_uint256_decrypt(resultPtr.get(C_POINTER, 0), clientKey, resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -166,30 +169,30 @@ class HighLevelCustomIntegersTest {
   }
 
   private void testUint256CompactPublicKey(MemorySegment clientKey, MemorySegment compressedPublicKey) {
-    MemorySegment publicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment compactListPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment compactListPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcDecompress = compressed_compact_public_key_decompress(compressedPublicKey, publicKeyPtr);
     assertThat(rcDecompress).isZero();
 
     // Create compact list builder
-    MemorySegment builderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment expanderPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment builderPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment expanderPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcBuilderNew = compact_ciphertext_list_builder_new(publicKeyPtr.get(C_POINTER, 0), builderPtr);
     assertThat(rcBuilderNew).isZero();
 
     // Create U256 values {5, 6, 7, 8} and {1, 2, 3, 4}
-    MemorySegment clear0 = LIBRARY_ARENA.allocate(32);
+    MemorySegment clear0 = TfheWrapper.createPointer(32);
     clear0.setAtIndex(C_LONG_LONG, 0, 5L);
     clear0.setAtIndex(C_LONG_LONG, 1, 6L);
     clear0.setAtIndex(C_LONG_LONG, 2, 7L);
     clear0.setAtIndex(C_LONG_LONG, 3, 8L);
 
-    MemorySegment clear1 = LIBRARY_ARENA.allocate(32);
+    MemorySegment clear1 = TfheWrapper.createPointer(32);
     clear1.setAtIndex(C_LONG_LONG, 0, 1L);
     clear1.setAtIndex(C_LONG_LONG, 1, 2L);
     clear1.setAtIndex(C_LONG_LONG, 2, 3L);
@@ -207,7 +210,7 @@ class HighLevelCustomIntegersTest {
     int rcExpand = compact_ciphertext_list_expand(compactListPtr.get(C_POINTER, 0), expanderPtr);
     assertThat(rcExpand).isZero();
 
-    MemorySegment lenPtr = LIBRARY_ARENA.allocate(C_LONG);
+    MemorySegment lenPtr = TfheWrapper.createPointer(C_LONG);
     int rcLen = compact_ciphertext_list_expander_len(expanderPtr.get(C_POINTER, 0), lenPtr);
     assertThat(rcLen).isZero();
     assertThat(lenPtr.get(C_LONG, 0)).isEqualTo(2L);
@@ -221,7 +224,7 @@ class HighLevelCustomIntegersTest {
     int rcSub = fhe_uint256_sub(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcSub).isZero();
 
-    MemorySegment resultClear = LIBRARY_ARENA.allocate(32);
+    MemorySegment resultClear = TfheWrapper.createPointer(32);
     int rcDecrypt = fhe_uint256_decrypt(resultPtr.get(C_POINTER, 0), clientKey, resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -249,18 +252,18 @@ class HighLevelCustomIntegersTest {
   }
 
   private void testInt32CompactPublicKey(MemorySegment clientKey, MemorySegment compressedPublicKey) {
-    MemorySegment publicKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment compactListPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment lhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment rhsPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment resultPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment compactListPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcDecompress = compressed_compact_public_key_decompress(compressedPublicKey, publicKeyPtr);
     assertThat(rcDecompress).isZero();
 
     // Create compact list builder
-    MemorySegment builderPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment expanderPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment builderPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment expanderPtr = TfheWrapper.createPointer(C_POINTER);
 
     int rcBuilderNew = compact_ciphertext_list_builder_new(publicKeyPtr.get(C_POINTER, 0), builderPtr);
     assertThat(rcBuilderNew).isZero();
@@ -280,7 +283,7 @@ class HighLevelCustomIntegersTest {
     int rcExpand = compact_ciphertext_list_expand(compactListPtr.get(C_POINTER, 0), expanderPtr);
     assertThat(rcExpand).isZero();
 
-    MemorySegment lenPtr = LIBRARY_ARENA.allocate(C_LONG);
+    MemorySegment lenPtr = TfheWrapper.createPointer(C_LONG);
     int rcLen = compact_ciphertext_list_expander_len(expanderPtr.get(C_POINTER, 0), lenPtr);
     assertThat(rcLen).isZero();
     assertThat(lenPtr.get(C_LONG, 0)).isEqualTo(2L);
@@ -294,7 +297,7 @@ class HighLevelCustomIntegersTest {
     int rcAdd = fhe_int32_add(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcAdd).isZero();
 
-    MemorySegment resultClear = LIBRARY_ARENA.allocate(C_INT);
+    MemorySegment resultClear = TfheWrapper.createPointer(C_INT);
     int rcDecrypt = fhe_int32_decrypt(resultPtr.get(C_POINTER, 0), clientKey, resultClear);
     assertThat(rcDecrypt).isZero();
 
