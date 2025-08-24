@@ -42,7 +42,7 @@ jobs:
     needs: native-libs
     steps:
       - name: Download Native Libraries
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           pattern: 'native-libs-*'
           merge-multiple: 'true'
