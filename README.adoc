@@ -67,6 +67,8 @@ The `local` profile performs the following steps in `initialize` phase:
 2. **Rust compilation**: Compiles the TFHE Rust library with C API
 3. **Binding generation**: Uses jextract to generate Java bindings from C headers
 
+TIP: In case you just want to re-generate libraries and bindings, then simply call `./mvnw initialize -Plocal`.
+
 === Performance Tips
 
 * **Key Reuse**: Generate keys once and reuse them across operations
