@@ -34,7 +34,7 @@
     <!--suppress XmlUnresolvedReference -->
     <java.library.path>${native-libs.output.directory}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Library dependencies -->
-    <commons-io.version>2.15.1</commons-io.version>
+    <commons-io.version>2.20.0</commons-io.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
     <!-- Plugin dependencies-->
     <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
