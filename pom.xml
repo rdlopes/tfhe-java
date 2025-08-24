@@ -37,7 +37,7 @@
     <commons-io.version>2.20.0</commons-io.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
     <!-- Plugin dependencies-->
-    <os-maven-plugin.version>1.7.0</os-maven-plugin.version>
+    <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
   </properties>
 
   <dependencyManagement>
