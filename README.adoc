@@ -39,16 +39,15 @@ Add the following dependency to your `pom.xml`:
 === Requirements
 
 * **Java 24** or later (requires Foreign Function & Memory API support)
-* **JVM Arguments**: `--enable-native-access=ALL-UNNAMED` (or provide a named module)
+* **JVM Arguments**: `--enable-native-access=ALL-UNNAMED` (or tfhe.core with module system active)
 * **Native Libraries**: Automatically included in the JAR (supports macOS ARM64, Linux x86_64, Windows x86_64)
 
 === Generated Bindings
 
 The build process automatically generates Java bindings from the TFHE-rs C API:
 
-- **Native Package**: `ai.zama.tfhe`
+- **Native Package**: `io.github.rdlopes.tfhe.ffm`
 - **Main Class**: `TfheNative` - Contains all native function bindings
-- **Key Management**: `ConfigBuilder`, `Config`, `ClientKey`, `CompressedServerKey`
 - **Memory Management**: Uses Java's Foreign Function & Memory API with a simplified interface
 
 == Building from Source
@@ -56,52 +55,16 @@ The build process automatically generates Java bindings from the TFHE-rs C API:
 For most users, the library is available through Maven Central and doesn't require building from source.
 However, if you need to build locally:
 
-=== Standard Build
-
-[source,bash]
+[source]
 ----
-# Clone the repository
-git clone https://github.com/rdlopes/tfhe-java.git
-cd tfhe-java
-
-# Build the project
-./mvnw package
+./mvnw initialize -Plocal
 ----
-
-**Prerequisites:**
-* **Java 24** (Temurin distribution recommended)
-
-[source,bash]
-----
-# Using SDKMAN
-sdk install java 24-tem
-sdk use java 24-tem
-----
-
-The build process automatically downloads pre-built native libraries and Java bindings, making it simple to get started without complex toolchain setup.
-
-=== Building for Unsupported Platforms
-
-The library includes pre-built native libraries for **macOS ARM64**, **Linux x86_64**, and **Windows x86_64**.
-If your development platform is not among these supported platforms, you can build the library from source using the `local` maven profile to create a native wrapper that suits your specific platform.
-
-This approach is also useful for:
-
-* Local development with custom modifications
-* Building on architectures not covered by the pre-built binaries
-* Creating optimized builds for specific hardware configurations
-
-[source,bash]
-----
-# Build with local profile (builds from TFHE-rs source)
-./mvnw package -Plocal
-----
-
-**Additional Prerequisites for Local Build:**
-* **Rust toolchain** with nightly support * **jextract** tool (version 22) for generating Java bindings from C headers
 
 The `local` profile performs the following steps:
-1. **TFHE-rs download**: Downloads the tfhe-rs source from GitHub 2. **Rust compilation**: Compiles the TFHE Rust library with C API 3. **Binding generation**: Uses jextract to generate Java bindings from C headers 4. **Java compilation**: Compiles Java code including generated bindings 5. **Native library packaging**: Copies native libraries to target/classes/native
+
+1. **TFHE-rs download**: Downloads the tfhe-rs source from GitHub
+2. **Rust compilation**: Compiles the TFHE Rust library with C API
+3. **Binding generation**: Uses jextract to generate Java bindings from C headers
 
 === Performance Tips
 
@@ -113,6 +76,9 @@ The `local` profile performs the following steps:
 == License
 
 This project is licensed under the link:{license}[MIT License].
+
+It packages tfhe-rs library which is under BSD 3 license.
+A copy of their license is available within the jar in `/native/LICENSE` file.
 
 == Acknowledgments
 
