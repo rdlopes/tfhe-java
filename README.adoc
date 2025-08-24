@@ -53,14 +53,15 @@ The build process automatically generates Java bindings from the TFHE-rs C API:
 == Building from Source
 
 For most users, the library is available through Maven Central and doesn't require building from source.
+
 However, if you need to build locally:
 
 [source]
 ----
-./mvnw initialize -Plocal
+./mvnw package -Plocal
 ----
 
-The `local` profile performs the following steps:
+The `local` profile performs the following steps in `initialize` phase:
 
 1. **TFHE-rs download**: Downloads the tfhe-rs source from GitHub
 2. **Rust compilation**: Compiles the TFHE Rust library with C API
