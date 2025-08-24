@@ -1,5 +1,6 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.test;
 
+import io.github.rdlopes.tfhe.ffm.U128;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -59,11 +60,11 @@ class HighLevel128BitsTest {
     MemorySegment resultPtr = createPointer(C_POINTER);
 
     // Create U128 values: lhs = {10, 20}, rhs = {1, 2}
-    MemorySegment lhsClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment lhsClear = createPointer(U128.layout());
     U128.w0(lhsClear, 10L);
     U128.w1(lhsClear, 20L);
 
-    MemorySegment rhsClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment rhsClear = createPointer(U128.layout());
     U128.w0(rhsClear, 1L);
     U128.w1(rhsClear, 2L);
 
@@ -76,7 +77,7 @@ class HighLevel128BitsTest {
     int rcSub = fhe_uint128_sub(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcSub).isZero();
 
-    MemorySegment resultClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment resultClear = createPointer(U128.layout());
     int rcDecrypt = fhe_uint128_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -99,11 +100,11 @@ class HighLevel128BitsTest {
     MemorySegment resultPtr = createPointer(C_POINTER);
 
     // Create U128 values: lhs = {10, 20}, rhs = {1, 2}
-    MemorySegment lhsClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment lhsClear = createPointer(U128.layout());
     U128.w0(lhsClear, 10L);
     U128.w1(lhsClear, 20L);
 
-    MemorySegment rhsClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment rhsClear = createPointer(U128.layout());
     U128.w0(rhsClear, 1L);
     U128.w1(rhsClear, 2L);
 
@@ -116,7 +117,7 @@ class HighLevel128BitsTest {
     int rcSub = fhe_uint128_sub(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcSub).isZero();
 
-    MemorySegment resultClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment resultClear = createPointer(U128.layout());
     int rcDecrypt = fhe_uint128_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -139,11 +140,11 @@ class HighLevel128BitsTest {
     MemorySegment resultPtr = createPointer(C_POINTER);
 
     // Create U128 values: lhs = {10, 20}, rhs = {1, 2}
-    MemorySegment lhsClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment lhsClear = createPointer(U128.layout());
     U128.w0(lhsClear, 10L);
     U128.w1(lhsClear, 20L);
 
-    MemorySegment rhsClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment rhsClear = createPointer(U128.layout());
     U128.w0(rhsClear, 1L);
     U128.w1(rhsClear, 2L);
 
@@ -157,7 +158,7 @@ class HighLevel128BitsTest {
     int rcAdd = fhe_uint128_add(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcAdd).isZero();
 
-    MemorySegment resultClear = U128.allocate(LIBRARY_ARENA);
+    MemorySegment resultClear = createPointer(U128.layout());
     int rcDecrypt = fhe_uint128_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 

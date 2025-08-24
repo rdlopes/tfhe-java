@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.test;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ class ConfigTest {
 
   @Test
   void configCanGenerateClientKey() {
-    MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment clientKeyPtr = createPointer(C_POINTER);
 
     int rcClientKey = client_key_generate(configPtr.get(C_POINTER, 0), clientKeyPtr);
     assertThat(rcClientKey).isZero();
@@ -44,8 +44,8 @@ class ConfigTest {
 
   @Test
   void configCanGenerateAllKeys() {
-    MemorySegment clientKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
-    MemorySegment serverKeyPtr = LIBRARY_ARENA.allocate(C_POINTER);
+    MemorySegment clientKeyPtr = createPointer(C_POINTER);
+    MemorySegment serverKeyPtr = createPointer(C_POINTER);
 
     int rcKeys = generate_keys(configPtr.get(C_POINTER, 0), clientKeyPtr, serverKeyPtr);
     assertThat(rcKeys).isZero();

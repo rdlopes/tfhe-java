@@ -37,7 +37,7 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-libs'
-          path: ${{github.workspace}}/native-libs
+          path: ${{github.workspace}}/.native/libs
 
       - name: Download Native Bindings
         uses: dawidd6/action-download-artifact@v11
@@ -45,7 +45,7 @@ jobs:
           github_token: ${{github.token}}
           workflow: native.yaml
           name: 'native-bindings'
-          path: ${{github.workspace}}/native-bindings
+          path: ${{github.workspace}}/.native/bindings
 
       - name: Release With Maven
         run: |

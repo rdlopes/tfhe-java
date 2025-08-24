@@ -12,6 +12,9 @@ pom.xml.versionsBackup
 jextract-22/
 jextract.tar.gz
 
+### Native libs ###
+.native
+
 ### VS Code ###
 .vscode/
 

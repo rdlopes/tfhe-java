@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.ffm.test;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

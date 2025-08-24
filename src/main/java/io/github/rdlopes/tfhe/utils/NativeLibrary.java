@@ -26,16 +26,16 @@ public class NativeLibrary {
       loadFromName();
       loaded = true;
       return;
-    } catch (Exception exception) {
-      logger.debug("Failed loading TFHE native library from name", exception);
+    } catch (Throwable throwable) {
+      logger.debug("Failed loading TFHE native library from name, message: {}", throwable.getMessage());
     }
 
     logger.debug("Loading TFHE native library from path");
     try {
       loadFromPath();
       loaded = true;
-    } catch (Exception exception) {
-      logger.debug("Failed loading TFHE native library from path", exception);
+    } catch (Throwable throwable) {
+      logger.debug("Failed loading TFHE native library from path, message: {}", throwable.getMessage());
     }
   }
 

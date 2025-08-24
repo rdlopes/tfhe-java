@@ -24,12 +24,15 @@
   <properties>
     <!-- Project properties -->
     <java.version>24</java.version>
-    <tfhe-rs.basedir>${project.build.directory}/tfhe-rs</tfhe-rs.basedir>
-    <tfhe-rs.build.directory>${tfhe-rs.basedir}/target/release</tfhe-rs.build.directory>
-    <native-bindings.basedir>${project.build.directory}/generated-sources/tfhe-rs</native-bindings.basedir>
-    <native-libs.basedir>${project.build.directory}/native</native-libs.basedir>
+    <native.basedir>${project.basedir}/.native</native.basedir>
+    <native-libs.basedir>${native.basedir}/libs</native-libs.basedir>
+    <native-bindings.basedir>${native.basedir}/bindings</native-bindings.basedir>
+    <native-libs.output.directory>${project.build.outputDirectory}/native</native-libs.output.directory>
+    <native-bindings.output.directory>${project.build.directory}/generated-sources/tfhe-rs
+    </native-bindings.output.directory>
+    <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
     <!--suppress XmlUnresolvedReference -->
-    <native-libs.libraryPath>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</native-libs.libraryPath>
+    <java.library.path>${native-libs.output.directory}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Library dependencies -->
     <commons-io.version>2.15.1</commons-io.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
@@ -101,10 +104,55 @@
             <jextract.trace.downcalls>true</jextract.trace.downcalls>
           </systemPropertyVariables>
           <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
-            --sun-misc-unsafe-memory-access=allow
-            -Djava.library.path=${native-libs.libraryPath}
+            -Djava.library.path=${java.library.path}
           </argLine>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-native-bindings</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <outputDirectory>${native-bindings.output.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${native-bindings.basedir}</directory>
+                  <includes>
+                    <include>**/*.java</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-native-libs</id>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <outputDirectory>${native-libs.output.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${native-libs.basedir}</directory>
+                  <includes>
+                    <include>LICENSE</include>
+                    <include>**/*.h</include>
+                    <include>**/*.dylib</include>
+                    <include>**/*.so</include>
+                    <include>**/*.dll</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -118,36 +166,8 @@
             <phase>process-sources</phase>
             <configuration>
               <sources>
-                <source>${native-bindings.basedir}</source>
+                <source>${native-bindings.output.directory}</source>
               </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>include-native-libraries</id>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <outputDirectory>${project.build.outputDirectory}/native</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${native-libs.basedir}</directory>
-                  <includes>
-                    <include>LICENSE</include>
-                    <include>**/*.h</include>
-                    <include>**/*.dylib</include>
-                    <include>**/*.so</include>
-                    <include>**/*.dll</include>
-                  </includes>
-                </resource>
-              </resources>
             </configuration>
           </execution>
         </executions>
@@ -167,6 +187,18 @@
       <id>local</id>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <configuration>
+              <excludeDefaultDirectories>false</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${native.basedir}</directory>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
@@ -191,7 +223,7 @@
                 <goals>
                   <goal>exec</goal>
                 </goals>
-                <phase>generate-sources</phase>
+                <phase>initialize</phase>
                 <configuration>
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
                   <executable>make</executable>
@@ -205,7 +237,7 @@
                 <goals>
                   <goal>exec</goal>
                 </goals>
-                <phase>generate-sources</phase>
+                <phase>initialize</phase>
                 <configuration>
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
                   <executable>jextract</executable>
@@ -221,7 +253,7 @@
                 <goals>
                   <goal>exec</goal>
                 </goals>
-                <phase>generate-sources</phase>
+                <phase>initialize</phase>
                 <configuration>
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
                   <executable>grep</executable>
@@ -237,7 +269,7 @@
                 <goals>
                   <goal>exec</goal>
                 </goals>
-                <phase>generate-sources</phase>
+                <phase>initialize</phase>
                 <configuration>
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
                   <executable>jextract</executable>
@@ -268,12 +300,12 @@
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
-                <phase>generate-resources</phase>
+                <phase>initialize</phase>
                 <configuration>
-                  <outputDirectory>${native-libs.libraryPath}</outputDirectory>
+                  <outputDirectory>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${tfhe-rs.build.directory}</directory>
+                      <directory>${tfhe-rs.basedir}/target/release</directory>
                       <includes>
                         <include>*.h</include>
                         <include>*.dylib</include>
@@ -289,7 +321,7 @@
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
-                <phase>generate-resources</phase>
+                <phase>initialize</phase>
                 <configuration>
                   <outputDirectory>${native-libs.basedir}</outputDirectory>
                   <resources>
