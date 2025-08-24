@@ -50,20 +50,20 @@ jobs:
           github-token: ${{github.token}}
       - name: Pack OSX Library
         run: |
-          mkdir -p .native/libs/osx/aarch64
-          cp native-libs/tfhe.h .native/libs/osx/aarch64
-          cp native-libs/*.dylib .native/libs/osx/aarch64
+          mkdir -p native-bundle/libs/osx/aarch64
+          cp native-libs/tfhe.h native-bundle/libs/osx/aarch64
+          cp native-libs/*.dylib native-bundle/libs/osx/aarch64
       - name: Pack Linux Library
         run: |
-          mkdir -p .native/libs/linux/x86_64
-          cp native-libs/tfhe.h .native/libs/linux/x86_64
-          cp native-libs/*.so .native/libs/linux/x86_64
+          mkdir -p native-bundle/libs/linux/x86_64
+          cp native-libs/tfhe.h native-bundle/libs/linux/x86_64
+          cp native-libs/*.so native-bundle/libs/linux/x86_64
       - name: Pack Windows Library
         run: |
-          mkdir -p .native/libs/windows/x86_64
-          cp native-libs/tfhe.h .native/libs/windows/x86_64
-          cp native-libs/*.dll .native/libs/windows/x86_64
-      - run: cp native-libs/LICENSE .native/libs
+          mkdir -p native-bundle/libs/windows/x86_64
+          cp native-libs/tfhe.h native-bundle/libs/windows/x86_64
+          cp native-libs/*.dll native-bundle/libs/windows/x86_64
+      - run: cp native-libs/LICENSE native-bundle/libs
       - uses: jcwillox/install-tool-action@v1
         with:
           id: 'jextract'
@@ -85,12 +85,12 @@ jobs:
           @jextract-includes-filtered.txt \
           --header-class-name TfheHeader \
           --target-package io.github.rdlopes.tfhe.ffm \
-          --output .native/bindings
+          --output native-bundle/bindings
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v4
         with:
           name: native-bundle
-          path: .native
+          path: native-bundle
           retention-days: 1
       - name: Delete Native Libraries Specific Artifacts
         uses: geekyeggo/delete-artifact@v5
