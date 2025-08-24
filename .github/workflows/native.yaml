@@ -17,11 +17,8 @@ jobs:
       matrix:
         include:
           - os: macos-latest
-            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_macos-aarch64_bin.tar.gz
           - os: ubuntu-latest
-            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
           - os: windows-latest
-            jextract: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_windows-x64_bin.tar.gz
     runs-on: ${{matrix.os}}
     steps:
       - run: gh repo clone zama-ai/tfhe-rs .
@@ -39,54 +36,10 @@ jobs:
           path: target/release
           retention-days: 1
 
-  bindings:
-    name: Build Native Bindings
-    runs-on: ubuntu-latest
-    needs: native-libs
-    steps:
-      - uses: jcwillox/install-tool-action@v1
-        with:
-          id: 'jextract'
-          download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
-          version: '22+6-47'
-          bin_path: 'jextract-22/bin'
-      - name: Download Linux Libraries
-        uses: actions/download-artifact@v4
-        with:
-          name: native-libs-ubuntu-latest
-          github-token: ${{github.token}}
-      - name: Jextract Dump includes
-        run: |
-          jextract \
-          --dump-includes jextract-includes.txt \
-          tfhe.h
-      - name: Jextract filter Includes
-        run: |
-          grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
-          cat jextract-includes-filtered.txt
-      - name: Jextract Bindings
-        run: |
-          jextract \
-          @jextract-includes-filtered.txt \
-          --header-class-name TfheHeader \
-          --target-package io.github.rdlopes.tfhe.ffm \
-          --output native-bindings \
-          --use-system-load-library \
-          --include-dir . \
-          --include-dir deps \
-          --library tfhe \
-          tfhe.h
-      - name: Upload FFM Bindings
-        uses: actions/upload-artifact@v4
-        with:
-          name: native-bindings
-          path: native-bindings
-          retention-days: 1
-
   bundle-native-libs:
     name: Bundle Native Libraries
     runs-on: ubuntu-latest
-    needs: bindings
+    needs: native-libs
     steps:
       - name: Download Native Libraries
         uses: actions/download-artifact@v4
@@ -97,25 +50,47 @@ jobs:
           github-token: ${{github.token}}
       - name: Pack OSX Library
         run: |
-          mkdir -p native-bundle/osx/aarch64
-          cp native-libs/tfhe.h native-bundle/osx/aarch64
-          cp native-libs/*.dylib native-bundle/osx/aarch64
+          mkdir -p .native/libs/osx/aarch64
+          cp native-libs/tfhe.h .native/libs/osx/aarch64
+          cp native-libs/*.dylib .native/libs/osx/aarch64
       - name: Pack Linux Library
         run: |
-          mkdir -p native-bundle/linux/x86_64
-          cp native-libs/tfhe.h native-bundle/linux/x86_64
-          cp native-libs/*.so native-bundle/linux/x86_64
+          mkdir -p .native/libs/linux/x86_64
+          cp native-libs/tfhe.h .native/libs/linux/x86_64
+          cp native-libs/*.so .native/libs/linux/x86_64
       - name: Pack Windows Library
         run: |
-          mkdir -p native-bundle/windows/x86_64
-          cp native-libs/tfhe.h native-bundle/windows/x86_64
-          cp native-libs/*.dll native-bundle/windows/x86_64
-      - run: cp native-libs/LICENSE native-bundle
+          mkdir -p .native/libs/windows/x86_64
+          cp native-libs/tfhe.h .native/libs/windows/x86_64
+          cp native-libs/*.dll .native/libs/windows/x86_64
+      - run: cp native-libs/LICENSE .native/libs
+      - uses: jcwillox/install-tool-action@v1
+        with:
+          id: 'jextract'
+          download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
+          version: '22+6-47'
+          bin_path: 'jextract-22/bin'
+      - name: Jextract Dump includes
+        run: |
+          jextract native-libs/tfhe.h \
+          --dump-includes jextract-includes.txt
+      - name: Jextract filter Includes
+        run: |
+          grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
+          cat jextract-includes-filtered.txt
+      - name: Jextract Bindings
+        run: |
+          mkdir -p .native/bindings
+          jextract native-libs/tfhe.h \
+          @jextract-includes-filtered.txt \
+          --header-class-name TfheHeader \
+          --target-package io.github.rdlopes.tfhe.ffm \
+          --output .native/bindings
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v4
         with:
-          name: native-libs
-          path: native-bundle
+          name: native-bundle
+          path: .native
           retention-days: 1
       - name: Delete Native Libraries Specific Artifacts
         uses: geekyeggo/delete-artifact@v5

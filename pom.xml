@@ -282,10 +282,6 @@
                     <argument>io.github.rdlopes.tfhe.ffm</argument>
                     <argument>--output</argument>
                     <argument>${native-bindings.basedir}</argument>
-                    <argument>--include-dir</argument>
-                    <argument>target/release</argument>
-                    <argument>--include-dir</argument>
-                    <argument>target/release/deps</argument>
                   </arguments>
                 </configuration>
               </execution>
