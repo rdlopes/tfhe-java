@@ -7,11 +7,15 @@ import org.slf4j.LoggerFactory;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 
-public class TfheNative extends TfheHeader {
+public final class TfheNative extends TfheHeader {
   private static final Logger logger = LoggerFactory.getLogger(TfheNative.class);
 
   static {
     NativeLibrary.load();
+  }
+
+  private TfheNative() {
+    super();
   }
 
   public static MemorySegment createPointer(MemoryLayout layout) {

@@ -11,7 +11,7 @@ import java.lang.foreign.MemorySegment;
 import static io.github.rdlopes.tfhe.ffm.TfheNative.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Tag("native")
+@Tag("ffm")
 class HighLevel128BitsTest {
 
   private final MemorySegment configBuilderPtr = createPointer(C_POINTER);

@@ -32,7 +32,7 @@
     </native-bindings.output.directory>
     <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
     <!--suppress XmlUnresolvedReference -->
-    <java.library.path>${native-libs.output.directory}/${os.detected.name}/${os.detected.arch}</java.library.path>
+    <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Library dependencies -->
     <commons-io.version>2.20.0</commons-io.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
