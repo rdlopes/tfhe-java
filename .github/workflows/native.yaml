@@ -68,7 +68,7 @@ jobs:
         run: |
           jextract \
           @jextract-includes-filtered.txt \
-          --header-class-name TfheNative \
+          --header-class-name TfheHeader \
           --target-package io.github.rdlopes.tfhe.ffm \
           --output native-bindings \
           --use-system-load-library \

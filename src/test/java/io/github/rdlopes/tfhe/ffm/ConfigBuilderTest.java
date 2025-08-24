@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
@@ -13,15 +16,10 @@ class ConfigBuilderTest {
   private MemorySegment configBuilderPtr;
   private MemorySegment configPtr;
 
-  @BeforeAll
-  static void beforeAll() {
-    TfheWrapper.loadNativeLibrary();
-  }
-
   @BeforeEach
   void setUp() {
-    configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
-    configPtr = TfheWrapper.createPointer(C_POINTER);
+    configBuilderPtr = createPointer(C_POINTER);
+    configPtr = createPointer(C_POINTER);
 
     int rcDefault = config_builder_default(configBuilderPtr);
     assertThat(rcDefault).isZero();

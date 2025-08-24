@@ -245,7 +245,7 @@
                     <argument>@jextract-includes-filtered.txt</argument>
                     <argument>target/release/tfhe.h</argument>
                     <argument>--header-class-name</argument>
-                    <argument>TfheNative</argument>
+                    <argument>TfheHeader</argument>
                     <argument>--target-package</argument>
                     <argument>io.github.rdlopes.tfhe.ffm</argument>
                     <argument>--output</argument>

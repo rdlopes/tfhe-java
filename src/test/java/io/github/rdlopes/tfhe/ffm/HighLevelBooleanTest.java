@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
@@ -10,16 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("native")
 class HighLevelBooleanTest {
 
-  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
-
-  @BeforeAll
-  static void beforeAll() {
-    TfheWrapper.loadNativeLibrary();
-  }
+  private final MemorySegment configBuilderPtr = createPointer(C_POINTER);
+  private final MemorySegment configPtr = createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment publicKeyPtr = createPointer(C_POINTER);
 
   @BeforeEach
   void setUp() {
@@ -56,9 +54,9 @@ class HighLevelBooleanTest {
 
   @Test
   void clientKeyTest() {
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     boolean lhsClear = false;
     boolean rhsClear = true;
@@ -72,7 +70,7 @@ class HighLevelBooleanTest {
     int rcBitand = fhe_bool_bitand(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcBitand).isZero();
 
-    MemorySegment clearResult = TfheWrapper.createPointer(C_BOOL);
+    MemorySegment clearResult = createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
@@ -89,9 +87,9 @@ class HighLevelBooleanTest {
 
   @Test
   void publicKeyTest() {
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     boolean lhsClear = false;
     boolean rhsClear = true;
@@ -105,7 +103,7 @@ class HighLevelBooleanTest {
     int rcBitand = fhe_bool_bitand(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcBitand).isZero();
 
-    MemorySegment clearResult = TfheWrapper.createPointer(C_BOOL);
+    MemorySegment clearResult = createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 
@@ -122,9 +120,9 @@ class HighLevelBooleanTest {
 
   @Test
   void trivialEncryptTest() {
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     boolean lhsClear = false;
     boolean rhsClear = true;
@@ -138,7 +136,7 @@ class HighLevelBooleanTest {
     int rcBitand = fhe_bool_bitand(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcBitand).isZero();
 
-    MemorySegment clearResult = TfheWrapper.createPointer(C_BOOL);
+    MemorySegment clearResult = createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
     assertThat(rcDecrypt).isZero();
 

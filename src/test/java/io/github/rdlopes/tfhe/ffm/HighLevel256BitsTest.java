@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
@@ -10,16 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("native")
 class HighLevel256BitsTest {
 
-  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
-
-  @BeforeAll
-  static void beforeAll() {
-    TfheWrapper.loadNativeLibrary();
-  }
+  private final MemorySegment configBuilderPtr = createPointer(C_POINTER);
+  private final MemorySegment configPtr = createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment publicKeyPtr = createPointer(C_POINTER);
 
   @BeforeEach
   void setUp() {
@@ -52,20 +50,20 @@ class HighLevel256BitsTest {
   @Test
   void uint256ClientKeyTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment castResultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
+    MemorySegment castResultPtr = createPointer(C_POINTER);
 
     // U256 lhs_clear = {1, 2, 3, 4};
-    MemorySegment lhsClear = TfheWrapper.createPointer(32); // 4 * 8 bytes = 32 bytes for U256
+    MemorySegment lhsClear = createPointer(32); // 4 * 8 bytes = 32 bytes for U256
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 2L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 3L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 4L);
 
     // U256 rhs_clear = {5, 6, 7, 8};
-    MemorySegment rhsClear = TfheWrapper.createPointer(32);
+    MemorySegment rhsClear = createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, 5L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, 6L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, 7L);
@@ -84,7 +82,7 @@ class HighLevel256BitsTest {
     assertThat(rcAdd).isZero();
 
     // Decrypt result
-    MemorySegment resultClear = TfheWrapper.createPointer(32);
+    MemorySegment resultClear = createPointer(32);
     int rcDecrypt = fhe_uint256_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -98,7 +96,7 @@ class HighLevel256BitsTest {
     int rcCast = fhe_uint256_cast_into_fhe_uint64(resultPtr.get(C_POINTER, 0), castResultPtr);
     assertThat(rcCast).isZero();
 
-    MemorySegment u64Clear = TfheWrapper.createPointer(C_LONG_LONG);
+    MemorySegment u64Clear = createPointer(C_LONG_LONG);
     int rcDecryptCast = fhe_uint64_decrypt(castResultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), u64Clear);
     assertThat(rcDecryptCast).isZero();
     assertThat(u64Clear.get(C_LONG_LONG, 0)).isEqualTo(6L);
@@ -117,19 +115,19 @@ class HighLevel256BitsTest {
   @Test
   void uint256EncryptTrivialTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     // U256 lhs_clear = {1, 2, 3, 4};
-    MemorySegment lhsClear = TfheWrapper.createPointer(32);
+    MemorySegment lhsClear = createPointer(32);
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 2L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 3L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 4L);
 
     // U256 rhs_clear = {5, 6, 7, 8};
-    MemorySegment rhsClear = TfheWrapper.createPointer(32);
+    MemorySegment rhsClear = createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, 5L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, 6L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, 7L);
@@ -147,7 +145,7 @@ class HighLevel256BitsTest {
     assertThat(rcAdd).isZero();
 
     // Decrypt result
-    MemorySegment resultClear = TfheWrapper.createPointer(32);
+    MemorySegment resultClear = createPointer(32);
     int rcDecrypt = fhe_uint256_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -169,19 +167,19 @@ class HighLevel256BitsTest {
   @Test
   void uint256PublicKeyTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     // U256 lhs_clear = {5, 6, 7, 8};
-    MemorySegment lhsClear = TfheWrapper.createPointer(32);
+    MemorySegment lhsClear = createPointer(32);
     lhsClear.setAtIndex(C_LONG_LONG, 0, 5L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 6L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 7L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 8L);
 
     // U256 rhs_clear = {1, 2, 3, 4};
-    MemorySegment rhsClear = TfheWrapper.createPointer(32);
+    MemorySegment rhsClear = createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, 2L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, 3L);
@@ -199,7 +197,7 @@ class HighLevel256BitsTest {
     assertThat(rcSub).isZero();
 
     // Decrypt result
-    MemorySegment resultClear = TfheWrapper.createPointer(32);
+    MemorySegment resultClear = createPointer(32);
     int rcDecrypt = fhe_uint256_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -221,20 +219,20 @@ class HighLevel256BitsTest {
   @Test
   void int256ClientKeyTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment castResultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
+    MemorySegment castResultPtr = createPointer(C_POINTER);
 
     // I256 lhs_clear = {1, 0, 0, 0}; // This is +1
-    MemorySegment lhsClear = TfheWrapper.createPointer(32);
+    MemorySegment lhsClear = createPointer(32);
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 0L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 0L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 0L);
 
     // I256 rhs_clear = {UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX}; // This is -1
-    MemorySegment rhsClear = TfheWrapper.createPointer(32);
+    MemorySegment rhsClear = createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, -1L); // UINT64_MAX as signed is -1
     rhsClear.setAtIndex(C_LONG_LONG, 1, -1L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, -1L);
@@ -251,7 +249,7 @@ class HighLevel256BitsTest {
     int rcAdd = fhe_int256_add(lhsPtr.get(C_POINTER, 0), rhsPtr.get(C_POINTER, 0), resultPtr);
     assertThat(rcAdd).isZero();
 
-    MemorySegment resultClear = TfheWrapper.createPointer(32);
+    MemorySegment resultClear = createPointer(32);
     int rcDecrypt = fhe_int256_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -281,7 +279,7 @@ class HighLevel256BitsTest {
     int rcCast = fhe_int256_cast_into_fhe_int64(resultPtr.get(C_POINTER, 0), castResultPtr);
     assertThat(rcCast).isZero();
 
-    MemorySegment i64Clear = TfheWrapper.createPointer(C_LONG_LONG);
+    MemorySegment i64Clear = createPointer(C_LONG_LONG);
     int rcDecryptCast = fhe_int64_decrypt(castResultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), i64Clear);
     assertThat(rcDecryptCast).isZero();
     assertThat(i64Clear.get(C_LONG_LONG, 0)).isEqualTo(2L);
@@ -300,19 +298,19 @@ class HighLevel256BitsTest {
   @Test
   void int256EncryptTrivialTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     // I256 lhs_clear = {1, 2, 3, 4};
-    MemorySegment lhsClear = TfheWrapper.createPointer(32);
+    MemorySegment lhsClear = createPointer(32);
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 2L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 3L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 4L);
 
     // I256 rhs_clear = {5, 6, 7, 8};
-    MemorySegment rhsClear = TfheWrapper.createPointer(32);
+    MemorySegment rhsClear = createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, 5L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, 6L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, 7L);
@@ -330,7 +328,7 @@ class HighLevel256BitsTest {
     assertThat(rcAdd).isZero();
 
     // Decrypt result
-    MemorySegment resultClear = TfheWrapper.createPointer(32);
+    MemorySegment resultClear = createPointer(32);
     int rcDecrypt = fhe_int256_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 
@@ -352,19 +350,19 @@ class HighLevel256BitsTest {
   @Test
   void int256PublicKeyTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     // I256 lhs_clear = {1, 0, 0, 0}; // This is +1
-    MemorySegment lhsClear = TfheWrapper.createPointer(32);
+    MemorySegment lhsClear = createPointer(32);
     lhsClear.setAtIndex(C_LONG_LONG, 0, 1L);
     lhsClear.setAtIndex(C_LONG_LONG, 1, 0L);
     lhsClear.setAtIndex(C_LONG_LONG, 2, 0L);
     lhsClear.setAtIndex(C_LONG_LONG, 3, 0L);
 
     // I256 rhs_clear = {UINT64_MAX, UINT64_MAX, UINT64_MAX, UINT64_MAX}; // This is -1
-    MemorySegment rhsClear = TfheWrapper.createPointer(32);
+    MemorySegment rhsClear = createPointer(32);
     rhsClear.setAtIndex(C_LONG_LONG, 0, -1L);
     rhsClear.setAtIndex(C_LONG_LONG, 1, -1L);
     rhsClear.setAtIndex(C_LONG_LONG, 2, -1L);
@@ -382,7 +380,7 @@ class HighLevel256BitsTest {
     assertThat(rcSub).isZero();
 
     // Decrypt result
-    MemorySegment resultClear = TfheWrapper.createPointer(32);
+    MemorySegment resultClear = createPointer(32);
     int rcDecrypt = fhe_int256_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 

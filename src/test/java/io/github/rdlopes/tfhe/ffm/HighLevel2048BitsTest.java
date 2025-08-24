@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
@@ -10,16 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("native")
 class HighLevel2048BitsTest {
 
-  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment publicKeyPtr = TfheWrapper.createPointer(C_POINTER);
-
-  @BeforeAll
-  static void beforeAll() {
-    TfheWrapper.loadNativeLibrary();
-  }
+  private final MemorySegment configBuilderPtr = createPointer(C_POINTER);
+  private final MemorySegment configPtr = createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment publicKeyPtr = createPointer(C_POINTER);
 
   @BeforeEach
   void setUp() {
@@ -52,14 +50,14 @@ class HighLevel2048BitsTest {
   @Test
   void uint2048ClientKeyTest() {
 
-    MemorySegment lhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment rhsPtr = TfheWrapper.createPointer(C_POINTER);
-    MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+    MemorySegment lhsPtr = createPointer(C_POINTER);
+    MemorySegment rhsPtr = createPointer(C_POINTER);
+    MemorySegment resultPtr = createPointer(C_POINTER);
 
     // U2048 lhs_clear with 32 words (32 * 8 bytes = 256 bytes for U2048)
-    MemorySegment lhsClear = TfheWrapper.createPointer(256);
+    MemorySegment lhsClear = createPointer(256);
     // U2048 rhs_clear with 32 words
-    MemorySegment rhsClear = TfheWrapper.createPointer(256);
+    MemorySegment rhsClear = createPointer(256);
 
     // Fill lhs_clear with incremental values: words[i] = i
     for (int i = 0; i < 32; i++) {
@@ -85,7 +83,7 @@ class HighLevel2048BitsTest {
     assertThat(rcEq).isZero();
 
     // Decrypt result
-    MemorySegment resultClear = TfheWrapper.createPointer(C_BOOL);
+    MemorySegment resultClear = createPointer(C_BOOL);
     int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), resultClear);
     assertThat(rcDecrypt).isZero();
 

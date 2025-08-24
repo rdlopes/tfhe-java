@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
@@ -10,15 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("native")
 class HighLevelArrayTest {
 
-  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment clientKeyPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment serverKeyPtr = TfheWrapper.createPointer(C_POINTER);
-
-  @BeforeAll
-  static void beforeAll() {
-    TfheWrapper.loadNativeLibrary();
-  }
+  private final MemorySegment configBuilderPtr = createPointer(C_POINTER);
+  private final MemorySegment configPtr = createPointer(C_POINTER);
+  private final MemorySegment clientKeyPtr = createPointer(C_POINTER);
+  private final MemorySegment serverKeyPtr = createPointer(C_POINTER);
 
   @BeforeEach
   void setUp() {
@@ -52,7 +50,7 @@ class HighLevelArrayTest {
     MemorySegment[] result = new MemorySegment[bytes.length];
 
     for (int i = 0; i < bytes.length; i++) {
-      MemorySegment fheUint8Ptr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment fheUint8Ptr = createPointer(C_POINTER);
       int rc = fhe_uint8_try_encrypt_with_client_key_u8(bytes[i], clientKey, fheUint8Ptr);
       assertThat(rc).isZero();
       result[i] = fheUint8Ptr.get(C_POINTER, 0);
@@ -86,11 +84,11 @@ class HighLevelArrayTest {
 
     // Test equality with different lengths (sentence vs pattern1)
     {
-      MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment resultPtr = createPointer(C_POINTER);
 
       // Create arrays for the native call
-      MemorySegment sentenceArray = TfheWrapper.createPointer(C_POINTER, encryptedSentence.length);
-      MemorySegment pattern1Array = TfheWrapper.createPointer(C_POINTER, encryptedPattern1.length);
+      MemorySegment sentenceArray = createPointer(C_POINTER, encryptedSentence.length);
+      MemorySegment pattern1Array = createPointer(C_POINTER, encryptedPattern1.length);
 
       for (int i = 0; i < encryptedSentence.length; i++) {
         sentenceArray.setAtIndex(C_POINTER, i, encryptedSentence[i]);
@@ -103,7 +101,7 @@ class HighLevelArrayTest {
         pattern1Array, encryptedPattern1.length, resultPtr);
       assertThat(rc).isZero();
 
-      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
+      MemorySegment clearResult = createPointer(C_CHAR);
       int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -116,10 +114,10 @@ class HighLevelArrayTest {
 
     // Test equality with same lengths but different content (pattern2 vs pattern1)
     {
-      MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment resultPtr = createPointer(C_POINTER);
 
-      MemorySegment pattern2Array = TfheWrapper.createPointer(C_POINTER, encryptedPattern2.length);
-      MemorySegment pattern1Array = TfheWrapper.createPointer(C_POINTER, encryptedPattern1.length);
+      MemorySegment pattern2Array = createPointer(C_POINTER, encryptedPattern2.length);
+      MemorySegment pattern1Array = createPointer(C_POINTER, encryptedPattern1.length);
 
       for (int i = 0; i < encryptedPattern2.length; i++) {
         pattern2Array.setAtIndex(C_POINTER, i, encryptedPattern2[i]);
@@ -132,7 +130,7 @@ class HighLevelArrayTest {
         pattern1Array, encryptedPattern1.length, resultPtr);
       assertThat(rc).isZero();
 
-      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
+      MemorySegment clearResult = createPointer(C_CHAR);
       int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -145,9 +143,9 @@ class HighLevelArrayTest {
 
     // Test equality with same array (sentence vs sentence)
     {
-      MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment resultPtr = createPointer(C_POINTER);
 
-      MemorySegment sentenceArray = TfheWrapper.createPointer(C_POINTER, encryptedSentence.length);
+      MemorySegment sentenceArray = createPointer(C_POINTER, encryptedSentence.length);
 
       for (int i = 0; i < encryptedSentence.length; i++) {
         sentenceArray.setAtIndex(C_POINTER, i, encryptedSentence[i]);
@@ -157,7 +155,7 @@ class HighLevelArrayTest {
         sentenceArray, encryptedSentence.length, resultPtr);
       assertThat(rc).isZero();
 
-      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
+      MemorySegment clearResult = createPointer(C_CHAR);
       int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -187,10 +185,10 @@ class HighLevelArrayTest {
 
     // Test contains sub slice - pattern1 should be found in sentence
     {
-      MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment resultPtr = createPointer(C_POINTER);
 
-      MemorySegment sentenceArray = TfheWrapper.createPointer(C_POINTER, encryptedSentence.length);
-      MemorySegment pattern1Array = TfheWrapper.createPointer(C_POINTER, encryptedPattern1.length);
+      MemorySegment sentenceArray = createPointer(C_POINTER, encryptedSentence.length);
+      MemorySegment pattern1Array = createPointer(C_POINTER, encryptedPattern1.length);
 
       for (int i = 0; i < encryptedSentence.length; i++) {
         sentenceArray.setAtIndex(C_POINTER, i, encryptedSentence[i]);
@@ -203,7 +201,7 @@ class HighLevelArrayTest {
         pattern1Array, encryptedPattern1.length, resultPtr);
       assertThat(rc).isZero();
 
-      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
+      MemorySegment clearResult = createPointer(C_CHAR);
       int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -216,10 +214,10 @@ class HighLevelArrayTest {
 
     // Test contains sub slice - pattern2 should not be found in sentence
     {
-      MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment resultPtr = createPointer(C_POINTER);
 
-      MemorySegment sentenceArray = TfheWrapper.createPointer(C_POINTER, encryptedSentence.length);
-      MemorySegment pattern2Array = TfheWrapper.createPointer(C_POINTER, encryptedPattern2.length);
+      MemorySegment sentenceArray = createPointer(C_POINTER, encryptedSentence.length);
+      MemorySegment pattern2Array = createPointer(C_POINTER, encryptedPattern2.length);
 
       for (int i = 0; i < encryptedSentence.length; i++) {
         sentenceArray.setAtIndex(C_POINTER, i, encryptedSentence[i]);
@@ -232,7 +230,7 @@ class HighLevelArrayTest {
         pattern2Array, encryptedPattern2.length, resultPtr);
       assertThat(rc).isZero();
 
-      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
+      MemorySegment clearResult = createPointer(C_CHAR);
       int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 
@@ -245,9 +243,9 @@ class HighLevelArrayTest {
 
     // Test contains sub slice - sentence should contain itself
     {
-      MemorySegment resultPtr = TfheWrapper.createPointer(C_POINTER);
+      MemorySegment resultPtr = createPointer(C_POINTER);
 
-      MemorySegment sentenceArray = TfheWrapper.createPointer(C_POINTER, encryptedSentence.length);
+      MemorySegment sentenceArray = createPointer(C_POINTER, encryptedSentence.length);
 
       for (int i = 0; i < encryptedSentence.length; i++) {
         sentenceArray.setAtIndex(C_POINTER, i, encryptedSentence[i]);
@@ -257,7 +255,7 @@ class HighLevelArrayTest {
         sentenceArray, encryptedSentence.length, resultPtr);
       assertThat(rc).isZero();
 
-      MemorySegment clearResult = TfheWrapper.createPointer(C_CHAR);
+      MemorySegment clearResult = createPointer(C_CHAR);
       int rcDecrypt = fhe_bool_decrypt(resultPtr.get(C_POINTER, 0), clientKeyPtr.get(C_POINTER, 0), clearResult);
       assertThat(rcDecrypt).isZero();
 

@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.lang.foreign.MemorySegment;
 
@@ -10,13 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("native")
 class ConfigTest {
 
-  private final MemorySegment configBuilderPtr = TfheWrapper.createPointer(C_POINTER);
-  private final MemorySegment configPtr = TfheWrapper.createPointer(C_POINTER);
-
-  @BeforeAll
-  static void beforeAll() {
-    TfheWrapper.loadNativeLibrary();
-  }
+  private final MemorySegment configBuilderPtr = createPointer(C_POINTER);
+  private final MemorySegment configPtr = createPointer(C_POINTER);
 
   @BeforeEach
   void setUp() {
