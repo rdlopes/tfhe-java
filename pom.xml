@@ -100,9 +100,6 @@
           <environmentVariables>
             <RUST_BACKTRACE>full</RUST_BACKTRACE>
           </environmentVariables>
-          <systemPropertyVariables>
-            <jextract.trace.downcalls>true</jextract.trace.downcalls>
-          </systemPropertyVariables>
           <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
             -Djava.library.path=${java.library.path}
           </argLine>

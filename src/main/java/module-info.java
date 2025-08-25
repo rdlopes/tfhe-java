@@ -1,5 +1,5 @@
 module tfhe.core {
-  exports io.github.rdlopes.tfhe.ffm;
+  exports io.github.rdlopes.tfhe.core.configuration;
   requires org.apache.commons.io;
   requires org.apache.commons.lang3;
   requires org.slf4j;
