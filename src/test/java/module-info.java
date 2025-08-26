@@ -2,8 +2,8 @@ open module tfhe.core.test {
   uses java.security.Provider;
 
   requires tfhe.core;
-  requires transitive org.junit.jupiter.engine;
-  requires transitive org.junit.jupiter.api;
-  requires transitive org.assertj.core;
-  requires transitive org.junit.jupiter.params;
+  requires org.junit.jupiter.engine;
+  requires org.junit.jupiter.api;
+  requires org.assertj.core;
+  requires org.junit.jupiter.params;
 }

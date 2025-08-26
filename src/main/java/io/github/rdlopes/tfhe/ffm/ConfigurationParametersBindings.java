@@ -5,10 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.foreign.MemorySegment;
 
-/**
- * Contains all SHORTINT parameter constants.
- * This class contains all 357 SHORTINT_PARAM methods extracted from TfheNative.
- */
 public class ConfigurationParametersBindings extends BaseBindings {
   private static final Logger logger = LoggerFactory.getLogger(ConfigurationParametersBindings.class);
 

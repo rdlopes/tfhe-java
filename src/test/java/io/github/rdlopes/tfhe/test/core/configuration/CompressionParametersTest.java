@@ -35,7 +35,6 @@ class CompressionParametersTest {
 
   @Test
   void customParameters() {
-    // Create test values
     long brLevel = 4L;
     long brBaseLog = 6L;
     long packingKsLevel = 5L;
@@ -45,10 +44,8 @@ class CompressionParametersTest {
     long lwePerGlwe = 16L;
     long storageLogModulus = 64L;
 
-    // Create required complex object
     DynamicDistribution packingKsKeyNoiseDistribution = new DynamicDistribution(1L, new DynamicDistributionPayload(new Gaussian(1.0)));
 
-    // Create parameters using the 9-parameter constructor
     CompressionParameters parameters = new CompressionParameters(
       brLevel,
       brBaseLog,
@@ -61,7 +58,6 @@ class CompressionParametersTest {
       packingKsKeyNoiseDistribution
     );
 
-    // Test all getter methods
     assertThat(parameters.brLevel()).isEqualTo(brLevel);
     assertThat(parameters.brBaseLog()).isEqualTo(brBaseLog);
     assertThat(parameters.packingKsLevel()).isEqualTo(packingKsLevel);
@@ -75,14 +71,12 @@ class CompressionParametersTest {
 
   @Test
   void integrationWithConfigBuilder() {
-    // Test that CompressionParameters can be used with ConfigBuilder
     ConfigBuilder configBuilder = new ConfigBuilder();
     CompressionParameters compressionParams = CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128;
 
-    // This should not throw any exception
     ConfigBuilder result = configBuilder.enableCompression(compressionParams);
     assertThat(result).isNotNull();
-    assertThat(result).isSameAs(configBuilder); // Should return the same builder for method chaining
+    assertThat(result).isSameAs(configBuilder);
   }
 
 }

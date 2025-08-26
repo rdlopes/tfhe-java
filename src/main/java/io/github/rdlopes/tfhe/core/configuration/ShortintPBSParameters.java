@@ -399,7 +399,6 @@ public record ShortintPBSParameters(MemorySegment address) {
     ShortintPBSParametersBindings.modulusSwitchNoiseReductionParams(address, modulusSwitchNoiseReductionParams.address());
   }
 
-  // Record accessor methods that read from native memory
   public long lweDimension() {
     return ShortintPBSParametersBindings.lweDimension(address);
   }

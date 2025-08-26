@@ -6,7 +6,6 @@ import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
 public class TfheHeaderExtension extends TfheHeader {
 
-  // Predefined compression parameters
   public static MemorySegment SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
     return SymbolLookup.loaderLookup()
                        .find("SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128")
@@ -55,21 +54,6 @@ public class TfheHeaderExtension extends TfheHeader {
                                                          .byteSize());
   }
 
-  /**
-   * {@snippet lang = c:
-   * struct CompressionParameters {
-   *     size_t br_level;
-   *     size_t br_base_log;
-   *     size_t packing_ks_level;
-   *     size_t packing_ks_base_log;
-   *     size_t packing_ks_polynomial_size;
-   *     size_t packing_ks_glwe_dimension;
-   *     size_t lwe_per_glwe;
-   *     size_t storage_log_modulus;
-   *     struct DynamicDistribution packing_ks_key_noise_distribution;
-   * }
-   *}
-   */
   @SuppressWarnings("unused")
   public static class CompressionParameters {
 
@@ -86,41 +70,28 @@ public class TfheHeaderExtension extends TfheHeader {
                                                                                 .withName("packing_ks_key_noise_distribution")
                                                            )
                                                            .withName("CompressionParameters");
-    // br_level field accessors
     private static final ValueLayout.OfLong br_level$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("br_level"));
     private static final long br_level$OFFSET = 0;
-    // br_base_log field accessors
     private static final ValueLayout.OfLong br_base_log$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("br_base_log"));
     private static final long br_base_log$OFFSET = 8;
-    // packing_ks_level field accessors
     private static final ValueLayout.OfLong packing_ks_level$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_level"));
     private static final long packing_ks_level$OFFSET = 16;
-    // packing_ks_base_log field accessors
     private static final ValueLayout.OfLong packing_ks_base_log$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_base_log"));
     private static final long packing_ks_base_log$OFFSET = 24;
-    // packing_ks_polynomial_size field accessors
     private static final ValueLayout.OfLong packing_ks_polynomial_size$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_polynomial_size"));
     private static final long packing_ks_polynomial_size$OFFSET = 32;
-    // packing_ks_glwe_dimension field accessors
     private static final ValueLayout.OfLong packing_ks_glwe_dimension$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_glwe_dimension"));
     private static final long packing_ks_glwe_dimension$OFFSET = 40;
-    // lwe_per_glwe field accessors
     private static final ValueLayout.OfLong lwe_per_glwe$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("lwe_per_glwe"));
     private static final long lwe_per_glwe$OFFSET = 48;
-    // storage_log_modulus field accessors
     private static final ValueLayout.OfLong storage_log_modulus$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("storage_log_modulus"));
     private static final long storage_log_modulus$OFFSET = 56;
-    // packing_ks_key_noise_distribution field accessors
     private static final GroupLayout packing_ks_key_noise_distribution$LAYOUT = (GroupLayout) $LAYOUT.select(groupElement("packing_ks_key_noise_distribution"));
     private static final long packing_ks_key_noise_distribution$OFFSET = 64;
 
     CompressionParameters() {
-      // Should not be called directly
     }
 
-    /**
-     * The layout of this struct
-     */
     public static GroupLayout layout() {
       return $LAYOUT;
     }

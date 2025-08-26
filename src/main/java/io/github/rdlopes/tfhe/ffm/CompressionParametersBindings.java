@@ -15,7 +15,6 @@ public class CompressionParametersBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(TfheHeaderExtension.CompressionParameters.layout());
   }
 
-  // Predefined compression parameters
   public static MemorySegment SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
     logger.trace("SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
     return TfheHeaderExtension.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128();

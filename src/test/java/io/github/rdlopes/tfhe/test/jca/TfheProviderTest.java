@@ -19,6 +19,7 @@ class TfheProviderTest {
   @Test
   void testProviderRegistration() {
     Provider provider = Security.getProvider("TFHE");
+
     assertThat(provider).isNotNull();
     assertThat(provider.getName()).isEqualTo("TFHE");
     assertThat(provider.getVersionStr()).isEqualTo("1.0");
