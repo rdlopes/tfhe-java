@@ -39,4 +39,9 @@ public final class ConfigurationBuilderBindings extends BaseBindings {
     logger.trace("useDedicatedCompactPublicKeyParameters - pointer: {}, compactPublicKeyParametersPointer: {}", pointer, compactPublicKeyParametersPointer);
     executeWithErrorHandling(() -> use_dedicated_compact_public_key_parameters(pointer, compactPublicKeyParametersPointer));
   }
+
+  public static void enableCompression(MemorySegment pointer, MemorySegment compressionParametersPointer) {
+    logger.trace("enableCompression - pointer: {}, compressionParametersPointer: {}", pointer, compressionParametersPointer);
+    executeWithErrorHandling(() -> config_builder_enable_compression(pointer, compressionParametersPointer));
+  }
 }

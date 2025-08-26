@@ -21,6 +21,11 @@ public record ConfigBuilder(MemorySegment pointer) implements Cloneable {
     return this;
   }
 
+  public ConfigBuilder enableCompression(CompressionParameters compressionParameters) {
+    ConfigurationBuilderBindings.enableCompression(pointer, compressionParameters.pointer());
+    return this;
+  }
+
   public Config build() {
     Config config = new Config();
     ConfigurationBuilderBindings.build(pointer, config.pointer());
