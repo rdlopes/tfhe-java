@@ -23,11 +23,13 @@ public record TfhePublicKey(ServerKey serverKey) implements PublicKey {
 
   @Override
   public String getFormat() {
-    return null;
+    return "RAW";
   }
 
   @Override
   public byte[] getEncoded() {
-    return null;
+    return serverKey.serialize()
+                    .view()
+                    .toByteArray();
   }
 }

@@ -1,46 +1,46 @@
 package io.github.rdlopes.tfhe.test.core.serde;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
+import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
+import io.github.rdlopes.tfhe.core.keys.ClientKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
+import io.github.rdlopes.tfhe.jca.TfhePrivateKey;
 import org.junit.jupiter.api.Test;
 
-import java.lang.foreign.MemorySegment;
+import java.security.KeyPair;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DynamicBufferViewTest {
 
   @Test
-  void createDynamicBufferView() {
-    DynamicBufferView bufferView = new DynamicBufferView();
-    assertThat(bufferView).isNotNull();
-    assertThat(bufferView.address()).isNotNull();
+  void serializesToBytes() {
+    Config config = new ConfigBuilder().build();
+    KeyPair keyPair = config.generateKeys();
+    TfhePrivateKey privateKey = (TfhePrivateKey) keyPair.getPrivate();
+    ClientKey clientKey = privateKey.clientKey();
+
+    DynamicBuffer dynamicBuffer = clientKey.serialize();
+    DynamicBufferView view = dynamicBuffer.view();
+    byte[] bytes = view.toByteArray();
+
+    assertThat(bytes).isNotNull();
+    assertThat(bytes.length).isEqualTo(dynamicBuffer.length());
   }
 
   @Test
-  void testLength() {
-    DynamicBufferView bufferView = new DynamicBufferView();
+  void deserializesFromBytes() {
+    Config config = new ConfigBuilder().build();
+    KeyPair keyPair = config.generateKeys();
+    TfhePrivateKey privateKey = (TfhePrivateKey) keyPair.getPrivate();
+    ClientKey clientKey = privateKey.clientKey();
+    DynamicBuffer dynamicBuffer = clientKey.serialize();
+    DynamicBufferView view = dynamicBuffer.view();
+    byte[] bytes = view.toByteArray();
+    DynamicBufferView view2 = DynamicBufferView.fromByteArray(bytes);
 
-    // Test setting and getting length
-    bufferView.length(100L);
-    assertThat(bufferView.length()).isEqualTo(100L);
-
-    bufferView.length(0L);
-    assertThat(bufferView.length()).isEqualTo(0L);
-
-    bufferView.length(Long.MAX_VALUE);
-    assertThat(bufferView.length()).isEqualTo(Long.MAX_VALUE);
-  }
-
-  @Test
-  void testPointer() {
-    DynamicBufferView bufferView = new DynamicBufferView();
-
-    // Initially, dataPointer might be null or a default value
-    MemorySegment initialPointer = bufferView.pointer();
-    assertThat(initialPointer).isNotNull();
-
-    // Test setting dataPointer to null (which should be allowed)
-    bufferView.pointer(MemorySegment.NULL);
-    assertThat(bufferView.pointer()).isEqualTo(MemorySegment.NULL);
+    assertThat(view2).isNotNull();
+    assertThat(view2.length()).isEqualTo(view.length());
   }
 }

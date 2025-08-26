@@ -23,11 +23,13 @@ public record TfhePrivateKey(ClientKey clientKey) implements PrivateKey {
 
   @Override
   public String getFormat() {
-    return null;
+    return "RAW";
   }
 
   @Override
   public byte[] getEncoded() {
-    return null;
+    return clientKey.serialize()
+                    .view()
+                    .toByteArray();
   }
 }

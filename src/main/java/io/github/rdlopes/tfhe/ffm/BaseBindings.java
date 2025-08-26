@@ -12,6 +12,8 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public abstract class BaseBindings {
   private static final Logger logger = LoggerFactory.getLogger(BaseBindings.class);
 
+  public static final int SERDE_MAX_SIZE = Integer.MAX_VALUE;
+
   static {
     NativeLibrary.load();
     System.setProperty("jextract.trace.downcalls", String.valueOf(logger.isDebugEnabled()));
@@ -35,4 +37,10 @@ public abstract class BaseBindings {
     logger.trace("addressValue - address: {}", address);
     return address.get(C_POINTER, 0);
   }
+
+  public static MemorySegment allocateData(long size) {
+    logger.trace("allocateData - size: {}", size);
+    return LIBRARY_ARENA.allocate(size);
+  }
+
 }

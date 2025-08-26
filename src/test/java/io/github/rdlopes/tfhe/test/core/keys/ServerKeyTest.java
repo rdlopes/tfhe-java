@@ -1,30 +1,49 @@
 package io.github.rdlopes.tfhe.test.core.keys;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
+import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.jca.TfhePublicKey;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.security.KeyPair;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class ServerKeyTest {
 
-  @Test
-  void testDefaultConstructor() {
-    // Create ServerKey object
-    ServerKey serverKey = new ServerKey();
+  private ServerKey serverKey;
 
-    // Verify object creation and memory segment
-    assertThat(serverKey).isNotNull();
-    assertThat(serverKey.address()).isNotNull();
+  @BeforeEach
+  void setUp() {
+    Config config = new ConfigBuilder().build();
+    KeyPair keyPair = config.generateKeys();
+    TfhePublicKey publicKey = (TfhePublicKey) keyPair.getPublic();
+    serverKey = publicKey.serverKey();
   }
 
   @Test
-  void testConstructorWithAddress() {
-    // Create ServerKey with existing address
-    ServerKey original = new ServerKey();
-    ServerKey copy = new ServerKey(original.address());
+  void serializesAndDeserializes() {
+    DynamicBuffer dynamicBuffer = serverKey.serialize();
 
-    // Verify both objects point to same memory
-    assertThat(copy).isNotNull();
-    assertThat(copy.address()).isEqualTo(original.address());
+    assertThat(dynamicBuffer).isNotNull();
+    assertThat(dynamicBuffer.pointer()).isNotNull();
+    assertThat(dynamicBuffer.length()).isGreaterThan(0);
+
+    ServerKey deserializedServerKey = ServerKey.deserialize(dynamicBuffer.view());
+
+    assertThat(deserializedServerKey).isNotNull();
+    assertThat(deserializedServerKey.address()).isNotNull();
+  }
+
+  @Test
+  void safeSerializesAndDeserializes() {
+    assertThatCode(() -> {
+      DynamicBuffer dynamicBuffer = serverKey.safeSerialize();
+      assertThat(dynamicBuffer).isNotNull();
+    }).hasMessage("Server key does not support safe serialization");
   }
 }

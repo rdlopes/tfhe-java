@@ -25,4 +25,23 @@ public record DynamicBufferView(MemorySegment address) {
   public void length(long value) {
     DynamicBufferViewBindings.length(address, value);
   }
+
+  public static DynamicBufferView fromByteArray(byte[] bytes) {
+    DynamicBufferView bufferView = new DynamicBufferView();
+    MemorySegment dataSegment = DynamicBufferViewBindings.allocateData(bytes.length);
+    dataSegment.asByteBuffer()
+               .put(bytes);
+    bufferView.pointer(dataSegment);
+    bufferView.length(bytes.length);
+    return bufferView;
+  }
+
+  public byte[] toByteArray() {
+    byte[] bytes = new byte[(int) length()];
+    pointer()
+      .reinterpret(length())
+      .asByteBuffer()
+      .get(bytes);
+    return bytes;
+  }
 }

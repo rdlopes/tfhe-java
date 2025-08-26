@@ -33,4 +33,13 @@ public record DynamicBuffer(MemorySegment address) {
   public void destructor(MemorySegment value) {
     DynamicBufferBindings.destructor(address, value);
   }
+
+  public DynamicBufferView view() {
+    DynamicBufferView view = new DynamicBufferView();
+    view.pointer(pointer());
+    view.length(length());
+
+    return view;
+  }
+
 }
