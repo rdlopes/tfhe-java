@@ -70,6 +70,7 @@ public class TfheHeaderExtension extends TfheHeader {
    * }
    *}
    */
+  @SuppressWarnings("unused")
   public static class CompressionParameters {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
@@ -120,15 +121,15 @@ public class TfheHeaderExtension extends TfheHeader {
     /**
      * The layout of this struct
      */
-    public static final GroupLayout layout() {
+    public static GroupLayout layout() {
       return $LAYOUT;
     }
 
-    public static final ValueLayout.OfLong br_level$layout() {
+    public static ValueLayout.OfLong br_level$layout() {
       return br_level$LAYOUT;
     }
 
-    public static final long br_level$offset() {
+    public static long br_level$offset() {
       return br_level$OFFSET;
     }
 
@@ -140,11 +141,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(br_level$LAYOUT, br_level$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong br_base_log$layout() {
+    public static ValueLayout.OfLong br_base_log$layout() {
       return br_base_log$LAYOUT;
     }
 
-    public static final long br_base_log$offset() {
+    public static long br_base_log$offset() {
       return br_base_log$OFFSET;
     }
 
@@ -156,11 +157,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(br_base_log$LAYOUT, br_base_log$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong packing_ks_level$layout() {
+    public static ValueLayout.OfLong packing_ks_level$layout() {
       return packing_ks_level$LAYOUT;
     }
 
-    public static final long packing_ks_level$offset() {
+    public static long packing_ks_level$offset() {
       return packing_ks_level$OFFSET;
     }
 
@@ -172,11 +173,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(packing_ks_level$LAYOUT, packing_ks_level$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong packing_ks_base_log$layout() {
+    public static ValueLayout.OfLong packing_ks_base_log$layout() {
       return packing_ks_base_log$LAYOUT;
     }
 
-    public static final long packing_ks_base_log$offset() {
+    public static long packing_ks_base_log$offset() {
       return packing_ks_base_log$OFFSET;
     }
 
@@ -188,11 +189,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(packing_ks_base_log$LAYOUT, packing_ks_base_log$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong packing_ks_polynomial_size$layout() {
+    public static ValueLayout.OfLong packing_ks_polynomial_size$layout() {
       return packing_ks_polynomial_size$LAYOUT;
     }
 
-    public static final long packing_ks_polynomial_size$offset() {
+    public static long packing_ks_polynomial_size$offset() {
       return packing_ks_polynomial_size$OFFSET;
     }
 
@@ -204,11 +205,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(packing_ks_polynomial_size$LAYOUT, packing_ks_polynomial_size$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong packing_ks_glwe_dimension$layout() {
+    public static ValueLayout.OfLong packing_ks_glwe_dimension$layout() {
       return packing_ks_glwe_dimension$LAYOUT;
     }
 
-    public static final long packing_ks_glwe_dimension$offset() {
+    public static long packing_ks_glwe_dimension$offset() {
       return packing_ks_glwe_dimension$OFFSET;
     }
 
@@ -220,11 +221,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(packing_ks_glwe_dimension$LAYOUT, packing_ks_glwe_dimension$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong lwe_per_glwe$layout() {
+    public static ValueLayout.OfLong lwe_per_glwe$layout() {
       return lwe_per_glwe$LAYOUT;
     }
 
-    public static final long lwe_per_glwe$offset() {
+    public static long lwe_per_glwe$offset() {
       return lwe_per_glwe$OFFSET;
     }
 
@@ -236,11 +237,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(lwe_per_glwe$LAYOUT, lwe_per_glwe$OFFSET, fieldValue);
     }
 
-    public static final ValueLayout.OfLong storage_log_modulus$layout() {
+    public static ValueLayout.OfLong storage_log_modulus$layout() {
       return storage_log_modulus$LAYOUT;
     }
 
-    public static final long storage_log_modulus$offset() {
+    public static long storage_log_modulus$offset() {
       return storage_log_modulus$OFFSET;
     }
 
@@ -252,11 +253,11 @@ public class TfheHeaderExtension extends TfheHeader {
       struct.set(storage_log_modulus$LAYOUT, storage_log_modulus$OFFSET, fieldValue);
     }
 
-    public static final GroupLayout packing_ks_key_noise_distribution$layout() {
+    public static GroupLayout packing_ks_key_noise_distribution$layout() {
       return packing_ks_key_noise_distribution$LAYOUT;
     }
 
-    public static final long packing_ks_key_noise_distribution$offset() {
+    public static long packing_ks_key_noise_distribution$offset() {
       return packing_ks_key_noise_distribution$OFFSET;
     }
 
