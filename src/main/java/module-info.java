@@ -6,4 +6,5 @@ module tfhe.core {
   requires org.apache.commons.io;
   requires org.apache.commons.lang3;
   requires org.slf4j;
+  provides java.security.Provider with io.github.rdlopes.tfhe.jca.TfheProvider;
 }
