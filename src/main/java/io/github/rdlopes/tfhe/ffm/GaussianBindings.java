@@ -21,13 +21,13 @@ public final class GaussianBindings extends BaseBindings {
     return new_gaussian_from_std_dev(LIBRARY_ARENA, stdDev);
   }
 
-  public static void std(MemorySegment pointer, double stdDev) {
-    logger.trace("std - pointer: {}, stdDev: {}", pointer, stdDev);
-    Gaussian.std(pointer, stdDev);
+  public static void std(MemorySegment address, double stdDev) {
+    logger.trace("std - address: {}, stdDev: {}", address, stdDev);
+    Gaussian.std(address, stdDev);
   }
 
-  public static double std(MemorySegment pointer) {
-    logger.trace("std - pointer: {}", pointer);
-    return Gaussian.std(pointer);
+  public static double std(MemorySegment address) {
+    logger.trace("std - address: {}", address);
+    return Gaussian.std(address);
   }
 }

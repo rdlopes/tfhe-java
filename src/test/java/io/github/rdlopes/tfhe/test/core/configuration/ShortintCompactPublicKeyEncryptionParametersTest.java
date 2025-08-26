@@ -30,7 +30,7 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
   @FieldSource
   void predefinedParameters(ShortintCompactPublicKeyEncryptionParameters parameters) {
     assertThat(parameters).isNotNull();
-    assertThat(parameters.pointer()).isNotNull();
+    assertThat(parameters.address()).isNotNull();
   }
 
   @Test

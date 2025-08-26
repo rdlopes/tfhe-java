@@ -14,7 +14,7 @@ public abstract class BaseBindings {
 
   static {
     NativeLibrary.load();
-    System.setProperty("jextract.trace.downcalls", String.valueOf(logger.isTraceEnabled()));
+    System.setProperty("jextract.trace.downcalls", String.valueOf(logger.isDebugEnabled()));
     tfhe_error_disable_automatic_prints();
   }
 
@@ -31,8 +31,8 @@ public abstract class BaseBindings {
     }
   }
 
-  public static MemorySegment pointerValue(MemorySegment pointer) {
-    logger.trace("pointerValue - pointer: {}", pointer);
-    return pointer.get(C_POINTER, 0);
+  public static MemorySegment addressValue(MemorySegment address) {
+    logger.trace("addressValue - address: {}", address);
+    return address.get(C_POINTER, 0);
   }
 }

@@ -15,43 +15,43 @@ public final class ModulusSwitchNoiseReductionParamsBindings extends BaseBinding
     return LIBRARY_ARENA.allocate(ModulusSwitchNoiseReductionParams.layout());
   }
 
-  public static void modulusSwitchZerosCount(MemorySegment pointer, int modulusSwitchZerosCount) {
-    logger.trace("modulusSwitchZerosCount - pointer: {}, modulusSwitchZerosCount: {}", pointer, modulusSwitchZerosCount);
-    ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(pointer, modulusSwitchZerosCount);
+  public static void modulusSwitchZerosCount(MemorySegment address, int modulusSwitchZerosCount) {
+    logger.trace("modulusSwitchZerosCount - address: {}, modulusSwitchZerosCount: {}", address, modulusSwitchZerosCount);
+    ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(address, modulusSwitchZerosCount);
   }
 
-  public static void msBound(MemorySegment pointer, double msBound) {
-    logger.trace("msBound - pointer: {}, msBound: {}", pointer, msBound);
-    ModulusSwitchNoiseReductionParams.ms_bound(pointer, msBound);
+  public static void msBound(MemorySegment address, double msBound) {
+    logger.trace("msBound - address: {}, msBound: {}", address, msBound);
+    ModulusSwitchNoiseReductionParams.ms_bound(address, msBound);
   }
 
-  public static void msRSigmaFactor(MemorySegment pointer, double msRSigmaFactor) {
-    logger.trace("msRSigmaFactor - pointer: {}, msRSigmaFactor: {}", pointer, msRSigmaFactor);
-    ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(pointer, msRSigmaFactor);
+  public static void msRSigmaFactor(MemorySegment address, double msRSigmaFactor) {
+    logger.trace("msRSigmaFactor - address: {}, msRSigmaFactor: {}", address, msRSigmaFactor);
+    ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(address, msRSigmaFactor);
   }
 
-  public static void msInputVariance(MemorySegment pointer, double msInputVariance) {
-    logger.trace("msInputVariance - pointer: {}, msInputVariance: {}", pointer, msInputVariance);
-    ModulusSwitchNoiseReductionParams.ms_input_variance(pointer, msInputVariance);
+  public static void msInputVariance(MemorySegment address, double msInputVariance) {
+    logger.trace("msInputVariance - address: {}, msInputVariance: {}", address, msInputVariance);
+    ModulusSwitchNoiseReductionParams.ms_input_variance(address, msInputVariance);
   }
 
-  public static int modulusSwitchZerosCount(MemorySegment pointer) {
-    logger.trace("modulusSwitchZerosCount - pointer: {}", pointer);
-    return ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(pointer);
+  public static int modulusSwitchZerosCount(MemorySegment address) {
+    logger.trace("modulusSwitchZerosCount - address: {}", address);
+    return ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(address);
   }
 
-  public static double msBound(MemorySegment pointer) {
-    logger.trace("msBound - pointer: {}", pointer);
-    return ModulusSwitchNoiseReductionParams.ms_bound(pointer);
+  public static double msBound(MemorySegment address) {
+    logger.trace("msBound - address: {}", address);
+    return ModulusSwitchNoiseReductionParams.ms_bound(address);
   }
 
-  public static double msRSigmaFactor(MemorySegment pointer) {
-    logger.trace("msRSigmaFactor - pointer: {}", pointer);
-    return ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(pointer);
+  public static double msRSigmaFactor(MemorySegment address) {
+    logger.trace("msRSigmaFactor - address: {}", address);
+    return ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(address);
   }
 
-  public static double msInputVariance(MemorySegment pointer) {
-    logger.trace("msInputVariance - pointer: {}", pointer);
-    return ModulusSwitchNoiseReductionParams.ms_input_variance(pointer);
+  public static double msInputVariance(MemorySegment address) {
+    logger.trace("msInputVariance - address: {}", address);
+    return ModulusSwitchNoiseReductionParams.ms_input_variance(address);
   }
 }

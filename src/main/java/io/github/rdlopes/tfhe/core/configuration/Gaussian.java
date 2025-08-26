@@ -4,15 +4,15 @@ import io.github.rdlopes.tfhe.ffm.GaussianBindings;
 
 import java.lang.foreign.MemorySegment;
 
-public record Gaussian(MemorySegment pointer) {
+public record Gaussian(MemorySegment address) {
 
   public Gaussian(double stdDev) {
     this(GaussianBindings.allocate());
 
-    GaussianBindings.std(pointer, stdDev);
+    GaussianBindings.std(address, stdDev);
   }
 
   public double std() {
-    return GaussianBindings.std(pointer);
+    return GaussianBindings.std(address);
   }
 }

@@ -15,23 +15,23 @@ public final class DynamicDistributionBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(DynamicDistribution.layout());
   }
 
-  public static void tag(MemorySegment dynamicDistributionPointer, long tag) {
-    logger.trace("tag - dynamicDistributionPointer: {}, tag: {}", dynamicDistributionPointer, tag);
-    DynamicDistribution.tag(dynamicDistributionPointer, tag);
+  public static void tag(MemorySegment dynamicDistributionAddress, long tag) {
+    logger.trace("tag - dynamicDistributionAddress: {}, tag: {}", dynamicDistributionAddress, tag);
+    DynamicDistribution.tag(dynamicDistributionAddress, tag);
   }
 
-  public static long tag(MemorySegment dynamicDistributionPointer) {
-    logger.trace("tag - dynamicDistributionPointer: {}", dynamicDistributionPointer);
-    return DynamicDistribution.tag(dynamicDistributionPointer);
+  public static long tag(MemorySegment dynamicDistributionAddress) {
+    logger.trace("tag - dynamicDistributionAddress: {}", dynamicDistributionAddress);
+    return DynamicDistribution.tag(dynamicDistributionAddress);
   }
 
-  public static void payload(MemorySegment dynamicDistributionPointer, MemorySegment dynamicDistributionPayloadPointer) {
-    logger.trace("payload - dynamicDistributionPointer: {}, dynamicDistributionPayloadPointer: {}", dynamicDistributionPointer, dynamicDistributionPayloadPointer);
-    DynamicDistribution.distribution(dynamicDistributionPointer, dynamicDistributionPayloadPointer);
+  public static void payload(MemorySegment dynamicDistributionAddress, MemorySegment dynamicDistributionPayloadAddress) {
+    logger.trace("payload - dynamicDistributionAddress: {}, dynamicDistributionPayloadAddress: {}", dynamicDistributionAddress, dynamicDistributionPayloadAddress);
+    DynamicDistribution.distribution(dynamicDistributionAddress, dynamicDistributionPayloadAddress);
   }
 
-  public static MemorySegment payload(MemorySegment dynamicDistributionPointer) {
-    logger.trace("payload - dynamicDistributionPointer: {}", dynamicDistributionPointer);
-    return DynamicDistribution.distribution(dynamicDistributionPointer);
+  public static MemorySegment payload(MemorySegment dynamicDistributionAddress) {
+    logger.trace("payload - dynamicDistributionAddress: {}", dynamicDistributionAddress);
+    return DynamicDistribution.distribution(dynamicDistributionAddress);
   }
 }

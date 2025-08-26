@@ -4,31 +4,31 @@ import io.github.rdlopes.tfhe.ffm.ConfigurationBuilderBindings;
 
 import java.lang.foreign.MemorySegment;
 
-public record ConfigBuilder(MemorySegment pointer) implements Cloneable {
+public record ConfigBuilder(MemorySegment address) implements Cloneable {
 
   public ConfigBuilder() {
     this(ConfigurationBuilderBindings.allocate());
-    ConfigurationBuilderBindings.initialize(pointer);
+    ConfigurationBuilderBindings.initialize(address);
   }
 
   public ConfigBuilder useCustomParameters(ShortintPBSParameters parameters) {
-    ConfigurationBuilderBindings.useCustomParameters(pointer, parameters.pointer());
+    ConfigurationBuilderBindings.useCustomParameters(address, parameters.address());
     return this;
   }
 
   public ConfigBuilder useDedicatedCompactPublicKeyParameters(ShortintCompactPublicKeyEncryptionParameters compactPublicKeyParameters) {
-    ConfigurationBuilderBindings.useDedicatedCompactPublicKeyParameters(pointer, compactPublicKeyParameters.pointer());
+    ConfigurationBuilderBindings.useDedicatedCompactPublicKeyParameters(address, compactPublicKeyParameters.address());
     return this;
   }
 
   public ConfigBuilder enableCompression(CompressionParameters compressionParameters) {
-    ConfigurationBuilderBindings.enableCompression(pointer, compressionParameters.pointer());
+    ConfigurationBuilderBindings.enableCompression(address, compressionParameters.address());
     return this;
   }
 
   public Config build() {
     Config config = new Config();
-    ConfigurationBuilderBindings.build(pointer, config.pointer());
+    ConfigurationBuilderBindings.build(address, config.address());
     return config;
   }
 
@@ -36,7 +36,7 @@ public record ConfigBuilder(MemorySegment pointer) implements Cloneable {
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public ConfigBuilder clone() {
     ConfigBuilder configBuilder = new ConfigBuilder();
-    ConfigurationBuilderBindings.clone(pointer, configBuilder.pointer());
+    ConfigurationBuilderBindings.clone(address, configBuilder.address());
     return configBuilder;
   }
 }

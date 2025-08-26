@@ -4,20 +4,20 @@ import io.github.rdlopes.tfhe.ffm.ModulusSwitchTypeBindings;
 
 import java.lang.foreign.MemorySegment;
 
-public record ModulusSwitchType(MemorySegment pointer) {
+public record ModulusSwitchType(MemorySegment address) {
 
   public ModulusSwitchType(long tag, ModulusSwitchNoiseReductionParams modulusSwitchNoiseReductionParams) {
     this(ModulusSwitchTypeBindings.allocate());
 
-    ModulusSwitchTypeBindings.tag(pointer, tag);
-    ModulusSwitchTypeBindings.modulusSwitchNoiseReductionParams(pointer, modulusSwitchNoiseReductionParams.pointer());
+    ModulusSwitchTypeBindings.tag(address, tag);
+    ModulusSwitchTypeBindings.modulusSwitchNoiseReductionParams(address, modulusSwitchNoiseReductionParams.address());
   }
 
   public long tag() {
-    return ModulusSwitchTypeBindings.tag(pointer);
+    return ModulusSwitchTypeBindings.tag(address);
   }
 
   public ModulusSwitchNoiseReductionParams modulusSwitchNoiseReductionParams() {
-    return new ModulusSwitchNoiseReductionParams(ModulusSwitchTypeBindings.modulusSwitchNoiseReductionParams(pointer));
+    return new ModulusSwitchNoiseReductionParams(ModulusSwitchTypeBindings.modulusSwitchNoiseReductionParams(address));
   }
 }

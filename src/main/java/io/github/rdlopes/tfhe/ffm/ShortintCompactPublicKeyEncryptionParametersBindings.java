@@ -15,73 +15,73 @@ public final class ShortintCompactPublicKeyEncryptionParametersBindings extends 
     return LIBRARY_ARENA.allocate(ShortintCompactPublicKeyEncryptionParameters.layout());
   }
 
-  public static void encryptionLweDimension(MemorySegment pointer, int encryptionLweDimension) {
-    logger.trace("encryptionLweDimension - pointer: {}, encryptionLweDimension: {}", pointer, encryptionLweDimension);
-    ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(pointer, encryptionLweDimension);
+  public static void encryptionLweDimension(MemorySegment address, long encryptionLweDimension) {
+    logger.trace("encryptionLweDimension - address: {}, encryptionLweDimension: {}", address, encryptionLweDimension);
+    ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(address, encryptionLweDimension);
   }
 
-  public static void encryptionNoiseDistribution(MemorySegment pointer, MemorySegment encryptionNoiseDistribution) {
-    logger.trace("encryptionNoiseDistribution - pointer: {}, encryptionNoiseDistribution: {}", pointer, encryptionNoiseDistribution);
-    ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(pointer, encryptionNoiseDistribution);
+  public static void encryptionNoiseDistribution(MemorySegment address, MemorySegment encryptionNoiseDistribution) {
+    logger.trace("encryptionNoiseDistribution - address: {}, encryptionNoiseDistribution: {}", address, encryptionNoiseDistribution);
+    ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(address, encryptionNoiseDistribution);
   }
 
-  public static void messageModulus(MemorySegment pointer, int messageModulus) {
-    logger.trace("messageModulus - pointer: {}, messageModulus: {}", pointer, messageModulus);
-    ShortintCompactPublicKeyEncryptionParameters.message_modulus(pointer, messageModulus);
+  public static void messageModulus(MemorySegment address, long messageModulus) {
+    logger.trace("messageModulus - address: {}, messageModulus: {}", address, messageModulus);
+    ShortintCompactPublicKeyEncryptionParameters.message_modulus(address, messageModulus);
   }
 
-  public static void carryModulus(MemorySegment pointer, int carryModulus) {
-    logger.trace("carryModulus - pointer: {}, carryModulus: {}", pointer, carryModulus);
-    ShortintCompactPublicKeyEncryptionParameters.carry_modulus(pointer, carryModulus);
+  public static void carryModulus(MemorySegment address, long carryModulus) {
+    logger.trace("carryModulus - address: {}, carryModulus: {}", address, carryModulus);
+    ShortintCompactPublicKeyEncryptionParameters.carry_modulus(address, carryModulus);
   }
 
-  public static void modulusPowerOf2Exponent(MemorySegment pointer, int modulusPowerOf2Exponent) {
-    logger.trace("modulusPowerOf2Exponent - pointer: {}, modulusPowerOf2Exponent: {}", pointer, modulusPowerOf2Exponent);
-    ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(pointer, modulusPowerOf2Exponent);
+  public static void modulusPowerOf2Exponent(MemorySegment address, long modulusPowerOf2Exponent) {
+    logger.trace("modulusPowerOf2Exponent - address: {}, modulusPowerOf2Exponent: {}", address, modulusPowerOf2Exponent);
+    ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(address, modulusPowerOf2Exponent);
   }
 
-  public static void castingParameters(MemorySegment pointer, MemorySegment castingParameters) {
-    logger.trace("castingParameters - pointer: {}, castingParameters: {}", pointer, castingParameters);
-    ShortintCompactPublicKeyEncryptionParameters.casting_parameters(pointer, castingParameters);
+  public static void castingParameters(MemorySegment address, MemorySegment castingParameters) {
+    logger.trace("castingParameters - address: {}, castingParameters: {}", address, castingParameters);
+    ShortintCompactPublicKeyEncryptionParameters.casting_parameters(address, castingParameters);
   }
 
-  public static void zkScheme(MemorySegment pointer, int zkScheme) {
-    logger.trace("zkScheme - pointer: {}, zkScheme: {}", pointer, zkScheme);
-    ShortintCompactPublicKeyEncryptionParameters.zk_scheme(pointer, zkScheme);
+  public static void zkScheme(MemorySegment address, int zkScheme) {
+    logger.trace("zkScheme - address: {}, zkScheme: {}", address, zkScheme);
+    ShortintCompactPublicKeyEncryptionParameters.zk_scheme(address, zkScheme);
   }
 
-  public static long encryptionLweDimension(MemorySegment pointer) {
-    logger.trace("encryptionLweDimension - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(pointer);
+  public static long encryptionLweDimension(MemorySegment address) {
+    logger.trace("encryptionLweDimension - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(address);
   }
 
-  public static MemorySegment encryptionNoiseDistribution(MemorySegment pointer) {
-    logger.trace("encryptionNoiseDistribution - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(pointer);
+  public static MemorySegment encryptionNoiseDistribution(MemorySegment address) {
+    logger.trace("encryptionNoiseDistribution - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(address);
   }
 
-  public static long messageModulus(MemorySegment pointer) {
-    logger.trace("messageModulus - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.message_modulus(pointer);
+  public static long messageModulus(MemorySegment address) {
+    logger.trace("messageModulus - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.message_modulus(address);
   }
 
-  public static long carryModulus(MemorySegment pointer) {
-    logger.trace("carryModulus - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.carry_modulus(pointer);
+  public static long carryModulus(MemorySegment address) {
+    logger.trace("carryModulus - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.carry_modulus(address);
   }
 
-  public static long modulusPowerOf2Exponent(MemorySegment pointer) {
-    logger.trace("modulusPowerOf2Exponent - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(pointer);
+  public static long modulusPowerOf2Exponent(MemorySegment address) {
+    logger.trace("modulusPowerOf2Exponent - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(address);
   }
 
-  public static MemorySegment castingParameters(MemorySegment pointer) {
-    logger.trace("castingParameters - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.casting_parameters(pointer);
+  public static MemorySegment castingParameters(MemorySegment address) {
+    logger.trace("castingParameters - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.casting_parameters(address);
   }
 
-  public static int zkScheme(MemorySegment pointer) {
-    logger.trace("zkScheme - pointer: {}", pointer);
-    return ShortintCompactPublicKeyEncryptionParameters.zk_scheme(pointer);
+  public static int zkScheme(MemorySegment address) {
+    logger.trace("zkScheme - address: {}", address);
+    return ShortintCompactPublicKeyEncryptionParameters.zk_scheme(address);
   }
 }

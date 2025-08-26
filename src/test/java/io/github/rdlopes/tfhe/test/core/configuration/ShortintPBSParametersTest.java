@@ -30,7 +30,7 @@ class ShortintPBSParametersTest {
   @FieldSource
   void predefinedParameters(ShortintPBSParameters parameters) {
     assertThat(parameters).isNotNull();
-    assertThat(parameters.pointer()).isNotNull();
+    assertThat(parameters.address()).isNotNull();
   }
 
   @Test

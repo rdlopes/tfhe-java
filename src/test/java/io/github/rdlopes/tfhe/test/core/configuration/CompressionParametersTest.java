@@ -30,7 +30,7 @@ class CompressionParametersTest {
   @FieldSource
   void predefinedParameters(CompressionParameters parameters) {
     assertThat(parameters).isNotNull();
-    assertThat(parameters.pointer()).isNotNull();
+    assertThat(parameters.address()).isNotNull();
   }
 
   @Test

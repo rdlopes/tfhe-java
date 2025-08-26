@@ -6,12 +6,12 @@ import io.github.rdlopes.tfhe.ffm.TUniformBindings;
 
 import java.lang.foreign.MemorySegment;
 
-public record DynamicDistribution(MemorySegment pointer) {
+public record DynamicDistribution(MemorySegment address) {
 
   public DynamicDistribution(long tag, DynamicDistributionPayload distribution) {
     this(DynamicDistributionBindings.allocate());
-    DynamicDistributionBindings.tag(pointer, tag);
-    DynamicDistributionBindings.payload(pointer, distribution.pointer());
+    DynamicDistributionBindings.tag(address, tag);
+    DynamicDistributionBindings.payload(address, distribution.address());
   }
 
   public DynamicDistribution(double stdDev) {
@@ -23,10 +23,10 @@ public record DynamicDistribution(MemorySegment pointer) {
   }
 
   public long tag() {
-    return DynamicDistributionBindings.tag(pointer);
+    return DynamicDistributionBindings.tag(address);
   }
 
   public DynamicDistributionPayload distribution() {
-    return new DynamicDistributionPayload(DynamicDistributionBindings.payload(pointer));
+    return new DynamicDistributionPayload(DynamicDistributionBindings.payload(address));
   }
 }

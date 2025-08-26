@@ -15,23 +15,23 @@ public final class ModulusSwitchTypeBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(ModulusSwitchType.layout());
   }
 
-  public static void tag(MemorySegment pointer, long tag) {
-    logger.trace("tag - pointer: {}, tag: {}", pointer, tag);
-    ModulusSwitchType.tag(pointer, tag);
+  public static void tag(MemorySegment address, long tag) {
+    logger.trace("tag - address: {}, tag: {}", address, tag);
+    ModulusSwitchType.tag(address, tag);
   }
 
-  public static void modulusSwitchNoiseReductionParams(MemorySegment pointer, MemorySegment modulusSwitchNoiseReductionParams) {
-    logger.trace("modulusSwitchNoiseReductionParams - pointer: {}, modulusSwitchNoiseReductionParams: {}", pointer, modulusSwitchNoiseReductionParams);
-    ModulusSwitchType.modulus_switch_noise_reduction_params(pointer, modulusSwitchNoiseReductionParams);
+  public static void modulusSwitchNoiseReductionParams(MemorySegment address, MemorySegment modulusSwitchNoiseReductionParams) {
+    logger.trace("modulusSwitchNoiseReductionParams - address: {}, modulusSwitchNoiseReductionParams: {}", address, modulusSwitchNoiseReductionParams);
+    ModulusSwitchType.modulus_switch_noise_reduction_params(address, modulusSwitchNoiseReductionParams);
   }
 
-  public static long tag(MemorySegment pointer) {
-    logger.trace("tag - pointer: {}", pointer);
-    return ModulusSwitchType.tag(pointer);
+  public static long tag(MemorySegment address) {
+    logger.trace("tag - address: {}", address);
+    return ModulusSwitchType.tag(address);
   }
 
-  public static MemorySegment modulusSwitchNoiseReductionParams(MemorySegment pointer) {
-    logger.trace("modulusSwitchNoiseReductionParams - pointer: {}", pointer);
-    return ModulusSwitchType.modulus_switch_noise_reduction_params(pointer);
+  public static MemorySegment modulusSwitchNoiseReductionParams(MemorySegment address) {
+    logger.trace("modulusSwitchNoiseReductionParams - address: {}", address);
+    return ModulusSwitchType.modulus_switch_noise_reduction_params(address);
   }
 }

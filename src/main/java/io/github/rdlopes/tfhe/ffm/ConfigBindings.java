@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.LIBRARY_ARENA;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public final class ConfigBindings extends BaseBindings {
   private static final Logger logger = LoggerFactory.getLogger(ConfigBindings.class);
@@ -14,5 +13,10 @@ public final class ConfigBindings extends BaseBindings {
   public static MemorySegment allocate() {
     logger.trace("allocate");
     return LIBRARY_ARENA.allocate(C_POINTER);
+  }
+
+  public static void generateKeys(MemorySegment config, MemorySegment clientKeyAddress, MemorySegment serverKeyAddress) {
+    logger.trace("generateKeys - config: {}, clientKeyAddress: {}, serverKeyAddress: {}", config, clientKeyAddress, serverKeyAddress);
+    executeWithErrorHandling(() -> generate_keys(addressValue(config), clientKeyAddress, serverKeyAddress));
   }
 }

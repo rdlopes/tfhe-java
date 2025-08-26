@@ -4,7 +4,7 @@ import io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParamsBindings;
 
 import java.lang.foreign.MemorySegment;
 
-public record ModulusSwitchNoiseReductionParams(MemorySegment pointer) {
+public record ModulusSwitchNoiseReductionParams(MemorySegment address) {
 
   public ModulusSwitchNoiseReductionParams(
     int modulusSwitchZerosCount,
@@ -14,25 +14,25 @@ public record ModulusSwitchNoiseReductionParams(MemorySegment pointer) {
   ) {
     this(ModulusSwitchNoiseReductionParamsBindings.allocate());
 
-    ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(pointer, modulusSwitchZerosCount);
-    ModulusSwitchNoiseReductionParamsBindings.msBound(pointer, msBound);
-    ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(pointer, msRSigmaFactor);
-    ModulusSwitchNoiseReductionParamsBindings.msInputVariance(pointer, msInputVariance);
+    ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(address, modulusSwitchZerosCount);
+    ModulusSwitchNoiseReductionParamsBindings.msBound(address, msBound);
+    ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(address, msRSigmaFactor);
+    ModulusSwitchNoiseReductionParamsBindings.msInputVariance(address, msInputVariance);
   }
 
   public int modulusSwitchZerosCount() {
-    return ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(address);
   }
 
   public double msBound() {
-    return ModulusSwitchNoiseReductionParamsBindings.msBound(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.msBound(address);
   }
 
   public double msRSigmaFactor() {
-    return ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(address);
   }
 
   public double msInputVariance() {
-    return ModulusSwitchNoiseReductionParamsBindings.msInputVariance(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.msInputVariance(address);
   }
 }

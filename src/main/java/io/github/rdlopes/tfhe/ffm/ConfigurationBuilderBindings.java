@@ -15,33 +15,33 @@ public final class ConfigurationBuilderBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(C_POINTER);
   }
 
-  public static void initialize(MemorySegment pointer) {
-    logger.trace("initialize - pointer: {}", pointer);
-    executeWithErrorHandling(() -> config_builder_default(pointer));
+  public static void initialize(MemorySegment address) {
+    logger.trace("initialize - address: {}", address);
+    executeWithErrorHandling(() -> config_builder_default(address));
   }
 
-  public static void build(MemorySegment pointer, MemorySegment configPointer) {
-    logger.trace("build - pointer: {}, configPointer: {}", pointer, configPointer);
-    executeWithErrorHandling(() -> config_builder_build(pointerValue(pointer), configPointer));
+  public static void build(MemorySegment address, MemorySegment configAddress) {
+    logger.trace("build - address: {}, configAddress: {}", address, configAddress);
+    executeWithErrorHandling(() -> config_builder_build(addressValue(address), configAddress));
   }
 
-  public static void clone(MemorySegment pointer, MemorySegment clonePointer) {
-    logger.trace("clone - pointer: {}, clonePointer: {}", pointer, clonePointer);
-    executeWithErrorHandling(() -> config_builder_build(pointerValue(pointer), clonePointer));
+  public static void clone(MemorySegment address, MemorySegment cloneAddress) {
+    logger.trace("clone - address: {}, cloneAddress: {}", address, cloneAddress);
+    executeWithErrorHandling(() -> config_builder_clone(addressValue(address), cloneAddress));
   }
 
-  public static void useCustomParameters(MemorySegment pointer, MemorySegment parametersPointer) {
-    logger.trace("useCustomParameters - pointer: {}, parametersPointer: {}", pointer, parametersPointer);
-    executeWithErrorHandling(() -> config_builder_use_custom_parameters(pointer, parametersPointer));
+  public static void useCustomParameters(MemorySegment address, MemorySegment parametersAddress) {
+    logger.trace("useCustomParameters - address: {}, parametersAddress: {}", address, parametersAddress);
+    executeWithErrorHandling(() -> config_builder_use_custom_parameters(address, parametersAddress));
   }
 
-  public static void useDedicatedCompactPublicKeyParameters(MemorySegment pointer, MemorySegment compactPublicKeyParametersPointer) {
-    logger.trace("useDedicatedCompactPublicKeyParameters - pointer: {}, compactPublicKeyParametersPointer: {}", pointer, compactPublicKeyParametersPointer);
-    executeWithErrorHandling(() -> use_dedicated_compact_public_key_parameters(pointer, compactPublicKeyParametersPointer));
+  public static void useDedicatedCompactPublicKeyParameters(MemorySegment address, MemorySegment compactPublicKeyParametersAddress) {
+    logger.trace("useDedicatedCompactPublicKeyParameters - address: {}, compactPublicKeyParametersAddress: {}", address, compactPublicKeyParametersAddress);
+    executeWithErrorHandling(() -> use_dedicated_compact_public_key_parameters(address, compactPublicKeyParametersAddress));
   }
 
-  public static void enableCompression(MemorySegment pointer, MemorySegment compressionParametersPointer) {
-    logger.trace("enableCompression - pointer: {}, compressionParametersPointer: {}", pointer, compressionParametersPointer);
-    executeWithErrorHandling(() -> config_builder_enable_compression(pointer, compressionParametersPointer));
+  public static void enableCompression(MemorySegment address, MemorySegment compressionParametersAddress) {
+    logger.trace("enableCompression - address: {}, compressionParametersAddress: {}", address, compressionParametersAddress);
+    executeWithErrorHandling(() -> config_builder_enable_compression(address, compressionParametersAddress));
   }
 }

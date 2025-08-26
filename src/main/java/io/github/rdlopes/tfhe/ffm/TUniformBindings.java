@@ -21,13 +21,13 @@ public final class TUniformBindings extends BaseBindings {
     return new_t_uniform(LIBRARY_ARENA, boundLog2);
   }
 
-  public static void boundLog2(MemorySegment pointer, int boundLog2) {
-    logger.trace("boundLog2 - pointer: {}, boundLog2: {}", pointer, boundLog2);
-    TUniform.bound_log2(pointer, boundLog2);
+  public static void boundLog2(MemorySegment address, int boundLog2) {
+    logger.trace("boundLog2 - address: {}, boundLog2: {}", address, boundLog2);
+    TUniform.bound_log2(address, boundLog2);
   }
 
-  public static int boundLog2(MemorySegment pointer) {
-    logger.trace("boundLog2 - pointer: {}", pointer);
-    return TUniform.bound_log2(pointer);
+  public static int boundLog2(MemorySegment address) {
+    logger.trace("boundLog2 - address: {}", address);
+    return TUniform.bound_log2(address);
   }
 }

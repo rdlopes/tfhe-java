@@ -15,23 +15,23 @@ public final class DynamicDistributionPayloadBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(DynamicDistributionPayload.layout());
   }
 
-  public static void gaussian(MemorySegment pointer, MemorySegment gaussian) {
-    logger.trace("gaussian - pointer: {}, gaussian: {}", pointer, gaussian);
-    DynamicDistributionPayload.gaussian(pointer, gaussian);
+  public static void gaussian(MemorySegment address, MemorySegment gaussian) {
+    logger.trace("gaussian - address: {}, gaussian: {}", address, gaussian);
+    DynamicDistributionPayload.gaussian(address, gaussian);
   }
 
-  public static void tUniform(MemorySegment pointer, MemorySegment tUniform) {
-    logger.trace("tUniform - pointer: {}, tUniform: {}", pointer, tUniform);
-    DynamicDistributionPayload.t_uniform(pointer, tUniform);
+  public static void tUniform(MemorySegment address, MemorySegment tUniform) {
+    logger.trace("tUniform - address: {}, tUniform: {}", address, tUniform);
+    DynamicDistributionPayload.t_uniform(address, tUniform);
   }
 
-  public static MemorySegment gaussian(MemorySegment pointer) {
-    logger.trace("gaussian - pointer: {}", pointer);
-    return DynamicDistributionPayload.gaussian(pointer);
+  public static MemorySegment gaussian(MemorySegment address) {
+    logger.trace("gaussian - address: {}", address);
+    return DynamicDistributionPayload.gaussian(address);
   }
 
-  public static MemorySegment tUniform(MemorySegment pointer) {
-    logger.trace("tUniform - pointer: {}", pointer);
-    return DynamicDistributionPayload.t_uniform(pointer);
+  public static MemorySegment tUniform(MemorySegment address) {
+    logger.trace("tUniform - address: {}", address);
+    return DynamicDistributionPayload.t_uniform(address);
   }
 }
