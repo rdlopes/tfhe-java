@@ -4,12 +4,10 @@ import io.github.rdlopes.tfhe.ffm.ModulusSwitchTypeBindings;
 
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.ffm.ModulusSwitchTypeBindings.allocate;
-
 public record ModulusSwitchType(MemorySegment pointer) {
 
   public ModulusSwitchType(long tag, ModulusSwitchNoiseReductionParams modulusSwitchNoiseReductionParams) {
-    this(allocate());
+    this(ModulusSwitchTypeBindings.allocate());
 
     ModulusSwitchTypeBindings.tag(pointer, tag);
     ModulusSwitchTypeBindings.modulusSwitchNoiseReductionParams(pointer, modulusSwitchNoiseReductionParams.pointer());

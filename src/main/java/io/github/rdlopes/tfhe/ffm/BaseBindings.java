@@ -35,5 +35,4 @@ public abstract class BaseBindings {
     logger.trace("pointerValue - pointer: {}", pointer);
     return pointer.get(C_POINTER, 0);
   }
-
 }
