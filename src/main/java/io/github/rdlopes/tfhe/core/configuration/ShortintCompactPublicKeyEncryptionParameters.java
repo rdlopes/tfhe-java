@@ -1,10 +1,10 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
+import io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParametersBindings;
+
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.ffm.CompactPublicKeyParameters.*;
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateShortintCompactPublicKeyEncryptionParameters;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.*;
+import static io.github.rdlopes.tfhe.ffm.CompactPublicKeyParametersBindings.*;
 
 public record ShortintCompactPublicKeyEncryptionParameters(MemorySegment pointer) {
 
@@ -24,42 +24,42 @@ public record ShortintCompactPublicKeyEncryptionParameters(MemorySegment pointer
     ShortintPBSParameters castingParameters,
     int zkScheme
   ) {
-    this(allocateShortintCompactPublicKeyEncryptionParameters());
+    this(ShortintCompactPublicKeyEncryptionParametersBindings.allocate());
 
-    shortintCompactPublicKeyEncryptionParametersEncryptionLweDimension(pointer, (int) encryptionLweDimension);
-    shortintCompactPublicKeyEncryptionParametersEncryptionNoiseDistribution(pointer, encryptionNoiseDistribution.pointer());
-    shortintCompactPublicKeyEncryptionParametersMessageModulus(pointer, (int) messageModulus);
-    shortintCompactPublicKeyEncryptionParametersCarryModulus(pointer, (int) carryModulus);
-    shortintCompactPublicKeyEncryptionParametersModulusPowerOf2Exponent(pointer, (int) modulusPowerOf2Exponent);
-    shortintCompactPublicKeyEncryptionParametersCastingParameters(pointer, castingParameters.pointer());
-    shortintCompactPublicKeyEncryptionParametersZkScheme(pointer, zkScheme);
+    ShortintCompactPublicKeyEncryptionParametersBindings.encryptionLweDimension(pointer, (int) encryptionLweDimension);
+    ShortintCompactPublicKeyEncryptionParametersBindings.encryptionNoiseDistribution(pointer, encryptionNoiseDistribution.pointer());
+    ShortintCompactPublicKeyEncryptionParametersBindings.messageModulus(pointer, (int) messageModulus);
+    ShortintCompactPublicKeyEncryptionParametersBindings.carryModulus(pointer, (int) carryModulus);
+    ShortintCompactPublicKeyEncryptionParametersBindings.modulusPowerOf2Exponent(pointer, (int) modulusPowerOf2Exponent);
+    ShortintCompactPublicKeyEncryptionParametersBindings.castingParameters(pointer, castingParameters.pointer());
+    ShortintCompactPublicKeyEncryptionParametersBindings.zkScheme(pointer, zkScheme);
   }
 
   public long encryptionLweDimension() {
-    return shortintCompactPublicKeyEncryptionParametersEncryptionLweDimension(pointer);
+    return ShortintCompactPublicKeyEncryptionParametersBindings.encryptionLweDimension(pointer);
   }
 
   public DynamicDistribution encryptionNoiseDistribution() {
-    return new DynamicDistribution(shortintCompactPublicKeyEncryptionParametersEncryptionNoiseDistribution(pointer));
+    return new DynamicDistribution(ShortintCompactPublicKeyEncryptionParametersBindings.encryptionNoiseDistribution(pointer));
   }
 
   public long messageModulus() {
-    return shortintCompactPublicKeyEncryptionParametersMessageModulus(pointer);
+    return ShortintCompactPublicKeyEncryptionParametersBindings.messageModulus(pointer);
   }
 
   public long carryModulus() {
-    return shortintCompactPublicKeyEncryptionParametersCarryModulus(pointer);
+    return ShortintCompactPublicKeyEncryptionParametersBindings.carryModulus(pointer);
   }
 
   public long modulusPowerOf2Exponent() {
-    return shortintCompactPublicKeyEncryptionParametersModulusPowerOf2Exponent(pointer);
+    return ShortintCompactPublicKeyEncryptionParametersBindings.modulusPowerOf2Exponent(pointer);
   }
 
   public ShortintPBSParameters castingParameters() {
-    return new ShortintPBSParameters(shortintCompactPublicKeyEncryptionParametersCastingParameters(pointer));
+    return new ShortintPBSParameters(ShortintCompactPublicKeyEncryptionParametersBindings.castingParameters(pointer));
   }
 
   public int zkScheme() {
-    return shortintCompactPublicKeyEncryptionParametersZkScheme(pointer);
+    return ShortintCompactPublicKeyEncryptionParametersBindings.zkScheme(pointer);
   }
 }

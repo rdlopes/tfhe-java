@@ -1,10 +1,11 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
+import io.github.rdlopes.tfhe.ffm.ShortintPBSParametersBindings;
+
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.ffm.ConfigurationParameters.*;
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateShortintPBSParameters;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.*;
+import static io.github.rdlopes.tfhe.ffm.ConfigurationParametersBindings.*;
+
 
 public record ShortintPBSParameters(MemorySegment pointer) {
 
@@ -378,88 +379,88 @@ public record ShortintPBSParameters(MemorySegment pointer) {
     int encryptionKeyChoice,
     ModulusSwitchType modulusSwitchNoiseReductionParams
   ) {
-    this(allocateShortintPBSParameters());
+    this(ShortintPBSParametersBindings.allocate());
 
-    shortintPBSParametersLweDimension(pointer, (int) lweDimension);
-    shortintPBSParametersGlweDimension(pointer, (int) glweDimension);
-    shortintPBSParametersPolynomialSize(pointer, (int) polynomialSize);
-    shortintPBSParametersLweNoiseDistribution(pointer, lweNoiseDistribution.pointer());
-    shortintPBSParametersGlweNoiseDistribution(pointer, glweNoiseDistribution.pointer());
-    shortintPBSParametersPbsBaseLog(pointer, (int) pbsBaseLog);
-    shortintPBSParametersPbsLevel(pointer, (int) pbsLevel);
-    shortintPBSParametersKsBaseLog(pointer, (int) ksBaseLog);
-    shortintPBSParametersKsLevel(pointer, (int) ksLevel);
-    shortintPBSParametersMessageModulus(pointer, (int) messageModulus);
-    shortintPBSParametersCarryModulus(pointer, (int) carryModulus);
-    shortintPBSParametersMaxNoiseLevel(pointer, maxNoiseLevel);
-    shortintPBSParametersLog2pFail(pointer, log2pFail);
-    shortintPBSParametersModulusPowerOf2Exponent(pointer, (int) modulusPowerOf2Exponent);
-    shortintPBSParametersEncryptionKeyChoice(pointer, encryptionKeyChoice);
-    shortintPBSParametersModulusSwitchNoiseReductionParams(pointer, modulusSwitchNoiseReductionParams.pointer());
+    ShortintPBSParametersBindings.lweDimension(pointer, (int) lweDimension);
+    ShortintPBSParametersBindings.glweDimension(pointer, (int) glweDimension);
+    ShortintPBSParametersBindings.polynomialSize(pointer, (int) polynomialSize);
+    ShortintPBSParametersBindings.lweNoiseDistribution(pointer, lweNoiseDistribution.pointer());
+    ShortintPBSParametersBindings.glweNoiseDistribution(pointer, glweNoiseDistribution.pointer());
+    ShortintPBSParametersBindings.pbsBaseLog(pointer, (int) pbsBaseLog);
+    ShortintPBSParametersBindings.pbsLevel(pointer, (int) pbsLevel);
+    ShortintPBSParametersBindings.ksBaseLog(pointer, (int) ksBaseLog);
+    ShortintPBSParametersBindings.ksLevel(pointer, (int) ksLevel);
+    ShortintPBSParametersBindings.messageModulus(pointer, (int) messageModulus);
+    ShortintPBSParametersBindings.carryModulus(pointer, (int) carryModulus);
+    ShortintPBSParametersBindings.maxNoiseLevel(pointer, maxNoiseLevel);
+    ShortintPBSParametersBindings.log2pFail(pointer, log2pFail);
+    ShortintPBSParametersBindings.modulusPowerOf2Exponent(pointer, (int) modulusPowerOf2Exponent);
+    ShortintPBSParametersBindings.encryptionKeyChoice(pointer, encryptionKeyChoice);
+    ShortintPBSParametersBindings.modulusSwitchNoiseReductionParams(pointer, modulusSwitchNoiseReductionParams.pointer());
   }
 
   // Record accessor methods that read from native memory
   public long lweDimension() {
-    return shortintPBSParametersLweDimension(pointer);
+    return ShortintPBSParametersBindings.lweDimension(pointer);
   }
 
   public long glweDimension() {
-    return shortintPBSParametersGlweDimension(pointer);
+    return ShortintPBSParametersBindings.glweDimension(pointer);
   }
 
   public long polynomialSize() {
-    return shortintPBSParametersPolynomialSize(pointer);
+    return ShortintPBSParametersBindings.polynomialSize(pointer);
   }
 
   public DynamicDistribution lweNoiseDistribution() {
-    return new DynamicDistribution(shortintPBSParametersLweNoiseDistribution(pointer));
+    return new DynamicDistribution(ShortintPBSParametersBindings.lweNoiseDistribution(pointer));
   }
 
   public DynamicDistribution glweNoiseDistribution() {
-    return new DynamicDistribution(shortintPBSParametersGlweNoiseDistribution(pointer));
+    return new DynamicDistribution(ShortintPBSParametersBindings.glweNoiseDistribution(pointer));
   }
 
   public long pbsBaseLog() {
-    return shortintPBSParametersPbsBaseLog(pointer);
+    return ShortintPBSParametersBindings.pbsBaseLog(pointer);
   }
 
   public long pbsLevel() {
-    return shortintPBSParametersPbsLevel(pointer);
+    return ShortintPBSParametersBindings.pbsLevel(pointer);
   }
 
   public long ksBaseLog() {
-    return shortintPBSParametersKsBaseLog(pointer);
+    return ShortintPBSParametersBindings.ksBaseLog(pointer);
   }
 
   public long ksLevel() {
-    return shortintPBSParametersKsLevel(pointer);
+    return ShortintPBSParametersBindings.ksLevel(pointer);
   }
 
   public long messageModulus() {
-    return shortintPBSParametersMessageModulus(pointer);
+    return ShortintPBSParametersBindings.messageModulus(pointer);
   }
 
   public long carryModulus() {
-    return shortintPBSParametersCarryModulus(pointer);
+    return ShortintPBSParametersBindings.carryModulus(pointer);
   }
 
   public long maxNoiseLevel() {
-    return (long) shortintPBSParametersMaxNoiseLevel(pointer);
+    return ShortintPBSParametersBindings.maxNoiseLevel(pointer);
   }
 
   public double log2pFail() {
-    return shortintPBSParametersLog2pFail(pointer);
+    return ShortintPBSParametersBindings.log2pFail(pointer);
   }
 
   public long modulusPowerOf2Exponent() {
-    return shortintPBSParametersModulusPowerOf2Exponent(pointer);
+    return ShortintPBSParametersBindings.modulusPowerOf2Exponent(pointer);
   }
 
   public int encryptionKeyChoice() {
-    return shortintPBSParametersEncryptionKeyChoice(pointer);
+    return ShortintPBSParametersBindings.encryptionKeyChoice(pointer);
   }
 
   public ModulusSwitchType modulusSwitchNoiseReductionParams() {
-    return new ModulusSwitchType(shortintPBSParametersModulusSwitchNoiseReductionParams(pointer));
+    return new ModulusSwitchType(ShortintPBSParametersBindings.modulusSwitchNoiseReductionParams(pointer));
   }
 }

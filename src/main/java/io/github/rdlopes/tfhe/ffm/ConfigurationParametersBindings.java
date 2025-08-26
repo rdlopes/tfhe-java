@@ -9,8 +9,8 @@ import java.lang.foreign.MemorySegment;
  * Contains all SHORTINT parameter constants.
  * This class contains all 357 SHORTINT_PARAM methods extracted from TfheNative.
  */
-public final class ConfigurationParameters extends TfheNativeBase {
-  private static final Logger logger = LoggerFactory.getLogger(ConfigurationParameters.class);
+public class ConfigurationParametersBindings extends BaseBindings {
+  private static final Logger logger = LoggerFactory.getLogger(ConfigurationParametersBindings.class);
 
   public static MemorySegment SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
     logger.trace("SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 -");

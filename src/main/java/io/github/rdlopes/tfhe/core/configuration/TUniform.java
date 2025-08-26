@@ -1,19 +1,18 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import java.lang.foreign.MemorySegment;
+import io.github.rdlopes.tfhe.ffm.TUniformBindings;
 
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateTUniform;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.tUniformBoundLog2;
+import java.lang.foreign.MemorySegment;
 
 public record TUniform(MemorySegment pointer) {
 
   public TUniform(int boundLog2) {
-    this(allocateTUniform());
+    this(TUniformBindings.allocate());
 
-    tUniformBoundLog2(pointer, boundLog2);
+    TUniformBindings.boundLog2(pointer, boundLog2);
   }
 
   public int boundLog2() {
-    return tUniformBoundLog2(pointer);
+    return TUniformBindings.boundLog2(pointer);
   }
 }

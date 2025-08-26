@@ -1,9 +1,8 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import java.lang.foreign.MemorySegment;
+import io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParamsBindings;
 
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateModulusSwitchNoiseReductionParams;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.*;
+import java.lang.foreign.MemorySegment;
 
 public record ModulusSwitchNoiseReductionParams(MemorySegment pointer) {
 
@@ -13,27 +12,27 @@ public record ModulusSwitchNoiseReductionParams(MemorySegment pointer) {
     double msRSigmaFactor,
     double msInputVariance
   ) {
-    this(allocateModulusSwitchNoiseReductionParams());
+    this(ModulusSwitchNoiseReductionParamsBindings.allocate());
 
-    modulusSwitchNoiseReductionParamsModulusSwitchZerosCount(pointer, modulusSwitchZerosCount);
-    modulusSwitchNoiseReductionParamsMsBound(pointer, msBound);
-    modulusSwitchNoiseReductionParamsMsRSigmaFactor(pointer, msRSigmaFactor);
-    modulusSwitchNoiseReductionParamsMsInputVariance(pointer, msInputVariance);
+    ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(pointer, modulusSwitchZerosCount);
+    ModulusSwitchNoiseReductionParamsBindings.msBound(pointer, msBound);
+    ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(pointer, msRSigmaFactor);
+    ModulusSwitchNoiseReductionParamsBindings.msInputVariance(pointer, msInputVariance);
   }
 
   public int modulusSwitchZerosCount() {
-    return modulusSwitchNoiseReductionParamsModulusSwitchZerosCount(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(pointer);
   }
 
   public double msBound() {
-    return modulusSwitchNoiseReductionParamsMsBound(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.msBound(pointer);
   }
 
   public double msRSigmaFactor() {
-    return modulusSwitchNoiseReductionParamsMsRSigmaFactor(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(pointer);
   }
 
   public double msInputVariance() {
-    return modulusSwitchNoiseReductionParamsMsInputVariance(pointer);
+    return ModulusSwitchNoiseReductionParamsBindings.msInputVariance(pointer);
   }
 }

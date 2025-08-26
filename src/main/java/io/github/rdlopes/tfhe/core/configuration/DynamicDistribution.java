@@ -1,33 +1,32 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
+import io.github.rdlopes.tfhe.ffm.DynamicDistributionBindings;
+import io.github.rdlopes.tfhe.ffm.GaussianBindings;
+import io.github.rdlopes.tfhe.ffm.TUniformBindings;
 
 import java.lang.foreign.MemorySegment;
-
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.*;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.dynamicDistributionPayload;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.dynamicDistributionTag;
 
 public record DynamicDistribution(MemorySegment pointer) {
 
   public DynamicDistribution(long tag, DynamicDistributionPayload distribution) {
-    this(allocateDynamicDistribution());
-    dynamicDistributionTag(pointer, tag);
-    dynamicDistributionPayload(pointer, distribution.pointer());
+    this(DynamicDistributionBindings.allocate());
+    DynamicDistributionBindings.tag(pointer, tag);
+    DynamicDistributionBindings.payload(pointer, distribution.pointer());
   }
 
   public DynamicDistribution(double stdDev) {
-    this(allocateGaussianFromStdDev(stdDev));
+    this(GaussianBindings.allocateFromStdDev(stdDev));
   }
 
   public DynamicDistribution(int boundLog2) {
-    this(allocateTUniform(boundLog2));
+    this(TUniformBindings.allocate(boundLog2));
   }
 
   public long tag() {
-    return dynamicDistributionTag(pointer);
+    return DynamicDistributionBindings.tag(pointer);
   }
 
   public DynamicDistributionPayload distribution() {
-    return new DynamicDistributionPayload(dynamicDistributionPayload(pointer));
+    return new DynamicDistributionPayload(DynamicDistributionBindings.payload(pointer));
   }
 }

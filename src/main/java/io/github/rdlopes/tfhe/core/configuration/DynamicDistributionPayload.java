@@ -1,30 +1,28 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import java.lang.foreign.MemorySegment;
+import io.github.rdlopes.tfhe.ffm.DynamicDistributionPayloadBindings;
 
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateDynamicDistributionPayload;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.dynamicDistributionPayloadGaussian;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.dynamicDistributionPayloadTUniform;
+import java.lang.foreign.MemorySegment;
 
 public record DynamicDistributionPayload(MemorySegment pointer) {
 
   public DynamicDistributionPayload(Gaussian gaussian) {
-    this(allocateDynamicDistributionPayload());
+    this(DynamicDistributionPayloadBindings.allocate());
 
-    dynamicDistributionPayloadGaussian(pointer, gaussian.pointer());
+    DynamicDistributionPayloadBindings.gaussian(pointer, gaussian.pointer());
   }
 
   public DynamicDistributionPayload(TUniform tUniform) {
-    this(allocateDynamicDistributionPayload());
+    this(DynamicDistributionPayloadBindings.allocate());
 
-    dynamicDistributionPayloadTUniform(pointer, tUniform.pointer());
+    DynamicDistributionPayloadBindings.tUniform(pointer, tUniform.pointer());
   }
 
   public Gaussian gaussian() {
-    return new Gaussian(dynamicDistributionPayloadGaussian(pointer));
+    return new Gaussian(DynamicDistributionPayloadBindings.gaussian(pointer));
   }
 
   public TUniform tUniform() {
-    return new TUniform(dynamicDistributionPayloadTUniform(pointer));
+    return new TUniform(DynamicDistributionPayloadBindings.tUniform(pointer));
   }
 }

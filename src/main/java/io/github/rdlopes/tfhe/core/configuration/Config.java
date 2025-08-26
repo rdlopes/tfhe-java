@@ -1,11 +1,11 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import java.lang.foreign.MemorySegment;
+import io.github.rdlopes.tfhe.ffm.ConfigBindings;
 
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateConfig;
+import java.lang.foreign.MemorySegment;
 
 public record Config(MemorySegment pointer) {
   public Config() {
-    this(allocateConfig());
+    this(ConfigBindings.allocate());
   }
 }

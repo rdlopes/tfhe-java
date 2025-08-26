@@ -1,19 +1,18 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import java.lang.foreign.MemorySegment;
+import io.github.rdlopes.tfhe.ffm.GaussianBindings;
 
-import static io.github.rdlopes.tfhe.ffm.TfheMemoryAllocator.allocateGaussian;
-import static io.github.rdlopes.tfhe.ffm.TfheParameterAccessors.gaussianStd;
+import java.lang.foreign.MemorySegment;
 
 public record Gaussian(MemorySegment pointer) {
 
   public Gaussian(double stdDev) {
-    this(allocateGaussian());
+    this(GaussianBindings.allocate());
 
-    gaussianStd(pointer, stdDev);
+    GaussianBindings.std(pointer, stdDev);
   }
 
   public double std() {
-    return gaussianStd(pointer);
+    return GaussianBindings.std(pointer);
   }
 }

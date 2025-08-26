@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.foreign.MemorySegment;
 
-public final class CompactPublicKeyParameters extends TfheNativeBase {
-  private static final Logger logger = LoggerFactory.getLogger(CompactPublicKeyParameters.class);
+public class CompactPublicKeyParametersBindings extends BaseBindings {
+  private static final Logger logger = LoggerFactory.getLogger(CompactPublicKeyParametersBindings.class);
 
   public static MemorySegment SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
     logger.trace("SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");

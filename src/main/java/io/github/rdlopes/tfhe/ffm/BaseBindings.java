@@ -9,8 +9,8 @@ import java.util.function.Supplier;
 
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
-public abstract class TfheNativeBase {
-  private static final Logger logger = LoggerFactory.getLogger(TfheNativeBase.class);
+public abstract class BaseBindings {
+  private static final Logger logger = LoggerFactory.getLogger(BaseBindings.class);
 
   static {
     NativeLibrary.load();
@@ -18,7 +18,7 @@ public abstract class TfheNativeBase {
     tfhe_error_disable_automatic_prints();
   }
 
-  protected static void checkNativeCall(Supplier<Integer> call) throws NativeCallException {
+  protected static void executeWithErrorHandling(Supplier<Integer> call) throws NativeCallException {
     logger.trace("nativeCall - call: {}", call);
 
     int result = call.get();
@@ -30,4 +30,10 @@ public abstract class TfheNativeBase {
       throw new NativeCallException(result, lastError);
     }
   }
+
+  public static MemorySegment pointerValue(MemorySegment pointer) {
+    logger.trace("pointerValue - pointer: {}", pointer);
+    return pointer.get(C_POINTER, 0);
+  }
+
 }
