@@ -48,6 +48,12 @@ public record ClientKey(MemorySegment address) {
     return compactPublicKey;
   }
 
+  public CompressedServerKey generateCompressedPublicKey() {
+    CompressedServerKey compressedServerKey = new CompressedServerKey();
+    ClientKeyBindings.generateCompressedPublicKey(address, compressedServerKey.address());
+    return compressedServerKey;
+  }
+
   public void destroy() {
     ClientKeyBindings.destroy(address);
   }

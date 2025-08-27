@@ -17,11 +17,6 @@ public final class CompressedServerKeyBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(C_POINTER);
   }
 
-  public static void createNew(MemorySegment clientKeyAddress, MemorySegment compressedServerKeyAddress) {
-    logger.trace("createNew - clientKeyAddress: {}, compressedServerKeyAddress: {}", clientKeyAddress, compressedServerKeyAddress);
-    executeWithErrorHandling(() -> compressed_server_key_new(addressValue(clientKeyAddress), compressedServerKeyAddress));
-  }
-
   public static void serialize(MemorySegment compressedServerKeyAddress, MemorySegment dynamicBufferAddress) {
     logger.trace("serialize - compressedServerKeyAddress: {}, dynamicBufferAddress: {}", compressedServerKeyAddress, dynamicBufferAddress);
     executeWithErrorHandling(() -> compressed_server_key_serialize(addressValue(compressedServerKeyAddress), dynamicBufferAddress));

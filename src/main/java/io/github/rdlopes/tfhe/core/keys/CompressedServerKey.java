@@ -12,11 +12,6 @@ public record CompressedServerKey(MemorySegment address) {
     this(CompressedServerKeyBindings.allocate());
   }
 
-  public CompressedServerKey(ClientKey clientKey) {
-    this();
-    CompressedServerKeyBindings.createNew(clientKey.address(), address);
-  }
-
   public static CompressedServerKey deserialize(DynamicBufferView bufferView) {
     CompressedServerKey compressedServerKey = new CompressedServerKey();
     CompressedServerKeyBindings.deserialize(bufferView.address(), compressedServerKey.address());

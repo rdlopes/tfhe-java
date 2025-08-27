@@ -8,6 +8,7 @@ import java.lang.foreign.MemorySegment;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.LIBRARY_ARENA;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader_1.public_key_new;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader_15.compressed_server_key_new;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.*;
 
 public final class ClientKeyBindings extends BaseBindings {
@@ -16,6 +17,11 @@ public final class ClientKeyBindings extends BaseBindings {
   public static MemorySegment allocate() {
     logger.trace("allocate");
     return LIBRARY_ARENA.allocate(C_POINTER);
+  }
+
+  public static void generateCompressedPublicKey(MemorySegment clientKeyAddress, MemorySegment compressedServerKeyAddress) {
+    logger.trace("createNew - clientKeyAddress: {}, compressedServerKeyAddress: {}", clientKeyAddress, compressedServerKeyAddress);
+    executeWithErrorHandling(() -> compressed_server_key_new(addressValue(clientKeyAddress), compressedServerKeyAddress));
   }
 
   public static void generatePublicKey(MemorySegment clientKeyAddress, MemorySegment publicKeyAddress) {

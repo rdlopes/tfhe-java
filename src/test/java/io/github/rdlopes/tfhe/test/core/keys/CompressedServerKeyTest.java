@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CompressedServerKeyTest {
 
   private ClientKey clientKey;
-  private CompressedServerKey compressedServerKey;
 
   @BeforeEach
   void setUp() {
@@ -25,19 +24,19 @@ class CompressedServerKeyTest {
     KeyPair keyPair = config.generateKeys();
     TfhePrivateKey privateKey = (TfhePrivateKey) keyPair.getPrivate();
     clientKey = privateKey.clientKey();
-    compressedServerKey = new CompressedServerKey(clientKey);
   }
 
   @Test
-  void createsFromClientKey() {
-    CompressedServerKey newCompressedServerKey = new CompressedServerKey(clientKey);
+  void initializesFromClientKey() {
+    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
 
-    assertThat(newCompressedServerKey).isNotNull();
-    assertThat(newCompressedServerKey.address()).isNotNull();
+    assertThat(compressedServerKey).isNotNull();
+    assertThat(compressedServerKey.address()).isNotNull();
   }
 
   @Test
   void serializesAndDeserializes() {
+    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
     DynamicBuffer dynamicBuffer = compressedServerKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -52,6 +51,7 @@ class CompressedServerKeyTest {
 
   @Test
   void safeSerializesAndSafeDeserializes() {
+    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
     DynamicBuffer dynamicBuffer = compressedServerKey.safeSerialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -66,6 +66,7 @@ class CompressedServerKeyTest {
 
   @Test
   void decompressesToServerKey() {
+    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
     ServerKey serverKey = compressedServerKey.decompress();
 
     assertThat(serverKey).isNotNull();
@@ -74,8 +75,7 @@ class CompressedServerKeyTest {
 
   @Test
   void destroys() {
-    CompressedServerKey tempCompressedServerKey = new CompressedServerKey(clientKey);
-
-    tempCompressedServerKey.destroy();
+    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
+    compressedServerKey.destroy();
   }
 }
