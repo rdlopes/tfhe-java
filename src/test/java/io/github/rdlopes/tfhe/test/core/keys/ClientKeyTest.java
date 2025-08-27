@@ -51,4 +51,11 @@ class ClientKeyTest {
     assertThat(deserializedClientKey).isNotNull();
     assertThat(deserializedClientKey.address()).isNotNull();
   }
+
+  @Test
+  void destroysSuccessfully() {
+    assertThat(clientKey.address()).isNotNull();
+
+    clientKey.destroy();
+  }
 }

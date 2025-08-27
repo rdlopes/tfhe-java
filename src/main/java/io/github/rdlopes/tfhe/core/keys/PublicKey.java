@@ -35,4 +35,8 @@ public record PublicKey(MemorySegment address) {
     PublicKeyBindings.safeSerialize(address, dynamicBuffer.address());
     return dynamicBuffer;
   }
+
+  public void destroy() {
+    PublicKeyBindings.destroy(address);
+  }
 }

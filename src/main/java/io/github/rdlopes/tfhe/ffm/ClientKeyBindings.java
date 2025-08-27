@@ -47,4 +47,9 @@ public final class ClientKeyBindings extends BaseBindings {
     logger.trace("safeDeserialize");
     executeWithErrorHandling(() -> client_key_safe_deserialize(dynamicBufferViewAddress, SERDE_MAX_SIZE, clientKeyAddress));
   }
+
+  public static void destroy(MemorySegment clientKeyAddress) {
+    logger.trace("destroy - clientKeyAddress: {}", clientKeyAddress);
+    executeWithErrorHandling(() -> client_key_destroy(addressValue(clientKeyAddress)));
+  }
 }

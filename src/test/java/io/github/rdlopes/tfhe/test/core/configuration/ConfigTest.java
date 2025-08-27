@@ -2,6 +2,7 @@ package io.github.rdlopes.tfhe.test.core.configuration;
 
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
+import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.jca.TfhePrivateKey;
 import io.github.rdlopes.tfhe.jca.TfhePublicKey;
 import org.junit.jupiter.api.Test;
@@ -14,15 +15,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ConfigTest {
 
   @Test
-  void testGenerateKeyPair() {
-    // Create Config object with default parameters
+  void generatesKeyPair() {
     Config config = new ConfigBuilder()
       .build();
 
-    // Generate KeyPair from Config
     KeyPair keyPair = config.generateKeys();
 
-    // Verify KeyPair generation
     assertThat(keyPair).isNotNull();
     assertThat(keyPair.getPublic()).isNotNull();
     assertThat(keyPair.getPrivate()).isNotNull();
@@ -33,20 +31,41 @@ class ConfigTest {
   }
 
   @Test
-  void testGenerateMultipleKeyPairs() {
-    // Create Config object with default parameters
+  void generatesClientKey() {
     Config config = new ConfigBuilder()
       .build();
 
-    // Generate first KeyPair successfully
+    ClientKey clientKey = config.generateClientKey();
+
+    assertThat(clientKey).isNotNull();
+    assertThat(clientKey.address()).isNotNull();
+  }
+
+  @Test
+  void doesNotGenerateMultipleClientKeys() {
+    Config config = new ConfigBuilder()
+      .build();
+
+    ClientKey clientKey = config.generateClientKey();
+    assertThat(clientKey).isNotNull();
+    assertThat(clientKey.address()).isNotNull();
+
+    assertThatThrownBy(config::generateClientKey)
+      .isInstanceOf(IllegalStateException.class)
+      .hasMessage("Keys have already been generated for this Config instance");
+  }
+
+  @Test
+  void doesNotGenerateMultipleKeyPairs() {
+    Config config = new ConfigBuilder()
+      .build();
+
     KeyPair keyPair1 = config.generateKeys();
 
-    // Verify first KeyPair generation
     assertThat(keyPair1).isNotNull();
     assertThat(keyPair1.getPublic()).isNotNull();
     assertThat(keyPair1.getPrivate()).isNotNull();
 
-    // Attempt to generate second KeyPair should throw exception
     assertThatThrownBy(config::generateKeys)
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Keys have already been generated for this Config instance");

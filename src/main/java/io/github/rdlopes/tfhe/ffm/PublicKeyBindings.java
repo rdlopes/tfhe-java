@@ -36,4 +36,9 @@ public final class PublicKeyBindings extends BaseBindings {
     logger.trace("safeDeserialize - dynamicBufferViewAddress: {}, publicKeyAddress: {}", dynamicBufferViewAddress, publicKeyAddress);
     executeWithErrorHandling(() -> public_key_safe_deserialize(dynamicBufferViewAddress, SERDE_MAX_SIZE, publicKeyAddress));
   }
+
+  public static void destroy(MemorySegment publicKeyAddress) {
+    logger.trace("destroy - publicKeyAddress: {}", publicKeyAddress);
+    executeWithErrorHandling(() -> public_key_destroy(addressValue(publicKeyAddress)));
+  }
 }

@@ -31,4 +31,9 @@ public final class ServerKeyBindings extends BaseBindings {
     logger.trace("deserialize - dynamicBufferViewAddress: {}, serverKeyAddress: {}", dynamicBufferViewAddress, serverKeyAddress);
     executeWithErrorHandling(() -> server_key_deserialize(dynamicBufferViewAddress, serverKeyAddress));
   }
+
+  public static void destroy(MemorySegment serverKeyAddress) {
+    logger.trace("destroy - serverKeyAddress: {}", serverKeyAddress);
+    executeWithErrorHandling(() -> server_key_destroy(addressValue(serverKeyAddress)));
+  }
 }

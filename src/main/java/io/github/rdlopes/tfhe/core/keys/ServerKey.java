@@ -28,4 +28,8 @@ public record ServerKey(MemorySegment address) {
     ServerKeyBindings.safeSerialize(address, buffer.address());
     return buffer;
   }
+
+  public void destroy() {
+    ServerKeyBindings.destroy(address);
+  }
 }

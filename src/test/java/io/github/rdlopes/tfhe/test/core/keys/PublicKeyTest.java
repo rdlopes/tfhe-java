@@ -53,4 +53,11 @@ class PublicKeyTest {
     assertThat(deserializedPublicKey).isNotNull();
     assertThat(deserializedPublicKey.address()).isNotNull();
   }
+
+  @Test
+  void destroysSuccessfully() {
+    assertThat(publicKey.address()).isNotNull();
+
+    publicKey.destroy();
+  }
 }

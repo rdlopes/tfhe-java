@@ -46,4 +46,11 @@ class ServerKeyTest {
     assertThat(dynamicBuffer.pointer()).isNotNull();
     assertThat(dynamicBuffer.length()).isGreaterThan(0);
   }
+
+  @Test
+  void destroysSuccessfully() {
+    assertThat(serverKey.address()).isNotNull();
+
+    serverKey.destroy();
+  }
 }

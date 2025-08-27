@@ -47,4 +47,8 @@ public record ClientKey(MemorySegment address) {
     ClientKeyBindings.generateCompactPublicKey(address, compactPublicKey.address());
     return compactPublicKey;
   }
+
+  public void destroy() {
+    ClientKeyBindings.destroy(address);
+  }
 }
