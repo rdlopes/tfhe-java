@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.security.KeyPair;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 class ServerKeyTest {
 
@@ -40,10 +39,11 @@ class ServerKeyTest {
   }
 
   @Test
-  void safeSerializesAndDeserializes() {
-    assertThatCode(() -> {
-      DynamicBuffer dynamicBuffer = serverKey.safeSerialize();
-      assertThat(dynamicBuffer).isNotNull();
-    }).hasMessage("Server key does not support safe serialization");
+  void safeSerializes() {
+    DynamicBuffer dynamicBuffer = serverKey.safeSerialize();
+
+    assertThat(dynamicBuffer).isNotNull();
+    assertThat(dynamicBuffer.pointer()).isNotNull();
+    assertThat(dynamicBuffer.length()).isGreaterThan(0);
   }
 }

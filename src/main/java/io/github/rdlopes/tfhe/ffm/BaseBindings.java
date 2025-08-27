@@ -12,7 +12,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public abstract class BaseBindings {
   private static final Logger logger = LoggerFactory.getLogger(BaseBindings.class);
 
-  public static final int SERDE_MAX_SIZE = Integer.MAX_VALUE;
+  public static final long SERDE_MAX_SIZE = Long.MAX_VALUE;
 
   static {
     NativeLibrary.load();

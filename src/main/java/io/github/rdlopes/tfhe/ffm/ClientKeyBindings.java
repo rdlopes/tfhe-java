@@ -7,6 +7,7 @@ import java.lang.foreign.MemorySegment;
 
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.LIBRARY_ARENA;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader_1.public_key_new;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.*;
 
 public final class ClientKeyBindings extends BaseBindings {
@@ -17,9 +18,14 @@ public final class ClientKeyBindings extends BaseBindings {
     return LIBRARY_ARENA.allocate(C_POINTER);
   }
 
-  public static void generate(MemorySegment configAddress, MemorySegment clientKeyAddress) {
-    logger.trace("generate");
-    executeWithErrorHandling(() -> client_key_generate(addressValue(configAddress), clientKeyAddress));
+  public static void generatePublicKey(MemorySegment clientKeyAddress, MemorySegment publicKeyAddress) {
+    logger.trace("generatePublicKey - clientKeyAddress: {}, publicKeyAddress: {}", clientKeyAddress, publicKeyAddress);
+    executeWithErrorHandling(() -> public_key_new(addressValue(clientKeyAddress), publicKeyAddress));
+  }
+
+  public static void generateCompactPublicKey(MemorySegment clientKeyAddress, MemorySegment compressedPublicKeyAddress) {
+    logger.trace("generateCompressedPublicKey - clientKeyAddress: {}, compressedPublicKeyAddress: {}", clientKeyAddress, compressedPublicKeyAddress);
+    executeWithErrorHandling(() -> compressed_compact_public_key_new(addressValue(clientKeyAddress), compressedPublicKeyAddress));
   }
 
   public static void serialize(MemorySegment clientKeyAddress, MemorySegment dynamicBufferAddress) {

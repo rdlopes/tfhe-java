@@ -19,4 +19,10 @@ public final class ConfigBindings extends BaseBindings {
     logger.trace("generateKeys - config: {}, clientKeyAddress: {}, serverKeyAddress: {}", config, clientKeyAddress, serverKeyAddress);
     executeWithErrorHandling(() -> generate_keys(addressValue(config), clientKeyAddress, serverKeyAddress));
   }
+
+  public static void generateClientKey(MemorySegment configAddress, MemorySegment clientKeyAddress) {
+    logger.trace("generate");
+    executeWithErrorHandling(() -> client_key_generate(addressValue(configAddress), clientKeyAddress));
+  }
+
 }

@@ -29,4 +29,14 @@ public record Config(MemorySegment address, AtomicBoolean keysGenerated) {
     keysGenerated.setRelease(true);
     return new KeyPair(new TfhePublicKey(serverKey), new TfhePrivateKey(clientKey));
   }
+
+  public ClientKey generateClientKey() {
+    if (keysGenerated.getAcquire()) {
+      throw new IllegalStateException("Keys have already been generated for this Config instance");
+    }
+    ClientKey clientKey = new ClientKey();
+    ConfigBindings.generateClientKey(address, clientKey.address());
+    keysGenerated.setRelease(true);
+    return clientKey;
+  }
 }

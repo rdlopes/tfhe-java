@@ -35,4 +35,16 @@ public record ClientKey(MemorySegment address) {
     ClientKeyBindings.safeSerialize(address, dynamicBuffer.address());
     return dynamicBuffer;
   }
+
+  public PublicKey generatePublicKey() {
+    PublicKey publicKey = new PublicKey();
+    ClientKeyBindings.generatePublicKey(address, publicKey.address());
+    return publicKey;
+  }
+
+  public CompactPublicKey generateCompactPublicKey() {
+    CompactPublicKey compactPublicKey = new CompactPublicKey();
+    ClientKeyBindings.generateCompactPublicKey(address, compactPublicKey.address());
+    return compactPublicKey;
+  }
 }
