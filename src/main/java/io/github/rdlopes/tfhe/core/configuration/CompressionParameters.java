@@ -30,15 +30,15 @@ public class CompressionParameters extends GroupLayoutPointer {
     DynamicDistribution packingKsKeyNoiseDistribution
   ) {
     super(TfheWrapper.CompressionParameters.layout());
-    TfheWrapper.CompressionParameters.br_level(getAddress(), brLevel);
-    TfheWrapper.CompressionParameters.br_base_log(getAddress(), brBaseLog);
-    TfheWrapper.CompressionParameters.packing_ks_level(getAddress(), packingKsLevel);
-    TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress(), packingKsBaseLog);
-    TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress(), packingKsPolynomialSize);
-    TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress(), packingKsGlweDimension);
-    TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress(), lwePerGlwe);
-    TfheWrapper.CompressionParameters.storage_log_modulus(getAddress(), storageLogModulus);
-    TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress(), packingKsKeyNoiseDistribution.getAddress());
+    setBrLevel(brLevel);
+    setBrBaseLog(brBaseLog);
+    setPackingKsLevel(packingKsLevel);
+    setPackingKsBaseLog(packingKsBaseLog);
+    setPackingKsPolynomialSize(packingKsPolynomialSize);
+    setPackingKsGlweDimension(packingKsGlweDimension);
+    setLwePerGlwe(lwePerGlwe);
+    setStorageLogModulus(storageLogModulus);
+    setPackingKsKeyNoiseDistribution(packingKsKeyNoiseDistribution);
   }
 
   public long getBrLevel() {

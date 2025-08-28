@@ -383,22 +383,22 @@ public class ShortintPBSParameters extends GroupLayoutPointer {
     ModulusSwitchType modulusSwitchNoiseReductionParams
   ) {
     super(io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.layout());
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_dimension(getAddress(), lweDimension);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_dimension(getAddress(), glweDimension);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.polynomial_size(getAddress(), polynomialSize);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_noise_distribution(getAddress(), lweNoiseDistribution.getAddress());
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_noise_distribution(getAddress(), glweNoiseDistribution.getAddress());
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_base_log(getAddress(), pbsBaseLog);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_level(getAddress(), pbsLevel);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_base_log(getAddress(), ksBaseLog);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_level(getAddress(), ksLevel);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.message_modulus(getAddress(), messageModulus);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.carry_modulus(getAddress(), carryModulus);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.max_noise_level(getAddress(), maxNoiseLevel);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.log2_p_fail(getAddress(), log2pFail);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_power_of_2_exponent(getAddress(), modulusPowerOf2Exponent);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.encryption_key_choice(getAddress(), encryptionKeyChoice);
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_switch_noise_reduction_params(getAddress(), modulusSwitchNoiseReductionParams.getAddress());
+    setLweDimension(lweDimension);
+    setGlweDimension(glweDimension);
+    setPolynomialSize(polynomialSize);
+    setLweNoiseDistribution(lweNoiseDistribution);
+    setGlweNoiseDistribution(glweNoiseDistribution);
+    setPbsBaseLog(pbsBaseLog);
+    setPbsLevel(pbsLevel);
+    setKsBaseLog(ksBaseLog);
+    setKsLevel(ksLevel);
+    setMessageModulus(messageModulus);
+    setCarryModulus(carryModulus);
+    setMaxNoiseLevel(maxNoiseLevel);
+    setLog2pFail(log2pFail);
+    setModulusPowerOf2Exponent(modulusPowerOf2Exponent);
+    setEncryptionKeyChoice(encryptionKeyChoice);
+    setModulusSwitchNoiseReductionParams(modulusSwitchNoiseReductionParams);
   }
 
   public long getLweDimension() {

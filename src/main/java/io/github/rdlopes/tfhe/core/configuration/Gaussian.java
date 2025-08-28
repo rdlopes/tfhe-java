@@ -13,7 +13,7 @@ public class Gaussian extends GroupLayoutPointer {
 
   public Gaussian(double stdDev) {
     super(io.github.rdlopes.tfhe.ffm.Gaussian.layout());
-    io.github.rdlopes.tfhe.ffm.Gaussian.std(getAddress(), stdDev);
+    setStd(stdDev);
   }
 
   public double getStd() {

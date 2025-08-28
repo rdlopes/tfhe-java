@@ -29,13 +29,13 @@ public class ShortintCompactPublicKeyEncryptionParameters extends GroupLayoutPoi
     int zkScheme
   ) {
     super(io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.layout());
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(getAddress(), (int) encryptionLweDimension);
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(getAddress(), encryptionNoiseDistribution.getAddress());
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.message_modulus(getAddress(), (int) messageModulus);
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.carry_modulus(getAddress(), (int) carryModulus);
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(getAddress(), (int) modulusPowerOf2Exponent);
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.casting_parameters(getAddress(), castingParameters.getAddress());
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.zk_scheme(getAddress(), zkScheme);
+    setEncryptionLweDimension(encryptionLweDimension);
+    setEncryptionNoiseDistribution(encryptionNoiseDistribution);
+    setMessageModulus(messageModulus);
+    setCarryModulus(carryModulus);
+    setModulusPowerOf2Exponent(modulusPowerOf2Exponent);
+    setCastingParameters(castingParameters);
+    setZkScheme(zkScheme);
   }
 
   public long getEncryptionLweDimension() {

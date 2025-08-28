@@ -10,10 +10,9 @@ public class TUniform extends GroupLayoutPointer {
     super(address, io.github.rdlopes.tfhe.ffm.TUniform.layout());
   }
 
-
   public TUniform(int boundLog2) {
     super(io.github.rdlopes.tfhe.ffm.TUniform.layout());
-    io.github.rdlopes.tfhe.ffm.TUniform.bound_log2(getAddress(), boundLog2);
+    setBoundLog2(boundLog2);
   }
 
   public int getBoundLog2() {

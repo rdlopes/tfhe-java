@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
 import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import java.lang.foreign.MemorySegment;
 
@@ -17,21 +18,11 @@ public class DynamicDistribution extends GroupLayoutPointer {
   }
 
   public DynamicDistribution(double stdDev) {
-    super(io.github.rdlopes.tfhe.ffm.DynamicDistribution.layout());
-    Gaussian gaussian = new Gaussian(stdDev);
-    DynamicDistributionPayload payload = new DynamicDistributionPayload();
-    payload.gaussian(gaussian.getAddress());
-    io.github.rdlopes.tfhe.ffm.DynamicDistribution.tag(getAddress(), 0L);
-    io.github.rdlopes.tfhe.ffm.DynamicDistribution.distribution(getAddress(), payload.getAddress());
+    super(TfheWrapper.new_gaussian_from_std_dev(ARENA, stdDev), io.github.rdlopes.tfhe.ffm.DynamicDistribution.layout());
   }
 
   public DynamicDistribution(int boundLog2) {
-    super(io.github.rdlopes.tfhe.ffm.DynamicDistribution.layout());
-    TUniform tUniform = new TUniform(boundLog2);
-    DynamicDistributionPayload payload = new DynamicDistributionPayload();
-    payload.tUniform(tUniform.getAddress());
-    io.github.rdlopes.tfhe.ffm.DynamicDistribution.tag(getAddress(), 1L);
-    io.github.rdlopes.tfhe.ffm.DynamicDistribution.distribution(getAddress(), payload.getAddress());
+    super(TfheWrapper.new_t_uniform(ARENA, boundLog2), io.github.rdlopes.tfhe.ffm.DynamicDistribution.layout());
   }
 
   public long getTag() {

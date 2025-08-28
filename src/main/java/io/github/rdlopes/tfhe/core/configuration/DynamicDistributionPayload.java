@@ -40,12 +40,4 @@ public class DynamicDistributionPayload extends GroupLayoutPointer {
   public void setTUniform(TUniform tUniform) {
     io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress(), tUniform.getAddress());
   }
-
-  public void gaussian(MemorySegment gaussianAddress) {
-    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.gaussian(getAddress(), gaussianAddress);
-  }
-
-  public void tUniform(MemorySegment tUniformAddress) {
-    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress(), tUniformAddress);
-  }
 }
