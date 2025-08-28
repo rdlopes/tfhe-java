@@ -1,45 +1,55 @@
 package io.github.rdlopes.tfhe.core.serde;
 
-import io.github.rdlopes.tfhe.ffm.DynamicBufferViewBindings;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-public record DynamicBufferView(MemorySegment address) {
+import static io.github.rdlopes.tfhe.ffm.DynamicBufferView.layout;
+
+public class DynamicBufferView extends GroupLayoutPointer {
+
+  public DynamicBufferView(MemorySegment address) {
+    super(address, layout());
+  }
 
   public DynamicBufferView() {
-    this(DynamicBufferViewBindings.allocate());
-  }
-
-  public MemorySegment pointer() {
-    return DynamicBufferViewBindings.pointer(address);
-  }
-
-  public void pointer(MemorySegment value) {
-    DynamicBufferViewBindings.pointer(address, value);
-  }
-
-  public long length() {
-    return DynamicBufferViewBindings.length(address);
-  }
-
-  public void length(long value) {
-    DynamicBufferViewBindings.length(address, value);
+    super(layout());
   }
 
   public static DynamicBufferView fromByteArray(byte[] bytes) {
     DynamicBufferView bufferView = new DynamicBufferView();
-    MemorySegment dataSegment = DynamicBufferViewBindings.allocateData(bytes.length);
+    MemorySegment dataSegment = ARENA.allocate(bytes.length);
     dataSegment.asByteBuffer()
                .put(bytes);
-    bufferView.pointer(dataSegment);
-    bufferView.length(bytes.length);
+    bufferView.setPointer(dataSegment);
+    bufferView.setLength(bytes.length);
     return bufferView;
   }
 
+  public MemorySegment getPointer() {
+    return io.github.rdlopes.tfhe.ffm.DynamicBufferView.pointer(getAddress());
+  }
+
+  public void setPointer(MemorySegment value) {
+    io.github.rdlopes.tfhe.ffm.DynamicBufferView.pointer(getAddress(), value);
+  }
+
+  public long getLength() {
+    return io.github.rdlopes.tfhe.ffm.DynamicBufferView.length(getAddress());
+  }
+
+  public void setLength(long value) {
+    io.github.rdlopes.tfhe.ffm.DynamicBufferView.length(getAddress(), value);
+  }
+
   public byte[] toByteArray() {
-    byte[] bytes = new byte[(int) length()];
-    pointer()
-      .reinterpret(length())
+    if (getLength() > Integer.MAX_VALUE) {
+      throw new IllegalStateException("The length of the buffer is too big");
+    }
+
+    byte[] bytes = new byte[(int) getLength()];
+    getPointer()
+      .reinterpret(getLength())
       .asByteBuffer()
       .get(bytes);
     return bytes;

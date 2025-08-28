@@ -1,18 +1,26 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import io.github.rdlopes.tfhe.ffm.TUniformBindings;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-public record TUniform(MemorySegment address) {
+public class TUniform extends GroupLayoutPointer {
 
-  public TUniform(int boundLog2) {
-    this(TUniformBindings.allocate());
-
-    TUniformBindings.boundLog2(address, boundLog2);
+  public TUniform(MemorySegment address) {
+    super(address, io.github.rdlopes.tfhe.ffm.TUniform.layout());
   }
 
-  public int boundLog2() {
-    return TUniformBindings.boundLog2(address);
+
+  public TUniform(int boundLog2) {
+    super(io.github.rdlopes.tfhe.ffm.TUniform.layout());
+    io.github.rdlopes.tfhe.ffm.TUniform.bound_log2(getAddress(), boundLog2);
+  }
+
+  public int getBoundLog2() {
+    return io.github.rdlopes.tfhe.ffm.TUniform.bound_log2(getAddress());
+  }
+
+  public void setBoundLog2(int boundLog2) {
+    io.github.rdlopes.tfhe.ffm.TUniform.bound_log2(getAddress(), boundLog2);
   }
 }

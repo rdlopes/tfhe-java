@@ -30,7 +30,7 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
   @FieldSource
   void predefinedParameters(ShortintCompactPublicKeyEncryptionParameters parameters) {
     assertThat(parameters).isNotNull();
-    assertThat(parameters.address()).isNotNull();
+    assertThat(parameters.getAddress()).isNotNull();
   }
 
   @Test
@@ -47,7 +47,7 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
 
     // Create a simplified ShortintPBSParameters with all required parameters
     // Using predefined constant for simplicity instead of creating complex constructor call
-    ShortintPBSParameters castingParams = ShortintCompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128.castingParameters();
+    ShortintPBSParameters castingParams = ShortintCompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128.getCastingParameters();
 
     // Create the parameters using the constructor
     ShortintCompactPublicKeyEncryptionParameters parameters = new ShortintCompactPublicKeyEncryptionParameters(
@@ -61,13 +61,13 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
     );
 
     // Test all getter methods
-    assertThat(parameters.encryptionLweDimension()).isEqualTo(encryptionLweDimension);
-    assertThat(parameters.messageModulus()).isEqualTo(messageModulus);
-    assertThat(parameters.carryModulus()).isEqualTo(carryModulus);
-    assertThat(parameters.modulusPowerOf2Exponent()).isEqualTo(modulusPowerOf2Exponent);
-    assertThat(parameters.zkScheme()).isEqualTo(zkScheme);
-    assertThat(parameters.encryptionNoiseDistribution()).isNotNull();
-    assertThat(parameters.castingParameters()).isNotNull();
+    assertThat(parameters.getEncryptionLweDimension()).isEqualTo(encryptionLweDimension);
+    assertThat(parameters.getMessageModulus()).isEqualTo(messageModulus);
+    assertThat(parameters.getCarryModulus()).isEqualTo(carryModulus);
+    assertThat(parameters.getModulusPowerOf2Exponent()).isEqualTo(modulusPowerOf2Exponent);
+    assertThat(parameters.getZkScheme()).isEqualTo(zkScheme);
+    assertThat(parameters.getEncryptionNoiseDistribution()).isNotNull();
+    assertThat(parameters.getCastingParameters()).isNotNull();
   }
 
 }

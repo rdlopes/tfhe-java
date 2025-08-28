@@ -1,35 +1,12 @@
 package io.github.rdlopes.tfhe.jca;
 
-import io.github.rdlopes.tfhe.core.keys.ServerKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 
 import java.security.PublicKey;
 
-public record TfhePublicKey(ServerKey serverKey) implements PublicKey {
-  public TfhePublicKey {
-    if (serverKey == null) {
-      throw new IllegalArgumentException("ServerKey cannot be null");
-    }
-  }
+public class TfhePublicKey extends TfheKey implements PublicKey {
 
-  @Override
-  public ServerKey serverKey() {
-    return serverKey;
-  }
-
-  @Override
-  public String getAlgorithm() {
-    return "TFHE";
-  }
-
-  @Override
-  public String getFormat() {
-    return "RAW";
-  }
-
-  @Override
-  public byte[] getEncoded() {
-    return serverKey.serialize()
-                    .view()
-                    .toByteArray();
+  public TfhePublicKey(DynamicBuffer keyBuffer) {
+    super(keyBuffer);
   }
 }

@@ -2,59 +2,55 @@ package io.github.rdlopes.tfhe.core.keys;
 
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import io.github.rdlopes.tfhe.ffm.ClientKeyBindings;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
-import java.lang.foreign.MemorySegment;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public record ClientKey(MemorySegment address) {
-
-  public ClientKey() {
-    this(ClientKeyBindings.allocate());
-  }
+public class ClientKey extends AddressLayoutPointer {
 
   public static ClientKey deserialize(DynamicBufferView bufferView) {
     ClientKey clientKey = new ClientKey();
-    ClientKeyBindings.deserialize(bufferView.address(), clientKey.address());
+    executeWithErrorHandling(() -> client_key_deserialize(bufferView.getAddress(), clientKey.getAddress()));
     return clientKey;
   }
 
   public static ClientKey safeDeserialize(DynamicBufferView bufferView) {
     ClientKey clientKey = new ClientKey();
-    ClientKeyBindings.safeDeserialize(bufferView.address(), clientKey.address());
+    executeWithErrorHandling(() -> client_key_safe_deserialize(bufferView.getAddress(), SERDE_MAX_SIZE, clientKey.getAddress()));
     return clientKey;
   }
 
   public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    ClientKeyBindings.serialize(address, dynamicBuffer.address());
+    executeWithErrorHandling(() -> client_key_serialize(getValue(), dynamicBuffer.getAddress()));
     return dynamicBuffer;
   }
 
   public DynamicBuffer safeSerialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    ClientKeyBindings.safeSerialize(address, dynamicBuffer.address());
+    executeWithErrorHandling(() -> client_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), SERDE_MAX_SIZE));
     return dynamicBuffer;
   }
 
   public PublicKey generatePublicKey() {
     PublicKey publicKey = new PublicKey();
-    ClientKeyBindings.generatePublicKey(address, publicKey.address());
+    executeWithErrorHandling(() -> public_key_new(getValue(), publicKey.getAddress()));
     return publicKey;
   }
 
-  public CompactPublicKey generateCompactPublicKey() {
-    CompactPublicKey compactPublicKey = new CompactPublicKey();
-    ClientKeyBindings.generateCompactPublicKey(address, compactPublicKey.address());
-    return compactPublicKey;
+  public CompressedCompactPublicKey generateCompactPublicKey() {
+    CompressedCompactPublicKey compressedCompactPublicKey = new CompressedCompactPublicKey();
+    executeWithErrorHandling(() -> compressed_compact_public_key_new(getValue(), compressedCompactPublicKey.getAddress()));
+    return compressedCompactPublicKey;
   }
 
   public CompressedServerKey generateCompressedPublicKey() {
     CompressedServerKey compressedServerKey = new CompressedServerKey();
-    ClientKeyBindings.generateCompressedPublicKey(address, compressedServerKey.address());
+    executeWithErrorHandling(() -> compressed_server_key_new(getValue(), compressedServerKey.getAddress()));
     return compressedServerKey;
   }
 
   public void destroy() {
-    ClientKeyBindings.destroy(address);
+    executeWithErrorHandling(() -> client_key_destroy(getValue()));
   }
 }

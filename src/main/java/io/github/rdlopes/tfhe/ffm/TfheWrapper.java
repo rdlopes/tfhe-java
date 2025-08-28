@@ -4,7 +4,7 @@ import java.lang.foreign.*;
 
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
-public class TfheHeaderExtension extends TfheHeader {
+public class TfheWrapper extends TfheHeader {
 
   public static MemorySegment SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
     return SymbolLookup.loaderLookup()

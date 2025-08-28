@@ -1,35 +1,12 @@
 package io.github.rdlopes.tfhe.jca;
 
-import io.github.rdlopes.tfhe.core.keys.ClientKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 
 import java.security.PrivateKey;
 
-public record TfhePrivateKey(ClientKey clientKey) implements PrivateKey {
-  public TfhePrivateKey {
-    if (clientKey == null) {
-      throw new IllegalArgumentException("ClientKey cannot be null");
-    }
-  }
+public final class TfhePrivateKey extends TfheKey implements PrivateKey {
 
-  @Override
-  public ClientKey clientKey() {
-    return clientKey;
-  }
-
-  @Override
-  public String getAlgorithm() {
-    return "TFHE";
-  }
-
-  @Override
-  public String getFormat() {
-    return "RAW";
-  }
-
-  @Override
-  public byte[] getEncoded() {
-    return clientKey.serialize()
-                    .view()
-                    .toByteArray();
+  public TfhePrivateKey(DynamicBuffer keyBuffer) {
+    super(keyBuffer);
   }
 }

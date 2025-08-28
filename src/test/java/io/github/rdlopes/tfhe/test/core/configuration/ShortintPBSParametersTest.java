@@ -30,7 +30,7 @@ class ShortintPBSParametersTest {
   @FieldSource
   void predefinedParameters(ShortintPBSParameters parameters) {
     assertThat(parameters).isNotNull();
-    assertThat(parameters.address()).isNotNull();
+    assertThat(parameters.getAddress()).isNotNull();
   }
 
   @Test
@@ -75,23 +75,23 @@ class ShortintPBSParametersTest {
       modulusSwitch
     );
 
-    // Test all getter methods (using new record method names)
-    assertThat(parameters.lweDimension()).isEqualTo(lweDimension);
-    assertThat(parameters.glweDimension()).isEqualTo(glweDimension);
-    assertThat(parameters.polynomialSize()).isEqualTo(polynomialSize);
-    assertThat(parameters.pbsBaseLog()).isEqualTo(pbsBaseLog);
-    assertThat(parameters.pbsLevel()).isEqualTo(pbsLevel);
-    assertThat(parameters.ksBaseLog()).isEqualTo(ksBaseLog);
-    assertThat(parameters.ksLevel()).isEqualTo(ksLevel);
-    assertThat(parameters.messageModulus()).isEqualTo(messageModulus);
-    assertThat(parameters.carryModulus()).isEqualTo(carryModulus);
-    assertThat(parameters.maxNoiseLevel()).isEqualTo(maxNoiseLevel);
-    assertThat(parameters.log2pFail()).isEqualTo(log2pFail);
-    assertThat(parameters.modulusPowerOf2Exponent()).isEqualTo(modulusPowerOf2Exponent);
-    assertThat(parameters.encryptionKeyChoice()).isEqualTo(encryptionKeyChoice);
-    assertThat(parameters.lweNoiseDistribution()).isNotNull();
-    assertThat(parameters.glweNoiseDistribution()).isNotNull();
-    assertThat(parameters.modulusSwitchNoiseReductionParams()).isNotNull();
+    // Test all getter methods (using proper getXXX method names)
+    assertThat(parameters.getLweDimension()).isEqualTo(lweDimension);
+    assertThat(parameters.getGlweDimension()).isEqualTo(glweDimension);
+    assertThat(parameters.getPolynomialSize()).isEqualTo(polynomialSize);
+    assertThat(parameters.getPbsBaseLog()).isEqualTo(pbsBaseLog);
+    assertThat(parameters.getPbsLevel()).isEqualTo(pbsLevel);
+    assertThat(parameters.getKsBaseLog()).isEqualTo(ksBaseLog);
+    assertThat(parameters.getKsLevel()).isEqualTo(ksLevel);
+    assertThat(parameters.getMessageModulus()).isEqualTo(messageModulus);
+    assertThat(parameters.getCarryModulus()).isEqualTo(carryModulus);
+    assertThat(parameters.getMaxNoiseLevel()).isEqualTo(maxNoiseLevel);
+    assertThat(parameters.getLog2pFail()).isEqualTo(log2pFail);
+    assertThat(parameters.getModulusPowerOf2Exponent()).isEqualTo(modulusPowerOf2Exponent);
+    assertThat(parameters.getEncryptionKeyChoice()).isEqualTo(encryptionKeyChoice);
+    assertThat(parameters.getLweNoiseDistribution()).isNotNull();
+    assertThat(parameters.getGlweNoiseDistribution()).isNotNull();
+    assertThat(parameters.getModulusSwitchNoiseReductionParams()).isNotNull();
   }
 
 }

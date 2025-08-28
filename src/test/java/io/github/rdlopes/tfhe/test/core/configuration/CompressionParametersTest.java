@@ -30,7 +30,7 @@ class CompressionParametersTest {
   @FieldSource
   void predefinedParameters(CompressionParameters parameters) {
     assertThat(parameters).isNotNull();
-    assertThat(parameters.address()).isNotNull();
+    assertThat(parameters.getAddress()).isNotNull();
   }
 
   @Test
@@ -58,15 +58,15 @@ class CompressionParametersTest {
       packingKsKeyNoiseDistribution
     );
 
-    assertThat(parameters.brLevel()).isEqualTo(brLevel);
-    assertThat(parameters.brBaseLog()).isEqualTo(brBaseLog);
-    assertThat(parameters.packingKsLevel()).isEqualTo(packingKsLevel);
-    assertThat(parameters.packingKsBaseLog()).isEqualTo(packingKsBaseLog);
-    assertThat(parameters.packingKsPolynomialSize()).isEqualTo(packingKsPolynomialSize);
-    assertThat(parameters.packingKsGlweDimension()).isEqualTo(packingKsGlweDimension);
-    assertThat(parameters.lwePerGlwe()).isEqualTo(lwePerGlwe);
-    assertThat(parameters.storageLogModulus()).isEqualTo(storageLogModulus);
-    assertThat(parameters.packingKsKeyNoiseDistribution()).isNotNull();
+    assertThat(parameters.getBrLevel()).isEqualTo(brLevel);
+    assertThat(parameters.getBrBaseLog()).isEqualTo(brBaseLog);
+    assertThat(parameters.getPackingKsLevel()).isEqualTo(packingKsLevel);
+    assertThat(parameters.getPackingKsBaseLog()).isEqualTo(packingKsBaseLog);
+    assertThat(parameters.getPackingKsPolynomialSize()).isEqualTo(packingKsPolynomialSize);
+    assertThat(parameters.getPackingKsGlweDimension()).isEqualTo(packingKsGlweDimension);
+    assertThat(parameters.getLwePerGlwe()).isEqualTo(lwePerGlwe);
+    assertThat(parameters.getStorageLogModulus()).isEqualTo(storageLogModulus);
+    assertThat(parameters.getPackingKsKeyNoiseDistribution()).isNotNull();
   }
 
   @Test

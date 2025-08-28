@@ -1,29 +1,22 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import io.github.rdlopes.tfhe.ffm.CompressionParametersBindings;
-import io.github.rdlopes.tfhe.ffm.TfheHeaderExtension;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import java.lang.foreign.MemorySegment;
 
-public record CompressionParameters(MemorySegment address) {
+public class CompressionParameters extends GroupLayoutPointer {
 
-  public static final CompressionParameters SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 =
-    new CompressionParameters(CompressionParametersBindings.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+  public static final CompressionParameters SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 = new CompressionParameters(TfheWrapper.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+  public static final CompressionParameters SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64 = new CompressionParameters(TfheWrapper.SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64());
+  public static final CompressionParameters SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 = new CompressionParameters(TfheWrapper.SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+  public static final CompressionParameters SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 = new CompressionParameters(TfheWrapper.SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+  public static final CompressionParameters SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 = new CompressionParameters(TfheWrapper.SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+  public static final CompressionParameters SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 = new CompressionParameters(TfheWrapper.SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
 
-  public static final CompressionParameters SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64 =
-    new CompressionParameters(CompressionParametersBindings.SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64());
-
-  public static final CompressionParameters SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 =
-    new CompressionParameters(CompressionParametersBindings.SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
-
-  public static final CompressionParameters SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 =
-    new CompressionParameters(CompressionParametersBindings.SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
-
-  public static final CompressionParameters SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 =
-    new CompressionParameters(CompressionParametersBindings.SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
-
-  public static final CompressionParameters SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 =
-    new CompressionParameters(CompressionParametersBindings.SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());
+  public CompressionParameters(MemorySegment address) {
+    super(address, TfheWrapper.CompressionParameters.layout());
+  }
 
   public CompressionParameters(
     long brLevel,
@@ -36,53 +29,88 @@ public record CompressionParameters(MemorySegment address) {
     long storageLogModulus,
     DynamicDistribution packingKsKeyNoiseDistribution
   ) {
-    this(CompressionParametersBindings.allocate());
-
-    TfheHeaderExtension.CompressionParameters.br_level(address, brLevel);
-    TfheHeaderExtension.CompressionParameters.br_base_log(address, brBaseLog);
-    TfheHeaderExtension.CompressionParameters.packing_ks_level(address, packingKsLevel);
-    TfheHeaderExtension.CompressionParameters.packing_ks_base_log(address, packingKsBaseLog);
-    TfheHeaderExtension.CompressionParameters.packing_ks_polynomial_size(address, packingKsPolynomialSize);
-    TfheHeaderExtension.CompressionParameters.packing_ks_glwe_dimension(address, packingKsGlweDimension);
-    TfheHeaderExtension.CompressionParameters.lwe_per_glwe(address, lwePerGlwe);
-    TfheHeaderExtension.CompressionParameters.storage_log_modulus(address, storageLogModulus);
-    TfheHeaderExtension.CompressionParameters.packing_ks_key_noise_distribution(address, packingKsKeyNoiseDistribution.address());
+    super(TfheWrapper.CompressionParameters.layout());
+    TfheWrapper.CompressionParameters.br_level(getAddress(), brLevel);
+    TfheWrapper.CompressionParameters.br_base_log(getAddress(), brBaseLog);
+    TfheWrapper.CompressionParameters.packing_ks_level(getAddress(), packingKsLevel);
+    TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress(), packingKsBaseLog);
+    TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress(), packingKsPolynomialSize);
+    TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress(), packingKsGlweDimension);
+    TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress(), lwePerGlwe);
+    TfheWrapper.CompressionParameters.storage_log_modulus(getAddress(), storageLogModulus);
+    TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress(), packingKsKeyNoiseDistribution.getAddress());
   }
 
-  public long brLevel() {
-    return TfheHeaderExtension.CompressionParameters.br_level(address);
+  public long getBrLevel() {
+    return TfheWrapper.CompressionParameters.br_level(getAddress());
   }
 
-  public long brBaseLog() {
-    return TfheHeaderExtension.CompressionParameters.br_base_log(address);
+  public void setBrLevel(long brLevel) {
+    TfheWrapper.CompressionParameters.br_level(getAddress(), brLevel);
   }
 
-  public long packingKsLevel() {
-    return TfheHeaderExtension.CompressionParameters.packing_ks_level(address);
+  public long getBrBaseLog() {
+    return TfheWrapper.CompressionParameters.br_base_log(getAddress());
   }
 
-  public long packingKsBaseLog() {
-    return TfheHeaderExtension.CompressionParameters.packing_ks_base_log(address);
+  public void setBrBaseLog(long brBaseLog) {
+    TfheWrapper.CompressionParameters.br_base_log(getAddress(), brBaseLog);
   }
 
-  public long packingKsPolynomialSize() {
-    return TfheHeaderExtension.CompressionParameters.packing_ks_polynomial_size(address);
+  public long getPackingKsLevel() {
+    return TfheWrapper.CompressionParameters.packing_ks_level(getAddress());
   }
 
-  public long packingKsGlweDimension() {
-    return TfheHeaderExtension.CompressionParameters.packing_ks_glwe_dimension(address);
+  public void setPackingKsLevel(long packingKsLevel) {
+    TfheWrapper.CompressionParameters.packing_ks_level(getAddress(), packingKsLevel);
   }
 
-  public long lwePerGlwe() {
-    return TfheHeaderExtension.CompressionParameters.lwe_per_glwe(address);
+  public long getPackingKsBaseLog() {
+    return TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress());
   }
 
-  public long storageLogModulus() {
-    return TfheHeaderExtension.CompressionParameters.storage_log_modulus(address);
+  public void setPackingKsBaseLog(long packingKsBaseLog) {
+    TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress(), packingKsBaseLog);
   }
 
-  public DynamicDistribution packingKsKeyNoiseDistribution() {
-    return new DynamicDistribution(TfheHeaderExtension.CompressionParameters.packing_ks_key_noise_distribution(address));
+  public long getPackingKsPolynomialSize() {
+    return TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress());
+  }
+
+  public void setPackingKsPolynomialSize(long packingKsPolynomialSize) {
+    TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress(), packingKsPolynomialSize);
+  }
+
+  public long getPackingKsGlweDimension() {
+    return TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress());
+  }
+
+  public void setPackingKsGlweDimension(long packingKsGlweDimension) {
+    TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress(), packingKsGlweDimension);
+  }
+
+  public long getLwePerGlwe() {
+    return TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress());
+  }
+
+  public void setLwePerGlwe(long lwePerGlwe) {
+    TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress(), lwePerGlwe);
+  }
+
+  public long getStorageLogModulus() {
+    return TfheWrapper.CompressionParameters.storage_log_modulus(getAddress());
+  }
+
+  public void setStorageLogModulus(long storageLogModulus) {
+    TfheWrapper.CompressionParameters.storage_log_modulus(getAddress(), storageLogModulus);
+  }
+
+  public DynamicDistribution getPackingKsKeyNoiseDistribution() {
+    return new DynamicDistribution(TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress()));
+  }
+
+  public void setPackingKsKeyNoiseDistribution(DynamicDistribution packingKsKeyNoiseDistribution) {
+    TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress(), packingKsKeyNoiseDistribution.getAddress());
   }
 
 }

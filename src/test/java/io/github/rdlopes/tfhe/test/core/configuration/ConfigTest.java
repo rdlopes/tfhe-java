@@ -3,11 +3,8 @@ package io.github.rdlopes.tfhe.test.core.configuration;
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
-import io.github.rdlopes.tfhe.jca.TfhePrivateKey;
-import io.github.rdlopes.tfhe.jca.TfhePublicKey;
+import io.github.rdlopes.tfhe.core.keys.KeySet;
 import org.junit.jupiter.api.Test;
-
-import java.security.KeyPair;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,15 +16,11 @@ class ConfigTest {
     Config config = new ConfigBuilder()
       .build();
 
-    KeyPair keyPair = config.generateKeys();
+    KeySet keySet = config.generateKeys();
 
-    assertThat(keyPair).isNotNull();
-    assertThat(keyPair.getPublic()).isNotNull();
-    assertThat(keyPair.getPrivate()).isNotNull();
-    assertThat(((TfhePublicKey) keyPair.getPublic()).serverKey()
-                                                    .address()).isNotNull();
-    assertThat(((TfhePrivateKey) keyPair.getPrivate()).clientKey()
-                                                      .address()).isNotNull();
+    assertThat(keySet).isNotNull();
+    assertThat(keySet.clientKey()).isNotNull();
+    assertThat(keySet.serverKey()).isNotNull();
   }
 
   @Test
@@ -38,7 +31,7 @@ class ConfigTest {
     ClientKey clientKey = config.generateClientKey();
 
     assertThat(clientKey).isNotNull();
-    assertThat(clientKey.address()).isNotNull();
+    assertThat(clientKey.getAddress()).isNotNull();
   }
 
   @Test
@@ -48,7 +41,7 @@ class ConfigTest {
 
     ClientKey clientKey = config.generateClientKey();
     assertThat(clientKey).isNotNull();
-    assertThat(clientKey.address()).isNotNull();
+    assertThat(clientKey.getAddress()).isNotNull();
 
     assertThatThrownBy(config::generateClientKey)
       .isInstanceOf(IllegalStateException.class)
@@ -60,11 +53,11 @@ class ConfigTest {
     Config config = new ConfigBuilder()
       .build();
 
-    KeyPair keyPair1 = config.generateKeys();
+    KeySet keySet = config.generateKeys();
 
-    assertThat(keyPair1).isNotNull();
-    assertThat(keyPair1.getPublic()).isNotNull();
-    assertThat(keyPair1.getPrivate()).isNotNull();
+    assertThat(keySet).isNotNull();
+    assertThat(keySet.clientKey()).isNotNull();
+    assertThat(keySet.serverKey()).isNotNull();
 
     assertThatThrownBy(config::generateKeys)
       .isInstanceOf(IllegalStateException.class)

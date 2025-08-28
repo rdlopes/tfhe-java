@@ -2,47 +2,43 @@ package io.github.rdlopes.tfhe.core.keys;
 
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import io.github.rdlopes.tfhe.ffm.CompressedServerKeyBindings;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
-import java.lang.foreign.MemorySegment;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public record CompressedServerKey(MemorySegment address) {
-
-  public CompressedServerKey() {
-    this(CompressedServerKeyBindings.allocate());
-  }
+public class CompressedServerKey extends AddressLayoutPointer {
 
   public static CompressedServerKey deserialize(DynamicBufferView bufferView) {
     CompressedServerKey compressedServerKey = new CompressedServerKey();
-    CompressedServerKeyBindings.deserialize(bufferView.address(), compressedServerKey.address());
+    executeWithErrorHandling(() -> compressed_server_key_deserialize(bufferView.getAddress(), compressedServerKey.getAddress()));
     return compressedServerKey;
   }
 
   public static CompressedServerKey safeDeserialize(DynamicBufferView bufferView) {
     CompressedServerKey compressedServerKey = new CompressedServerKey();
-    CompressedServerKeyBindings.safeDeserialize(bufferView.address(), compressedServerKey.address());
+    executeWithErrorHandling(() -> compressed_server_key_safe_deserialize(bufferView.getAddress(), SERDE_MAX_SIZE, compressedServerKey.getAddress()));
     return compressedServerKey;
   }
 
   public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    CompressedServerKeyBindings.serialize(address, dynamicBuffer.address());
+    executeWithErrorHandling(() -> compressed_server_key_serialize(getValue(), dynamicBuffer.getAddress()));
     return dynamicBuffer;
   }
 
   public DynamicBuffer safeSerialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    CompressedServerKeyBindings.safeSerialize(address, dynamicBuffer.address());
+    executeWithErrorHandling(() -> compressed_server_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), SERDE_MAX_SIZE));
     return dynamicBuffer;
   }
 
   public ServerKey decompress() {
     ServerKey serverKey = new ServerKey();
-    CompressedServerKeyBindings.decompress(address, serverKey.address());
+    executeWithErrorHandling(() -> compressed_server_key_decompress(getValue(), serverKey.getAddress()));
     return serverKey;
   }
 
   public void destroy() {
-    CompressedServerKeyBindings.destroy(address);
+    executeWithErrorHandling(() -> compressed_server_key_destroy(getValue()));
   }
 }

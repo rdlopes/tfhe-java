@@ -1,18 +1,26 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import io.github.rdlopes.tfhe.ffm.GaussianBindings;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-public record Gaussian(MemorySegment address) {
+public class Gaussian extends GroupLayoutPointer {
 
-  public Gaussian(double stdDev) {
-    this(GaussianBindings.allocate());
-
-    GaussianBindings.std(address, stdDev);
+  public Gaussian(MemorySegment address) {
+    super(address, io.github.rdlopes.tfhe.ffm.Gaussian.layout());
   }
 
-  public double std() {
-    return GaussianBindings.std(address);
+
+  public Gaussian(double stdDev) {
+    super(io.github.rdlopes.tfhe.ffm.Gaussian.layout());
+    io.github.rdlopes.tfhe.ffm.Gaussian.std(getAddress(), stdDev);
+  }
+
+  public double getStd() {
+    return io.github.rdlopes.tfhe.ffm.Gaussian.std(getAddress());
+  }
+
+  public void setStd(double std) {
+    io.github.rdlopes.tfhe.ffm.Gaussian.std(getAddress(), std);
   }
 }

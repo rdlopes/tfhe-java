@@ -1,22 +1,19 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
+import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
-import io.github.rdlopes.tfhe.ffm.ConfigBindings;
-import io.github.rdlopes.tfhe.jca.TfhePrivateKey;
-import io.github.rdlopes.tfhe.jca.TfhePublicKey;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
-import java.lang.foreign.MemorySegment;
-import java.security.KeyPair;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public record Config(MemorySegment address, AtomicBoolean keysGenerated) {
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.client_key_generate;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.generate_keys;
 
-  Config() {
-    this(ConfigBindings.allocate(), new AtomicBoolean(false));
-  }
+public class Config extends AddressLayoutPointer {
+  private final AtomicBoolean keysGenerated = new AtomicBoolean(false);
 
-  public KeyPair generateKeys() {
+  public KeySet generateKeys() {
     if (keysGenerated.getAcquire()) {
       throw new IllegalStateException("Keys have already been generated for this Config instance");
     }
@@ -24,18 +21,20 @@ public record Config(MemorySegment address, AtomicBoolean keysGenerated) {
     ClientKey clientKey = new ClientKey();
     ServerKey serverKey = new ServerKey();
 
-    ConfigBindings.generateKeys(address, clientKey.address(), serverKey.address());
+    executeWithErrorHandling(() -> generate_keys(getValue(), clientKey.getAddress(), serverKey.getAddress()));
 
     keysGenerated.setRelease(true);
-    return new KeyPair(new TfhePublicKey(serverKey), new TfhePrivateKey(clientKey));
+    return new KeySet(clientKey, serverKey);
   }
 
   public ClientKey generateClientKey() {
     if (keysGenerated.getAcquire()) {
       throw new IllegalStateException("Keys have already been generated for this Config instance");
     }
+
     ClientKey clientKey = new ClientKey();
-    ConfigBindings.generateClientKey(address, clientKey.address());
+    executeWithErrorHandling(() -> client_key_generate(getValue(), clientKey.getAddress()));
+
     keysGenerated.setRelease(true);
     return clientKey;
   }

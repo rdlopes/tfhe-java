@@ -1,43 +1,49 @@
 package io.github.rdlopes.tfhe.core.serde;
 
-import io.github.rdlopes.tfhe.ffm.DynamicBufferBindings;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-public record DynamicBuffer(MemorySegment address) {
+import static io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout;
+
+public class DynamicBuffer extends GroupLayoutPointer {
+
+  public DynamicBuffer(MemorySegment address) {
+    super(address, layout());
+  }
 
   public DynamicBuffer() {
-    this(DynamicBufferBindings.allocate());
+    super(layout());
   }
 
-  public MemorySegment pointer() {
-    return DynamicBufferBindings.pointer(address);
+  public MemorySegment getPointer() {
+    return io.github.rdlopes.tfhe.ffm.DynamicBuffer.pointer(getAddress());
   }
 
-  public void pointer(MemorySegment value) {
-    DynamicBufferBindings.pointer(address, value);
+  public void setPointer(MemorySegment value) {
+    io.github.rdlopes.tfhe.ffm.DynamicBuffer.pointer(getAddress(), value);
   }
 
-  public long length() {
-    return DynamicBufferBindings.length(address);
+  public long getLength() {
+    return io.github.rdlopes.tfhe.ffm.DynamicBuffer.length(getAddress());
   }
 
-  public void length(long value) {
-    DynamicBufferBindings.length(address, value);
+  public void setLength(long value) {
+    io.github.rdlopes.tfhe.ffm.DynamicBuffer.length(getAddress(), value);
   }
 
-  public MemorySegment destructor() {
-    return DynamicBufferBindings.destructor(address);
+  public MemorySegment getDestructor() {
+    return io.github.rdlopes.tfhe.ffm.DynamicBuffer.destructor(getAddress());
   }
 
-  public void destructor(MemorySegment value) {
-    DynamicBufferBindings.destructor(address, value);
+  public void setDestructor(MemorySegment value) {
+    io.github.rdlopes.tfhe.ffm.DynamicBuffer.destructor(getAddress(), value);
   }
 
   public DynamicBufferView view() {
     DynamicBufferView view = new DynamicBufferView();
-    view.pointer(pointer());
-    view.length(length());
+    view.setPointer(getPointer());
+    view.setLength(getLength());
 
     return view;
   }

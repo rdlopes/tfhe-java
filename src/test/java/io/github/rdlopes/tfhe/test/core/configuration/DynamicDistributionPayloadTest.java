@@ -14,20 +14,20 @@ class DynamicDistributionPayloadTest {
   void tUniform() {
     TUniform initial = new TUniform(64);
     DynamicDistributionPayload payload = new DynamicDistributionPayload(initial);
-    TUniform read = payload.tUniform();
-    assertThat(read.boundLog2()).isEqualTo(initial.boundLog2());
-    Gaussian gaussian = payload.gaussian();
-    assertThat(gaussian.std()).isCloseTo(0, offset(1e-10));
+    TUniform read = payload.getTUniform();
+    assertThat(read.getBoundLog2()).isEqualTo(initial.getBoundLog2());
+    Gaussian gaussian = payload.getGaussian();
+    assertThat(gaussian.getStd()).isCloseTo(0, offset(1e-10));
   }
 
   @Test
   void gaussian() {
     Gaussian initial = new Gaussian(5.0);
     DynamicDistributionPayload payload = new DynamicDistributionPayload(initial);
-    Gaussian read = payload.gaussian();
-    assertThat(read.std()).isEqualTo(initial.std());
-    TUniform tUniform = payload.tUniform();
-    assertThat(tUniform.boundLog2()).isEqualTo(0);
+    Gaussian read = payload.getGaussian();
+    assertThat(read.getStd()).isEqualTo(initial.getStd());
+    TUniform tUniform = payload.getTUniform();
+    assertThat(tUniform.getBoundLog2()).isEqualTo(0);
   }
 
 }

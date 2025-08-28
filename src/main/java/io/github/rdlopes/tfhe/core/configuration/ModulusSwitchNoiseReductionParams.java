@@ -1,10 +1,14 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParamsBindings;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-public record ModulusSwitchNoiseReductionParams(MemorySegment address) {
+public class ModulusSwitchNoiseReductionParams extends GroupLayoutPointer {
+
+  public ModulusSwitchNoiseReductionParams(MemorySegment address) {
+    super(address, io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.layout());
+  }
 
   public ModulusSwitchNoiseReductionParams(
     int modulusSwitchZerosCount,
@@ -12,27 +16,42 @@ public record ModulusSwitchNoiseReductionParams(MemorySegment address) {
     double msRSigmaFactor,
     double msInputVariance
   ) {
-    this(ModulusSwitchNoiseReductionParamsBindings.allocate());
-
-    ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(address, modulusSwitchZerosCount);
-    ModulusSwitchNoiseReductionParamsBindings.msBound(address, msBound);
-    ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(address, msRSigmaFactor);
-    ModulusSwitchNoiseReductionParamsBindings.msInputVariance(address, msInputVariance);
+    super(io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.layout());
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress(), modulusSwitchZerosCount);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress(), msBound);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress(), msRSigmaFactor);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_input_variance(getAddress(), msInputVariance);
   }
 
-  public int modulusSwitchZerosCount() {
-    return ModulusSwitchNoiseReductionParamsBindings.modulusSwitchZerosCount(address);
+  public int getModulusSwitchZerosCount() {
+    return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress());
   }
 
-  public double msBound() {
-    return ModulusSwitchNoiseReductionParamsBindings.msBound(address);
+  public void setModulusSwitchZerosCount(int modulusSwitchZerosCount) {
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress(), modulusSwitchZerosCount);
   }
 
-  public double msRSigmaFactor() {
-    return ModulusSwitchNoiseReductionParamsBindings.msRSigmaFactor(address);
+  public double getMsBound() {
+    return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress());
   }
 
-  public double msInputVariance() {
-    return ModulusSwitchNoiseReductionParamsBindings.msInputVariance(address);
+  public void setMsBound(double msBound) {
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress(), msBound);
+  }
+
+  public double getMsRSigmaFactor() {
+    return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress());
+  }
+
+  public void setMsRSigmaFactor(double msRSigmaFactor) {
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress(), msRSigmaFactor);
+  }
+
+  public double getMsInputVariance() {
+    return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_input_variance(getAddress());
+  }
+
+  public void setMsInputVariance(double msInputVariance) {
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_input_variance(getAddress(), msInputVariance);
   }
 }

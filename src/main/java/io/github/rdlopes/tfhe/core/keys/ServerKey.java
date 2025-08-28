@@ -2,34 +2,31 @@ package io.github.rdlopes.tfhe.core.keys;
 
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import io.github.rdlopes.tfhe.ffm.ServerKeyBindings;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
-import java.lang.foreign.MemorySegment;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public record ServerKey(MemorySegment address) {
-  public ServerKey() {
-    this(ServerKeyBindings.allocate());
-  }
+public class ServerKey extends AddressLayoutPointer {
 
   public static ServerKey deserialize(DynamicBufferView bufferView) {
     ServerKey serverKey = new ServerKey();
-    ServerKeyBindings.deserialize(bufferView.address(), serverKey.address());
+    executeWithErrorHandling(() -> server_key_deserialize(bufferView.getAddress(), serverKey.getAddress()));
     return serverKey;
   }
 
   public DynamicBuffer serialize() {
     DynamicBuffer buffer = new DynamicBuffer();
-    ServerKeyBindings.serialize(address, buffer.address());
+    executeWithErrorHandling(() -> server_key_serialize(getValue(), buffer.getAddress()));
     return buffer;
   }
 
   public DynamicBuffer safeSerialize() {
     DynamicBuffer buffer = new DynamicBuffer();
-    ServerKeyBindings.safeSerialize(address, buffer.address());
+    executeWithErrorHandling(() -> server_key_safe_serialize(getValue(), buffer.getAddress(), SERDE_MAX_SIZE));
     return buffer;
   }
 
   public void destroy() {
-    ServerKeyBindings.destroy(address);
+    executeWithErrorHandling(() -> server_key_destroy(getValue()));
   }
 }

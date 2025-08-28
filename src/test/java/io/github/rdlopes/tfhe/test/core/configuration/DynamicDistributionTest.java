@@ -18,13 +18,13 @@ class DynamicDistributionTest {
     DynamicDistributionPayload payload = new DynamicDistributionPayload(tUniform);
     DynamicDistribution distribution = new DynamicDistribution(tag, payload);
 
-    assertThat(distribution.tag()).isEqualTo(tag);
-    assertThat(distribution.distribution()
-                           .tUniform()
-                           .boundLog2()).isEqualTo(64);
-    assertThat(distribution.distribution()
-                           .gaussian()
-                           .std()).isCloseTo(0.0, offset(1e-10));
+    assertThat(distribution.getTag()).isEqualTo(tag);
+    assertThat(distribution.getDistribution()
+                           .getTUniform()
+                           .getBoundLog2()).isEqualTo(64);
+    assertThat(distribution.getDistribution()
+                           .getGaussian()
+                           .getStd()).isCloseTo(0.0, offset(1e-10));
   }
 
   @Test
@@ -34,13 +34,13 @@ class DynamicDistributionTest {
     DynamicDistributionPayload payload = new DynamicDistributionPayload(gaussian);
     DynamicDistribution distribution = new DynamicDistribution(tag, payload);
 
-    assertThat(distribution.tag()).isEqualTo(tag);
-    assertThat(distribution.distribution()
-                           .gaussian()
-                           .std()).isEqualTo(5.0);
-    assertThat(distribution.distribution()
-                           .tUniform()
-                           .boundLog2()).isEqualTo(0);
+    assertThat(distribution.getTag()).isEqualTo(tag);
+    assertThat(distribution.getDistribution()
+                           .getGaussian()
+                           .getStd()).isEqualTo(5.0);
+    assertThat(distribution.getDistribution()
+                           .getTUniform()
+                           .getBoundLog2()).isEqualTo(0);
   }
 
 }

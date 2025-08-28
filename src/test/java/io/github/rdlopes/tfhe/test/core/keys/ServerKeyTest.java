@@ -2,13 +2,11 @@ package io.github.rdlopes.tfhe.test.core.keys;
 
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
+import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
-import io.github.rdlopes.tfhe.jca.TfhePublicKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.security.KeyPair;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,9 +17,8 @@ class ServerKeyTest {
   @BeforeEach
   void setUp() {
     Config config = new ConfigBuilder().build();
-    KeyPair keyPair = config.generateKeys();
-    TfhePublicKey publicKey = (TfhePublicKey) keyPair.getPublic();
-    serverKey = publicKey.serverKey();
+    KeySet keySet = config.generateKeys();
+    serverKey = keySet.serverKey();
   }
 
   @Test
@@ -29,13 +26,13 @@ class ServerKeyTest {
     DynamicBuffer dynamicBuffer = serverKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.pointer()).isNotNull();
-    assertThat(dynamicBuffer.length()).isGreaterThan(0);
+    assertThat(dynamicBuffer.getPointer()).isNotNull();
+    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
 
     ServerKey deserializedServerKey = ServerKey.deserialize(dynamicBuffer.view());
 
     assertThat(deserializedServerKey).isNotNull();
-    assertThat(deserializedServerKey.address()).isNotNull();
+    assertThat(deserializedServerKey.getAddress()).isNotNull();
   }
 
   @Test
@@ -43,13 +40,13 @@ class ServerKeyTest {
     DynamicBuffer dynamicBuffer = serverKey.safeSerialize();
 
     assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.pointer()).isNotNull();
-    assertThat(dynamicBuffer.length()).isGreaterThan(0);
+    assertThat(dynamicBuffer.getPointer()).isNotNull();
+    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
   }
 
   @Test
   void destroysSuccessfully() {
-    assertThat(serverKey.address()).isNotNull();
+    assertThat(serverKey.getAddress()).isNotNull();
 
     serverKey.destroy();
   }

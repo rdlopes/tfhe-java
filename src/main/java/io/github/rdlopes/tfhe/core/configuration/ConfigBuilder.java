@@ -1,34 +1,34 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import io.github.rdlopes.tfhe.ffm.ConfigurationBuilderBindings;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
-import java.lang.foreign.MemorySegment;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public record ConfigBuilder(MemorySegment address) implements Cloneable {
+public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
 
   public ConfigBuilder() {
-    this(ConfigurationBuilderBindings.allocate());
-    ConfigurationBuilderBindings.initialize(address);
+    super();
+    executeWithErrorHandling(() -> config_builder_default(getAddress()));
   }
 
   public ConfigBuilder useCustomParameters(ShortintPBSParameters parameters) {
-    ConfigurationBuilderBindings.useCustomParameters(address, parameters.address());
+    executeWithErrorHandling(() -> config_builder_use_custom_parameters(getAddress(), parameters.getAddress()));
     return this;
   }
 
   public ConfigBuilder useDedicatedCompactPublicKeyParameters(ShortintCompactPublicKeyEncryptionParameters compactPublicKeyParameters) {
-    ConfigurationBuilderBindings.useDedicatedCompactPublicKeyParameters(address, compactPublicKeyParameters.address());
+    executeWithErrorHandling(() -> use_dedicated_compact_public_key_parameters(getAddress(), compactPublicKeyParameters.getAddress()));
     return this;
   }
 
   public ConfigBuilder enableCompression(CompressionParameters compressionParameters) {
-    ConfigurationBuilderBindings.enableCompression(address, compressionParameters.address());
+    executeWithErrorHandling(() -> config_builder_enable_compression(getAddress(), compressionParameters.getAddress()));
     return this;
   }
 
   public Config build() {
     Config config = new Config();
-    ConfigurationBuilderBindings.build(address, config.address());
+    executeWithErrorHandling(() -> config_builder_build(getValue(), config.getAddress()));
     return config;
   }
 
@@ -36,7 +36,7 @@ public record ConfigBuilder(MemorySegment address) implements Cloneable {
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public ConfigBuilder clone() {
     ConfigBuilder configBuilder = new ConfigBuilder();
-    ConfigurationBuilderBindings.clone(address, configBuilder.address());
+    executeWithErrorHandling(() -> config_builder_clone(getValue(), configBuilder.getAddress()));
     return configBuilder;
   }
 }

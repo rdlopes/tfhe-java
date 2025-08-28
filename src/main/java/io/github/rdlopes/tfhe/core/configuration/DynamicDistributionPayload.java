@@ -1,28 +1,51 @@
 package io.github.rdlopes.tfhe.core.configuration;
 
-import io.github.rdlopes.tfhe.ffm.DynamicDistributionPayloadBindings;
+import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-public record DynamicDistributionPayload(MemorySegment address) {
+public class DynamicDistributionPayload extends GroupLayoutPointer {
+
+  public DynamicDistributionPayload(MemorySegment address) {
+    super(address, io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+  }
+
+
+  public DynamicDistributionPayload() {
+    super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+  }
 
   public DynamicDistributionPayload(Gaussian gaussian) {
-    this(DynamicDistributionPayloadBindings.allocate());
-
-    DynamicDistributionPayloadBindings.gaussian(address, gaussian.address());
+    super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.gaussian(getAddress(), gaussian.getAddress());
   }
 
   public DynamicDistributionPayload(TUniform tUniform) {
-    this(DynamicDistributionPayloadBindings.allocate());
-
-    DynamicDistributionPayloadBindings.tUniform(address, tUniform.address());
+    super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress(), tUniform.getAddress());
   }
 
-  public Gaussian gaussian() {
-    return new Gaussian(DynamicDistributionPayloadBindings.gaussian(address));
+  public Gaussian getGaussian() {
+    return new Gaussian(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.gaussian(getAddress()));
   }
 
-  public TUniform tUniform() {
-    return new TUniform(DynamicDistributionPayloadBindings.tUniform(address));
+  public void setGaussian(Gaussian gaussian) {
+    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.gaussian(getAddress(), gaussian.getAddress());
+  }
+
+  public TUniform getTUniform() {
+    return new TUniform(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress()));
+  }
+
+  public void setTUniform(TUniform tUniform) {
+    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress(), tUniform.getAddress());
+  }
+
+  public void gaussian(MemorySegment gaussianAddress) {
+    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.gaussian(getAddress(), gaussianAddress);
+  }
+
+  public void tUniform(MemorySegment tUniformAddress) {
+    io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress(), tUniformAddress);
   }
 }
