@@ -8,38 +8,24 @@ import static io.github.rdlopes.tfhe.ffm.DynamicBufferView.layout;
 
 public class DynamicBufferView extends GroupLayoutPointer {
 
-  public DynamicBufferView(MemorySegment address) {
-    super(address, layout());
-  }
-
-  public DynamicBufferView() {
-    super(layout());
-  }
-
-  public static DynamicBufferView fromByteArray(byte[] bytes) {
-    DynamicBufferView bufferView = new DynamicBufferView();
-    MemorySegment dataSegment = ARENA.allocate(bytes.length);
-    dataSegment.asByteBuffer()
-               .put(bytes);
-    bufferView.setPointer(dataSegment);
-    bufferView.setLength(bytes.length);
-    return bufferView;
+  public DynamicBufferView(MemorySegment pointer, long length) {
+    super(pointer, layout());
+    io.github.rdlopes.tfhe.ffm.DynamicBufferView.length(getAddress(), length);
   }
 
   public MemorySegment getPointer() {
     return io.github.rdlopes.tfhe.ffm.DynamicBufferView.pointer(getAddress());
   }
 
-  public void setPointer(MemorySegment value) {
-    io.github.rdlopes.tfhe.ffm.DynamicBufferView.pointer(getAddress(), value);
-  }
-
   public long getLength() {
     return io.github.rdlopes.tfhe.ffm.DynamicBufferView.length(getAddress());
   }
 
-  public void setLength(long value) {
-    io.github.rdlopes.tfhe.ffm.DynamicBufferView.length(getAddress(), value);
+  public static DynamicBufferView fromByteArray(byte[] bytes) {
+    MemorySegment dataSegment = ARENA.allocate(bytes.length);
+    dataSegment.asByteBuffer()
+               .put(bytes);
+    return new DynamicBufferView(dataSegment, bytes.length);
   }
 
   public byte[] toByteArray() {
