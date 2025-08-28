@@ -39,4 +39,8 @@ public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> config_builder_clone(getValue(), configBuilder.getAddress()));
     return configBuilder;
   }
+
+  public void destroy() {
+    executeWithErrorHandling(() -> config_builder_destroy(getValue()));
+  }
 }
