@@ -5,7 +5,6 @@ import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 import java.lang.foreign.MemorySegment;
 
 import static io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout;
-import static io.github.rdlopes.tfhe.ffm.TfheWrapper.destroy_dynamic_buffer;
 
 public class DynamicBuffer extends GroupLayoutPointer {
 
@@ -29,7 +28,4 @@ public class DynamicBuffer extends GroupLayoutPointer {
     return new DynamicBufferView(getPointer(), getLength());
   }
 
-  public void destroy() {
-    executeWithErrorHandling(() -> destroy_dynamic_buffer(getPointer()));
-  }
 }
