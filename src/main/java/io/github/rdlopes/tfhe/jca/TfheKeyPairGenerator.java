@@ -4,8 +4,13 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
+import io.github.rdlopes.tfhe.core.keys.PublicKey;
+import io.github.rdlopes.tfhe.core.keys.ServerKey;
 
-import java.security.*;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.KeyPair;
+import java.security.KeyPairGeneratorSpi;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Objects;
 
@@ -28,23 +33,30 @@ public final class TfheKeyPairGenerator extends KeyPairGeneratorSpi {
   @Override
   public KeyPair generateKeyPair() {
     Config config = new ConfigBuilder().build();
-
-    PublicKey publicKey;
-    PrivateKey privateKey;
+    KeyPair keyPair;
 
     if (parameterSpec.serverKey()) {
       KeySet keySet = config.generateKeys();
-      privateKey = new TfhePrivateKey(keySet.clientKey()
-                                            .safeSerialize());
-      publicKey = new TfheServerKey(keySet.serverKey()
-                                          .safeSerialize());
+      ClientKey clientKey = keySet.clientKey();
+      ServerKey serverKey = keySet.serverKey();
+      keyPair = new KeyPair(
+        new TfheServerKey(serverKey.safeSerialize()),
+        new TfhePrivateKey(clientKey.safeSerialize())
+      );
+      clientKey.destroy();
+      serverKey.destroy();
+
     } else {
       ClientKey clientKey = config.generateClientKey();
-      privateKey = new TfhePrivateKey(clientKey.safeSerialize());
-      publicKey = new TfhePublicKey(clientKey.generatePublicKey()
-                                             .safeSerialize());
+      PublicKey publicKey = clientKey.generatePublicKey();
+      keyPair = new KeyPair(
+        new TfhePublicKey(publicKey.safeSerialize()),
+        new TfhePrivateKey(clientKey.safeSerialize())
+      );
+      clientKey.destroy();
+      publicKey.destroy();
     }
 
-    return new KeyPair(publicKey, privateKey);
+    return keyPair;
   }
 }
