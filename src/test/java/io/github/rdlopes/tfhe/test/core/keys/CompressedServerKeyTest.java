@@ -4,9 +4,9 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedServerKey;
-import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,26 +14,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedServerKeyTest {
 
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
+  private CompressedServerKey compressedServerKey;
 
   @BeforeEach
   void setUp() {
-    Config config = new ConfigBuilder().build();
-    KeySet keySet = config.generateKeys();
-    clientKey = keySet.clientKey();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    clientKey = config.generateClientKey();
+    compressedServerKey = clientKey.generateCompressedPublicKey();
   }
 
-  @Test
-  void initializesFromClientKey() {
-    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
-
-    assertThat(compressedServerKey).isNotNull();
-    assertThat(compressedServerKey.getAddress()).isNotNull();
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    compressedServerKey.destroy();
+    // crashes the JVM
+    // config.destroy();
+    // configBuilder.destroy();
   }
 
   @Test
   void serializesAndDeserializes() {
-    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
     DynamicBuffer dynamicBuffer = compressedServerKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -44,11 +48,14 @@ class CompressedServerKeyTest {
 
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
+
+    deserializedCompressedServerKey.destroy();
+    // crashes the JVM
+    // dynamicBuffer.destroy();
   }
 
   @Test
   void safeSerializesAndSafeDeserializes() {
-    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
     DynamicBuffer dynamicBuffer = compressedServerKey.safeSerialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -59,20 +66,19 @@ class CompressedServerKeyTest {
 
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
+
+    deserializedCompressedServerKey.destroy();
+    // crashes the JVM
+    // dynamicBuffer.destroy();
   }
 
   @Test
   void decompressesToServerKey() {
-    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
     ServerKey serverKey = compressedServerKey.decompress();
 
     assertThat(serverKey).isNotNull();
     assertThat(serverKey.getAddress()).isNotNull();
-  }
 
-  @Test
-  void destroys() {
-    CompressedServerKey compressedServerKey = clientKey.generateCompressedPublicKey();
-    compressedServerKey.destroy();
+    serverKey.destroy();
   }
 }

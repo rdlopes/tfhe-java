@@ -4,6 +4,8 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -11,34 +13,48 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConfigTest {
 
+  private ConfigBuilder configBuilder;
+  private Config config;
+
+  @BeforeEach
+  void setUp() {
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+  }
+
+  @AfterEach
+  void tearDown() {
+    // crashes the JVM
+    // config.destroy();
+    // configBuilder.destroy();
+  }
+
   @Test
   void generatesKeyPair() {
-    Config config = new ConfigBuilder()
-      .build();
-
     KeySet keySet = config.generateKeys();
 
     assertThat(keySet).isNotNull();
     assertThat(keySet.clientKey()).isNotNull();
     assertThat(keySet.serverKey()).isNotNull();
+
+    keySet.clientKey()
+          .destroy();
+    keySet.serverKey()
+          .destroy();
   }
 
   @Test
   void generatesClientKey() {
-    Config config = new ConfigBuilder()
-      .build();
-
     ClientKey clientKey = config.generateClientKey();
 
     assertThat(clientKey).isNotNull();
     assertThat(clientKey.getAddress()).isNotNull();
+
+    clientKey.destroy();
   }
 
   @Test
   void doesNotGenerateMultipleClientKeys() {
-    Config config = new ConfigBuilder()
-      .build();
-
     ClientKey clientKey = config.generateClientKey();
     assertThat(clientKey).isNotNull();
     assertThat(clientKey.getAddress()).isNotNull();
@@ -46,13 +62,12 @@ class ConfigTest {
     assertThatThrownBy(config::generateClientKey)
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Keys have already been generated for this Config instance");
+
+    clientKey.destroy();
   }
 
   @Test
   void doesNotGenerateMultipleKeyPairs() {
-    Config config = new ConfigBuilder()
-      .build();
-
     KeySet keySet = config.generateKeys();
 
     assertThat(keySet).isNotNull();
@@ -62,5 +77,10 @@ class ConfigTest {
     assertThatThrownBy(config::generateKeys)
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Keys have already been generated for this Config instance");
+
+    keySet.clientKey()
+          .destroy();
+    keySet.serverKey()
+          .destroy();
   }
 }

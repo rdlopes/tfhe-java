@@ -10,7 +10,6 @@ public class DynamicDistributionPayload extends GroupLayoutPointer {
     super(address, io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
   }
 
-
   public DynamicDistributionPayload() {
     super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
   }

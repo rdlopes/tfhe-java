@@ -45,7 +45,7 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     if (result != 0) {
       MemorySegment lastErrorPtr = tfhe_error_get_last();
       String lastError = lastErrorPtr.getString(0);
-      throw new NativeCallException(result, lastError);
+      if (!lastError.equals("no error")) throw new NativeCallException(result, lastError);
     }
   }
 

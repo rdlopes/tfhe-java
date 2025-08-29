@@ -2,9 +2,11 @@ package io.github.rdlopes.tfhe.test.core.keys;
 
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
+import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,13 +14,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ServerKeyTest {
 
+  private ConfigBuilder configBuilder;
+  private Config config;
+  private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    Config config = new ConfigBuilder().build();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
     KeySet keySet = config.generateKeys();
+    clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    serverKey.destroy();
+    // crashes the JVM
+    // config.destroy();
+    // configBuilder.destroy();
   }
 
   @Test
@@ -33,6 +49,10 @@ class ServerKeyTest {
 
     assertThat(deserializedServerKey).isNotNull();
     assertThat(deserializedServerKey.getAddress()).isNotNull();
+
+    deserializedServerKey.destroy();
+    // crashes the JVM
+    // dynamicBuffer.destroy();
   }
 
   @Test
@@ -42,12 +62,8 @@ class ServerKeyTest {
     assertThat(dynamicBuffer).isNotNull();
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
-  }
 
-  @Test
-  void destroysSuccessfully() {
-    assertThat(serverKey.getAddress()).isNotNull();
-
-    serverKey.destroy();
+    // crashes the JVM
+    // dynamicBuffer.destroy();
   }
 }

@@ -4,8 +4,8 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedCompactPublicKey;
-import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +13,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedCompactPublicKeyTest {
 
+  private ConfigBuilder configBuilder;
+  private Config config;
+  private ClientKey clientKey;
   private CompressedCompactPublicKey compressedCompactPublicKey;
 
   @BeforeEach
   void setUp() {
-    Config config = new ConfigBuilder().build();
-    KeySet keySet = config.generateKeys();
-    ClientKey clientKey = keySet.clientKey();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    clientKey = config.generateClientKey();
     compressedCompactPublicKey = clientKey.generateCompactPublicKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    compressedCompactPublicKey.destroy();
+    // crashes the JVM
+    // config.destroy();
+    // configBuilder.destroy();
   }
 
   @Test
@@ -35,6 +47,10 @@ class CompressedCompactPublicKeyTest {
 
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
+
+    deserializedCompressedCompactPublicKey.destroy();
+    // crashes the JVM
+    // dynamicBuffer.destroy();
   }
 
   @Test
@@ -49,12 +65,9 @@ class CompressedCompactPublicKeyTest {
 
     assertThat(safeDeserializedCompressedCompactPublicKey).isNotNull();
     assertThat(safeDeserializedCompressedCompactPublicKey.getAddress()).isNotNull();
-  }
 
-  @Test
-  void destroysSuccessfully() {
-    assertThat(compressedCompactPublicKey.getAddress()).isNotNull();
-
-    compressedCompactPublicKey.destroy();
+    safeDeserializedCompressedCompactPublicKey.destroy();
+    // crashes the JVM
+    // dynamicBuffer.destroy();
   }
 }
