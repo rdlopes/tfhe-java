@@ -31,9 +31,8 @@ class PublicKeyTest {
   void tearDown() {
     clientKey.destroy();
     publicKey.destroy();
-    // crashes the JVM
-    // config.destroy();
-    // configBuilder.destroy();
+    configBuilder.destroy();
+    config.destroy();
   }
 
   @Test
@@ -51,8 +50,7 @@ class PublicKeyTest {
     assertThat(deserializedPublicKey.getAddress()).isNotNull();
 
     deserializedPublicKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 
   @Test
@@ -70,7 +68,6 @@ class PublicKeyTest {
     assertThat(deserializedPublicKey.getAddress()).isNotNull();
 
     deserializedPublicKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 }

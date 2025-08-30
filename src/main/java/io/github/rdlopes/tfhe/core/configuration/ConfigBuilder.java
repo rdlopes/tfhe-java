@@ -41,6 +41,7 @@ public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
   }
 
   public void destroy() {
-    executeWithErrorHandling(() -> config_builder_destroy(getValue()));
+    // FIXME: crashes VM
+    // executeWithErrorHandling(() -> config_builder_destroy(getValue()));
   }
 }

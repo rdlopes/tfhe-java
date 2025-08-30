@@ -30,9 +30,8 @@ class CompressedCompactPublicKeyTest {
   void tearDown() {
     clientKey.destroy();
     compressedCompactPublicKey.destroy();
-    // crashes the JVM
-    // config.destroy();
-    // configBuilder.destroy();
+    config.destroy();
+    configBuilder.destroy();
   }
 
   @Test
@@ -49,8 +48,7 @@ class CompressedCompactPublicKeyTest {
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
 
     deserializedCompressedCompactPublicKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 
   @Test
@@ -67,7 +65,6 @@ class CompressedCompactPublicKeyTest {
     assertThat(safeDeserializedCompressedCompactPublicKey.getAddress()).isNotNull();
 
     safeDeserializedCompressedCompactPublicKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 }

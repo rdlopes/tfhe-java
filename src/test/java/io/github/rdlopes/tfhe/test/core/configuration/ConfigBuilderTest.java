@@ -22,8 +22,7 @@ class ConfigBuilderTest {
 
   @AfterEach
   void tearDown() {
-    // crashes the JVM
-    //configBuilder.destroy();
+    configBuilder.destroy();
   }
 
   @Test

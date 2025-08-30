@@ -31,9 +31,8 @@ class CompressedServerKeyTest {
   void tearDown() {
     clientKey.destroy();
     compressedServerKey.destroy();
-    // crashes the JVM
-    // config.destroy();
-    // configBuilder.destroy();
+    config.destroy();
+    configBuilder.destroy();
   }
 
   @Test
@@ -50,8 +49,7 @@ class CompressedServerKeyTest {
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
 
     deserializedCompressedServerKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 
   @Test
@@ -68,8 +66,7 @@ class CompressedServerKeyTest {
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
 
     deserializedCompressedServerKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 
   @Test

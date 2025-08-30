@@ -32,9 +32,8 @@ class ServerKeyTest {
   void tearDown() {
     clientKey.destroy();
     serverKey.destroy();
-    // crashes the JVM
-    // config.destroy();
-    // configBuilder.destroy();
+    config.destroy();
+    configBuilder.destroy();
   }
 
   @Test
@@ -51,8 +50,7 @@ class ServerKeyTest {
     assertThat(deserializedServerKey.getAddress()).isNotNull();
 
     deserializedServerKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 
   @Test
@@ -63,7 +61,6 @@ class ServerKeyTest {
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
 
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 }

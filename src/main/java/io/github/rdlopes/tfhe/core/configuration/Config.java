@@ -7,7 +7,6 @@ import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader_15.config_destroy;
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.client_key_generate;
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.generate_keys;
 
@@ -41,6 +40,7 @@ public class Config extends AddressLayoutPointer {
   }
 
   public void destroy() {
-    executeWithErrorHandling(() -> config_destroy(getValue()));
+    // FIXME: crashes VM
+    // executeWithErrorHandling(() -> config_destroy(getValue()));
   }
 }

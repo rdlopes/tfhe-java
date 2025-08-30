@@ -33,9 +33,8 @@ class DynamicBufferTest {
   void tearDown() {
     clientKey.destroy();
     serverKey.destroy();
-    // crashes the JVM
-    // config.destroy();
-    // configBuilder.destroy();
+    configBuilder.destroy();
+    config.destroy();
   }
 
   @Test
@@ -47,7 +46,6 @@ class DynamicBufferTest {
     assertThat(view.getPointer()).isEqualTo(dynamicBuffer.getPointer());
     assertThat(view.getLength()).isEqualTo(dynamicBuffer.getLength());
 
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 }

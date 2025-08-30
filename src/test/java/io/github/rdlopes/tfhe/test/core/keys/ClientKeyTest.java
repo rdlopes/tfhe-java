@@ -26,9 +26,8 @@ class ClientKeyTest {
   @AfterEach
   void tearDown() {
     clientKey.destroy();
-    // crashes the JVM
-    // config.destroy();
-    // configBuilder.destroy();
+    config.destroy();
+    configBuilder.destroy();
   }
 
   @Test
@@ -45,8 +44,7 @@ class ClientKeyTest {
     assertThat(deserializedClientKey.getAddress()).isNotNull();
 
     deserializedClientKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 
   @Test
@@ -63,7 +61,6 @@ class ClientKeyTest {
     assertThat(deserializedClientKey.getAddress()).isNotNull();
 
     deserializedClientKey.destroy();
-    // crashes the JVM
-    // dynamicBuffer.destroy();
+    dynamicBuffer.destroy();
   }
 }
