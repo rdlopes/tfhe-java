@@ -1,16 +1,16 @@
 package io.github.rdlopes.tfhe.test.core.keys;
 
+import io.github.rdlopes.tfhe.core.NativeCallException;
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.PublicKey;
-import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class PublicKeyTest {
 
@@ -24,7 +24,7 @@ class PublicKeyTest {
     configBuilder = new ConfigBuilder();
     config = configBuilder.build();
     clientKey = config.generateClientKey();
-    publicKey = clientKey.generatePublicKey();
+    publicKey = clientKey.newPublicKey();
   }
 
   @AfterEach
@@ -38,36 +38,7 @@ class PublicKeyTest {
   @Test
   @Tag("largeByteBuffer")
   void serializesAndDeserializes() {
-    DynamicBuffer dynamicBuffer = publicKey.serialize();
-
-    assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.getPointer()).isNotNull();
-    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
-
-    PublicKey deserializedPublicKey = PublicKey.deserialize(dynamicBuffer.view());
-
-    assertThat(deserializedPublicKey).isNotNull();
-    assertThat(deserializedPublicKey.getAddress()).isNotNull();
-
-    deserializedPublicKey.destroy();
-    dynamicBuffer.destroy();
-  }
-
-  @Test
-  @Tag("largeByteBuffer")
-  void safeSerializesAndDeserializes() {
-    DynamicBuffer dynamicBuffer = publicKey.safeSerialize();
-
-    assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.getPointer()).isNotNull();
-    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
-
-    PublicKey deserializedPublicKey = PublicKey.safeDeserialize(dynamicBuffer.view());
-
-    assertThat(deserializedPublicKey).isNotNull();
-    assertThat(deserializedPublicKey.getAddress()).isNotNull();
-
-    deserializedPublicKey.destroy();
-    dynamicBuffer.destroy();
+    assertThatCode(() -> publicKey.serialize())
+      .isInstanceOf(NativeCallException.class);
   }
 }

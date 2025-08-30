@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.test.jca;
 
-import io.github.rdlopes.tfhe.jca.*;
+import io.github.rdlopes.tfhe.jca.TfheKeyPairGenerator;
+import io.github.rdlopes.tfhe.jca.TfheParameterSpec;
+import io.github.rdlopes.tfhe.jca.TfhePrivateKey;
+import io.github.rdlopes.tfhe.jca.TfhePublicKey;
 import org.junit.jupiter.api.Test;
 
 import java.security.InvalidAlgorithmParameterException;
@@ -21,8 +24,6 @@ class TfheKeyPairGeneratorTest {
     assertThat(keyPair).isNotNull();
     assertThat(keyPair.getPublic()).isNotNull();
     assertThat(keyPair.getPrivate()).isNotNull();
-    assertThat(keyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
-    assertThat(keyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
   }
 
   @Test
@@ -42,49 +43,49 @@ class TfheKeyPairGeneratorTest {
   @Test
   void generatesClientAndPublicKeyPair() throws Exception {
     TfheKeyPairGenerator generator = new TfheKeyPairGenerator();
-    TfheParameterSpec clientKeySpec = new TfheParameterSpec(false);
-    generator.initialize(clientKeySpec, null);
+    TfheParameterSpec spec = new TfheParameterSpec(false);
+    generator.initialize(spec, null);
 
     KeyPair keyPair = generator.generateKeyPair();
 
     assertThat(keyPair).isNotNull();
-    assertThat(keyPair.getPublic()).isNotNull();
-    assertThat(keyPair.getPrivate()).isNotNull();
     assertThat(keyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
-    assertThat(keyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
+    TfhePublicKey publicKey = (TfhePublicKey) keyPair.getPublic();
+    assertThat(publicKey.isServerKey()).isFalse();
   }
 
   @Test
   void generatesClientAndServerKeyPair() throws Exception {
     TfheKeyPairGenerator generator = new TfheKeyPairGenerator();
-    TfheParameterSpec serverKeySpec = new TfheParameterSpec(true);
-    generator.initialize(serverKeySpec, null);
+    TfheParameterSpec spec = new TfheParameterSpec(true);
+    generator.initialize(spec, null);
 
     KeyPair keyPair = generator.generateKeyPair();
 
     assertThat(keyPair).isNotNull();
-    assertThat(keyPair.getPublic()).isNotNull();
-    assertThat(keyPair.getPrivate()).isNotNull();
-    assertThat(keyPair.getPublic()).isInstanceOf(TfheServerKey.class);
-    assertThat(keyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
+    assertThat(keyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
+    TfhePublicKey publicKey = (TfhePublicKey) keyPair.getPublic();
+    assertThat(publicKey.isServerKey()).isTrue();
   }
 
   @Test
   void generatesKeyPairsWithDifferentSpecs() throws Exception {
     TfheKeyPairGenerator generator = new TfheKeyPairGenerator();
 
-    generator.initialize(new TfheParameterSpec(false), null);
-    KeyPair clientKeyPair = generator.generateKeyPair();
-
     generator.initialize(new TfheParameterSpec(true), null);
-    KeyPair serverKeyPair = generator.generateKeyPair();
+    KeyPair clientServerKeyPair = generator.generateKeyPair();
 
-    assertThat(clientKeyPair).isNotNull();
-    assertThat(serverKeyPair).isNotNull();
-    assertThat(clientKeyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
-    assertThat(serverKeyPair.getPublic()).isInstanceOf(TfheServerKey.class);
-    assertThat(clientKeyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
-    assertThat(serverKeyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
+    generator.initialize(new TfheParameterSpec(false), null);
+    KeyPair clientPublicKeyPair = generator.generateKeyPair();
+
+    assertThat(clientServerKeyPair).isNotNull();
+    assertThat(clientPublicKeyPair).isNotNull();
+    assertThat(clientPublicKeyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
+    assertThat(clientPublicKeyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
+    TfhePublicKey serverKey = (TfhePublicKey) clientServerKeyPair.getPublic();
+    TfhePublicKey publicKey = (TfhePublicKey) clientPublicKeyPair.getPublic();
+    assertThat(serverKey.isServerKey()).isTrue();
+    assertThat(publicKey.isServerKey()).isFalse();
   }
 
   @Test

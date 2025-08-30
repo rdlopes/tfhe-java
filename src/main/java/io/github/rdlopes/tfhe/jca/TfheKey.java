@@ -1,14 +1,12 @@
 package io.github.rdlopes.tfhe.jca;
 
-import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
-
 import java.security.Key;
 
 public class TfheKey implements Key {
-  protected final DynamicBuffer keyBuffer;
+  private final byte[] encoded;
 
-  public TfheKey(DynamicBuffer keyBuffer) {
-    this.keyBuffer = keyBuffer;
+  public TfheKey(byte[] encoded) {
+    this.encoded = encoded;
   }
 
   @Override
@@ -23,7 +21,7 @@ public class TfheKey implements Key {
 
   @Override
   public byte[] getEncoded() {
-    return keyBuffer.view()
-                    .toByteArray();
+    return encoded;
   }
+
 }

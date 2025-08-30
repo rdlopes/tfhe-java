@@ -23,7 +23,7 @@ class CompressedCompactPublicKeyTest {
     configBuilder = new ConfigBuilder();
     config = configBuilder.build();
     clientKey = config.generateClientKey();
-    compressedCompactPublicKey = clientKey.generateCompactPublicKey();
+    compressedCompactPublicKey = clientKey.newCompressedCompactPublicKey();
   }
 
   @AfterEach
@@ -48,23 +48,6 @@ class CompressedCompactPublicKeyTest {
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
 
     deserializedCompressedCompactPublicKey.destroy();
-    dynamicBuffer.destroy();
-  }
-
-  @Test
-  void safeSerializesAndDeserializes() {
-    DynamicBuffer dynamicBuffer = compressedCompactPublicKey.safeSerialize();
-
-    assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.getPointer()).isNotNull();
-    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
-
-    CompressedCompactPublicKey safeDeserializedCompressedCompactPublicKey = CompressedCompactPublicKey.safeDeserialize(dynamicBuffer.view());
-
-    assertThat(safeDeserializedCompressedCompactPublicKey).isNotNull();
-    assertThat(safeDeserializedCompressedCompactPublicKey.getAddress()).isNotNull();
-
-    safeDeserializedCompressedCompactPublicKey.destroy();
     dynamicBuffer.destroy();
   }
 }

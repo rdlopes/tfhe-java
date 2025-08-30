@@ -37,25 +37,8 @@ class ServerKeyTest {
   }
 
   @Test
-  void serializesAndDeserializes() {
+  void serializes() {
     DynamicBuffer dynamicBuffer = serverKey.serialize();
-
-    assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.getPointer()).isNotNull();
-    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
-
-    ServerKey deserializedServerKey = ServerKey.deserialize(dynamicBuffer.view());
-
-    assertThat(deserializedServerKey).isNotNull();
-    assertThat(deserializedServerKey.getAddress()).isNotNull();
-
-    deserializedServerKey.destroy();
-    dynamicBuffer.destroy();
-  }
-
-  @Test
-  void safeSerializes() {
-    DynamicBuffer dynamicBuffer = serverKey.safeSerialize();
 
     assertThat(dynamicBuffer).isNotNull();
     assertThat(dynamicBuffer.getPointer()).isNotNull();

@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.ffm;
+package io.github.rdlopes.tfhe.core;
 
 public class NativeCallException extends RuntimeException {
   public NativeCallException(int result, String nativeErrorMessage) {

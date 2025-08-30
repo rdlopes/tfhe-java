@@ -3,9 +3,9 @@ package io.github.rdlopes.tfhe.jca;
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
-import io.github.rdlopes.tfhe.core.keys.KeySet;
-import io.github.rdlopes.tfhe.core.keys.PublicKey;
-import io.github.rdlopes.tfhe.core.keys.ServerKey;
+import io.github.rdlopes.tfhe.core.keys.CompressedCompactPublicKey;
+import io.github.rdlopes.tfhe.core.keys.CompressedServerKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
@@ -32,29 +32,49 @@ public final class TfheKeyPairGenerator extends KeyPairGeneratorSpi {
 
   @Override
   public KeyPair generateKeyPair() {
-    Config config = new ConfigBuilder().build();
-    KeyPair keyPair;
+    ConfigBuilder configBuilder = new ConfigBuilder()
+      .enableCompression(parameterSpec.compressionParameters());
+    Config config = configBuilder.build();
 
-    if (parameterSpec.serverKey()) {
-      KeySet keySet = config.generateKeys();
-      ClientKey clientKey = keySet.clientKey();
-      ServerKey serverKey = keySet.serverKey();
+    KeyPair keyPair;
+    ClientKey clientKey = config.generateClientKey();
+    DynamicBuffer clientKeyBuffer = clientKey.serialize();
+
+    if (parameterSpec.isServerKey()) {
+      CompressedServerKey compressedServerKey = clientKey.newCompressedServerKey();
+      DynamicBuffer compressedServerKeyBuffer = compressedServerKey.serialize();
       keyPair = new KeyPair(
-        new TfheServerKey(serverKey.safeSerialize()),
-        new TfhePrivateKey(clientKey.safeSerialize())
+        new TfhePublicKey(
+          compressedServerKeyBuffer.view()
+                                   .toByteArray(),
+          true,
+          true),
+        new TfhePrivateKey(
+          clientKeyBuffer.view()
+                         .toByteArray())
       );
+      clientKeyBuffer.destroy();
+      compressedServerKeyBuffer.destroy();
       clientKey.destroy();
-      serverKey.destroy();
+      compressedServerKey.destroy();
 
     } else {
-      ClientKey clientKey = config.generateClientKey();
-      PublicKey publicKey = clientKey.generatePublicKey();
+      CompressedCompactPublicKey compressedCompactPublicKey = clientKey.newCompressedCompactPublicKey();
+      DynamicBuffer compressedCompactPublicKeyBuffer = compressedCompactPublicKey.serialize();
       keyPair = new KeyPair(
-        new TfhePublicKey(publicKey.safeSerialize()),
-        new TfhePrivateKey(clientKey.safeSerialize())
+        new TfhePublicKey(
+          compressedCompactPublicKeyBuffer.view()
+                                          .toByteArray(),
+          true,
+          false),
+        new TfhePrivateKey(
+          clientKeyBuffer.view()
+                         .toByteArray())
       );
+      clientKeyBuffer.destroy();
+      compressedCompactPublicKeyBuffer.destroy();
       clientKey.destroy();
-      publicKey.destroy();
+      compressedCompactPublicKey.destroy();
     }
 
     return keyPair;

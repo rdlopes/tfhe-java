@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.ffm;
 
+import io.github.rdlopes.tfhe.core.NativeCallException;
 import io.github.rdlopes.tfhe.utils.NativeLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import java.util.function.Supplier;
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
-  public static final long SERDE_MAX_SIZE = Long.MAX_VALUE;
   protected static final Arena ARENA = LIBRARY_ARENA;
   private static final Logger logger = LoggerFactory.getLogger(MemoryLayoutPointer.class);
 

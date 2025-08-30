@@ -46,21 +46,4 @@ class ClientKeyTest {
     deserializedClientKey.destroy();
     dynamicBuffer.destroy();
   }
-
-  @Test
-  void safeSerializesAndDeserializes() {
-    DynamicBuffer dynamicBuffer = clientKey.safeSerialize();
-
-    assertThat(dynamicBuffer).isNotNull();
-    assertThat(dynamicBuffer.getPointer()).isNotNull();
-    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
-
-    ClientKey deserializedClientKey = ClientKey.safeDeserialize(dynamicBuffer.view());
-
-    assertThat(deserializedClientKey).isNotNull();
-    assertThat(deserializedClientKey.getAddress()).isNotNull();
-
-    deserializedClientKey.destroy();
-    dynamicBuffer.destroy();
-  }
 }
