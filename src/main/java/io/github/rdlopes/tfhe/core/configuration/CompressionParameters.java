@@ -30,87 +30,51 @@ public class CompressionParameters extends GroupLayoutPointer {
     DynamicDistribution packingKsKeyNoiseDistribution
   ) {
     super(TfheWrapper.CompressionParameters.layout());
-    setBrLevel(brLevel);
-    setBrBaseLog(brBaseLog);
-    setPackingKsLevel(packingKsLevel);
-    setPackingKsBaseLog(packingKsBaseLog);
-    setPackingKsPolynomialSize(packingKsPolynomialSize);
-    setPackingKsGlweDimension(packingKsGlweDimension);
-    setLwePerGlwe(lwePerGlwe);
-    setStorageLogModulus(storageLogModulus);
-    setPackingKsKeyNoiseDistribution(packingKsKeyNoiseDistribution);
+    TfheWrapper.CompressionParameters.br_level(getAddress(), brLevel);
+    TfheWrapper.CompressionParameters.br_base_log(getAddress(), brBaseLog);
+    TfheWrapper.CompressionParameters.packing_ks_level(getAddress(), packingKsLevel);
+    TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress(), packingKsBaseLog);
+    TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress(), packingKsPolynomialSize);
+    TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress(), packingKsGlweDimension);
+    TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress(), lwePerGlwe);
+    TfheWrapper.CompressionParameters.storage_log_modulus(getAddress(), storageLogModulus);
+    TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress(), packingKsKeyNoiseDistribution.getAddress());
   }
 
   public long getBrLevel() {
     return TfheWrapper.CompressionParameters.br_level(getAddress());
   }
 
-  public void setBrLevel(long brLevel) {
-    TfheWrapper.CompressionParameters.br_level(getAddress(), brLevel);
-  }
-
   public long getBrBaseLog() {
     return TfheWrapper.CompressionParameters.br_base_log(getAddress());
-  }
-
-  public void setBrBaseLog(long brBaseLog) {
-    TfheWrapper.CompressionParameters.br_base_log(getAddress(), brBaseLog);
   }
 
   public long getPackingKsLevel() {
     return TfheWrapper.CompressionParameters.packing_ks_level(getAddress());
   }
 
-  public void setPackingKsLevel(long packingKsLevel) {
-    TfheWrapper.CompressionParameters.packing_ks_level(getAddress(), packingKsLevel);
-  }
-
   public long getPackingKsBaseLog() {
     return TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress());
-  }
-
-  public void setPackingKsBaseLog(long packingKsBaseLog) {
-    TfheWrapper.CompressionParameters.packing_ks_base_log(getAddress(), packingKsBaseLog);
   }
 
   public long getPackingKsPolynomialSize() {
     return TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress());
   }
 
-  public void setPackingKsPolynomialSize(long packingKsPolynomialSize) {
-    TfheWrapper.CompressionParameters.packing_ks_polynomial_size(getAddress(), packingKsPolynomialSize);
-  }
-
   public long getPackingKsGlweDimension() {
     return TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress());
-  }
-
-  public void setPackingKsGlweDimension(long packingKsGlweDimension) {
-    TfheWrapper.CompressionParameters.packing_ks_glwe_dimension(getAddress(), packingKsGlweDimension);
   }
 
   public long getLwePerGlwe() {
     return TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress());
   }
 
-  public void setLwePerGlwe(long lwePerGlwe) {
-    TfheWrapper.CompressionParameters.lwe_per_glwe(getAddress(), lwePerGlwe);
-  }
-
   public long getStorageLogModulus() {
     return TfheWrapper.CompressionParameters.storage_log_modulus(getAddress());
   }
 
-  public void setStorageLogModulus(long storageLogModulus) {
-    TfheWrapper.CompressionParameters.storage_log_modulus(getAddress(), storageLogModulus);
-  }
-
   public DynamicDistribution getPackingKsKeyNoiseDistribution() {
     return new DynamicDistribution(TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress()));
-  }
-
-  public void setPackingKsKeyNoiseDistribution(DynamicDistribution packingKsKeyNoiseDistribution) {
-    TfheWrapper.CompressionParameters.packing_ks_key_noise_distribution(getAddress(), packingKsKeyNoiseDistribution.getAddress());
   }
 
 }

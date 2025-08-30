@@ -17,41 +17,25 @@ public class ModulusSwitchNoiseReductionParams extends GroupLayoutPointer {
     double msInputVariance
   ) {
     super(io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.layout());
-    setModulusSwitchZerosCount(modulusSwitchZerosCount);
-    setMsBound(msBound);
-    setMsRSigmaFactor(msRSigmaFactor);
-    setMsInputVariance(msInputVariance);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress(), modulusSwitchZerosCount);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress(), msBound);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress(), msRSigmaFactor);
+    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_input_variance(getAddress(), msInputVariance);
   }
 
   public int getModulusSwitchZerosCount() {
     return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress());
   }
 
-  public void setModulusSwitchZerosCount(int modulusSwitchZerosCount) {
-    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress(), modulusSwitchZerosCount);
-  }
-
   public double getMsBound() {
     return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress());
-  }
-
-  public void setMsBound(double msBound) {
-    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress(), msBound);
   }
 
   public double getMsRSigmaFactor() {
     return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress());
   }
 
-  public void setMsRSigmaFactor(double msRSigmaFactor) {
-    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress(), msRSigmaFactor);
-  }
-
   public double getMsInputVariance() {
     return io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_input_variance(getAddress());
-  }
-
-  public void setMsInputVariance(double msInputVariance) {
-    io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_input_variance(getAddress(), msInputVariance);
   }
 }

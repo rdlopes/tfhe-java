@@ -383,149 +383,85 @@ public class ShortintPBSParameters extends GroupLayoutPointer {
     ModulusSwitchType modulusSwitchNoiseReductionParams
   ) {
     super(io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.layout());
-    setLweDimension(lweDimension);
-    setGlweDimension(glweDimension);
-    setPolynomialSize(polynomialSize);
-    setLweNoiseDistribution(lweNoiseDistribution);
-    setGlweNoiseDistribution(glweNoiseDistribution);
-    setPbsBaseLog(pbsBaseLog);
-    setPbsLevel(pbsLevel);
-    setKsBaseLog(ksBaseLog);
-    setKsLevel(ksLevel);
-    setMessageModulus(messageModulus);
-    setCarryModulus(carryModulus);
-    setMaxNoiseLevel(maxNoiseLevel);
-    setLog2pFail(log2pFail);
-    setModulusPowerOf2Exponent(modulusPowerOf2Exponent);
-    setEncryptionKeyChoice(encryptionKeyChoice);
-    setModulusSwitchNoiseReductionParams(modulusSwitchNoiseReductionParams);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_dimension(getAddress(), lweDimension);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_dimension(getAddress(), glweDimension);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.polynomial_size(getAddress(), polynomialSize);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_noise_distribution(getAddress(), lweNoiseDistribution.getAddress());
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_noise_distribution(getAddress(), glweNoiseDistribution.getAddress());
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_base_log(getAddress(), pbsBaseLog);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_level(getAddress(), pbsLevel);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_base_log(getAddress(), ksBaseLog);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_level(getAddress(), ksLevel);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.message_modulus(getAddress(), messageModulus);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.carry_modulus(getAddress(), carryModulus);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.max_noise_level(getAddress(), maxNoiseLevel);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.log2_p_fail(getAddress(), log2pFail);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_power_of_2_exponent(getAddress(), modulusPowerOf2Exponent);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.encryption_key_choice(getAddress(), encryptionKeyChoice);
+    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_switch_noise_reduction_params(getAddress(), modulusSwitchNoiseReductionParams.getAddress());
   }
 
   public long getLweDimension() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_dimension(getAddress());
   }
 
-  public void setLweDimension(long lweDimension) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_dimension(getAddress(), lweDimension);
-  }
-
   public long getGlweDimension() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_dimension(getAddress());
-  }
-
-  public void setGlweDimension(long glweDimension) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_dimension(getAddress(), glweDimension);
   }
 
   public long getPolynomialSize() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.polynomial_size(getAddress());
   }
 
-  public void setPolynomialSize(long polynomialSize) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.polynomial_size(getAddress(), polynomialSize);
-  }
-
   public DynamicDistribution getLweNoiseDistribution() {
     return new DynamicDistribution(io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_noise_distribution(getAddress()));
-  }
-
-  public void setLweNoiseDistribution(DynamicDistribution lweNoiseDistribution) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_noise_distribution(getAddress(), lweNoiseDistribution.getAddress());
   }
 
   public DynamicDistribution getGlweNoiseDistribution() {
     return new DynamicDistribution(io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_noise_distribution(getAddress()));
   }
 
-  public void setGlweNoiseDistribution(DynamicDistribution glweNoiseDistribution) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_noise_distribution(getAddress(), glweNoiseDistribution.getAddress());
-  }
-
   public long getPbsBaseLog() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_base_log(getAddress());
-  }
-
-  public void setPbsBaseLog(long pbsBaseLog) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_base_log(getAddress(), pbsBaseLog);
   }
 
   public long getPbsLevel() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_level(getAddress());
   }
 
-  public void setPbsLevel(long pbsLevel) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.pbs_level(getAddress(), pbsLevel);
-  }
-
   public long getKsBaseLog() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_base_log(getAddress());
-  }
-
-  public void setKsBaseLog(long ksBaseLog) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_base_log(getAddress(), ksBaseLog);
   }
 
   public long getKsLevel() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_level(getAddress());
   }
 
-  public void setKsLevel(long ksLevel) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.ks_level(getAddress(), ksLevel);
-  }
-
   public long getMessageModulus() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.message_modulus(getAddress());
-  }
-
-  public void setMessageModulus(long messageModulus) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.message_modulus(getAddress(), messageModulus);
   }
 
   public long getCarryModulus() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.carry_modulus(getAddress());
   }
 
-  public void setCarryModulus(long carryModulus) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.carry_modulus(getAddress(), carryModulus);
-  }
-
   public long getMaxNoiseLevel() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.max_noise_level(getAddress());
-  }
-
-  public void setMaxNoiseLevel(long maxNoiseLevel) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.max_noise_level(getAddress(), maxNoiseLevel);
   }
 
   public double getLog2pFail() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.log2_p_fail(getAddress());
   }
 
-  public void setLog2pFail(double log2pFail) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.log2_p_fail(getAddress(), log2pFail);
-  }
-
   public long getModulusPowerOf2Exponent() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_power_of_2_exponent(getAddress());
-  }
-
-  public void setModulusPowerOf2Exponent(long modulusPowerOf2Exponent) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_power_of_2_exponent(getAddress(), modulusPowerOf2Exponent);
   }
 
   public int getEncryptionKeyChoice() {
     return io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.encryption_key_choice(getAddress());
   }
 
-  public void setEncryptionKeyChoice(int encryptionKeyChoice) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.encryption_key_choice(getAddress(), encryptionKeyChoice);
-  }
-
   public ModulusSwitchType getModulusSwitchNoiseReductionParams() {
     return new ModulusSwitchType(io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_switch_noise_reduction_params(getAddress()));
-  }
-
-  public void setModulusSwitchNoiseReductionParams(ModulusSwitchType modulusSwitchNoiseReductionParams) {
-    io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.modulus_switch_noise_reduction_params(getAddress(), modulusSwitchNoiseReductionParams.getAddress());
   }
 }

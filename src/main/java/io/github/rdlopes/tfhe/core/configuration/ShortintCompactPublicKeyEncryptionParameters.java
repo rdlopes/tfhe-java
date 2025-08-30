@@ -29,68 +29,40 @@ public class ShortintCompactPublicKeyEncryptionParameters extends GroupLayoutPoi
     int zkScheme
   ) {
     super(io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.layout());
-    setEncryptionLweDimension(encryptionLweDimension);
-    setEncryptionNoiseDistribution(encryptionNoiseDistribution);
-    setMessageModulus(messageModulus);
-    setCarryModulus(carryModulus);
-    setModulusPowerOf2Exponent(modulusPowerOf2Exponent);
-    setCastingParameters(castingParameters);
-    setZkScheme(zkScheme);
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(getAddress(), (int) encryptionLweDimension);
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(getAddress(), encryptionNoiseDistribution.getAddress());
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.message_modulus(getAddress(), (int) messageModulus);
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.carry_modulus(getAddress(), (int) carryModulus);
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(getAddress(), (int) modulusPowerOf2Exponent);
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.casting_parameters(getAddress(), castingParameters.getAddress());
+    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.zk_scheme(getAddress(), zkScheme);
   }
 
   public long getEncryptionLweDimension() {
     return io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(getAddress());
   }
 
-  public void setEncryptionLweDimension(long encryptionLweDimension) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(getAddress(), (int) encryptionLweDimension);
-  }
-
   public DynamicDistribution getEncryptionNoiseDistribution() {
     return new DynamicDistribution(io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(getAddress()));
-  }
-
-  public void setEncryptionNoiseDistribution(DynamicDistribution encryptionNoiseDistribution) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(getAddress(), encryptionNoiseDistribution.getAddress());
   }
 
   public long getMessageModulus() {
     return io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.message_modulus(getAddress());
   }
 
-  public void setMessageModulus(long messageModulus) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.message_modulus(getAddress(), (int) messageModulus);
-  }
-
   public long getCarryModulus() {
     return io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.carry_modulus(getAddress());
-  }
-
-  public void setCarryModulus(long carryModulus) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.carry_modulus(getAddress(), (int) carryModulus);
   }
 
   public long getModulusPowerOf2Exponent() {
     return io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(getAddress());
   }
 
-  public void setModulusPowerOf2Exponent(long modulusPowerOf2Exponent) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.modulus_power_of_2_exponent(getAddress(), (int) modulusPowerOf2Exponent);
-  }
-
   public ShortintPBSParameters getCastingParameters() {
     return new ShortintPBSParameters(io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.casting_parameters(getAddress()));
   }
 
-  public void setCastingParameters(ShortintPBSParameters castingParameters) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.casting_parameters(getAddress(), castingParameters.getAddress());
-  }
-
   public int getZkScheme() {
     return io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.zk_scheme(getAddress());
-  }
-
-  public void setZkScheme(int zkScheme) {
-    io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.zk_scheme(getAddress(), zkScheme);
   }
 }
