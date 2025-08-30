@@ -24,7 +24,7 @@ class CompressedServerKeyTest {
     configBuilder = new ConfigBuilder();
     config = configBuilder.build();
     clientKey = config.generateClientKey();
-    compressedServerKey = clientKey.generateCompressedPublicKey();
+    compressedServerKey = clientKey.generateCompressedServerKey();
   }
 
   @AfterEach

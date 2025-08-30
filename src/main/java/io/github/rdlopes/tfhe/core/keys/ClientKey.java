@@ -44,7 +44,7 @@ public class ClientKey extends AddressLayoutPointer {
     return compressedCompactPublicKey;
   }
 
-  public CompressedServerKey generateCompressedPublicKey() {
+  public CompressedServerKey generateCompressedServerKey() {
     CompressedServerKey compressedServerKey = new CompressedServerKey();
     executeWithErrorHandling(() -> compressed_server_key_new(getValue(), compressedServerKey.getAddress()));
     return compressedServerKey;
