@@ -15,10 +15,9 @@ class DynamicBufferTest {
     ConfigBuilder configBuilder = new ConfigBuilder();
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
-    DynamicBufferView buffer = clientKey.serialize();
-    DynamicBufferView view = buffer;
+    DynamicBufferView view = clientKey.serialize();
 
-    assertThat(view.getPointer()).isNotSameAs(buffer.getPointer());
-    assertThat(view.getLength()).isEqualTo(buffer.getLength());
+    assertThat(view.getPointer()).isNotSameAs(view.getPointer());
+    assertThat(view.getLength()).isEqualTo(view.getLength());
   }
 }

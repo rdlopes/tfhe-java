@@ -27,8 +27,7 @@ class DynamicBufferViewTest {
     ConfigBuilder configBuilder = new ConfigBuilder();
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
-    DynamicBufferView buffer = clientKey.serialize();
-    DynamicBufferView view = buffer;
+    DynamicBufferView view = clientKey.serialize();
     byte[] bytes = view.toByteArray();
     DynamicBufferView reconstructed = DynamicBufferView.fromByteArray(bytes);
 
