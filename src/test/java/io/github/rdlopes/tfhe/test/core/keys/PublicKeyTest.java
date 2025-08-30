@@ -7,7 +7,6 @@ import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.PublicKey;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -36,7 +35,6 @@ class PublicKeyTest {
   }
 
   @Test
-  @Tag("largeByteBuffer")
   void serializesAndDeserializes() {
     assertThatCode(() -> publicKey.serialize())
       .isInstanceOf(NativeCallException.class);
