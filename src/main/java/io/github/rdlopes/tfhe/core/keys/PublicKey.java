@@ -2,23 +2,24 @@ package io.github.rdlopes.tfhe.core.keys;
 
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import io.github.rdlopes.tfhe.core.serde.FheAbstractSerializable;
+import io.github.rdlopes.tfhe.core.serde.FheSerializable;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public class PublicKey extends FheAbstractSerializable {
+public class PublicKey extends AddressLayoutPointer implements FheSerializable {
+
+  public PublicKey() {
+    super(address -> public_key_destroy(address.get(C_POINTER, 0)));
+  }
 
   public void deserialize(DynamicBufferView bufferView) {
     executeWithErrorHandling(() -> public_key_safe_deserialize(bufferView.getAddress(), BUFFER_MAX_SIZE, getAddress()));
   }
 
-  public DynamicBuffer serialize() {
+  public DynamicBufferView serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> public_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-    return dynamicBuffer;
-  }
-
-  public void destroy() {
-    executeWithErrorHandling(() -> public_key_destroy(getValue()));
+    return dynamicBuffer.view();
   }
 }

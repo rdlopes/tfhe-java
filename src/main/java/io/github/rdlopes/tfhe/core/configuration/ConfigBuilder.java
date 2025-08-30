@@ -7,7 +7,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
 
   public ConfigBuilder() {
-    super();
+    super(address -> config_builder_destroy(address.get(C_POINTER, 0)));
     executeWithErrorHandling(() -> config_builder_default(getAddress()));
   }
 
@@ -35,10 +35,5 @@ public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
     ConfigBuilder configBuilder = new ConfigBuilder();
     executeWithErrorHandling(() -> config_builder_clone(getValue(), configBuilder.getAddress()));
     return configBuilder;
-  }
-
-  public void destroy() {
-    // FIXME: crashes VM
-    // executeWithErrorHandling(() -> config_builder_destroy(getValue()));
   }
 }

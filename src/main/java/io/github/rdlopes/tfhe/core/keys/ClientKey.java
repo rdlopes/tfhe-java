@@ -2,20 +2,25 @@ package io.github.rdlopes.tfhe.core.keys;
 
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import io.github.rdlopes.tfhe.core.serde.FheAbstractSerializable;
+import io.github.rdlopes.tfhe.core.serde.FheSerializable;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public class ClientKey extends FheAbstractSerializable {
+public class ClientKey extends AddressLayoutPointer implements FheSerializable {
+
+  public ClientKey() {
+    super(address -> client_key_destroy(address.get(C_POINTER, 0)));
+  }
 
   public void deserialize(DynamicBufferView bufferView) {
     executeWithErrorHandling(() -> client_key_safe_deserialize(bufferView.getAddress(), BUFFER_MAX_SIZE, getAddress()));
   }
 
-  public DynamicBuffer serialize() {
+  public DynamicBufferView serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> client_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-    return dynamicBuffer;
+    return dynamicBuffer.view();
   }
 
   public PublicKey newPublicKey() {
@@ -34,9 +39,5 @@ public class ClientKey extends FheAbstractSerializable {
     CompressedServerKey compressedServerKey = new CompressedServerKey();
     executeWithErrorHandling(() -> compressed_server_key_new(getValue(), compressedServerKey.getAddress()));
     return compressedServerKey;
-  }
-
-  public void destroy() {
-    executeWithErrorHandling(() -> client_key_destroy(getValue()));
   }
 }

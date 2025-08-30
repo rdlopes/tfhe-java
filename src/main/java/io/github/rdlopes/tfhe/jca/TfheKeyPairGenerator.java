@@ -4,7 +4,7 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedCompactPublicKey;
-import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 
 import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
@@ -32,21 +32,14 @@ public final class TfheKeyPairGenerator extends KeyPairGeneratorSpi {
     Config config = buildConfiguration();
 
     ClientKey clientKey = config.generateClientKey();
-    DynamicBuffer clientKeyBuffer = clientKey.serialize();
-    byte[] clientKeyBytes = clientKeyBuffer.view()
-                                           .toByteArray();
+    DynamicBufferView clientKeyBuffer = clientKey.serialize();
+    byte[] clientKeyBytes = clientKeyBuffer.toByteArray();
     TfhePrivateKey tfhePrivateKey = new TfhePrivateKey(clientKeyBytes);
 
     CompressedCompactPublicKey compressedCompactPublicKey = clientKey.newCompressedCompactPublicKey();
-    DynamicBuffer compressedCompactPublicKeyBuffer = compressedCompactPublicKey.serialize();
-    byte[] compressedCompactPublicKeyBytes = compressedCompactPublicKeyBuffer.view()
-                                                                             .toByteArray();
+    DynamicBufferView compressedCompactPublicKeyBuffer = compressedCompactPublicKey.serialize();
+    byte[] compressedCompactPublicKeyBytes = compressedCompactPublicKeyBuffer.toByteArray();
     TfhePublicKey tfhePublicKey = new TfhePublicKey(compressedCompactPublicKeyBytes);
-
-    compressedCompactPublicKeyBuffer.destroy();
-    compressedCompactPublicKey.destroy();
-    clientKeyBuffer.destroy();
-    clientKey.destroy();
 
     return new KeyPair(tfhePublicKey, tfhePrivateKey);
   }

@@ -8,11 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
+import java.lang.ref.Cleaner;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
+  protected static final Cleaner CLEANER = Cleaner.create();
   protected static final Arena ARENA = LIBRARY_ARENA;
   private static final Logger logger = LoggerFactory.getLogger(MemoryLayoutPointer.class);
 
@@ -25,9 +28,12 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
   private final MemorySegment address;
   private final L layout;
 
-  public MemoryLayoutPointer(MemorySegment address, L layout) {
+  public MemoryLayoutPointer(MemorySegment address, L layout, Consumer<MemorySegment> cleaner) {
     this.address = address;
     this.layout = layout;
+    if (cleaner != null) {
+      CLEANER.register(this, () -> cleaner.accept(address));
+    }
   }
 
   /**

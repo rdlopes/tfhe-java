@@ -4,7 +4,6 @@ import io.github.rdlopes.tfhe.ffm.GroupLayoutPointer;
 
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.core.serde.FheSerializable.BUFFER_MAX_SIZE;
 import static io.github.rdlopes.tfhe.ffm.DynamicBufferView.layout;
 
 public class DynamicBufferView extends GroupLayoutPointer {
@@ -31,10 +30,6 @@ public class DynamicBufferView extends GroupLayoutPointer {
   }
 
   public byte[] toByteArray() {
-    if (getLength() > BUFFER_MAX_SIZE) {
-      throw new IllegalStateException("Buffer length exceeds maximum allowed size");
-    }
-
     byte[] bytes = new byte[(int) getLength()];
     getPointer()
       .reinterpret(getLength())

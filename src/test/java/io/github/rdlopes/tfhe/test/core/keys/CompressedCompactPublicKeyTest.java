@@ -4,8 +4,7 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedCompactPublicKey;
-import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
-import org.junit.jupiter.api.AfterEach;
+import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,42 +12,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedCompactPublicKeyTest {
 
-  private ConfigBuilder configBuilder;
-  private Config config;
-  private ClientKey clientKey;
   private CompressedCompactPublicKey compressedCompactPublicKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
-    clientKey = config.generateClientKey();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
+    ClientKey clientKey = config.generateClientKey();
     compressedCompactPublicKey = clientKey.newCompressedCompactPublicKey();
-  }
-
-  @AfterEach
-  void tearDown() {
-    clientKey.destroy();
-    compressedCompactPublicKey.destroy();
-    config.destroy();
-    configBuilder.destroy();
   }
 
   @Test
   void serializesAndDeserializes() {
-    DynamicBuffer dynamicBuffer = compressedCompactPublicKey.serialize();
+    DynamicBufferView dynamicBuffer = compressedCompactPublicKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
 
     CompressedCompactPublicKey deserializedCompressedCompactPublicKey = new CompressedCompactPublicKey();
-    deserializedCompressedCompactPublicKey.deserialize(dynamicBuffer.view());
+    deserializedCompressedCompactPublicKey.deserialize(dynamicBuffer);
 
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
-
-    deserializedCompressedCompactPublicKey.destroy();
-    dynamicBuffer.destroy();
   }
 }

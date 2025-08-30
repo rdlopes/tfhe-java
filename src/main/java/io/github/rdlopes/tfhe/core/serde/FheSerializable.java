@@ -8,7 +8,7 @@ public interface FheSerializable extends Serializable {
   long serialVersionUID = 1L;
   long BUFFER_MAX_SIZE = Long.MAX_VALUE;
 
-  DynamicBuffer serialize();
+  DynamicBufferView serialize();
 
   void deserialize(DynamicBufferView bufferView);
 }
