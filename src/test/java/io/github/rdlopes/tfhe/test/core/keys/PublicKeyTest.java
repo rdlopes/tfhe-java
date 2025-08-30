@@ -1,15 +1,15 @@
 package io.github.rdlopes.tfhe.test.core.keys;
 
-import io.github.rdlopes.tfhe.core.NativeCallException;
 import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.PublicKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PublicKeyTest {
 
@@ -36,7 +36,19 @@ class PublicKeyTest {
 
   @Test
   void serializesAndDeserializes() {
-    assertThatCode(() -> publicKey.serialize())
-      .isInstanceOf(NativeCallException.class);
+    DynamicBuffer dynamicBuffer = publicKey.serialize();
+
+    assertThat(dynamicBuffer).isNotNull();
+    assertThat(dynamicBuffer.getPointer()).isNotNull();
+    assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
+
+    PublicKey deserializedPublicKey = new PublicKey();
+    deserializedPublicKey.deserialize(dynamicBuffer.view());
+
+    assertThat(deserializedPublicKey).isNotNull();
+    assertThat(deserializedPublicKey.getAddress()).isNotNull();
+
+    deserializedPublicKey.destroy();
+    dynamicBuffer.destroy();
   }
 }

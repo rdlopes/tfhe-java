@@ -6,7 +6,7 @@ import java.io.Serializable;
 public interface FheSerializable extends Serializable {
   @Serial
   long serialVersionUID = 1L;
-  long BUFFER_MAX_SIZE = Integer.MAX_VALUE;
+  long BUFFER_MAX_SIZE = Long.MAX_VALUE;
 
   DynamicBuffer serialize();
 
