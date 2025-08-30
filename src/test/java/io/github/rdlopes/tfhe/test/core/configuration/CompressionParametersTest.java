@@ -1,6 +1,9 @@
 package io.github.rdlopes.tfhe.test.core.configuration;
 
-import io.github.rdlopes.tfhe.core.configuration.*;
+import io.github.rdlopes.tfhe.core.configuration.CompressionParameters;
+import io.github.rdlopes.tfhe.core.configuration.DynamicDistribution;
+import io.github.rdlopes.tfhe.core.configuration.DynamicDistributionPayload;
+import io.github.rdlopes.tfhe.core.configuration.Gaussian;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.FieldSource;
@@ -67,16 +70,6 @@ class CompressionParametersTest {
     assertThat(parameters.getLwePerGlwe()).isEqualTo(lwePerGlwe);
     assertThat(parameters.getStorageLogModulus()).isEqualTo(storageLogModulus);
     assertThat(parameters.getPackingKsKeyNoiseDistribution()).isNotNull();
-  }
-
-  @Test
-  void integrationWithConfigBuilder() {
-    ConfigBuilder configBuilder = new ConfigBuilder();
-    CompressionParameters compressionParams = CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128;
-
-    ConfigBuilder result = configBuilder.enableCompression(compressionParams);
-    assertThat(result).isNotNull();
-    assertThat(result).isSameAs(configBuilder);
   }
 
 }

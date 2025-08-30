@@ -35,9 +35,8 @@ class ConfigBuilderTest {
 
   @Test
   void buildsWithCustomParameters() {
-    Config config = configBuilder
-      .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-      .build();
+    configBuilder.useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    Config config = configBuilder.build();
     assertThat(config).isNotNull();
 
     config.destroy();
@@ -45,9 +44,8 @@ class ConfigBuilderTest {
 
   @Test
   void buildsWithDedicatedCompactPublicKeyParameters() {
-    Config config = configBuilder
-      .useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-      .build();
+    configBuilder.useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    Config config = configBuilder.build();
     assertThat(config).isNotNull();
 
     config.destroy();
@@ -55,9 +53,8 @@ class ConfigBuilderTest {
 
   @Test
   void buildsWithCustomCompressionParameters() {
-    Config config = configBuilder
-      .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-      .build();
+    configBuilder.enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    Config config = configBuilder.build();
     assertThat(config).isNotNull();
 
     config.destroy();
@@ -65,11 +62,10 @@ class ConfigBuilderTest {
 
   @Test
   void buildsWithAllTweaks() {
-    Config config = configBuilder
-      .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-      .useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-      .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-      .build();
+    configBuilder.useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    configBuilder.enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    configBuilder.useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    Config config = configBuilder.build();
     assertThat(config).isNotNull();
 
     config.destroy();

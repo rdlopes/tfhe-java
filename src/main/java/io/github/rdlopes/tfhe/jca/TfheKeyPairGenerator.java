@@ -4,21 +4,18 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedCompactPublicKey;
-import io.github.rdlopes.tfhe.core.keys.CompressedServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGeneratorSpi;
-import java.security.SecureRandom;
+import java.security.*;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Objects;
 
 public final class TfheKeyPairGenerator extends KeyPairGeneratorSpi {
-  private TfheParameterSpec parameterSpec = new TfheParameterSpec(false);
+  private TfheParameterSpec parameterSpec = TfheParameterSpec.defaultSpec();
 
   @Override
   public void initialize(int keySize, SecureRandom random) {
+    throw new InvalidParameterException("Only TfheParameterSpec is supported");
   }
 
   @Override
@@ -32,51 +29,41 @@ public final class TfheKeyPairGenerator extends KeyPairGeneratorSpi {
 
   @Override
   public KeyPair generateKeyPair() {
-    ConfigBuilder configBuilder = new ConfigBuilder()
-      .enableCompression(parameterSpec.compressionParameters());
-    Config config = configBuilder.build();
+    Config config = buildConfiguration();
 
-    KeyPair keyPair;
     ClientKey clientKey = config.generateClientKey();
     DynamicBuffer clientKeyBuffer = clientKey.serialize();
+    byte[] clientKeyBytes = clientKeyBuffer.view()
+                                           .toByteArray();
+    TfhePrivateKey tfhePrivateKey = new TfhePrivateKey(clientKeyBytes);
 
-    if (parameterSpec.isServerKey()) {
-      CompressedServerKey compressedServerKey = clientKey.newCompressedServerKey();
-      DynamicBuffer compressedServerKeyBuffer = compressedServerKey.serialize();
-      keyPair = new KeyPair(
-        new TfhePublicKey(
-          compressedServerKeyBuffer.view()
-                                   .toByteArray(),
-          true,
-          true),
-        new TfhePrivateKey(
-          clientKeyBuffer.view()
-                         .toByteArray())
-      );
-      clientKeyBuffer.destroy();
-      compressedServerKeyBuffer.destroy();
-      clientKey.destroy();
-      compressedServerKey.destroy();
+    CompressedCompactPublicKey compressedCompactPublicKey = clientKey.newCompressedCompactPublicKey();
+    DynamicBuffer compressedCompactPublicKeyBuffer = compressedCompactPublicKey.serialize();
+    byte[] compressedCompactPublicKeyBytes = compressedCompactPublicKeyBuffer.view()
+                                                                             .toByteArray();
+    TfhePublicKey tfhePublicKey = new TfhePublicKey(compressedCompactPublicKeyBytes);
 
-    } else {
-      CompressedCompactPublicKey compressedCompactPublicKey = clientKey.newCompressedCompactPublicKey();
-      DynamicBuffer compressedCompactPublicKeyBuffer = compressedCompactPublicKey.serialize();
-      keyPair = new KeyPair(
-        new TfhePublicKey(
-          compressedCompactPublicKeyBuffer.view()
-                                          .toByteArray(),
-          true,
-          false),
-        new TfhePrivateKey(
-          clientKeyBuffer.view()
-                         .toByteArray())
-      );
-      clientKeyBuffer.destroy();
-      compressedCompactPublicKeyBuffer.destroy();
-      clientKey.destroy();
-      compressedCompactPublicKey.destroy();
+    compressedCompactPublicKeyBuffer.destroy();
+    compressedCompactPublicKey.destroy();
+    clientKeyBuffer.destroy();
+    clientKey.destroy();
+
+    return new KeyPair(tfhePublicKey, tfhePrivateKey);
+  }
+
+  private Config buildConfiguration() {
+    ConfigBuilder configBuilder = new ConfigBuilder();
+
+    if (parameterSpec.encryption() != null) {
+      configBuilder.useCustomParameters(parameterSpec.encryption());
+    }
+    if (parameterSpec.compression() != null) {
+      configBuilder.enableCompression(parameterSpec.compression());
+    }
+    if (parameterSpec.compactPublicKeyEncryption() != null) {
+      configBuilder.useDedicatedCompactPublicKeyParameters(parameterSpec.compactPublicKeyEncryption());
     }
 
-    return keyPair;
+    return configBuilder.build();
   }
 }

@@ -11,19 +11,16 @@ public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> config_builder_default(getAddress()));
   }
 
-  public ConfigBuilder useCustomParameters(ShortintPBSParameters parameters) {
+  public void useCustomParameters(ShortintPBSParameters parameters) {
     executeWithErrorHandling(() -> config_builder_use_custom_parameters(getAddress(), parameters.getAddress()));
-    return this;
   }
 
-  public ConfigBuilder useDedicatedCompactPublicKeyParameters(ShortintCompactPublicKeyEncryptionParameters compactPublicKeyParameters) {
-    executeWithErrorHandling(() -> use_dedicated_compact_public_key_parameters(getAddress(), compactPublicKeyParameters.getAddress()));
-    return this;
-  }
-
-  public ConfigBuilder enableCompression(CompressionParameters compressionParameters) {
+  public void enableCompression(CompressionParameters compressionParameters) {
     executeWithErrorHandling(() -> config_builder_enable_compression(getAddress(), compressionParameters.getAddress()));
-    return this;
+  }
+
+  public void useDedicatedCompactPublicKeyParameters(ShortintCompactPublicKeyEncryptionParameters compactPublicKeyParameters) {
+    executeWithErrorHandling(() -> use_dedicated_compact_public_key_parameters(getAddress(), compactPublicKeyParameters.getAddress()));
   }
 
   public Config build() {

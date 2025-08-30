@@ -1,9 +1,9 @@
 package io.github.rdlopes.tfhe.test.jca;
 
+import io.github.rdlopes.tfhe.core.configuration.CompressionParameters;
+import io.github.rdlopes.tfhe.core.configuration.ShortintPBSParameters;
 import io.github.rdlopes.tfhe.jca.TfheKeyPairGenerator;
 import io.github.rdlopes.tfhe.jca.TfheParameterSpec;
-import io.github.rdlopes.tfhe.jca.TfhePrivateKey;
-import io.github.rdlopes.tfhe.jca.TfhePublicKey;
 import org.junit.jupiter.api.Test;
 
 import java.security.InvalidAlgorithmParameterException;
@@ -41,51 +41,22 @@ class TfheKeyPairGeneratorTest {
   }
 
   @Test
-  void generatesClientAndPublicKeyPair() throws Exception {
-    TfheKeyPairGenerator generator = new TfheKeyPairGenerator();
-    TfheParameterSpec spec = new TfheParameterSpec(false);
-    generator.initialize(spec, null);
-
-    KeyPair keyPair = generator.generateKeyPair();
-
-    assertThat(keyPair).isNotNull();
-    assertThat(keyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
-    TfhePublicKey publicKey = (TfhePublicKey) keyPair.getPublic();
-    assertThat(publicKey.isServerKey()).isFalse();
-  }
-
-  @Test
-  void generatesClientAndServerKeyPair() throws Exception {
-    TfheKeyPairGenerator generator = new TfheKeyPairGenerator();
-    TfheParameterSpec spec = new TfheParameterSpec(true);
-    generator.initialize(spec, null);
-
-    KeyPair keyPair = generator.generateKeyPair();
-
-    assertThat(keyPair).isNotNull();
-    assertThat(keyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
-    TfhePublicKey publicKey = (TfhePublicKey) keyPair.getPublic();
-    assertThat(publicKey.isServerKey()).isTrue();
-  }
-
-  @Test
   void generatesKeyPairsWithDifferentSpecs() throws Exception {
     TfheKeyPairGenerator generator = new TfheKeyPairGenerator();
 
-    generator.initialize(new TfheParameterSpec(true), null);
-    KeyPair clientServerKeyPair = generator.generateKeyPair();
+    generator.initialize(TfheParameterSpec.defaultSpec(), null);
+    KeyPair firstKeyPair = generator.generateKeyPair();
 
-    generator.initialize(new TfheParameterSpec(false), null);
-    KeyPair clientPublicKeyPair = generator.generateKeyPair();
+    generator.initialize(new TfheParameterSpec(
+      ShortintPBSParameters.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128,
+      CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128,
+      null
+    ), null);
+    KeyPair secondKeyPair = generator.generateKeyPair();
 
-    assertThat(clientServerKeyPair).isNotNull();
-    assertThat(clientPublicKeyPair).isNotNull();
-    assertThat(clientPublicKeyPair.getPublic()).isInstanceOf(TfhePublicKey.class);
-    assertThat(clientPublicKeyPair.getPrivate()).isInstanceOf(TfhePrivateKey.class);
-    TfhePublicKey serverKey = (TfhePublicKey) clientServerKeyPair.getPublic();
-    TfhePublicKey publicKey = (TfhePublicKey) clientPublicKeyPair.getPublic();
-    assertThat(serverKey.isServerKey()).isTrue();
-    assertThat(publicKey.isServerKey()).isFalse();
+    assertThat(firstKeyPair).isNotNull();
+    assertThat(secondKeyPair).isNotNull();
+    assertThat(firstKeyPair).isNotSameAs(secondKeyPair);
   }
 
   @Test

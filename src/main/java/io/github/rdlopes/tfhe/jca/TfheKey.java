@@ -2,6 +2,8 @@ package io.github.rdlopes.tfhe.jca;
 
 import java.security.Key;
 
+import static io.github.rdlopes.tfhe.jca.TfheProvider.TFHE_ALGORITHM;
+
 public class TfheKey implements Key {
   private final byte[] encoded;
 
@@ -11,7 +13,7 @@ public class TfheKey implements Key {
 
   @Override
   public String getAlgorithm() {
-    return "TFHE";
+    return TFHE_ALGORITHM;
   }
 
   @Override
