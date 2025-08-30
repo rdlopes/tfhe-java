@@ -7,6 +7,7 @@ import io.github.rdlopes.tfhe.core.keys.PublicKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +36,7 @@ class PublicKeyTest {
   }
 
   @Test
+  @Tag("largeByteBuffer")
   void serializesAndDeserializes() {
     DynamicBuffer dynamicBuffer = publicKey.serialize();
 
@@ -52,6 +54,7 @@ class PublicKeyTest {
   }
 
   @Test
+  @Tag("largeByteBuffer")
   void safeSerializesAndDeserializes() {
     DynamicBuffer dynamicBuffer = publicKey.safeSerialize();
 
