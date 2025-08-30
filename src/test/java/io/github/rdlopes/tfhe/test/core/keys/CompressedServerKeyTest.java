@@ -43,7 +43,8 @@ class CompressedServerKeyTest {
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
 
-    CompressedServerKey deserializedCompressedServerKey = CompressedServerKey.deserialize(dynamicBuffer.view());
+    CompressedServerKey deserializedCompressedServerKey = new CompressedServerKey();
+    deserializedCompressedServerKey.deserialize(dynamicBuffer.view());
 
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();

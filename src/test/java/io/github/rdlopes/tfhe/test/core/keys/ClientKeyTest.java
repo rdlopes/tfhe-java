@@ -38,7 +38,8 @@ class ClientKeyTest {
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
 
-    ClientKey deserializedClientKey = ClientKey.deserialize(dynamicBuffer.view());
+    ClientKey deserializedClientKey = new ClientKey();
+    deserializedClientKey.deserialize(dynamicBuffer.view());
 
     assertThat(deserializedClientKey).isNotNull();
     assertThat(deserializedClientKey.getAddress()).isNotNull();

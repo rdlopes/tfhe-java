@@ -1,15 +1,14 @@
 package io.github.rdlopes.tfhe.core.serde;
 
+import java.io.Serial;
 import java.io.Serializable;
 
-public interface FheSerializable<T> extends Serializable {
+public interface FheSerializable extends Serializable {
+  @Serial
+  long serialVersionUID = 1L;
   long BUFFER_MAX_SIZE = Integer.MAX_VALUE;
 
-  default DynamicBuffer serialize() {
-    throw new UnsupportedOperationException("Serialization not implemented");
-  }
+  DynamicBuffer serialize();
 
-  default void deserialize(DynamicBufferView bufferView) {
-    throw new UnsupportedOperationException("Deserialization not implemented");
-  }
+  void deserialize(DynamicBufferView bufferView);
 }

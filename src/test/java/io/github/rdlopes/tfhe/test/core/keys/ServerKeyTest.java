@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class ServerKeyTest {
 
@@ -43,6 +44,15 @@ class ServerKeyTest {
     assertThat(dynamicBuffer).isNotNull();
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
+
+    dynamicBuffer.destroy();
+  }
+
+  @Test
+  void doesNotDeserialize() {
+    DynamicBuffer dynamicBuffer = serverKey.serialize();
+    assertThatCode(() -> serverKey.deserialize(dynamicBuffer.view()))
+      .isInstanceOf(UnsupportedOperationException.class);
 
     dynamicBuffer.destroy();
   }

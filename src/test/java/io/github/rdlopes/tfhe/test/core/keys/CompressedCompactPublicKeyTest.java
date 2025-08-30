@@ -42,7 +42,8 @@ class CompressedCompactPublicKeyTest {
     assertThat(dynamicBuffer.getPointer()).isNotNull();
     assertThat(dynamicBuffer.getLength()).isGreaterThan(0);
 
-    CompressedCompactPublicKey deserializedCompressedCompactPublicKey = CompressedCompactPublicKey.deserialize(dynamicBuffer.view());
+    CompressedCompactPublicKey deserializedCompressedCompactPublicKey = new CompressedCompactPublicKey();
+    deserializedCompressedCompactPublicKey.deserialize(dynamicBuffer.view());
 
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();

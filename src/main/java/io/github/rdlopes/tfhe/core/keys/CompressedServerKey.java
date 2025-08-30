@@ -2,17 +2,14 @@ package io.github.rdlopes.tfhe.core.keys;
 
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.core.serde.FheAbstractSerializable;
 
-import static io.github.rdlopes.tfhe.core.serde.FheSerializable.BUFFER_MAX_SIZE;
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public class CompressedServerKey extends AddressLayoutPointer {
+public class CompressedServerKey extends FheAbstractSerializable {
 
-  public static CompressedServerKey deserialize(DynamicBufferView bufferView) {
-    CompressedServerKey compressedServerKey = new CompressedServerKey();
-    executeWithErrorHandling(() -> compressed_server_key_safe_deserialize(bufferView.getAddress(), BUFFER_MAX_SIZE, compressedServerKey.getAddress()));
-    return compressedServerKey;
+  public void deserialize(DynamicBufferView bufferView) {
+    executeWithErrorHandling(() -> compressed_server_key_safe_deserialize(bufferView.getAddress(), BUFFER_MAX_SIZE, getAddress()));
   }
 
   public DynamicBuffer serialize() {
