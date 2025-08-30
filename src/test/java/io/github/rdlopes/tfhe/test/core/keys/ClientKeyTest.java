@@ -17,8 +17,7 @@ class ClientKeyTest {
 
     assertThat(buffer.getLength()).isGreaterThan(0);
 
-    ClientKey deserialized = new ClientKey();
-    deserialized.deserialize(buffer);
+    ClientKey deserialized = ClientKey.deserialize(buffer);
 
     assertThat(deserialized.getAddress()).isNotNull();
   }

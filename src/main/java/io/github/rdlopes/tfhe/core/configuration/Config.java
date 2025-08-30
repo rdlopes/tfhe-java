@@ -7,13 +7,17 @@ import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.client_key_generate;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.generate_keys;
 
 public class Config extends AddressLayoutPointer {
   private final AtomicBoolean keysGenerated = new AtomicBoolean(false);
 
   public Config() {
-    super(address -> config_destroy(address.get(C_POINTER, 0)));
+    super(address -> {
+      //FIXME crashes VM
+      //config_destroy(address.get(C_POINTER, 0));
+    });
   }
 
   public KeySet generateKeys() {

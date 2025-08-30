@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
+  public static final long BUFFER_MAX_SIZE = Long.MAX_VALUE;
   protected static final Cleaner CLEANER = Cleaner.create();
   protected static final Arena ARENA = LIBRARY_ARENA;
   private static final Logger logger = LoggerFactory.getLogger(MemoryLayoutPointer.class);
@@ -32,7 +33,10 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     this.address = address;
     this.layout = layout;
     if (cleaner != null) {
-      CLEANER.register(this, () -> cleaner.accept(address));
+      CLEANER.register(this, () -> {
+        logger.debug("cleaner - address: {}", address);
+        cleaner.accept(address);
+      });
     }
   }
 

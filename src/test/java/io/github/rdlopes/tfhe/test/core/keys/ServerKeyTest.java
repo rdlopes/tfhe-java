@@ -27,7 +27,7 @@ class ServerKeyTest {
                                              .serverKey();
     DynamicBufferView buffer = serverKey.serialize();
 
-    assertThatCode(() -> serverKey.deserialize(buffer))
+    assertThatCode(() -> ServerKey.deserialize(buffer))
       .isInstanceOf(UnsupportedOperationException.class);
   }
 }

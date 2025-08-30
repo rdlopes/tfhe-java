@@ -11,15 +11,15 @@ class PublicKeyTest {
 
   @Test
   void serializesAndDeserializes() {
-    PublicKey publicKey = new ConfigBuilder().build()
-                                             .generateClientKey()
-                                             .newPublicKey();
+    var clientKey = new ConfigBuilder().build()
+                                       .generateClientKey();
+    new PublicKey();
+    PublicKey publicKey = PublicKey.newWith(clientKey);
     DynamicBufferView buffer = publicKey.serialize();
 
     assertThat(buffer.getLength()).isGreaterThan(0);
 
-    PublicKey deserialized = new PublicKey();
-    deserialized.deserialize(buffer);
+    PublicKey deserialized = PublicKey.deserialize(buffer);
 
     assertThat(deserialized.getAddress()).isNotNull();
   }
