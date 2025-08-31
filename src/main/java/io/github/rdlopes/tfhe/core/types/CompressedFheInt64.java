@@ -30,7 +30,9 @@ public class CompressedFheInt64 extends AddressLayoutPointer implements Cloneabl
   public DynamicBufferView serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> compressed_fhe_int64_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-    return dynamicBuffer.view();
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.cleanNativeResources();
+    return dynamicBufferView;
   }
 
   public FheInt64 decompress() {

@@ -70,6 +70,9 @@ class CompressionParametersTest {
     assertThat(parameters.getLwePerGlwe()).isEqualTo(lwePerGlwe);
     assertThat(parameters.getStorageLogModulus()).isEqualTo(storageLogModulus);
     assertThat(parameters.getPackingKsKeyNoiseDistribution()).isNotNull();
+
+    parameters.cleanNativeResources();
+    packingKsKeyNoiseDistribution.cleanNativeResources();
   }
 
 }

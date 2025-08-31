@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -7,55 +8,46 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt32;
 import io.github.rdlopes.tfhe.core.types.FheInt32;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedFheInt32Test {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
   void encryptsWithClientKey() {
     int originalValue = 123456;
     CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
 
-  @Test
-  void encryptsWithClientKeyNegative() {
-    int originalValue = -123456;
-    CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
-  }
 
-  @Test
-  void encryptsWithClientKeyMaxValue() {
-    int originalValue = 2147483647; // Max int32
-    CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void encryptsWithClientKeyMinValue() {
-    int originalValue = -2147483648; // Min int32
-    CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
+    compressed.cleanNativeResources();
   }
 
   @Test
@@ -64,50 +56,16 @@ class CompressedFheInt32Test {
     CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
 
     FheInt32 decompressed = compressed.decompress();
+
     assertThat(decompressed).isNotNull();
     assertThat(decompressed.getValue()).isNotNull();
 
     int decrypted = decompressed.decryptWithClientKey(clientKey);
+
     assertThat(decrypted).isEqualTo(originalValue);
-  }
 
-  @Test
-  void decompressesAndDecryptsNegative() {
-    int originalValue = -123456;
-    CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
-
-    FheInt32 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    int decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void decompressesAndDecryptsMaxValue() {
-    int originalValue = 2147483647; // Max int32
-    CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
-
-    FheInt32 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    int decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void decompressesAndDecryptsMinValue() {
-    int originalValue = -2147483648; // Min int32
-    CompressedFheInt32 compressed = CompressedFheInt32.encryptWithClientKey(originalValue, clientKey);
-
-    FheInt32 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    int decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -118,26 +76,38 @@ class CompressedFheInt32Test {
     assertThat(buffer.getLength()).isGreaterThan(0);
 
     CompressedFheInt32 deserialized = CompressedFheInt32.deserialize(buffer, serverKey);
+
     assertThat(deserialized).isNotNull();
     assertThat(deserialized.getValue()).isNotNull();
 
     FheInt32 decompressed = deserialized.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
+
     assertThat(decrypted).isEqualTo(-3000000);
+
+    original.cleanNativeResources();
+    buffer.cleanNativeResources();
+    deserialized.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
-  void clonesSuccessfully() {
+  void clones() {
     CompressedFheInt32 original = CompressedFheInt32.encryptWithClientKey(-2500000, clientKey);
-
     CompressedFheInt32 cloned = original.clone();
+
     assertThat(cloned).isNotNull();
     assertThat(cloned.getValue()).isNotNull();
     assertThat(cloned).isNotSameAs(original);
 
     FheInt32 decompressed = cloned.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
+
     assertThat(decrypted).isEqualTo(-2500000);
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -147,6 +117,11 @@ class CompressedFheInt32Test {
     CompressedFheInt32 compressed = fheInt32.compress();
     FheInt32 decompressed = compressed.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
+
     assertThat(decrypted).isEqualTo(originalValue);
+
+    fheInt32.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 }

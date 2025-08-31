@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.keys;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
@@ -11,8 +12,9 @@ class ClientKeyTest {
 
   @Test
   void serializesAndDeserializes() {
-    ClientKey clientKey = new ConfigBuilder().build()
-                                             .generateClientKey();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
+    ClientKey clientKey = config.generateClientKey();
     DynamicBufferView buffer = clientKey.serialize();
 
     assertThat(buffer.getLength()).isGreaterThan(0);
@@ -20,5 +22,11 @@ class ClientKeyTest {
     ClientKey deserialized = ClientKey.deserialize(buffer);
 
     assertThat(deserialized.getAddress()).isNotNull();
+
+    deserialized.cleanNativeResources();
+    buffer.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    config.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 }

@@ -23,10 +23,15 @@ class ModulusSwitchTypeTest {
     assertThat(switchType.getModulusSwitchNoiseReductionParams()).isNotNull();
 
     ModulusSwitchNoiseReductionParams retrievedParams = switchType.getModulusSwitchNoiseReductionParams();
+
     assertThat(retrievedParams.getModulusSwitchZerosCount()).isEqualTo(10);
     assertThat(retrievedParams.getMsBound()).isEqualTo(1.5);
     assertThat(retrievedParams.getMsRSigmaFactor()).isEqualTo(2.0);
     assertThat(retrievedParams.getMsInputVariance()).isEqualTo(0.5);
+
+    retrievedParams.cleanNativeResources();
+    switchType.cleanNativeResources();
+    params.cleanNativeResources();
   }
 
 }

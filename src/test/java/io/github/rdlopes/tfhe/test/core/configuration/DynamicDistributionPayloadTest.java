@@ -15,9 +15,17 @@ class DynamicDistributionPayloadTest {
     TUniform initial = new TUniform(64);
     DynamicDistributionPayload payload = new DynamicDistributionPayload(initial);
     TUniform read = payload.getTUniform();
+
     assertThat(read.getBoundLog2()).isEqualTo(initial.getBoundLog2());
+
     Gaussian gaussian = payload.getGaussian();
+
     assertThat(gaussian.getStd()).isCloseTo(0, offset(1e-10));
+
+    read.cleanNativeResources();
+    gaussian.cleanNativeResources();
+    payload.cleanNativeResources();
+    initial.cleanNativeResources();
   }
 
   @Test
@@ -25,9 +33,17 @@ class DynamicDistributionPayloadTest {
     Gaussian initial = new Gaussian(5.0);
     DynamicDistributionPayload payload = new DynamicDistributionPayload(initial);
     Gaussian read = payload.getGaussian();
+
     assertThat(read.getStd()).isEqualTo(initial.getStd());
+
     TUniform tUniform = payload.getTUniform();
+
     assertThat(tUniform.getBoundLog2()).isEqualTo(0);
+
+    read.cleanNativeResources();
+    tUniform.cleanNativeResources();
+    payload.cleanNativeResources();
+    initial.cleanNativeResources();
   }
 
 }

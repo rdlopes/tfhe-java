@@ -45,7 +45,9 @@ public class FheBool extends AddressLayoutPointer implements Cloneable {
   public DynamicBufferView serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> fhe_bool_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-    return dynamicBuffer.view();
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.cleanNativeResources();
+    return dynamicBufferView;
   }
 
   public boolean decryptWithClientKey(ClientKey clientKey) {

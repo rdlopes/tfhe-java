@@ -28,6 +28,8 @@ public class PublicKey extends AddressLayoutPointer {
   public DynamicBufferView serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> public_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-    return dynamicBuffer.view();
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.cleanNativeResources();
+    return dynamicBufferView;
   }
 }

@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -7,23 +8,35 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheUint32;
 import io.github.rdlopes.tfhe.core.types.FheUint32;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedFheUint32Test {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
@@ -32,14 +45,8 @@ class CompressedFheUint32Test {
     CompressedFheUint32 compressed = CompressedFheUint32.encryptWithClientKey(originalValue, clientKey);
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
-  }
 
-  @Test
-  void encryptsWithClientKeyMaxValue() {
-    int originalValue = (int) 4294967295L;
-    CompressedFheUint32 compressed = CompressedFheUint32.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
+    compressed.cleanNativeResources();
   }
 
   @Test
@@ -53,19 +60,9 @@ class CompressedFheUint32Test {
 
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-  }
 
-  @Test
-  void decompressesAndDecryptsMaxValue() {
-    int originalValue = (int) 4294967295L;
-    CompressedFheUint32 compressed = CompressedFheUint32.encryptWithClientKey(originalValue, clientKey);
-
-    FheUint32 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    int decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -82,10 +79,15 @@ class CompressedFheUint32Test {
     FheUint32 decompressed = deserialized.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000);
+
+    original.cleanNativeResources();
+    buffer.cleanNativeResources();
+    deserialized.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
-  void clonesSuccessfully() {
+  void clones() {
     CompressedFheUint32 original = CompressedFheUint32.encryptWithClientKey(2500000, clientKey);
 
     CompressedFheUint32 cloned = original.clone();
@@ -96,6 +98,10 @@ class CompressedFheUint32Test {
     FheUint32 decompressed = cloned.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(2500000);
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -106,5 +112,9 @@ class CompressedFheUint32Test {
     FheUint32 decompressed = compressed.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    fheUint32.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 }

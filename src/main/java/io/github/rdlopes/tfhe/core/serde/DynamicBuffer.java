@@ -8,7 +8,10 @@ import java.lang.foreign.MemorySegment;
 public class DynamicBuffer extends GroupLayoutPointer {
 
   public DynamicBuffer() {
-    super(DynamicBuffer.class, io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout(), TfheWrapper::destroy_dynamic_buffer);
+    super(
+      DynamicBuffer.class,
+      io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout(),
+      TfheWrapper::destroy_dynamic_buffer);
   }
 
   public MemorySegment getPointer() {
@@ -24,10 +27,9 @@ public class DynamicBuffer extends GroupLayoutPointer {
   }
 
   public DynamicBufferView view() {
-    long length = getLength();
-    MemorySegment originalPointer = getPointer();
-    MemorySegment copiedSegment = ARENA.allocate(length);
-    copiedSegment.copyFrom(originalPointer.reinterpret(length));
-    return new DynamicBufferView(copiedSegment, length);
+    MemorySegment dataSegment = getPointer().reinterpret(getLength());
+    MemorySegment newSegment = ARENA.allocate(getLength());
+    newSegment.copyFrom(dataSegment);
+    return new DynamicBufferView(newSegment, getLength());
   }
 }

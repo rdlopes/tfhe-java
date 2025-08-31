@@ -19,9 +19,11 @@ public class ServerKey extends AddressLayoutPointer {
   }
 
   public DynamicBufferView serialize() {
-    DynamicBuffer buffer = new DynamicBuffer();
-    executeWithErrorHandling(() -> server_key_safe_serialize(getValue(), buffer.getAddress(), BUFFER_MAX_SIZE));
-    return buffer.view();
+    DynamicBuffer dynamicBuffer = new DynamicBuffer();
+    executeWithErrorHandling(() -> server_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.cleanNativeResources();
+    return dynamicBufferView;
   }
 
   public void setAsKey() {

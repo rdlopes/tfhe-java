@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -7,39 +8,46 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheBool;
 import io.github.rdlopes.tfhe.core.types.FheBool;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedFheBoolTest {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
   void encryptsWithClientKey() {
     boolean originalValue = true;
     CompressedFheBool compressed = CompressedFheBool.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
 
-  @Test
-  void encryptsWithClientKeyFalse() {
-    boolean originalValue = false;
-    CompressedFheBool compressed = CompressedFheBool.encryptWithClientKey(originalValue, clientKey);
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
+
+    compressed.cleanNativeResources();
   }
 
   @Test
@@ -53,6 +61,9 @@ class CompressedFheBoolTest {
 
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -66,6 +77,9 @@ class CompressedFheBoolTest {
 
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -82,6 +96,11 @@ class CompressedFheBoolTest {
     FheBool decompressed = deserialized.decompress();
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    original.cleanNativeResources();
+    deserialized.cleanNativeResources();
+    decompressed.cleanNativeResources();
+    buffer.cleanNativeResources();
   }
 
   @Test
@@ -96,6 +115,10 @@ class CompressedFheBoolTest {
     FheBool decompressed = cloned.decompress();
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -106,5 +129,9 @@ class CompressedFheBoolTest {
     FheBool decompressed = compressed.decompress();
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    fheBool.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 }

@@ -19,23 +19,37 @@ class DynamicDistributionTest {
     DynamicDistribution distribution = new DynamicDistribution(tag, payload);
 
     assertThat(distribution.getTag()).isEqualTo(tag);
-    assertThat(distribution.getDistribution()
-                           .getTUniform()
-                           .getBoundLog2()).isEqualTo(64);
-    assertThat(distribution.getDistribution()
-                           .getGaussian()
-                           .getStd()).isCloseTo(0.0, offset(1e-10));
+
+    DynamicDistributionPayload retrievedPayload = distribution.getDistribution();
+    TUniform retrievedTUniform = retrievedPayload.getTUniform();
+    Gaussian retrievedGaussian = retrievedPayload.getGaussian();
+
+    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
+    assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
+
+    retrievedTUniform.cleanNativeResources();
+    retrievedGaussian.cleanNativeResources();
+    retrievedPayload.cleanNativeResources();
+    distribution.cleanNativeResources();
+    payload.cleanNativeResources();
+    tUniform.cleanNativeResources();
   }
 
   @Test
   void generatesTUniform() {
     DynamicDistribution distribution = DynamicDistribution.tUniform(64);
-    assertThat(distribution.getDistribution()
-                           .getTUniform()
-                           .getBoundLog2()).isEqualTo(64);
-    assertThat(distribution.getDistribution()
-                           .getGaussian()
-                           .getStd()).isCloseTo(0.0, offset(1e-10));
+
+    DynamicDistributionPayload retrievedPayload = distribution.getDistribution();
+    TUniform retrievedTUniform = retrievedPayload.getTUniform();
+    Gaussian retrievedGaussian = retrievedPayload.getGaussian();
+
+    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
+    assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
+
+    retrievedTUniform.cleanNativeResources();
+    retrievedGaussian.cleanNativeResources();
+    retrievedPayload.cleanNativeResources();
+    distribution.cleanNativeResources();
   }
 
   @Test
@@ -46,22 +60,36 @@ class DynamicDistributionTest {
     DynamicDistribution distribution = new DynamicDistribution(tag, payload);
 
     assertThat(distribution.getTag()).isEqualTo(tag);
-    assertThat(distribution.getDistribution()
-                           .getGaussian()
-                           .getStd()).isEqualTo(5.0);
-    assertThat(distribution.getDistribution()
-                           .getTUniform()
-                           .getBoundLog2()).isEqualTo(0);
+
+    DynamicDistributionPayload retrievedPayload = distribution.getDistribution();
+    Gaussian retrievedGaussian = retrievedPayload.getGaussian();
+    TUniform retrievedTUniform = retrievedPayload.getTUniform();
+
+    assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
+    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
+
+    retrievedGaussian.cleanNativeResources();
+    retrievedTUniform.cleanNativeResources();
+    retrievedPayload.cleanNativeResources();
+    distribution.cleanNativeResources();
+    payload.cleanNativeResources();
+    gaussian.cleanNativeResources();
   }
 
   @Test
   void generatesGaussian() {
     DynamicDistribution distribution = DynamicDistribution.gaussian(5.0);
-    assertThat(distribution.getDistribution()
-                           .getGaussian()
-                           .getStd()).isEqualTo(5.0);
-    assertThat(distribution.getDistribution()
-                           .getTUniform()
-                           .getBoundLog2()).isEqualTo(0);
+
+    DynamicDistributionPayload retrievedPayload = distribution.getDistribution();
+    Gaussian retrievedGaussian = retrievedPayload.getGaussian();
+    TUniform retrievedTUniform = retrievedPayload.getTUniform();
+
+    assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
+    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
+
+    retrievedGaussian.cleanNativeResources();
+    retrievedTUniform.cleanNativeResources();
+    retrievedPayload.cleanNativeResources();
+    distribution.cleanNativeResources();
   }
 }

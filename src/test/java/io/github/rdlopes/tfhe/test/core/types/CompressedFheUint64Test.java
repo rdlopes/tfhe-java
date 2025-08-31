@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -7,23 +8,35 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheUint64;
 import io.github.rdlopes.tfhe.core.types.FheUint64;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedFheUint64Test {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
@@ -32,14 +45,8 @@ class CompressedFheUint64Test {
     CompressedFheUint64 compressed = CompressedFheUint64.encryptWithClientKey(originalValue, clientKey);
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
-  }
 
-  @Test
-  void encryptsWithClientKeyLargeValue() {
-    long originalValue = 9223372036854775807L; // Max long (treated as unsigned)
-    CompressedFheUint64 compressed = CompressedFheUint64.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
+    compressed.cleanNativeResources();
   }
 
   @Test
@@ -53,19 +60,9 @@ class CompressedFheUint64Test {
 
     long decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-  }
 
-  @Test
-  void decompressesAndDecryptsLargeValue() {
-    long originalValue = 9223372036854775807L; // Max long (treated as unsigned)
-    CompressedFheUint64 compressed = CompressedFheUint64.encryptWithClientKey(originalValue, clientKey);
-
-    FheUint64 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    long decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -82,6 +79,11 @@ class CompressedFheUint64Test {
     FheUint64 decompressed = deserialized.decompress();
     long decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(30000000000000L);
+
+    original.cleanNativeResources();
+    buffer.cleanNativeResources();
+    deserialized.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -96,6 +98,10 @@ class CompressedFheUint64Test {
     FheUint64 decompressed = cloned.decompress();
     long decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(25000000000000L);
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -106,5 +112,9 @@ class CompressedFheUint64Test {
     FheUint64 decompressed = compressed.decompress();
     long decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    fheUint64.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 }

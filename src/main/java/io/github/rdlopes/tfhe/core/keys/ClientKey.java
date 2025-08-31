@@ -23,7 +23,9 @@ public class ClientKey extends AddressLayoutPointer {
   public DynamicBufferView serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> client_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-    return dynamicBuffer.view();
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.cleanNativeResources();
+    return dynamicBufferView;
   }
 
 }

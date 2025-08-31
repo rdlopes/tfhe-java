@@ -12,22 +12,32 @@ class ServerKeyTest {
 
   @Test
   void serializes() {
-    ServerKey serverKey = new ConfigBuilder().build()
-                                             .generateKeys()
-                                             .serverKey();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    ServerKey serverKey = configBuilder.build()
+                                       .generateKeys()
+                                       .serverKey();
     DynamicBufferView buffer = serverKey.serialize();
 
     assertThat(buffer.getLength()).isGreaterThan(0);
+
+    buffer.cleanNativeResources();
+    serverKey.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 
   @Test
   void doesNotDeserialize() {
-    ServerKey serverKey = new ConfigBuilder().build()
-                                             .generateKeys()
-                                             .serverKey();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    ServerKey serverKey = configBuilder.build()
+                                       .generateKeys()
+                                       .serverKey();
     DynamicBufferView buffer = serverKey.serialize();
 
     assertThatCode(() -> ServerKey.deserialize(buffer))
       .isInstanceOf(UnsupportedOperationException.class);
+
+    buffer.cleanNativeResources();
+    serverKey.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 }

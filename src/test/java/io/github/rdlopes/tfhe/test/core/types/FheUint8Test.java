@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -9,23 +10,35 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheUint8;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheUint8;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FheUint8Test {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
@@ -37,6 +50,8 @@ class FheUint8Test {
 
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -49,6 +64,9 @@ class FheUint8Test {
 
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    encrypted.cleanNativeResources();
+    publicKey.cleanNativeResources();
   }
 
   @Test
@@ -61,6 +79,8 @@ class FheUint8Test {
     Byte decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -73,6 +93,10 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 25);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -83,6 +107,9 @@ class FheUint8Test {
     encrypted1.addAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 25);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -95,6 +122,10 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 15);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -105,6 +136,9 @@ class FheUint8Test {
     encrypted1.subAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 15);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -117,6 +151,10 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 30);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -127,6 +165,9 @@ class FheUint8Test {
     encrypted1.mulAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 30);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -139,6 +180,10 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7); // 0x07
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -149,6 +194,9 @@ class FheUint8Test {
     encrypted1.andAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7); // 0x07
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -161,6 +209,10 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 12); // 0x0C
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -171,6 +223,9 @@ class FheUint8Test {
     encrypted1.orAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 12); // 0x0C
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -183,6 +238,10 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8); // 0x08
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -193,6 +252,9 @@ class FheUint8Test {
     encrypted1.xorAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8); // 0x08
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -204,6 +266,9 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 25);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -213,6 +278,8 @@ class FheUint8Test {
     encrypted.scalarAddAssign((byte) 15);
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 25);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -224,6 +291,9 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 15);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -233,6 +303,8 @@ class FheUint8Test {
     encrypted.scalarSubAssign((byte) 15);
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 15);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -244,6 +316,9 @@ class FheUint8Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 30);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -253,6 +328,8 @@ class FheUint8Test {
     encrypted.scalarMulAssign((byte) 6);
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 30);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -265,6 +342,10 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -277,6 +358,10 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -289,6 +374,10 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -301,6 +390,10 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -313,6 +406,10 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -325,6 +422,10 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -336,6 +437,9 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -347,6 +451,9 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -358,6 +465,9 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -369,6 +479,9 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -380,6 +493,9 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -391,6 +507,9 @@ class FheUint8Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -407,6 +526,10 @@ class FheUint8Test {
 
     byte decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    serialized.cleanNativeResources();
+    deserialized.cleanNativeResources();
   }
 
   @Test
@@ -423,10 +546,14 @@ class FheUint8Test {
 
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
-  void clonesSuccessfully() {
+  void clones() {
     byte originalValue = 77;
     FheUint8 original = FheUint8.encryptWithClientKey(originalValue, clientKey);
     FheUint8 cloned = original.clone();
@@ -438,5 +565,9 @@ class FheUint8Test {
 
     byte decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    encryptedEquality.cleanNativeResources();
   }
 }

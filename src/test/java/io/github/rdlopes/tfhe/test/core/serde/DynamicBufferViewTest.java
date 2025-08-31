@@ -16,10 +16,14 @@ class DynamicBufferViewTest {
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
     DynamicBufferView buffer = clientKey.serialize();
-    byte[] bytes = buffer
-      .toByteArray();
+    byte[] bytes = buffer.toByteArray();
 
     assertThat(bytes.length).isEqualTo(buffer.getLength());
+
+    buffer.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    config.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 
   @Test
@@ -32,5 +36,11 @@ class DynamicBufferViewTest {
     DynamicBufferView reconstructed = DynamicBufferView.fromByteArray(bytes);
 
     assertThat(reconstructed.getLength()).isEqualTo(view.getLength());
+
+    reconstructed.cleanNativeResources();
+    view.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    config.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 }

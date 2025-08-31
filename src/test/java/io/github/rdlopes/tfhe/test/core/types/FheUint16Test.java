@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -9,46 +10,63 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheUint16;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheUint16;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FheUint16Test {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
-    short originalValue = 1234;
+    short originalValue = 42;
     FheUint16 encrypted = FheUint16.encryptWithClientKey(originalValue, clientKey);
     assertThat(encrypted).isNotNull();
     assertThat(encrypted.getValue()).isNotNull();
 
     short decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
   void encryptsAndDecryptsWithPublicKey() {
     PublicKey publicKey = PublicKey.newWith(clientKey);
-    short originalValue = 5000;
+    short originalValue = 100;
     FheUint16 encrypted = FheUint16.encryptWithPublicKey(originalValue, publicKey);
     assertThat(encrypted).isNotNull();
     assertThat(encrypted.getValue()).isNotNull();
 
     short decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    encrypted.cleanNativeResources();
+    publicKey.cleanNativeResources();
   }
 
   @Test
@@ -61,341 +79,442 @@ class FheUint16Test {
     Short decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
   void performsAddOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 100, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 200, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 10, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 15, clientKey);
 
     FheUint16 result = encrypted1.add(encrypted2);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 300);
+    assertThat(decrypted).isEqualTo((short) 25);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsAddAssignOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 100, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 200, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 10, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 15, clientKey);
 
     encrypted1.addAssign(encrypted2);
     short decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 300);
+    assertThat(decrypted).isEqualTo((short) 25);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
   void performsSubOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 500, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 200, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 30, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 15, clientKey);
 
     FheUint16 result = encrypted1.sub(encrypted2);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 300);
+    assertThat(decrypted).isEqualTo((short) 15);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsSubAssignOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 500, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 200, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 30, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 15, clientKey);
 
     encrypted1.subAssign(encrypted2);
     short decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 300);
+    assertThat(decrypted).isEqualTo((short) 15);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
   void performsMulOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 50, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 60, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 5, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 6, clientKey);
 
     FheUint16 result = encrypted1.mul(encrypted2);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 3000);
+    assertThat(decrypted).isEqualTo((short) 30);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsMulAssignOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 50, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 60, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 5, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 6, clientKey);
 
     encrypted1.mulAssign(encrypted2);
     short decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 3000);
+    assertThat(decrypted).isEqualTo((short) 30);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
   void performsAndOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 0xFF0F, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 0x00FF, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 15, clientKey); // 0x0F
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 7, clientKey);  // 0x07
 
     FheUint16 result = encrypted1.and(encrypted2);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 0x000F);
+    assertThat(decrypted).isEqualTo((short) 7); // 0x07
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsAndAssignOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 0xFF0F, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 0x00FF, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 15, clientKey); // 0x0F
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 7, clientKey);  // 0x07
 
     encrypted1.andAssign(encrypted2);
     short decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 0x000F);
+    assertThat(decrypted).isEqualTo((short) 7); // 0x07
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
   void performsOrOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 0xFF00, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 0x00FF, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 8, clientKey);  // 0x08
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 4, clientKey);  // 0x04
 
     FheUint16 result = encrypted1.or(encrypted2);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 0xFFFF);
+    assertThat(decrypted).isEqualTo((short) 12); // 0x0C
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsOrAssignOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 0xFF00, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 0x00FF, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 8, clientKey);  // 0x08
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 4, clientKey);  // 0x04
 
     encrypted1.orAssign(encrypted2);
     short decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 0xFFFF);
+    assertThat(decrypted).isEqualTo((short) 12); // 0x0C
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
   void performsXorOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 0xFFFF, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 0x00FF, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 15, clientKey); // 0x0F
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 7, clientKey);  // 0x07
 
     FheUint16 result = encrypted1.xor(encrypted2);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 0xFF00);
+    assertThat(decrypted).isEqualTo((short) 8); // 0x08
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsXorAssignOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 0xFFFF, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 0x00FF, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 15, clientKey); // 0x0F
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 7, clientKey);  // 0x07
 
     encrypted1.xorAssign(encrypted2);
     short decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 0xFF00);
+    assertThat(decrypted).isEqualTo((short) 8); // 0x08
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
   void performsScalarAddOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 1000, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 10, clientKey);
 
-    FheUint16 result = encrypted.scalarAdd((short) 500);
+    FheUint16 result = encrypted.scalarAdd((short) 15);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
+    assertThat(decrypted).isEqualTo((short) 25);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarAddAssignOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 1000, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 10, clientKey);
 
-    encrypted.scalarAddAssign((short) 500);
+    encrypted.scalarAddAssign((short) 15);
     short decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
+    assertThat(decrypted).isEqualTo((short) 25);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
   void performsScalarSubOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 1500, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 30, clientKey);
 
-    FheUint16 result = encrypted.scalarSub((short) 500);
+    FheUint16 result = encrypted.scalarSub((short) 15);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1000);
+    assertThat(decrypted).isEqualTo((short) 15);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarSubAssignOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 1500, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 30, clientKey);
 
-    encrypted.scalarSubAssign((short) 500);
+    encrypted.scalarSubAssign((short) 15);
     short decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1000);
+    assertThat(decrypted).isEqualTo((short) 15);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
   void performsScalarMulOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 100, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 5, clientKey);
 
-    FheUint16 result = encrypted.scalarMul((short) 50);
+    FheUint16 result = encrypted.scalarMul((short) 6);
     assertThat(result).isNotNull();
 
     short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 5000);
+    assertThat(decrypted).isEqualTo((short) 30);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarMulAssignOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 100, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 5, clientKey);
 
-    encrypted.scalarMulAssign((short) 50);
+    encrypted.scalarMulAssign((short) 6);
     short decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 5000);
+    assertThat(decrypted).isEqualTo((short) 30);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
   void performsEqualityOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 12345, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 12345, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 42, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
     FheBool result = encrypted1.eq(encrypted2);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsNotEqualOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 12345, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 54321, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 42, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 24, clientKey);
 
     FheBool result = encrypted1.ne(encrypted2);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsGreaterEqualOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 2000, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 1000, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 50, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
     FheBool result = encrypted1.ge(encrypted2);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsGreaterThanOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 2000, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 1000, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 50, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
     FheBool result = encrypted1.gt(encrypted2);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsLessEqualOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 1000, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 2000, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 30, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
     FheBool result = encrypted1.le(encrypted2);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsLessThanOperation() {
-    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 1000, clientKey);
-    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 2000, clientKey);
+    FheUint16 encrypted1 = FheUint16.encryptWithClientKey((short) 30, clientKey);
+    FheUint16 encrypted2 = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
     FheBool result = encrypted1.lt(encrypted2);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarEqualityOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 12345, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
-    FheBool result = encrypted.scalarEq((short) 12345);
+    FheBool result = encrypted.scalarEq((short) 42);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarNotEqualOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 12345, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 42, clientKey);
 
-    FheBool result = encrypted.scalarNe((short) 54321);
+    FheBool result = encrypted.scalarNe((short) 24);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarGreaterEqualOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 2000, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 50, clientKey);
 
-    FheBool result = encrypted.scalarGe((short) 1000);
+    FheBool result = encrypted.scalarGe((short) 42);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarGreaterThanOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 2000, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 50, clientKey);
 
-    FheBool result = encrypted.scalarGt((short) 1000);
+    FheBool result = encrypted.scalarGt((short) 42);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarLessEqualOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 1000, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 30, clientKey);
 
-    FheBool result = encrypted.scalarLe((short) 2000);
+    FheBool result = encrypted.scalarLe((short) 42);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void performsScalarLessThanOperation() {
-    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 1000, clientKey);
+    FheUint16 encrypted = FheUint16.encryptWithClientKey((short) 30, clientKey);
 
-    FheBool result = encrypted.scalarLt((short) 2000);
+    FheBool result = encrypted.scalarLt((short) 42);
     assertThat(result).isNotNull();
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
   void serializesAndDeserializes() {
-    short originalValue = 30000;
+    short originalValue = 12345;
     FheUint16 original = FheUint16.encryptWithClientKey(originalValue, clientKey);
 
     DynamicBufferView serialized = original.serialize();
@@ -407,11 +526,15 @@ class FheUint16Test {
 
     short decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    serialized.cleanNativeResources();
+    deserialized.cleanNativeResources();
   }
 
   @Test
   void compressesAndDecompresses() {
-    short originalValue = (short) 40000;
+    short originalValue = (short) 54321;
     FheUint16 original = FheUint16.encryptWithClientKey(originalValue, clientKey);
 
     CompressedFheUint16 compressed = original.compress();
@@ -423,11 +546,15 @@ class FheUint16Test {
 
     short decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
-  void clonesSuccessfully() {
-    short originalValue = 25000;
+  void clones() {
+    short originalValue = 7777;
     FheUint16 original = FheUint16.encryptWithClientKey(originalValue, clientKey);
     FheUint16 cloned = original.clone();
     assertThat(cloned).isNotSameAs(original);
@@ -438,5 +565,9 @@ class FheUint16Test {
 
     short decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    encryptedEquality.cleanNativeResources();
   }
 }

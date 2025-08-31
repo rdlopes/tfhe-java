@@ -5,25 +5,19 @@ import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedCompactPublicKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedCompactPublicKeyTest {
 
-  private CompressedCompactPublicKey compressedCompactPublicKey;
-
-  @BeforeEach
-  void setUp() {
+  @Test
+  void serializesAndDeserializes() {
     ConfigBuilder configBuilder = new ConfigBuilder();
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
-    compressedCompactPublicKey = CompressedCompactPublicKey.newWith(clientKey);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
+    CompressedCompactPublicKey compressedCompactPublicKey = CompressedCompactPublicKey.newWith(clientKey);
+    
     DynamicBufferView dynamicBuffer = compressedCompactPublicKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -34,5 +28,12 @@ class CompressedCompactPublicKeyTest {
 
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
+
+    deserializedCompressedCompactPublicKey.cleanNativeResources();
+    dynamicBuffer.cleanNativeResources();
+    compressedCompactPublicKey.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    config.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 }

@@ -9,6 +9,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.ref.Cleaner;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -16,8 +17,8 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
   public static final long BUFFER_MAX_SIZE = Long.MAX_VALUE;
-  protected static final Cleaner CLEANER = Cleaner.create();
   protected static final Arena ARENA = LIBRARY_ARENA;
+  private static final Cleaner CLEANER = Cleaner.create();
   private static final Logger logger = LoggerFactory.getLogger(MemoryLayoutPointer.class);
 
   static {
@@ -28,6 +29,7 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
 
   private final MemorySegment address;
   private final L layout;
+  private final Cleaner.Cleanable cleanable;
 
   public MemoryLayoutPointer(
     Class<?> clazz,
@@ -36,9 +38,8 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     Function<MemorySegment, Integer> destroyer) {
     this.address = address;
     this.layout = layout;
-    if (destroyer != null) {
-      CLEANER.register(this, new NativeHandle(clazz, address, destroyer));
-    }
+    this.cleanable = destroyer == null ? null
+      : CLEANER.register(this, new NativeHandle(clazz, address, destroyer));
   }
 
   /**
@@ -56,7 +57,6 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     if (result != 0) {
       MemorySegment lastErrorPtr = tfhe_error_get_last();
       String lastError = lastErrorPtr.getString(0);
-      logger.warn("nativeCall - error[{}]: {}", result, lastError);
       if (!lastError.equals("no error")) throw new NativeCallException(result, lastError);
     }
   }
@@ -69,6 +69,12 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     return layout;
   }
 
+  public synchronized void cleanNativeResources() {
+    logger.trace("cleanNativeResources");
+    Optional.ofNullable(cleanable)
+            .ifPresent(Cleaner.Cleanable::clean);
+  }
+
   public record NativeHandle(
     Class<?> clazz,
     MemorySegment address,
@@ -77,14 +83,14 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     private static final Logger logger = LoggerFactory.getLogger(NativeHandle.class);
 
     public NativeHandle {
-      logger.trace("NativeHandle - init {}<{}>", clazz.getSimpleName(), address);
+      logger.trace("init {}<{}>", clazz.getSimpleName(), address);
     }
 
     @Override
     public void run() {
       if (address == null || address == MemorySegment.NULL) return;
-      logger.trace("NativeHandle - destroy {}<{}>", clazz.getSimpleName(), address);
-      executeWithErrorHandling(() -> destroyer.apply(address.get(C_POINTER, 0)));
+      logger.trace("destroy {}<{}>", clazz.getSimpleName(), address);
+      executeWithErrorHandling(() -> destroyer.apply(address));
     }
   }
 }

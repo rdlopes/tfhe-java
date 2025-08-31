@@ -1,7 +1,12 @@
 package io.github.rdlopes.tfhe.test.core.configuration;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static io.github.rdlopes.tfhe.core.configuration.CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128;
 import static io.github.rdlopes.tfhe.core.configuration.ShortintCompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128;
@@ -10,43 +15,61 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ConfigBuilderTest {
 
+  private ConfigBuilder configBuilder;
+  private Config config;
+
+  @BeforeEach
+  void setUp() {
+    configBuilder = new ConfigBuilder();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    Optional.ofNullable(config)
+            .ifPresent(Config::cleanNativeResources);
+  }
+
   @Test
   void buildsWithDefaults() {
-    assertThat(new ConfigBuilder().build()).isNotNull();
+    config = configBuilder.build();
+    assertThat(config).isNotNull();
   }
 
   @Test
   void buildsWithCustomParameters() {
-    ConfigBuilder builder = new ConfigBuilder();
-    builder.useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
-    assertThat(builder.build()).isNotNull();
+    configBuilder.useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    config = configBuilder.build();
+    assertThat(config).isNotNull();
   }
 
   @Test
   void buildsWithDedicatedCompactPublicKeyParameters() {
-    ConfigBuilder builder = new ConfigBuilder();
-    builder.useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
-    assertThat(builder.build()).isNotNull();
+    configBuilder.useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    config = configBuilder.build();
+    assertThat(config).isNotNull();
   }
 
   @Test
   void buildsWithCustomCompressionParameters() {
-    ConfigBuilder builder = new ConfigBuilder();
-    builder.enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
-    assertThat(builder.build()).isNotNull();
+    configBuilder.enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    config = configBuilder.build();
+    assertThat(config).isNotNull();
   }
 
   @Test
   void buildsWithAllTweaks() {
-    ConfigBuilder builder = new ConfigBuilder();
-    builder.useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
-    builder.enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
-    builder.useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
-    assertThat(builder.build()).isNotNull();
+    configBuilder.useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    configBuilder.enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    configBuilder.useDedicatedCompactPublicKeyParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
+    config = configBuilder.build();
+    assertThat(config).isNotNull();
   }
 
   @Test
   void clones() {
-    assertThat(new ConfigBuilder().clone()).isNotNull();
+    ConfigBuilder clone = configBuilder.clone();
+    assertThat(clone).isNotNull();
+    clone.cleanNativeResources();
   }
 }

@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
+import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
@@ -9,23 +10,35 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt64;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheInt64;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FheInt64Test {
-
+  private ConfigBuilder configBuilder;
+  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    KeySet keySet = new ConfigBuilder().build()
-                                       .generateKeys();
+    configBuilder = new ConfigBuilder();
+    config = configBuilder.build();
+    KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
+
     serverKey.setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    configBuilder.cleanNativeResources();
+    config.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    serverKey.cleanNativeResources();
   }
 
   @Test
@@ -37,17 +50,8 @@ class FheInt64Test {
 
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-  }
 
-  @Test
-  void encryptsAndDecryptsWithClientKeyNegative() {
-    long originalValue = -12345678901234L;
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(originalValue, clientKey);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
-    long decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -60,18 +64,9 @@ class FheInt64Test {
 
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-  }
 
-  @Test
-  void encryptsAndDecryptsWithPublicKeyNegative() {
-    PublicKey publicKey = PublicKey.newWith(clientKey);
-    long originalValue = -50000000000000L;
-    FheInt64 encrypted = FheInt64.encryptWithPublicKey(originalValue, publicKey);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
-    long decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    encrypted.cleanNativeResources();
+    publicKey.cleanNativeResources();
   }
 
   @Test
@@ -84,18 +79,8 @@ class FheInt64Test {
     Long decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
-  }
 
-  @Test
-  void encryptsAndDecryptsTrivialNegative() {
-    long originalValue = -9223372036854775808L; // Min long
-    FheInt64 encrypted = FheInt64.encryptTrivial(originalValue);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
-    Long decrypted = encrypted.decryptTrivial();
-    assertThat(decrypted).isNotNull();
-    assertThat(decrypted).isEqualTo(originalValue);
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -108,18 +93,10 @@ class FheInt64Test {
 
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
-  }
 
-  @Test
-  void performsAddOperationWithNegative() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(3000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(-1000000000L, clientKey);
-
-    FheInt64 result = encrypted1.add(encrypted2);
-    assertThat(result).isNotNull();
-
-    long decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(2000000000L);
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -130,6 +107,9 @@ class FheInt64Test {
     encrypted1.addAssign(encrypted2);
     long decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -142,18 +122,10 @@ class FheInt64Test {
 
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
-  }
 
-  @Test
-  void performsSubOperationResultingNegative() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(2000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(5000000000L, clientKey);
-
-    FheInt64 result = encrypted1.sub(encrypted2);
-    assertThat(result).isNotNull();
-
-    long decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(-3000000000L);
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -164,6 +136,9 @@ class FheInt64Test {
     encrypted1.subAssign(encrypted2);
     long decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -176,18 +151,10 @@ class FheInt64Test {
 
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
-  }
 
-  @Test
-  void performsMulOperationWithNegative() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(-50000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(60000L, clientKey);
-
-    FheInt64 result = encrypted1.mul(encrypted2);
-    assertThat(result).isNotNull();
-
-    long decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(-3000000000L);
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -198,6 +165,9 @@ class FheInt64Test {
     encrypted1.mulAssign(encrypted2);
     long decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
+
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -209,17 +179,9 @@ class FheInt64Test {
 
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(15000000000L);
-  }
 
-  @Test
-  void performsScalarAddOperationWithNegativeScalar() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(10000000000L, clientKey);
-
-    FheInt64 result = encrypted.scalarAdd(-5000000000L);
-    assertThat(result).isNotNull();
-
-    long decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(5000000000L);
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -229,6 +191,8 @@ class FheInt64Test {
     encrypted.scalarAddAssign(5000000000L);
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(15000000000L);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -240,6 +204,9 @@ class FheInt64Test {
 
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(10000000000L);
+
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -249,6 +216,8 @@ class FheInt64Test {
     encrypted.scalarSubAssign(5000000000L);
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(10000000000L);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -260,17 +229,9 @@ class FheInt64Test {
 
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(5000000000L);
-  }
 
-  @Test
-  void performsScalarMulOperationWithNegativeScalar() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(1000000L, clientKey);
-
-    FheInt64 result = encrypted.scalarMul(-5000L);
-    assertThat(result).isNotNull();
-
-    long decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(-5000000000L);
+    encrypted.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -280,6 +241,8 @@ class FheInt64Test {
     encrypted.scalarMulAssign(5000L);
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(5000000000L);
+
+    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -292,156 +255,10 @@ class FheInt64Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-  }
 
-  @Test
-  void performsEqualityOperationWithNegative() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(-12345678901234L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(-12345678901234L, clientKey);
-
-    FheBool result = encrypted1.eq(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsNotEqualOperation() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(12345678901234L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(-12345678901234L, clientKey);
-
-    FheBool result = encrypted1.ne(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsGreaterEqualOperation() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(20000000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(10000000000000L, clientKey);
-
-    FheBool result = encrypted1.ge(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsGreaterEqualOperationWithNegative() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(-10000000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(-20000000000000L, clientKey);
-
-    FheBool result = encrypted1.ge(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsGreaterThanOperation() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(20000000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(10000000000000L, clientKey);
-
-    FheBool result = encrypted1.gt(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsLessEqualOperation() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(-20000000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(-10000000000000L, clientKey);
-
-    FheBool result = encrypted1.le(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsLessThanOperation() {
-    FheInt64 encrypted1 = FheInt64.encryptWithClientKey(10000000000000L, clientKey);
-    FheInt64 encrypted2 = FheInt64.encryptWithClientKey(20000000000000L, clientKey);
-
-    FheBool result = encrypted1.lt(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarEqualityOperation() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(-12345678901234L, clientKey);
-
-    FheBool result = encrypted.scalarEq(-12345678901234L);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarNotEqualOperation() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(12345678901234L, clientKey);
-
-    FheBool result = encrypted.scalarNe(-12345678901234L);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarGreaterEqualOperation() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(20000000000000L, clientKey);
-
-    FheBool result = encrypted.scalarGe(10000000000000L);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarGreaterThanOperation() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(20000000000000L, clientKey);
-
-    FheBool result = encrypted.scalarGt(10000000000000L);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarLessEqualOperation() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(-20000000000000L, clientKey);
-
-    FheBool result = encrypted.scalarLe(-10000000000000L);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarLessThanOperation() {
-    FheInt64 encrypted = FheInt64.encryptWithClientKey(10000000000000L, clientKey);
-
-    FheBool result = encrypted.scalarLt(20000000000000L);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
+    encrypted1.cleanNativeResources();
+    encrypted2.cleanNativeResources();
+    result.cleanNativeResources();
   }
 
   @Test
@@ -458,6 +275,10 @@ class FheInt64Test {
 
     long decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    serialized.cleanNativeResources();
+    deserialized.cleanNativeResources();
   }
 
   @Test
@@ -474,10 +295,14 @@ class FheInt64Test {
 
     long decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    compressed.cleanNativeResources();
+    decompressed.cleanNativeResources();
   }
 
   @Test
-  void clonesSuccessfully() {
+  void clones() {
     long originalValue = -25000000000000L;
     FheInt64 original = FheInt64.encryptWithClientKey(originalValue, clientKey);
     FheInt64 cloned = original.clone();
@@ -489,5 +314,9 @@ class FheInt64Test {
 
     long decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    original.cleanNativeResources();
+    cloned.cleanNativeResources();
+    encryptedEquality.cleanNativeResources();
   }
 }

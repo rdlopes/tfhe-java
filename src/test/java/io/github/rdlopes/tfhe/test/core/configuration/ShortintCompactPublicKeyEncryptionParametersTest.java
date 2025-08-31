@@ -31,25 +31,23 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
   void predefinedParameters(ShortintCompactPublicKeyEncryptionParameters parameters) {
     assertThat(parameters).isNotNull();
     assertThat(parameters.getAddress()).isNotNull();
+    parameters.cleanNativeResources();
   }
 
   @Test
   void customParameters() {
-    // Create test values
     long encryptionLweDimension = 512L;
     long messageModulus = 32L;
     long carryModulus = 16L;
     long modulusPowerOf2Exponent = 64L;
     int zkScheme = 1;
 
-    // Create DynamicDistribution (using gaussian for simplicity)
-    DynamicDistribution encryptionNoise = new DynamicDistribution(1L, new DynamicDistributionPayload(new Gaussian(1.0)));
+    Gaussian gaussian = new Gaussian(1.0);
+    DynamicDistributionPayload distribution = new DynamicDistributionPayload(gaussian);
+    DynamicDistribution encryptionNoise = new DynamicDistribution(1L, distribution);
 
-    // Create a simplified ShortintPBSParameters with all required parameters
-    // Using predefined constant for simplicity instead of creating complex constructor call
     ShortintPBSParameters castingParams = ShortintCompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128.getCastingParameters();
 
-    // Create the parameters using the constructor
     ShortintCompactPublicKeyEncryptionParameters parameters = new ShortintCompactPublicKeyEncryptionParameters(
       encryptionLweDimension,
       encryptionNoise,
@@ -60,7 +58,6 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
       zkScheme
     );
 
-    // Test all getter methods
     assertThat(parameters.getEncryptionLweDimension()).isEqualTo(encryptionLweDimension);
     assertThat(parameters.getMessageModulus()).isEqualTo(messageModulus);
     assertThat(parameters.getCarryModulus()).isEqualTo(carryModulus);
@@ -68,6 +65,11 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
     assertThat(parameters.getZkScheme()).isEqualTo(zkScheme);
     assertThat(parameters.getEncryptionNoiseDistribution()).isNotNull();
     assertThat(parameters.getCastingParameters()).isNotNull();
+
+    distribution.cleanNativeResources();
+    gaussian.cleanNativeResources();
+    parameters.cleanNativeResources();
+    encryptionNoise.cleanNativeResources();
   }
 
 }

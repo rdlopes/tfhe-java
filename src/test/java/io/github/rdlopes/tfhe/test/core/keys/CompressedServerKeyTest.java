@@ -6,25 +6,19 @@ import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.CompressedServerKey;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedServerKeyTest {
 
-  private CompressedServerKey compressedServerKey;
-
-  @BeforeEach
-  void setUp() {
+  @Test
+  void serializesAndDeserializes() {
     ConfigBuilder configBuilder = new ConfigBuilder();
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
-    compressedServerKey = CompressedServerKey.newWith(clientKey);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
+    CompressedServerKey compressedServerKey = CompressedServerKey.newWith(clientKey);
+    
     DynamicBufferView dynamicBuffer = compressedServerKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -35,13 +29,31 @@ class CompressedServerKeyTest {
 
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
+
+    deserializedCompressedServerKey.cleanNativeResources();
+    dynamicBuffer.cleanNativeResources();
+    compressedServerKey.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    config.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 
   @Test
   void decompressesToServerKey() {
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
+    ClientKey clientKey = config.generateClientKey();
+    CompressedServerKey compressedServerKey = CompressedServerKey.newWith(clientKey);
+    
     ServerKey serverKey = compressedServerKey.decompress();
 
     assertThat(serverKey).isNotNull();
     assertThat(serverKey.getAddress()).isNotNull();
+
+    serverKey.cleanNativeResources();
+    compressedServerKey.cleanNativeResources();
+    clientKey.cleanNativeResources();
+    config.cleanNativeResources();
+    configBuilder.cleanNativeResources();
   }
 }

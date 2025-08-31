@@ -31,11 +31,11 @@ class ShortintPBSParametersTest {
   void predefinedParameters(ShortintPBSParameters parameters) {
     assertThat(parameters).isNotNull();
     assertThat(parameters.getAddress()).isNotNull();
+    parameters.cleanNativeResources();
   }
 
   @Test
   void customParameters() {
-    // Create test values
     long lweDimension = 512L;
     long glweDimension = 1024L;
     long polynomialSize = 2048L;
@@ -50,12 +50,10 @@ class ShortintPBSParametersTest {
     long modulusPowerOf2Exponent = 64L;
     int encryptionKeyChoice = 2;
 
-    // Create required complex objects
     DynamicDistribution lweNoise = new DynamicDistribution(1L, new DynamicDistributionPayload(new Gaussian(1.0)));
     DynamicDistribution glweNoise = new DynamicDistribution(1L, new DynamicDistributionPayload(new Gaussian(1.0)));
     ModulusSwitchType modulusSwitch = new ModulusSwitchType(1L, new ModulusSwitchNoiseReductionParams(5, 1.2, 2.1, 0.8));
 
-    // Create parameters using the 16-parameter constructor
     ShortintPBSParameters parameters = new ShortintPBSParameters(
       lweDimension,
       glweDimension,
@@ -75,7 +73,6 @@ class ShortintPBSParametersTest {
       modulusSwitch
     );
 
-    // Test all getter methods (using proper getXXX method names)
     assertThat(parameters.getLweDimension()).isEqualTo(lweDimension);
     assertThat(parameters.getGlweDimension()).isEqualTo(glweDimension);
     assertThat(parameters.getPolynomialSize()).isEqualTo(polynomialSize);
@@ -92,6 +89,18 @@ class ShortintPBSParametersTest {
     assertThat(parameters.getLweNoiseDistribution()).isNotNull();
     assertThat(parameters.getGlweNoiseDistribution()).isNotNull();
     assertThat(parameters.getModulusSwitchNoiseReductionParams()).isNotNull();
+
+    DynamicDistribution retrievedLweNoise = parameters.getLweNoiseDistribution();
+    DynamicDistribution retrievedGlweNoise = parameters.getGlweNoiseDistribution();
+    ModulusSwitchType retrievedModulusSwitch = parameters.getModulusSwitchNoiseReductionParams();
+
+    retrievedLweNoise.cleanNativeResources();
+    retrievedGlweNoise.cleanNativeResources();
+    retrievedModulusSwitch.cleanNativeResources();
+    parameters.cleanNativeResources();
+    modulusSwitch.cleanNativeResources();
+    glweNoise.cleanNativeResources();
+    lweNoise.cleanNativeResources();
   }
 
 }
