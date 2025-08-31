@@ -11,16 +11,24 @@ public class DynamicDistributionPayload extends GroupLayoutPointer {
   }
 
   public DynamicDistributionPayload() {
-    super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
   }
 
   public DynamicDistributionPayload(Gaussian gaussian) {
-    super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout()
+    );
     io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.gaussian(getAddress(), gaussian.getAddress());
   }
 
   public DynamicDistributionPayload(TUniform tUniform) {
-    super(io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.layout()
+    );
     io.github.rdlopes.tfhe.ffm.DynamicDistributionPayload.t_uniform(getAddress(), tUniform.getAddress());
   }
 

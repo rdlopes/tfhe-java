@@ -11,7 +11,9 @@ public class TUniform extends GroupLayoutPointer {
   }
 
   public TUniform(int boundLog2) {
-    super(io.github.rdlopes.tfhe.ffm.TUniform.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.TUniform.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.TUniform.layout());
     io.github.rdlopes.tfhe.ffm.TUniform.bound_log2(getAddress(), boundLog2);
   }
 

@@ -28,7 +28,10 @@ public class ShortintCompactPublicKeyEncryptionParameters extends GroupLayoutPoi
     ShortintPBSParameters castingParameters,
     int zkScheme
   ) {
-    super(io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.layout()
+    );
     io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_lwe_dimension(getAddress(), (int) encryptionLweDimension);
     io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.encryption_noise_distribution(getAddress(), encryptionNoiseDistribution.getAddress());
     io.github.rdlopes.tfhe.ffm.ShortintCompactPublicKeyEncryptionParameters.message_modulus(getAddress(), (int) messageModulus);

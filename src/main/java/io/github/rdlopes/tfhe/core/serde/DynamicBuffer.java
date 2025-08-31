@@ -10,6 +10,7 @@ public class DynamicBuffer extends GroupLayoutPointer {
   public DynamicBuffer() {
     super(
       DynamicBuffer.class,
+      io.github.rdlopes.tfhe.ffm.DynamicBuffer.allocate(ARENA),
       io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout(),
       TfheWrapper::destroy_dynamic_buffer);
   }

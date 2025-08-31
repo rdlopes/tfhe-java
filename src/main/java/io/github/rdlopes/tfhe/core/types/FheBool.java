@@ -14,7 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class FheBool extends AddressLayoutPointer implements Cloneable {
 
-  public FheBool() {
+  protected FheBool() {
     super(FheBool.class, TfheWrapper::fhe_bool_destroy);
   }
 

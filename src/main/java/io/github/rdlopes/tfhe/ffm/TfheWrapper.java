@@ -239,5 +239,9 @@ public class TfheWrapper extends TfheHeader {
     public static void packing_ks_key_noise_distribution(MemorySegment struct, MemorySegment fieldValue) {
       MemorySegment.copy(fieldValue, 0, struct, packing_ks_key_noise_distribution$OFFSET, packing_ks_key_noise_distribution$LAYOUT.byteSize());
     }
+
+    public static MemorySegment allocate(SegmentAllocator allocator) {
+      return allocator.allocate(layout());
+    }
   }
 }

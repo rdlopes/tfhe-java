@@ -9,7 +9,7 @@ import static io.github.rdlopes.tfhe.ffm.DynamicBufferView.layout;
 public class DynamicBufferView extends GroupLayoutPointer {
 
   public DynamicBufferView(MemorySegment pointer, long byteSize) {
-    super(layout());
+    super(io.github.rdlopes.tfhe.ffm.DynamicBufferView.allocate(ARENA), layout());
     io.github.rdlopes.tfhe.ffm.DynamicBufferView.pointer(getAddress(), pointer);
     io.github.rdlopes.tfhe.ffm.DynamicBufferView.length(getAddress(), byteSize);
   }

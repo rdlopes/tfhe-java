@@ -14,7 +14,10 @@ public class DynamicDistribution extends GroupLayoutPointer {
   }
 
   public DynamicDistribution(long tag, DynamicDistributionPayload distribution) {
-    super(io.github.rdlopes.tfhe.ffm.DynamicDistribution.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.DynamicDistribution.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.DynamicDistribution.layout()
+    );
     setTag(tag);
     setDistribution(distribution);
   }

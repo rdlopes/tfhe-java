@@ -382,7 +382,10 @@ public class ShortintPBSParameters extends GroupLayoutPointer {
     int encryptionKeyChoice,
     ModulusSwitchType modulusSwitchNoiseReductionParams
   ) {
-    super(io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.layout()
+    );
     io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.lwe_dimension(getAddress(), lweDimension);
     io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.glwe_dimension(getAddress(), glweDimension);
     io.github.rdlopes.tfhe.ffm.ShortintPBSParameters.polynomial_size(getAddress(), polynomialSize);

@@ -11,7 +11,10 @@ public class ModulusSwitchType extends GroupLayoutPointer {
   }
 
   public ModulusSwitchType(long tag, ModulusSwitchNoiseReductionParams modulusSwitchNoiseReductionParams) {
-    super(io.github.rdlopes.tfhe.ffm.ModulusSwitchType.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.ModulusSwitchType.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.ModulusSwitchType.layout()
+    );
     io.github.rdlopes.tfhe.ffm.ModulusSwitchType.tag(getAddress(), tag);
     io.github.rdlopes.tfhe.ffm.ModulusSwitchType.modulus_switch_noise_reduction_params(getAddress(), modulusSwitchNoiseReductionParams.getAddress());
   }

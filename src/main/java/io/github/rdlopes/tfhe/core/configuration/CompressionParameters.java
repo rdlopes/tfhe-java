@@ -29,7 +29,10 @@ public class CompressionParameters extends GroupLayoutPointer {
     long storageLogModulus,
     DynamicDistribution packingKsKeyNoiseDistribution
   ) {
-    super(TfheWrapper.CompressionParameters.layout());
+    super(
+      TfheWrapper.CompressionParameters.allocate(ARENA),
+      TfheWrapper.CompressionParameters.layout()
+    );
     TfheWrapper.CompressionParameters.br_level(getAddress(), brLevel);
     TfheWrapper.CompressionParameters.br_base_log(getAddress(), brBaseLog);
     TfheWrapper.CompressionParameters.packing_ks_level(getAddress(), packingKsLevel);

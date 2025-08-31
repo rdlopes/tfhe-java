@@ -14,7 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class FheUint64 extends AddressLayoutPointer implements Cloneable {
 
-  public FheUint64() {
+  protected FheUint64() {
     super(FheUint64.class, TfheWrapper::fhe_uint64_destroy);
   }
 

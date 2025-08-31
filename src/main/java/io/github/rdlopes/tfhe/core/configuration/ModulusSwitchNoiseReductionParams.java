@@ -16,7 +16,10 @@ public class ModulusSwitchNoiseReductionParams extends GroupLayoutPointer {
     double msRSigmaFactor,
     double msInputVariance
   ) {
-    super(io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.layout());
+    super(
+      io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.allocate(ARENA),
+      io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.layout()
+    );
     io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.modulus_switch_zeros_count(getAddress(), modulusSwitchZerosCount);
     io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_bound(getAddress(), msBound);
     io.github.rdlopes.tfhe.ffm.ModulusSwitchNoiseReductionParams.ms_r_sigma_factor(getAddress(), msRSigmaFactor);

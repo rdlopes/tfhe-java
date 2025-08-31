@@ -11,7 +11,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class CompressedFheBool extends AddressLayoutPointer implements Cloneable {
 
-  public CompressedFheBool() {
+  protected CompressedFheBool() {
     super(CompressedFheBool.class, TfheWrapper::compressed_fhe_bool_destroy);
   }
 

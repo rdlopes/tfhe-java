@@ -8,7 +8,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.C_POINTER;
 
 public abstract class AddressLayoutPointer extends MemoryLayoutPointer<AddressLayout> {
 
-  public AddressLayoutPointer(Class<?> clazz, Function<MemorySegment, Integer> destroyer) {
+  protected AddressLayoutPointer(Class<?> clazz, Function<MemorySegment, Integer> destroyer) {
     super(
       clazz,
       ARENA.allocate(C_POINTER),
@@ -17,7 +17,7 @@ public abstract class AddressLayoutPointer extends MemoryLayoutPointer<AddressLa
         : address -> destroyer.apply(address.get(C_POINTER, 0)));
   }
 
-  public AddressLayoutPointer() {
+  protected AddressLayoutPointer() {
     this(null, null);
   }
 

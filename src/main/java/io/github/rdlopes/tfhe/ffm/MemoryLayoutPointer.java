@@ -31,7 +31,7 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
   private final L layout;
   private final Cleaner.Cleanable cleanable;
 
-  public MemoryLayoutPointer(
+  protected MemoryLayoutPointer(
     Class<?> clazz,
     MemorySegment address,
     L layout,
@@ -69,7 +69,7 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     return layout;
   }
 
-  public synchronized void cleanNativeResources() {
+  public void cleanNativeResources() {
     logger.trace("cleanNativeResources");
     Optional.ofNullable(cleanable)
             .ifPresent(Cleaner.Cleanable::clean);

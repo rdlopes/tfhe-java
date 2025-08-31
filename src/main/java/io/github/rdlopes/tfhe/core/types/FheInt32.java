@@ -14,7 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class FheInt32 extends AddressLayoutPointer implements Cloneable {
 
-  public FheInt32() {
+  protected FheInt32() {
     super(FheInt32.class, TfheWrapper::fhe_int32_destroy);
   }
 
