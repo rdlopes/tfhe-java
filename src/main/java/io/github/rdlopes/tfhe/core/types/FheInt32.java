@@ -6,6 +6,7 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import java.lang.foreign.MemorySegment;
 
@@ -13,8 +14,8 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class FheInt32 extends AddressLayoutPointer implements Cloneable {
 
-  protected FheInt32() {
-    super(address -> fhe_int32_destroy(address.get(C_POINTER, 0)));
+  public FheInt32() {
+    super(FheInt32.class, TfheWrapper::fhe_int32_destroy);
   }
 
   public static FheInt32 encryptWithClientKey(int clearValue, ClientKey clientKey) {

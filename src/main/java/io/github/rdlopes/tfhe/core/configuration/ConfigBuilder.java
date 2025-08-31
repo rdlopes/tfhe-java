@@ -7,10 +7,8 @@ import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 public class ConfigBuilder extends AddressLayoutPointer implements Cloneable {
 
   public ConfigBuilder() {
-    super(address -> {
-      //FIXME crashes VM
-      //config_builder_destroy(address.get(C_POINTER, 0));
-    });
+    //super(ConfigBuilder.class, TfheWrapper::config_builder_destroy);
+    super();
     executeWithErrorHandling(() -> config_builder_default(getAddress()));
   }
 

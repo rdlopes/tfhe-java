@@ -3,13 +3,14 @@ package io.github.rdlopes.tfhe.core.keys;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class PublicKey extends AddressLayoutPointer {
 
   public PublicKey() {
-    super(address -> public_key_destroy(address.get(C_POINTER, 0)));
+    super(PublicKey.class, TfheWrapper::public_key_destroy);
   }
 
   public static PublicKey newWith(ClientKey clientKey) {

@@ -3,13 +3,15 @@ package io.github.rdlopes.tfhe.core.keys;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
-import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.client_key_safe_deserialize;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.client_key_safe_serialize;
 
 public class ClientKey extends AddressLayoutPointer {
 
   public ClientKey() {
-    super(address -> client_key_destroy(address.get(C_POINTER, 0)));
+    super(ClientKey.class, TfheWrapper::client_key_destroy);
   }
 
   public static ClientKey deserialize(DynamicBufferView bufferView) {

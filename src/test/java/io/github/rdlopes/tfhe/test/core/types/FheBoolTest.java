@@ -16,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FheBoolTest {
 
   private ClientKey clientKey;
-  private PublicKey publicKey;
   private ServerKey serverKey;
 
   @BeforeEach
@@ -26,8 +25,6 @@ class FheBoolTest {
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
     serverKey.setAsKey();
-
-    publicKey = PublicKey.newWith(clientKey);
   }
 
   @Test
@@ -43,6 +40,7 @@ class FheBoolTest {
 
   @Test
   void encryptsAndDecryptsWithPublicKey() {
+    PublicKey publicKey = PublicKey.newWith(clientKey);
     boolean originalValue = true;
     FheBool encrypted = FheBool.encryptWithPublicKey(originalValue, publicKey);
     assertThat(encrypted).isNotNull();

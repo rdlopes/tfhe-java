@@ -3,16 +3,18 @@ package io.github.rdlopes.tfhe.core.keys;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
-import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.server_key_safe_serialize;
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.set_server_key;
 
 public class ServerKey extends AddressLayoutPointer {
 
   public ServerKey() {
-    super(address -> server_key_destroy(address.get(C_POINTER, 0)));
+    super(ServerKey.class, TfheWrapper::server_key_destroy);
   }
 
-  public static ServerKey deserialize(DynamicBufferView bufferView) {
+  public static ServerKey deserialize(DynamicBufferView ignoredBufferView) {
     throw new UnsupportedOperationException("Server keys cannot be deserialized");
   }
 

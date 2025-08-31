@@ -1,23 +1,22 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
-import io.github.rdlopes.tfhe.core.types.CompressedFheUint16;
-import io.github.rdlopes.tfhe.core.types.FheBool;
-import io.github.rdlopes.tfhe.core.types.FheUint16;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.keys.PublicKey;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
+import io.github.rdlopes.tfhe.core.types.CompressedFheUint16;
+import io.github.rdlopes.tfhe.core.types.FheBool;
+import io.github.rdlopes.tfhe.core.types.FheUint16;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FheUint16Test {
 
   private ClientKey clientKey;
-  private PublicKey publicKey;
   private ServerKey serverKey;
 
   @BeforeEach
@@ -27,8 +26,6 @@ class FheUint16Test {
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
     serverKey.setAsKey();
-
-    publicKey = PublicKey.newWith(clientKey);
   }
 
   @Test
@@ -44,6 +41,7 @@ class FheUint16Test {
 
   @Test
   void encryptsAndDecryptsWithPublicKey() {
+    PublicKey publicKey = PublicKey.newWith(clientKey);
     short originalValue = 5000;
     FheUint16 encrypted = FheUint16.encryptWithPublicKey(originalValue, publicKey);
     assertThat(encrypted).isNotNull();

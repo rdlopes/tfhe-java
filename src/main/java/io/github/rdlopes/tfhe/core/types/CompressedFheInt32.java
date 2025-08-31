@@ -5,13 +5,14 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class CompressedFheInt32 extends AddressLayoutPointer implements Cloneable {
 
-  protected CompressedFheInt32() {
-    super(address -> compressed_fhe_int32_destroy(address.get(C_POINTER, 0)));
+  public CompressedFheInt32() {
+    super(CompressedFheInt32.class, TfheWrapper::compressed_fhe_int32_destroy);
   }
 
   public static CompressedFheInt32 encryptWithClientKey(int clearValue, ClientKey clientKey) {

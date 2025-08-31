@@ -3,13 +3,14 @@ package io.github.rdlopes.tfhe.core.keys;
 import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
 public class CompressedCompactPublicKey extends AddressLayoutPointer {
 
   public CompressedCompactPublicKey() {
-    super(address -> compressed_compact_public_key_destroy(address.get(C_POINTER, 0)));
+    super(CompressedCompactPublicKey.class, TfheWrapper::compressed_compact_public_key_destroy);
   }
 
   public static CompressedCompactPublicKey newWith(ClientKey clientKey) {

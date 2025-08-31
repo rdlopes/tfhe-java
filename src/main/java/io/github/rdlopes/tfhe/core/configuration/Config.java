@@ -14,10 +14,8 @@ public class Config extends AddressLayoutPointer {
   private final AtomicBoolean keysGenerated = new AtomicBoolean(false);
 
   public Config() {
-    super(address -> {
-      //FIXME crashes VM
-      //config_destroy(address.get(C_POINTER, 0));
-    });
+    //super(Config.class, TfheWrapper::config_destroy);
+    super();
   }
 
   public KeySet generateKeys() {

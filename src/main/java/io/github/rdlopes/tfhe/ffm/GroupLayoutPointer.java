@@ -2,20 +2,23 @@ package io.github.rdlopes.tfhe.ffm;
 
 import java.lang.foreign.GroupLayout;
 import java.lang.foreign.MemorySegment;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 
-public class GroupLayoutPointer extends MemoryLayoutPointer<GroupLayout> {
-  public GroupLayoutPointer(MemorySegment address, GroupLayout layout, Consumer<MemorySegment> cleaner) {
-    super(address, layout, cleaner);
+public abstract class GroupLayoutPointer extends MemoryLayoutPointer<GroupLayout> {
+  public GroupLayoutPointer(Class<?> clazz,
+                            MemorySegment address,
+                            GroupLayout layout,
+                            Function<MemorySegment, Integer> destroyer) {
+    super(clazz, address, layout, destroyer);
+  }
+
+  public GroupLayoutPointer(Class<?> clazz, GroupLayout layout, Function<MemorySegment, Integer> destroyer) {
+    this(clazz, ARENA.allocate(layout), layout, destroyer);
   }
 
   public GroupLayoutPointer(MemorySegment address, GroupLayout layout) {
-    this(address, layout, null);
-  }
-
-  public GroupLayoutPointer(GroupLayout layout, Consumer<MemorySegment> cleaner) {
-    this(ARENA.allocate(layout), layout, cleaner);
+    this(null, address, layout, null);
   }
 
   public GroupLayoutPointer(GroupLayout layout) {

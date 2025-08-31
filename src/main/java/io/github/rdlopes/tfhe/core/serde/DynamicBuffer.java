@@ -5,12 +5,10 @@ import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import java.lang.foreign.MemorySegment;
 
-import static io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout;
-
 public class DynamicBuffer extends GroupLayoutPointer {
 
   public DynamicBuffer() {
-    super(layout(), address -> TfheWrapper.destroy_dynamic_buffer(io.github.rdlopes.tfhe.ffm.DynamicBuffer.pointer(address)));
+    super(DynamicBuffer.class, io.github.rdlopes.tfhe.ffm.DynamicBuffer.layout(), TfheWrapper::destroy_dynamic_buffer);
   }
 
   public MemorySegment getPointer() {

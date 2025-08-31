@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FheUint32Test {
 
   private ClientKey clientKey;
-  private PublicKey publicKey;
   private ServerKey serverKey;
 
   @BeforeEach
@@ -27,8 +26,6 @@ class FheUint32Test {
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
     serverKey.setAsKey();
-
-    publicKey = PublicKey.newWith(clientKey);
   }
 
   @Test
@@ -44,6 +41,7 @@ class FheUint32Test {
 
   @Test
   void encryptsAndDecryptsWithPublicKey() {
+    PublicKey publicKey = PublicKey.newWith(clientKey);
     int originalValue = 500000;
     FheUint32 encrypted = FheUint32.encryptWithPublicKey(originalValue, publicKey);
     assertThat(encrypted).isNotNull();

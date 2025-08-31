@@ -9,7 +9,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemoryLayout;
 import java.lang.foreign.MemorySegment;
 import java.lang.ref.Cleaner;
-import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
@@ -29,14 +29,15 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
   private final MemorySegment address;
   private final L layout;
 
-  public MemoryLayoutPointer(MemorySegment address, L layout, Consumer<MemorySegment> cleaner) {
+  public MemoryLayoutPointer(
+    Class<?> clazz,
+    MemorySegment address,
+    L layout,
+    Function<MemorySegment, Integer> destroyer) {
     this.address = address;
     this.layout = layout;
-    if (cleaner != null) {
-      CLEANER.register(this, () -> {
-        logger.debug("cleaner - address: {}", address);
-        cleaner.accept(address);
-      });
+    if (destroyer != null) {
+      CLEANER.register(this, new NativeHandle(clazz, address, destroyer));
     }
   }
 
@@ -55,6 +56,7 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     if (result != 0) {
       MemorySegment lastErrorPtr = tfhe_error_get_last();
       String lastError = lastErrorPtr.getString(0);
+      logger.warn("nativeCall - error[{}]: {}", result, lastError);
       if (!lastError.equals("no error")) throw new NativeCallException(result, lastError);
     }
   }
@@ -67,4 +69,22 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     return layout;
   }
 
+  public record NativeHandle(
+    Class<?> clazz,
+    MemorySegment address,
+    Function<MemorySegment, Integer> destroyer
+  ) implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(NativeHandle.class);
+
+    public NativeHandle {
+      logger.trace("NativeHandle - init {}<{}>", clazz.getSimpleName(), address);
+    }
+
+    @Override
+    public void run() {
+      if (address == null || address == MemorySegment.NULL) return;
+      logger.trace("NativeHandle - destroy {}<{}>", clazz.getSimpleName(), address);
+      executeWithErrorHandling(() -> destroyer.apply(address.get(C_POINTER, 0)));
+    }
+  }
 }
