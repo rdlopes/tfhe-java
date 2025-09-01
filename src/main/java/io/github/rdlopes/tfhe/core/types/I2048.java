@@ -27,6 +27,20 @@ public class I2048 extends GroupLayoutPointer {
   }
 
   public static I2048 valueOf(BigInteger value) {
+    BigInteger maxValue = BigInteger.valueOf(2)
+                                    .pow(2047)
+                                    .subtract(BigInteger.ONE);
+    BigInteger minValue = BigInteger.valueOf(2)
+                                    .pow(2047)
+                                    .negate();
+
+    if (value.compareTo(maxValue) > 0) {
+      throw new IllegalArgumentException("Value exceeds I2048 maximum capacity (2^2047 - 1)");
+    }
+    if (value.compareTo(minValue) < 0) {
+      throw new IllegalArgumentException("Value exceeds I2048 minimum capacity (-2^2047)");
+    }
+    
     byte[] bytes = value.toByteArray();
 
     byte[] paddedBytes = new byte[256];

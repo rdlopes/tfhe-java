@@ -5,7 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class I2048Test {
 
@@ -23,8 +24,7 @@ class I2048Test {
     long originalValue = 98765432109876543L;
     I2048 i2048 = I2048.valueOf(originalValue);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(originalValue));
+    assertThat(i2048).isEqualTo(originalValue);
   }
 
   @Test
@@ -32,8 +32,7 @@ class I2048Test {
     long zero = 0L;
     I2048 i2048 = I2048.valueOf(zero);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(zero));
+    assertThat(i2048).isEqualTo(zero);
   }
 
   @Test
@@ -41,8 +40,7 @@ class I2048Test {
     long negativeValue = -123456789L;
     I2048 i2048 = I2048.valueOf(negativeValue);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(negativeValue));
+    assertThat(i2048).isEqualTo(negativeValue);
   }
 
   @Test
@@ -50,8 +48,7 @@ class I2048Test {
     String largeValue = "123456789012345678901234567890123456789012345678901234567890";
     I2048 i2048 = I2048.valueOf(largeValue);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(new BigInteger(largeValue));
+    assertThat(i2048).isEqualTo(largeValue);
   }
 
   @Test
@@ -59,8 +56,7 @@ class I2048Test {
     String largeNegativeValue = "-123456789012345678901234567890123456789012345678901234567890";
     I2048 i2048 = I2048.valueOf(largeNegativeValue);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(new BigInteger(largeNegativeValue));
+    assertThat(i2048).isEqualTo(largeNegativeValue);
   }
 
   @Test
@@ -70,8 +66,7 @@ class I2048Test {
                                     .subtract(BigInteger.ONE);
     I2048 i2048 = I2048.valueOf(maxValue);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(maxValue);
+    assertThat(i2048).isEqualTo(maxValue);
   }
 
   @Test
@@ -81,7 +76,50 @@ class I2048Test {
                                     .negate();
     I2048 i2048 = I2048.valueOf(minValue);
 
-    BigInteger retrievedValue = i2048.getValue();
-    assertThat(retrievedValue).isEqualTo(minValue);
+    assertThat(i2048).isEqualTo(minValue);
+  }
+
+  @Test
+  void rejectsValueExceedingMaximumCapacity() {
+    BigInteger tooLargeValue = BigInteger.valueOf(2)
+                                         .pow(2047);
+
+    assertThatThrownBy(() -> I2048.valueOf(tooLargeValue))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Value exceeds I2048 maximum capacity (2^2047 - 1)");
+  }
+
+  @Test
+  void rejectsValueExceedingMinimumCapacity() {
+    BigInteger tooSmallValue = BigInteger.valueOf(2)
+                                         .pow(2047)
+                                         .negate()
+                                         .subtract(BigInteger.ONE);
+
+    assertThatThrownBy(() -> I2048.valueOf(tooSmallValue))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Value exceeds I2048 minimum capacity (-2^2047)");
+  }
+
+  @Test
+  void rejectsStringValueExceedingMaximumCapacity() {
+    BigInteger tooLargeValue = BigInteger.valueOf(2)
+                                         .pow(2047);
+
+    assertThatThrownBy(() -> I2048.valueOf(tooLargeValue.toString()))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Value exceeds I2048 maximum capacity (2^2047 - 1)");
+  }
+
+  @Test
+  void rejectsStringValueExceedingMinimumCapacity() {
+    BigInteger tooSmallValue = BigInteger.valueOf(2)
+                                         .pow(2047)
+                                         .negate()
+                                         .subtract(BigInteger.ONE);
+
+    assertThatThrownBy(() -> I2048.valueOf(tooSmallValue.toString()))
+      .isInstanceOf(IllegalArgumentException.class)
+      .hasMessage("Value exceeds I2048 minimum capacity (-2^2047)");
   }
 }
