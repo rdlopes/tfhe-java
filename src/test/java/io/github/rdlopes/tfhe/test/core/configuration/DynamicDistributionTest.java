@@ -27,12 +27,6 @@ class DynamicDistributionTest {
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
     assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
 
-    retrievedTUniform.cleanNativeResources();
-    retrievedGaussian.cleanNativeResources();
-    retrievedPayload.cleanNativeResources();
-    distribution.cleanNativeResources();
-    payload.cleanNativeResources();
-    tUniform.cleanNativeResources();
   }
 
   @Test
@@ -46,10 +40,6 @@ class DynamicDistributionTest {
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
     assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
 
-    retrievedTUniform.cleanNativeResources();
-    retrievedGaussian.cleanNativeResources();
-    retrievedPayload.cleanNativeResources();
-    distribution.cleanNativeResources();
   }
 
   @Test
@@ -68,12 +58,6 @@ class DynamicDistributionTest {
     assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
 
-    retrievedGaussian.cleanNativeResources();
-    retrievedTUniform.cleanNativeResources();
-    retrievedPayload.cleanNativeResources();
-    distribution.cleanNativeResources();
-    payload.cleanNativeResources();
-    gaussian.cleanNativeResources();
   }
 
   @Test
@@ -87,9 +71,5 @@ class DynamicDistributionTest {
     assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
 
-    retrievedGaussian.cleanNativeResources();
-    retrievedTUniform.cleanNativeResources();
-    retrievedPayload.cleanNativeResources();
-    distribution.cleanNativeResources();
   }
 }

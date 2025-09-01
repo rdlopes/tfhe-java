@@ -23,10 +23,5 @@ class ClientKeyTest {
 
     assertThat(deserialized.getAddress()).isNotNull();
 
-    deserialized.cleanNativeResources();
-    buffer.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

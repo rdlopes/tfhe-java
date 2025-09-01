@@ -8,7 +8,6 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt32;
 import io.github.rdlopes.tfhe.core.types.FheInt32;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,13 +30,6 @@ class CompressedFheInt32Test {
     serverKey.setAsKey();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-  }
 
   @Test
   void encryptsWithClientKey() {
@@ -47,7 +39,6 @@ class CompressedFheInt32Test {
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
 
-    compressed.cleanNativeResources();
   }
 
   @Test
@@ -64,8 +55,6 @@ class CompressedFheInt32Test {
 
     assertThat(decrypted).isEqualTo(originalValue);
 
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -85,10 +74,6 @@ class CompressedFheInt32Test {
 
     assertThat(decrypted).isEqualTo(-3000000);
 
-    original.cleanNativeResources();
-    buffer.cleanNativeResources();
-    deserialized.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -105,9 +90,6 @@ class CompressedFheInt32Test {
 
     assertThat(decrypted).isEqualTo(-2500000);
 
-    original.cleanNativeResources();
-    cloned.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -120,8 +102,5 @@ class CompressedFheInt32Test {
 
     assertThat(decrypted).isEqualTo(originalValue);
 
-    fheInt32.cleanNativeResources();
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 }

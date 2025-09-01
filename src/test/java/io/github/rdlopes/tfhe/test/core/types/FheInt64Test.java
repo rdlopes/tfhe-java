@@ -10,7 +10,6 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt64;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheInt64;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,13 +32,6 @@ class FheInt64Test {
     serverKey.setAsKey();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-  }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
@@ -51,7 +43,6 @@ class FheInt64Test {
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -65,8 +56,6 @@ class FheInt64Test {
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
-    publicKey.cleanNativeResources();
   }
 
   @Test
@@ -80,7 +69,6 @@ class FheInt64Test {
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -94,9 +82,6 @@ class FheInt64Test {
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -108,8 +93,6 @@ class FheInt64Test {
     long decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -123,9 +106,6 @@ class FheInt64Test {
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -137,8 +117,6 @@ class FheInt64Test {
     long decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -152,9 +130,6 @@ class FheInt64Test {
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -166,8 +141,6 @@ class FheInt64Test {
     long decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000000L);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -180,8 +153,6 @@ class FheInt64Test {
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(15000000000L);
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -192,7 +163,6 @@ class FheInt64Test {
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(15000000000L);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -205,8 +175,6 @@ class FheInt64Test {
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(10000000000L);
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -217,7 +185,6 @@ class FheInt64Test {
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(10000000000L);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -230,8 +197,6 @@ class FheInt64Test {
     long decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(5000000000L);
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -242,7 +207,6 @@ class FheInt64Test {
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(5000000000L);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -256,9 +220,6 @@ class FheInt64Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -276,9 +237,6 @@ class FheInt64Test {
     long decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    serialized.cleanNativeResources();
-    deserialized.cleanNativeResources();
   }
 
   @Test
@@ -296,9 +254,6 @@ class FheInt64Test {
     long decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -315,8 +270,5 @@ class FheInt64Test {
     long decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    cloned.cleanNativeResources();
-    encryptedEquality.cleanNativeResources();
   }
 }

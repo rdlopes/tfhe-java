@@ -20,9 +20,5 @@ class DynamicBufferTest {
     assertThat(view.getPointer()).isNotSameAs(view.getPointer());
     assertThat(view.getLength()).isEqualTo(view.getLength());
 
-    view.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

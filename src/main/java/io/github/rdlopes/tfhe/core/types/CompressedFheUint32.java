@@ -31,7 +31,7 @@ public class CompressedFheUint32 extends AddressLayoutPointer implements Cloneab
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> compressed_fhe_uint32_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
     DynamicBufferView dynamicBufferView = dynamicBuffer.view();
-    dynamicBuffer.cleanNativeResources();
+    dynamicBuffer.destroy();
     return dynamicBufferView;
   }
 

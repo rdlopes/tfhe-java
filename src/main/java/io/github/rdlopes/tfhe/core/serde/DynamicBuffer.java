@@ -33,4 +33,8 @@ public class DynamicBuffer extends GroupLayoutPointer {
     newSegment.copyFrom(dataSegment);
     return new DynamicBufferView(newSegment, getLength());
   }
+
+  public void destroy() {
+    super.cleanNativeResources();
+  }
 }

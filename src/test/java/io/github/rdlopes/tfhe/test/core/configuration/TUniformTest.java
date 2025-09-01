@@ -1,7 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.configuration;
 
 import io.github.rdlopes.tfhe.core.configuration.TUniform;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,10 +9,6 @@ class TUniformTest {
 
   private TUniform tUniform;
 
-  @AfterEach
-  void tearDown() {
-    tUniform.cleanNativeResources();
-  }
 
   @Test
   void zero() {

@@ -31,7 +31,6 @@ class ShortintPBSParametersTest {
   void predefinedParameters(ShortintPBSParameters parameters) {
     assertThat(parameters).isNotNull();
     assertThat(parameters.getAddress()).isNotNull();
-    parameters.cleanNativeResources();
   }
 
   @Test
@@ -94,13 +93,6 @@ class ShortintPBSParametersTest {
     DynamicDistribution retrievedGlweNoise = parameters.getGlweNoiseDistribution();
     ModulusSwitchType retrievedModulusSwitch = parameters.getModulusSwitchNoiseReductionParams();
 
-    retrievedLweNoise.cleanNativeResources();
-    retrievedGlweNoise.cleanNativeResources();
-    retrievedModulusSwitch.cleanNativeResources();
-    parameters.cleanNativeResources();
-    modulusSwitch.cleanNativeResources();
-    glweNoise.cleanNativeResources();
-    lweNoise.cleanNativeResources();
   }
 
 }

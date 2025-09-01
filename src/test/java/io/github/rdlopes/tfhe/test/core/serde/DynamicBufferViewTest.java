@@ -20,10 +20,6 @@ class DynamicBufferViewTest {
 
     assertThat(bytes.length).isEqualTo(buffer.getLength());
 
-    buffer.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 
   @Test
@@ -37,10 +33,5 @@ class DynamicBufferViewTest {
 
     assertThat(reconstructed.getLength()).isEqualTo(view.getLength());
 
-    reconstructed.cleanNativeResources();
-    view.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

@@ -7,7 +7,6 @@ import io.github.rdlopes.tfhe.core.keys.KeySet;
 import io.github.rdlopes.tfhe.core.keys.PublicKey;
 import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.types.I2048;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,14 +34,6 @@ class I2048Test {
     publicKey = PublicKey.newWith(clientKey);
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-    publicKey.cleanNativeResources();
-  }
 
   @Test
   void createsValueOf() {
@@ -52,7 +43,6 @@ class I2048Test {
     assertThat(i2048).isNotNull();
     assertThat(i2048.getAddress()).isNotNull();
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -63,7 +53,6 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(originalValue));
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -74,7 +63,6 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(zero));
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -85,7 +73,6 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(negativeValue));
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -96,7 +83,6 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(new BigInteger(largeValue));
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -107,7 +93,6 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(new BigInteger(largeNegativeValue));
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -120,7 +105,6 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(maxValue);
 
-    i2048.cleanNativeResources();
   }
 
   @Test
@@ -133,6 +117,5 @@ class I2048Test {
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(minValue);
 
-    i2048.cleanNativeResources();
   }
 }

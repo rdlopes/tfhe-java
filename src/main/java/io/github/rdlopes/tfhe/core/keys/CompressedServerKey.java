@@ -29,7 +29,7 @@ public class CompressedServerKey extends AddressLayoutPointer {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     executeWithErrorHandling(() -> compressed_server_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
     DynamicBufferView dynamicBufferView = dynamicBuffer.view();
-    dynamicBuffer.cleanNativeResources();
+    dynamicBuffer.destroy();
     return dynamicBufferView;
   }
 

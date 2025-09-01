@@ -30,12 +30,6 @@ class CompressedServerKeyTest {
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
 
-    deserializedCompressedServerKey.cleanNativeResources();
-    dynamicBuffer.cleanNativeResources();
-    compressedServerKey.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 
   @Test
@@ -50,10 +44,5 @@ class CompressedServerKeyTest {
     assertThat(serverKey).isNotNull();
     assertThat(serverKey.getAddress()).isNotNull();
 
-    serverKey.cleanNativeResources();
-    compressedServerKey.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

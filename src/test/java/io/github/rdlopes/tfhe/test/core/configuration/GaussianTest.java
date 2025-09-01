@@ -1,7 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.configuration;
 
 import io.github.rdlopes.tfhe.core.configuration.Gaussian;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -10,10 +9,6 @@ class GaussianTest {
 
   private Gaussian gaussian;
 
-  @AfterEach
-  void tearDown() {
-    gaussian.cleanNativeResources();
-  }
 
   @Test
   void zero() {

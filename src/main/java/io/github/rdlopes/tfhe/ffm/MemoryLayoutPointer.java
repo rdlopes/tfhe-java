@@ -69,7 +69,7 @@ public abstract class MemoryLayoutPointer<L extends MemoryLayout> {
     return layout;
   }
 
-  public void cleanNativeResources() {
+  protected void cleanNativeResources() {
     logger.trace("cleanNativeResources");
     Optional.ofNullable(cleanable)
             .ifPresent(Cleaner.Cleanable::clean);

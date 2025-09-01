@@ -8,7 +8,6 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheUint4;
 import io.github.rdlopes.tfhe.core.types.FheUint4;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,13 +30,6 @@ class CompressedFheUint4Test {
     serverKey.setAsKey();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-  }
 
   @Test
   void encryptsWithClientKey() {
@@ -46,7 +38,6 @@ class CompressedFheUint4Test {
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
 
-    compressed.cleanNativeResources();
   }
 
   @Test
@@ -61,8 +52,6 @@ class CompressedFheUint4Test {
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -80,10 +69,6 @@ class CompressedFheUint4Test {
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7);
 
-    original.cleanNativeResources();
-    buffer.cleanNativeResources();
-    deserialized.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -99,9 +84,6 @@ class CompressedFheUint4Test {
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 13);
 
-    original.cleanNativeResources();
-    cloned.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -113,8 +95,5 @@ class CompressedFheUint4Test {
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    fheUint4.cleanNativeResources();
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 }

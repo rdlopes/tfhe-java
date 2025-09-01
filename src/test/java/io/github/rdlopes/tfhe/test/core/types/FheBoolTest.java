@@ -9,7 +9,6 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheBool;
 import io.github.rdlopes.tfhe.core.types.FheBool;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,13 +31,6 @@ class FheBoolTest {
     serverKey.setAsKey();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-  }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
@@ -50,7 +42,6 @@ class FheBoolTest {
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -64,8 +55,6 @@ class FheBoolTest {
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
-    publicKey.cleanNativeResources();
   }
 
   @Test
@@ -79,7 +68,6 @@ class FheBoolTest {
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -93,9 +81,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -107,8 +92,6 @@ class FheBoolTest {
     boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -122,9 +105,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -136,8 +116,6 @@ class FheBoolTest {
     boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -151,9 +129,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -165,8 +140,6 @@ class FheBoolTest {
     boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -179,8 +152,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    result.cleanNativeResources();
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -193,8 +164,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    result.cleanNativeResources();
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -205,7 +174,6 @@ class FheBoolTest {
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -218,7 +186,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -229,7 +196,6 @@ class FheBoolTest {
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -242,8 +208,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -254,7 +218,6 @@ class FheBoolTest {
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -268,9 +231,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -284,9 +244,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -299,8 +256,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -313,8 +268,6 @@ class FheBoolTest {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -331,9 +284,6 @@ class FheBoolTest {
     boolean decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    original.cleanNativeResources();
-    buffer.cleanNativeResources();
-    deserialized.cleanNativeResources();
   }
 
   @Test
@@ -350,9 +300,6 @@ class FheBoolTest {
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    original.cleanNativeResources();
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -368,8 +315,5 @@ class FheBoolTest {
     boolean decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    original.cleanNativeResources();
-    cloned.cleanNativeResources();
-    encryptedEquality.cleanNativeResources();
   }
 }

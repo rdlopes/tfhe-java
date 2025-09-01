@@ -24,10 +24,5 @@ class PublicKeyTest {
 
     assertThat(deserializedPublicKey.getAddress()).isNotNull();
 
-    buffer.cleanNativeResources();
-    deserializedPublicKey.cleanNativeResources();
-    publicKey.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

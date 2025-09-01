@@ -4,7 +4,6 @@ import io.github.rdlopes.tfhe.core.configuration.Config;
 import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
 import io.github.rdlopes.tfhe.core.keys.ClientKey;
 import io.github.rdlopes.tfhe.core.keys.KeySet;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +20,6 @@ class ConfigTest {
     config = configBuilder.build();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-  }
 
   @Test
   void generatesKeyPair() {
@@ -34,11 +28,6 @@ class ConfigTest {
     assertThat(keySet).isNotNull();
     assertThat(keySet.clientKey()).isNotNull();
     assertThat(keySet.serverKey()).isNotNull();
-
-    keySet.clientKey()
-          .cleanNativeResources();
-    keySet.serverKey()
-          .cleanNativeResources();
   }
 
   @Test
@@ -47,32 +36,24 @@ class ConfigTest {
 
     assertThat(clientKey).isNotNull();
     assertThat(clientKey.getAddress()).isNotNull();
-
-    clientKey.cleanNativeResources();
   }
 
   @Test
   void doesNotGenerateMultipleClientKeys() {
-    ClientKey clientKey = config.generateClientKey();
+    config.generateClientKey();
 
     assertThatThrownBy(config::generateClientKey)
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Keys have already been generated for this Config instance");
 
-    clientKey.cleanNativeResources();
   }
 
   @Test
   void doesNotGenerateMultipleKeyPairs() {
-    KeySet keySet = config.generateKeys();
+    config.generateKeys();
 
     assertThatThrownBy(config::generateKeys)
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Keys have already been generated for this Config instance");
-
-    keySet.clientKey()
-          .cleanNativeResources();
-    keySet.serverKey()
-          .cleanNativeResources();
   }
 }

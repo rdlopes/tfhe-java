@@ -103,6 +103,7 @@
           <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
             -Djava.library.path=${java.library.path}
           </argLine>
+          <excludedGroups>largeBitSize</excludedGroups>
         </configuration>
       </plugin>
       <plugin>

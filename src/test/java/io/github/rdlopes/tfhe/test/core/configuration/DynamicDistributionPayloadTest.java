@@ -22,10 +22,6 @@ class DynamicDistributionPayloadTest {
 
     assertThat(gaussian.getStd()).isCloseTo(0, offset(1e-10));
 
-    read.cleanNativeResources();
-    gaussian.cleanNativeResources();
-    payload.cleanNativeResources();
-    initial.cleanNativeResources();
   }
 
   @Test
@@ -40,10 +36,6 @@ class DynamicDistributionPayloadTest {
 
     assertThat(tUniform.getBoundLog2()).isEqualTo(0);
 
-    read.cleanNativeResources();
-    tUniform.cleanNativeResources();
-    payload.cleanNativeResources();
-    initial.cleanNativeResources();
   }
 
 }

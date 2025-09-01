@@ -29,9 +29,6 @@ class ModulusSwitchTypeTest {
     assertThat(retrievedParams.getMsRSigmaFactor()).isEqualTo(2.0);
     assertThat(retrievedParams.getMsInputVariance()).isEqualTo(0.5);
 
-    retrievedParams.cleanNativeResources();
-    switchType.cleanNativeResources();
-    params.cleanNativeResources();
   }
 
 }

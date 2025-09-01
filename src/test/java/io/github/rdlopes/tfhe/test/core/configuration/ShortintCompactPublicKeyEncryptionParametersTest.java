@@ -31,7 +31,6 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
   void predefinedParameters(ShortintCompactPublicKeyEncryptionParameters parameters) {
     assertThat(parameters).isNotNull();
     assertThat(parameters.getAddress()).isNotNull();
-    parameters.cleanNativeResources();
   }
 
   @Test
@@ -66,10 +65,6 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
     assertThat(parameters.getEncryptionNoiseDistribution()).isNotNull();
     assertThat(parameters.getCastingParameters()).isNotNull();
 
-    distribution.cleanNativeResources();
-    gaussian.cleanNativeResources();
-    parameters.cleanNativeResources();
-    encryptionNoise.cleanNativeResources();
   }
 
 }

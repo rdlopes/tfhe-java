@@ -6,5 +6,4 @@ open module tfhe.core.test {
   requires transitive org.junit.jupiter.params;
 
   exports io.github.rdlopes.tfhe.test.assertions;
-  exports io.github.rdlopes.tfhe.core.types to org.assertj.core;
 }

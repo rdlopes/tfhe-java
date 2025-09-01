@@ -20,9 +20,6 @@ class ServerKeyTest {
 
     assertThat(buffer.getLength()).isGreaterThan(0);
 
-    buffer.cleanNativeResources();
-    serverKey.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 
   @Test
@@ -36,8 +33,5 @@ class ServerKeyTest {
     assertThatCode(() -> ServerKey.deserialize(buffer))
       .isInstanceOf(UnsupportedOperationException.class);
 
-    buffer.cleanNativeResources();
-    serverKey.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

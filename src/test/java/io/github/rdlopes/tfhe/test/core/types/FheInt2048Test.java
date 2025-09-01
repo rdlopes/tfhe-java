@@ -11,13 +11,13 @@ import io.github.rdlopes.tfhe.core.types.CompressedFheInt2048;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheInt2048;
 import io.github.rdlopes.tfhe.core.types.I2048;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 
+@Tag("largeBitSize")
 class FheInt2048Test {
   private ConfigBuilder configBuilder;
   private Config config;
@@ -35,13 +35,6 @@ class FheInt2048Test {
     serverKey.setAsKey();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-  }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
@@ -53,7 +46,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -67,8 +59,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
-    publicKey.cleanNativeResources();
   }
 
   @Test
@@ -82,7 +72,6 @@ class FheInt2048Test {
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -96,9 +85,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -110,8 +96,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -125,9 +109,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -139,12 +120,9 @@ class FheInt2048Test {
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
-  @Disabled
   void performsMulOperation() {
     FheInt2048 encrypted1 = FheInt2048.encryptWithClientKey(I2048.valueOf(15), clientKey);
     FheInt2048 encrypted2 = FheInt2048.encryptWithClientKey(I2048.valueOf(20), clientKey);
@@ -155,13 +133,9 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
-  @Disabled
   void performsMulAssignOperation() {
     FheInt2048 encrypted1 = FheInt2048.encryptWithClientKey(I2048.valueOf(15), clientKey);
     FheInt2048 encrypted2 = FheInt2048.encryptWithClientKey(I2048.valueOf(20), clientKey);
@@ -170,8 +144,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -185,9 +157,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1000);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -199,8 +168,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1000);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -214,9 +181,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1110);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -228,8 +192,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1110);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -243,9 +205,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b0110);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -257,8 +216,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b0110);
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
   }
 
   @Test
@@ -271,8 +228,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(150);
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -283,7 +238,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(150);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -296,8 +250,6 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(70);
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -308,11 +260,9 @@ class FheInt2048Test {
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(70);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
-  @Disabled
   void performsScalarMulOperation() {
     FheInt2048 encrypted = FheInt2048.encryptWithClientKey(I2048.valueOf(15), clientKey);
 
@@ -322,12 +272,9 @@ class FheInt2048Test {
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(60);
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
-  @Disabled
   void performsScalarMulAssignOperation() {
     FheInt2048 encrypted = FheInt2048.encryptWithClientKey(I2048.valueOf(15), clientKey);
 
@@ -335,7 +282,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(60);
 
-    encrypted.cleanNativeResources();
   }
 
   @Test
@@ -349,9 +295,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -365,9 +308,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -381,9 +321,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -397,9 +334,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -413,9 +347,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -429,9 +360,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted1.cleanNativeResources();
-    encrypted2.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -444,8 +372,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -458,8 +384,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -472,8 +396,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -486,8 +408,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -500,8 +420,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -514,8 +432,6 @@ class FheInt2048Test {
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
 
-    encrypted.cleanNativeResources();
-    result.cleanNativeResources();
   }
 
   @Test
@@ -533,9 +449,6 @@ class FheInt2048Test {
     I2048 decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    serialized.cleanNativeResources();
-    deserialized.cleanNativeResources();
   }
 
   @Test
@@ -553,9 +466,6 @@ class FheInt2048Test {
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -570,7 +480,5 @@ class FheInt2048Test {
     I2048 decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    cloned.cleanNativeResources();
   }
 }

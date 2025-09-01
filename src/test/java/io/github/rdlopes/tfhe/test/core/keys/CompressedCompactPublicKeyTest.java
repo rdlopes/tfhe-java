@@ -29,11 +29,5 @@ class CompressedCompactPublicKeyTest {
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
 
-    deserializedCompressedCompactPublicKey.cleanNativeResources();
-    dynamicBuffer.cleanNativeResources();
-    compressedCompactPublicKey.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    config.cleanNativeResources();
-    configBuilder.cleanNativeResources();
   }
 }

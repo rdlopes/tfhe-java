@@ -9,12 +9,13 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt2048;
 import io.github.rdlopes.tfhe.core.types.FheInt2048;
 import io.github.rdlopes.tfhe.core.types.I2048;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 
+@Tag("largeBitSize")
 class CompressedFheInt2048Test {
   private ConfigBuilder configBuilder;
   private Config config;
@@ -32,13 +33,6 @@ class CompressedFheInt2048Test {
     serverKey.setAsKey();
   }
 
-  @AfterEach
-  void tearDown() {
-    configBuilder.cleanNativeResources();
-    config.cleanNativeResources();
-    clientKey.cleanNativeResources();
-    serverKey.cleanNativeResources();
-  }
 
   @Test
   void encryptsWithClientKey() {
@@ -47,7 +41,6 @@ class CompressedFheInt2048Test {
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
 
-    compressed.cleanNativeResources();
   }
 
   @Test
@@ -62,8 +55,6 @@ class CompressedFheInt2048Test {
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -82,10 +73,6 @@ class CompressedFheInt2048Test {
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    buffer.cleanNativeResources();
-    deserialized.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -102,9 +89,6 @@ class CompressedFheInt2048Test {
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    original.cleanNativeResources();
-    cloned.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 
   @Test
@@ -116,8 +100,5 @@ class CompressedFheInt2048Test {
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
 
-    fheInt2048.cleanNativeResources();
-    compressed.cleanNativeResources();
-    decompressed.cleanNativeResources();
   }
 }
