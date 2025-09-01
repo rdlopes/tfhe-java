@@ -88,10 +88,6 @@ class ShortintPBSParametersTest {
     assertThat(parameters.getLweNoiseDistribution()).isNotNull();
     assertThat(parameters.getGlweNoiseDistribution()).isNotNull();
     assertThat(parameters.getModulusSwitchNoiseReductionParams()).isNotNull();
-
-    DynamicDistribution retrievedLweNoise = parameters.getLweNoiseDistribution();
-    DynamicDistribution retrievedGlweNoise = parameters.getGlweNoiseDistribution();
-    ModulusSwitchType retrievedModulusSwitch = parameters.getModulusSwitchNoiseReductionParams();
   }
 
 }
