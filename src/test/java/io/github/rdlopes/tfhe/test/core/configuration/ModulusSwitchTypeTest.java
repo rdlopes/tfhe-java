@@ -4,7 +4,7 @@ import io.github.rdlopes.tfhe.core.configuration.ModulusSwitchNoiseReductionPara
 import io.github.rdlopes.tfhe.core.configuration.ModulusSwitchType;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 
 class ModulusSwitchTypeTest {
 
@@ -19,15 +19,7 @@ class ModulusSwitchTypeTest {
 
     ModulusSwitchType switchType = new ModulusSwitchType(tag, params);
 
-    assertThat(switchType.getTag()).isEqualTo(tag);
-    assertThat(switchType.getModulusSwitchNoiseReductionParams()).isNotNull();
-
-    ModulusSwitchNoiseReductionParams retrievedParams = switchType.getModulusSwitchNoiseReductionParams();
-
-    assertThat(retrievedParams.getModulusSwitchZerosCount()).isEqualTo(10);
-    assertThat(retrievedParams.getMsBound()).isEqualTo(1.5);
-    assertThat(retrievedParams.getMsRSigmaFactor()).isEqualTo(2.0);
-    assertThat(retrievedParams.getMsInputVariance()).isEqualTo(0.5);
+    assertThat(switchType).hasFields(tag, params);
   }
 
 }

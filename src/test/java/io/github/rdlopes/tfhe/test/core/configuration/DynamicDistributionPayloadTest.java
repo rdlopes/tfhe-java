@@ -5,7 +5,7 @@ import io.github.rdlopes.tfhe.core.configuration.Gaussian;
 import io.github.rdlopes.tfhe.core.configuration.TUniform;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
 class DynamicDistributionPayloadTest {
@@ -16,11 +16,11 @@ class DynamicDistributionPayloadTest {
     DynamicDistributionPayload payload = new DynamicDistributionPayload(initial);
     TUniform read = payload.getTUniform();
 
-    assertThat(read.getBoundLog2()).isEqualTo(initial.getBoundLog2());
+    assertThat(read).hasBoundLog2(64);
 
     Gaussian gaussian = payload.getGaussian();
 
-    assertThat(gaussian.getStd()).isCloseTo(0, offset(1e-10));
+    assertThat(gaussian).hasStdCloseTo(0.0, offset(1e-10));
   }
 
   @Test
@@ -29,11 +29,11 @@ class DynamicDistributionPayloadTest {
     DynamicDistributionPayload payload = new DynamicDistributionPayload(initial);
     Gaussian read = payload.getGaussian();
 
-    assertThat(read.getStd()).isEqualTo(initial.getStd());
+    assertThat(read).hasStd(5.0);
 
     TUniform tUniform = payload.getTUniform();
 
-    assertThat(tUniform.getBoundLog2()).isEqualTo(0);
+    assertThat(tUniform).hasBoundLog2(0);
   }
 
 }

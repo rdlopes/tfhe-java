@@ -6,7 +6,7 @@ import io.github.rdlopes.tfhe.core.configuration.Gaussian;
 import io.github.rdlopes.tfhe.core.configuration.TUniform;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 import static org.assertj.core.data.Offset.offset;
 
 class DynamicDistributionTest {
@@ -18,14 +18,14 @@ class DynamicDistributionTest {
     DynamicDistributionPayload payload = new DynamicDistributionPayload(tUniform);
     DynamicDistribution distribution = new DynamicDistribution(tag, payload);
 
-    assertThat(distribution.getTag()).isEqualTo(tag);
+    assertThat(distribution).hasFields(tag, payload);
 
     DynamicDistributionPayload retrievedPayload = distribution.getDistribution();
     TUniform retrievedTUniform = retrievedPayload.getTUniform();
     Gaussian retrievedGaussian = retrievedPayload.getGaussian();
 
-    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
-    assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
+    assertThat(retrievedTUniform).hasBoundLog2(64);
+    assertThat(retrievedGaussian).hasStdCloseTo(0.0, offset(1e-10));
   }
 
   @Test
@@ -36,8 +36,8 @@ class DynamicDistributionTest {
     TUniform retrievedTUniform = retrievedPayload.getTUniform();
     Gaussian retrievedGaussian = retrievedPayload.getGaussian();
 
-    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
-    assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
+    assertThat(retrievedTUniform).hasBoundLog2(64);
+    assertThat(retrievedGaussian).hasStdCloseTo(0.0, offset(1e-10));
   }
 
   @Test
@@ -47,14 +47,14 @@ class DynamicDistributionTest {
     DynamicDistributionPayload payload = new DynamicDistributionPayload(gaussian);
     DynamicDistribution distribution = new DynamicDistribution(tag, payload);
 
-    assertThat(distribution.getTag()).isEqualTo(tag);
+    assertThat(distribution).hasFields(tag, payload);
 
     DynamicDistributionPayload retrievedPayload = distribution.getDistribution();
     Gaussian retrievedGaussian = retrievedPayload.getGaussian();
     TUniform retrievedTUniform = retrievedPayload.getTUniform();
 
-    assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
-    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
+    assertThat(retrievedGaussian).hasStdCloseTo(5.0, offset(1e-10));
+    assertThat(retrievedTUniform).hasBoundLog2(0);
   }
 
   @Test
@@ -65,7 +65,7 @@ class DynamicDistributionTest {
     Gaussian retrievedGaussian = retrievedPayload.getGaussian();
     TUniform retrievedTUniform = retrievedPayload.getTUniform();
 
-    assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
-    assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
+    assertThat(retrievedGaussian).hasStdCloseTo(5.0, offset(1e-10));
+    assertThat(retrievedTUniform).hasBoundLog2(0);
   }
 }

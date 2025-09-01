@@ -5,7 +5,7 @@ import org.assertj.core.api.AbstractAssert;
 
 import java.math.BigInteger;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings({"ClassEscapesDefinedScope", "UnusedReturnValue", "DataFlowIssue"})
 public class I2048Assert extends AbstractAssert<I2048Assert, I2048> {
   public I2048Assert(I2048 actual) {
     super(actual, I2048Assert.class);

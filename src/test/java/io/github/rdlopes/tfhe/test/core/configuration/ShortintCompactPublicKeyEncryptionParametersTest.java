@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.FieldSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.ArgumentSet;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 
@@ -35,35 +35,52 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
 
   @Test
   void customParameters() {
-    long encryptionLweDimension = 512L;
-    long messageModulus = 32L;
-    long carryModulus = 16L;
-    long modulusPowerOf2Exponent = 64L;
+    long encryptionLweDimension = 256;
+    DynamicDistribution encryptionNoiseDistribution = DynamicDistribution.gaussian(1.5);
+    long messageModulus = 4;
+    long carryModulus = 2;
+    long modulusPowerOf2Exponent = 10;
+    ShortintPBSParameters castingParameters = new ShortintPBSParameters(
+      512,
+      1024,
+      2048,
+      DynamicDistribution.gaussian(2.0),
+      DynamicDistribution.tUniform(6),
+      2,
+      3,
+      4,
+      5,
+      4,
+      2,
+      15,
+      3.14,
+      10,
+      0,
+      new ModulusSwitchType(1, new ModulusSwitchNoiseReductionParams(10, 1.5, 2.0, 0.5))
+    );
     int zkScheme = 1;
-
-    Gaussian gaussian = new Gaussian(1.0);
-    DynamicDistributionPayload distribution = new DynamicDistributionPayload(gaussian);
-    DynamicDistribution encryptionNoise = new DynamicDistribution(1L, distribution);
-
-    ShortintPBSParameters castingParams = ShortintCompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128.getCastingParameters();
 
     ShortintCompactPublicKeyEncryptionParameters parameters = new ShortintCompactPublicKeyEncryptionParameters(
       encryptionLweDimension,
-      encryptionNoise,
+      encryptionNoiseDistribution,
       messageModulus,
       carryModulus,
       modulusPowerOf2Exponent,
-      castingParams,
+      castingParameters,
       zkScheme
     );
 
-    assertThat(parameters.getEncryptionLweDimension()).isEqualTo(encryptionLweDimension);
-    assertThat(parameters.getMessageModulus()).isEqualTo(messageModulus);
-    assertThat(parameters.getCarryModulus()).isEqualTo(carryModulus);
-    assertThat(parameters.getModulusPowerOf2Exponent()).isEqualTo(modulusPowerOf2Exponent);
-    assertThat(parameters.getZkScheme()).isEqualTo(zkScheme);
-    assertThat(parameters.getEncryptionNoiseDistribution()).isNotNull();
-    assertThat(parameters.getCastingParameters()).isNotNull();
+    assertThat(parameters)
+      .isNotNull()
+      .hasFields(
+        encryptionLweDimension,
+        messageModulus,
+        carryModulus,
+        modulusPowerOf2Exponent,
+        zkScheme,
+        encryptionNoiseDistribution,
+        castingParameters
+      );
   }
 
 }
