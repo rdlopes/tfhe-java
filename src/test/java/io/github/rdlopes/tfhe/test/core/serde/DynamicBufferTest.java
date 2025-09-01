@@ -19,6 +19,5 @@ class DynamicBufferTest {
 
     assertThat(view.getPointer()).isNotSameAs(view.getPointer());
     assertThat(view.getLength()).isEqualTo(view.getLength());
-
   }
 }

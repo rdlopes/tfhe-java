@@ -17,7 +17,7 @@ class CompressedCompactPublicKeyTest {
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
     CompressedCompactPublicKey compressedCompactPublicKey = CompressedCompactPublicKey.newWith(clientKey);
-    
+
     DynamicBufferView dynamicBuffer = compressedCompactPublicKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -28,6 +28,5 @@ class CompressedCompactPublicKeyTest {
 
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
-
   }
 }

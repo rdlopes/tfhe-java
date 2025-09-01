@@ -92,7 +92,6 @@ class ShortintPBSParametersTest {
     DynamicDistribution retrievedLweNoise = parameters.getLweNoiseDistribution();
     DynamicDistribution retrievedGlweNoise = parameters.getGlweNoiseDistribution();
     ModulusSwitchType retrievedModulusSwitch = parameters.getModulusSwitchNoiseReductionParams();
-
   }
 
 }

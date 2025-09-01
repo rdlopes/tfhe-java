@@ -14,15 +14,13 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedFheUint32Test {
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
@@ -37,7 +35,6 @@ class CompressedFheUint32Test {
     CompressedFheUint32 compressed = CompressedFheUint32.encryptWithClientKey(originalValue, clientKey);
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
-
   }
 
   @Test
@@ -51,7 +48,6 @@ class CompressedFheUint32Test {
 
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -68,7 +64,6 @@ class CompressedFheUint32Test {
     FheUint32 decompressed = deserialized.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(3000000);
-
   }
 
   @Test
@@ -83,7 +78,6 @@ class CompressedFheUint32Test {
     FheUint32 decompressed = cloned.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(2500000);
-
   }
 
   @Test
@@ -94,6 +88,5 @@ class CompressedFheUint32Test {
     FheUint32 decompressed = compressed.decompress();
     int decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 }

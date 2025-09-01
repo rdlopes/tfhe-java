@@ -21,7 +21,6 @@ class DynamicDistributionPayloadTest {
     Gaussian gaussian = payload.getGaussian();
 
     assertThat(gaussian.getStd()).isCloseTo(0, offset(1e-10));
-
   }
 
   @Test
@@ -35,7 +34,6 @@ class DynamicDistributionPayloadTest {
     TUniform tUniform = payload.getTUniform();
 
     assertThat(tUniform.getBoundLog2()).isEqualTo(0);
-
   }
 
 }

@@ -17,15 +17,13 @@ import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 
 @Tag("largeBitSize")
 class CompressedFheInt2048Test {
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
@@ -40,7 +38,6 @@ class CompressedFheInt2048Test {
     CompressedFheInt2048 compressed = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf(originalValue), clientKey);
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
-
   }
 
   @Test
@@ -54,7 +51,6 @@ class CompressedFheInt2048Test {
 
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -72,7 +68,6 @@ class CompressedFheInt2048Test {
     FheInt2048 decompressed = deserialized.decompress();
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -88,7 +83,6 @@ class CompressedFheInt2048Test {
     FheInt2048 decompressed = cloned.decompress();
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -99,6 +93,5 @@ class CompressedFheInt2048Test {
     FheInt2048 decompressed = compressed.decompress();
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 }

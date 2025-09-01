@@ -23,6 +23,5 @@ class PublicKeyTest {
     PublicKey deserializedPublicKey = PublicKey.deserialize(buffer);
 
     assertThat(deserializedPublicKey.getAddress()).isNotNull();
-
   }
 }

@@ -26,7 +26,6 @@ class DynamicDistributionTest {
 
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
     assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
-
   }
 
   @Test
@@ -39,7 +38,6 @@ class DynamicDistributionTest {
 
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(64);
     assertThat(retrievedGaussian.getStd()).isCloseTo(0.0, offset(1e-10));
-
   }
 
   @Test
@@ -57,7 +55,6 @@ class DynamicDistributionTest {
 
     assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
-
   }
 
   @Test
@@ -70,6 +67,5 @@ class DynamicDistributionTest {
 
     assertThat(retrievedGaussian.getStd()).isEqualTo(5.0);
     assertThat(retrievedTUniform.getBoundLog2()).isEqualTo(0);
-
   }
 }

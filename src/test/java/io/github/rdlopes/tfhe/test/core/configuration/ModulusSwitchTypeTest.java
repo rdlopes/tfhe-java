@@ -28,7 +28,6 @@ class ModulusSwitchTypeTest {
     assertThat(retrievedParams.getMsBound()).isEqualTo(1.5);
     assertThat(retrievedParams.getMsRSigmaFactor()).isEqualTo(2.0);
     assertThat(retrievedParams.getMsInputVariance()).isEqualTo(0.5);
-
   }
 
 }

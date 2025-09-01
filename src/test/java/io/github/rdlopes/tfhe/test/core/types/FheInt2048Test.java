@@ -19,15 +19,13 @@ import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 
 @Tag("largeBitSize")
 class FheInt2048Test {
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
@@ -45,7 +43,6 @@ class FheInt2048Test {
 
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -58,7 +55,6 @@ class FheInt2048Test {
 
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -71,7 +67,6 @@ class FheInt2048Test {
     I2048 decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -84,7 +79,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
-
   }
 
   @Test
@@ -95,7 +89,6 @@ class FheInt2048Test {
     encrypted1.addAssign(encrypted2);
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
-
   }
 
   @Test
@@ -108,7 +101,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
-
   }
 
   @Test
@@ -119,7 +111,6 @@ class FheInt2048Test {
     encrypted1.subAssign(encrypted2);
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
-
   }
 
   @Test
@@ -132,7 +123,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
-
   }
 
   @Test
@@ -143,7 +133,6 @@ class FheInt2048Test {
     encrypted1.mulAssign(encrypted2);
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(300);
-
   }
 
   @Test
@@ -156,7 +145,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1000);
-
   }
 
   @Test
@@ -167,7 +155,6 @@ class FheInt2048Test {
     encrypted1.andAssign(encrypted2);
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1000);
-
   }
 
   @Test
@@ -180,7 +167,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1110);
-
   }
 
   @Test
@@ -191,7 +177,6 @@ class FheInt2048Test {
     encrypted1.orAssign(encrypted2);
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b1110);
-
   }
 
   @Test
@@ -204,7 +189,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b0110);
-
   }
 
   @Test
@@ -215,7 +199,6 @@ class FheInt2048Test {
     encrypted1.xorAssign(encrypted2);
     I2048 decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(0b0110);
-
   }
 
   @Test
@@ -227,7 +210,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(150);
-
   }
 
   @Test
@@ -237,7 +219,6 @@ class FheInt2048Test {
     encrypted.scalarAddAssign(I2048.valueOf(50));
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(150);
-
   }
 
   @Test
@@ -249,7 +230,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(70);
-
   }
 
   @Test
@@ -259,7 +239,6 @@ class FheInt2048Test {
     encrypted.scalarSubAssign(I2048.valueOf(30));
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(70);
-
   }
 
   @Test
@@ -271,7 +250,6 @@ class FheInt2048Test {
 
     I2048 decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(60);
-
   }
 
   @Test
@@ -281,7 +259,6 @@ class FheInt2048Test {
     encrypted.scalarMulAssign(I2048.valueOf(4));
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(60);
-
   }
 
   @Test
@@ -294,7 +271,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -307,7 +283,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -320,7 +295,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -333,7 +307,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -346,7 +319,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -359,7 +331,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -371,7 +342,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -383,7 +353,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -395,7 +364,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -407,7 +375,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -419,7 +386,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -431,7 +397,6 @@ class FheInt2048Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -448,7 +413,6 @@ class FheInt2048Test {
 
     I2048 decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -465,7 +429,6 @@ class FheInt2048Test {
 
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -479,6 +442,5 @@ class FheInt2048Test {
 
     I2048 decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 }

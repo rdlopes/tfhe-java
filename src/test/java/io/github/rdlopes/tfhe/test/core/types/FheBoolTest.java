@@ -15,15 +15,13 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FheBoolTest {
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
@@ -41,7 +39,6 @@ class FheBoolTest {
 
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -54,7 +51,6 @@ class FheBoolTest {
 
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -67,7 +63,6 @@ class FheBoolTest {
     Boolean decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -80,7 +75,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -91,7 +85,6 @@ class FheBoolTest {
     encrypted1.andAssign(encrypted2);
     boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -104,7 +97,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -115,7 +107,6 @@ class FheBoolTest {
     encrypted1.orAssign(encrypted2);
     boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -128,7 +119,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -139,7 +129,6 @@ class FheBoolTest {
     encrypted1.xorAssign(encrypted2);
     boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -151,7 +140,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -163,7 +151,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -173,7 +160,6 @@ class FheBoolTest {
     encrypted.scalarAndAssign(false);
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -185,7 +171,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -195,7 +180,6 @@ class FheBoolTest {
     encrypted.scalarOrAssign(true);
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -207,7 +191,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -217,7 +200,6 @@ class FheBoolTest {
     encrypted.scalarXorAssign(true);
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isFalse();
-
   }
 
   @Test
@@ -230,7 +212,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -243,7 +224,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -255,7 +235,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -267,7 +246,6 @@ class FheBoolTest {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -283,7 +261,6 @@ class FheBoolTest {
 
     boolean decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -299,7 +276,6 @@ class FheBoolTest {
 
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -314,6 +290,5 @@ class FheBoolTest {
 
     boolean decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 }

@@ -18,7 +18,7 @@ class CompressedServerKeyTest {
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
     CompressedServerKey compressedServerKey = CompressedServerKey.newWith(clientKey);
-    
+
     DynamicBufferView dynamicBuffer = compressedServerKey.serialize();
 
     assertThat(dynamicBuffer).isNotNull();
@@ -29,7 +29,6 @@ class CompressedServerKeyTest {
 
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
-
   }
 
   @Test
@@ -38,11 +37,10 @@ class CompressedServerKeyTest {
     Config config = configBuilder.build();
     ClientKey clientKey = config.generateClientKey();
     CompressedServerKey compressedServerKey = CompressedServerKey.newWith(clientKey);
-    
+
     ServerKey serverKey = compressedServerKey.decompress();
 
     assertThat(serverKey).isNotNull();
     assertThat(serverKey.getAddress()).isNotNull();
-
   }
 }

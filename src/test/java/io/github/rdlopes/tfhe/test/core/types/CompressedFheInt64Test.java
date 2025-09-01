@@ -14,15 +14,13 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CompressedFheInt64Test {
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
@@ -38,7 +36,6 @@ class CompressedFheInt64Test {
 
     assertThat(compressed).isNotNull();
     assertThat(compressed.getValue()).isNotNull();
-
   }
 
   @Test
@@ -54,7 +51,6 @@ class CompressedFheInt64Test {
     long decrypted = decompressed.decryptWithClientKey(clientKey);
 
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -73,7 +69,6 @@ class CompressedFheInt64Test {
     long decrypted = decompressed.decryptWithClientKey(clientKey);
 
     assertThat(decrypted).isEqualTo(-30000000000000L);
-
   }
 
   @Test
@@ -90,7 +85,6 @@ class CompressedFheInt64Test {
     long decrypted = decompressed.decryptWithClientKey(clientKey);
 
     assertThat(decrypted).isEqualTo(-25000000000000L);
-
   }
 
   @Test
@@ -102,6 +96,5 @@ class CompressedFheInt64Test {
     long decrypted = decompressed.decryptWithClientKey(clientKey);
 
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 }

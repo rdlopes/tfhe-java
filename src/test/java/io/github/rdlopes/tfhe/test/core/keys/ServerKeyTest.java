@@ -19,7 +19,6 @@ class ServerKeyTest {
     DynamicBufferView buffer = serverKey.serialize();
 
     assertThat(buffer.getLength()).isGreaterThan(0);
-
   }
 
   @Test
@@ -32,6 +31,5 @@ class ServerKeyTest {
 
     assertThatCode(() -> ServerKey.deserialize(buffer))
       .isInstanceOf(UnsupportedOperationException.class);
-
   }
 }

@@ -1,13 +1,6 @@
 package io.github.rdlopes.tfhe.test.core.types;
 
-import io.github.rdlopes.tfhe.core.configuration.Config;
-import io.github.rdlopes.tfhe.core.configuration.ConfigBuilder;
-import io.github.rdlopes.tfhe.core.keys.ClientKey;
-import io.github.rdlopes.tfhe.core.keys.KeySet;
-import io.github.rdlopes.tfhe.core.keys.PublicKey;
-import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.types.I2048;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -15,25 +8,6 @@ import java.math.BigInteger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class I2048Test {
-  private ConfigBuilder configBuilder;
-  private Config config;
-  private ClientKey clientKey;
-  private ServerKey serverKey;
-  private PublicKey publicKey;
-
-  @BeforeEach
-  void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
-    KeySet keySet = config.generateKeys();
-    clientKey = keySet.clientKey();
-    serverKey = keySet.serverKey();
-
-    serverKey.setAsKey();
-
-    publicKey = PublicKey.newWith(clientKey);
-  }
-
 
   @Test
   void createsValueOf() {
@@ -42,7 +16,6 @@ class I2048Test {
 
     assertThat(i2048).isNotNull();
     assertThat(i2048.getAddress()).isNotNull();
-
   }
 
   @Test
@@ -52,7 +25,6 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(originalValue));
-
   }
 
   @Test
@@ -62,7 +34,6 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(zero));
-
   }
 
   @Test
@@ -72,7 +43,6 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(BigInteger.valueOf(negativeValue));
-
   }
 
   @Test
@@ -82,7 +52,6 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(new BigInteger(largeValue));
-
   }
 
   @Test
@@ -92,7 +61,6 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(new BigInteger(largeNegativeValue));
-
   }
 
   @Test
@@ -104,7 +72,6 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(maxValue);
-
   }
 
   @Test
@@ -116,6 +83,5 @@ class I2048Test {
 
     BigInteger retrievedValue = i2048.getValue();
     assertThat(retrievedValue).isEqualTo(minValue);
-
   }
 }

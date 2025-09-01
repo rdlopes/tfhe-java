@@ -16,15 +16,13 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FheUint4Test {
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
-    config = configBuilder.build();
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
@@ -42,7 +40,6 @@ class FheUint4Test {
 
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -55,7 +52,6 @@ class FheUint4Test {
 
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -68,7 +64,6 @@ class FheUint4Test {
     Byte decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -81,7 +76,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8);
-
   }
 
   @Test
@@ -92,7 +86,6 @@ class FheUint4Test {
     encrypted1.addAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8);
-
   }
 
   @Test
@@ -105,7 +98,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7);
-
   }
 
   @Test
@@ -116,7 +108,6 @@ class FheUint4Test {
     encrypted1.subAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7);
-
   }
 
   @Test
@@ -129,7 +120,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 6);
-
   }
 
   @Test
@@ -140,7 +130,6 @@ class FheUint4Test {
     encrypted1.mulAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 6);
-
   }
 
   @Test
@@ -153,7 +142,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8);
-
   }
 
   @Test
@@ -164,7 +152,6 @@ class FheUint4Test {
     encrypted1.andAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8);
-
   }
 
   @Test
@@ -177,7 +164,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 14);
-
   }
 
   @Test
@@ -188,7 +174,6 @@ class FheUint4Test {
     encrypted1.orAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 14);
-
   }
 
   @Test
@@ -201,7 +186,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 6);
-
   }
 
   @Test
@@ -212,7 +196,6 @@ class FheUint4Test {
     encrypted1.xorAssign(encrypted2);
     byte decrypted = encrypted1.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 6);
-
   }
 
   @Test
@@ -224,7 +207,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8);
-
   }
 
   @Test
@@ -234,7 +216,6 @@ class FheUint4Test {
     encrypted.scalarAddAssign((byte) 3);
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 8);
-
   }
 
   @Test
@@ -246,7 +227,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7);
-
   }
 
   @Test
@@ -256,7 +236,6 @@ class FheUint4Test {
     encrypted.scalarSubAssign((byte) 3);
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 7);
-
   }
 
   @Test
@@ -268,7 +247,6 @@ class FheUint4Test {
 
     byte decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 6);
-
   }
 
   @Test
@@ -278,7 +256,6 @@ class FheUint4Test {
     encrypted.scalarMulAssign((byte) 2);
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo((byte) 6);
-
   }
 
   @Test
@@ -291,7 +268,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -304,7 +280,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -317,7 +292,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -330,7 +304,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -343,7 +316,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -356,7 +328,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -368,7 +339,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -380,7 +350,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -392,7 +361,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -404,7 +372,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -416,7 +383,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -428,7 +394,6 @@ class FheUint4Test {
 
     boolean decrypted = result.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
-
   }
 
   @Test
@@ -445,7 +410,6 @@ class FheUint4Test {
 
     byte decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -462,7 +426,6 @@ class FheUint4Test {
 
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 
   @Test
@@ -476,6 +439,5 @@ class FheUint4Test {
 
     byte decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
   }
 }

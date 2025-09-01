@@ -64,7 +64,6 @@ class ShortintCompactPublicKeyEncryptionParametersTest {
     assertThat(parameters.getZkScheme()).isEqualTo(zkScheme);
     assertThat(parameters.getEncryptionNoiseDistribution()).isNotNull();
     assertThat(parameters.getCastingParameters()).isNotNull();
-
   }
 
 }

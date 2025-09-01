@@ -11,12 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConfigTest {
-  private ConfigBuilder configBuilder;
   private Config config;
 
   @BeforeEach
   void setUp() {
-    configBuilder = new ConfigBuilder();
+    ConfigBuilder configBuilder = new ConfigBuilder();
     config = configBuilder.build();
   }
 
@@ -45,7 +44,6 @@ class ConfigTest {
     assertThatThrownBy(config::generateClientKey)
       .isInstanceOf(IllegalStateException.class)
       .hasMessage("Keys have already been generated for this Config instance");
-
   }
 
   @Test
