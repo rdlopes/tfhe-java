@@ -1,3 +1,8 @@
+### Templates ###
+scripts/
+.venv/
+.output*
+
 ### Maven ###
 target/
 pom.xml.releaseBackup

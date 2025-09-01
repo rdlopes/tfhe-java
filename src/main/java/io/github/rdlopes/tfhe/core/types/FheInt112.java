@@ -1,0 +1,245 @@
+package io.github.rdlopes.tfhe.core.types;
+
+import io.github.rdlopes.tfhe.core.keys.ClientKey;
+import io.github.rdlopes.tfhe.core.keys.PublicKey;
+import io.github.rdlopes.tfhe.core.keys.ServerKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
+
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
+
+public class FheInt112 extends AddressLayoutPointer implements Cloneable {
+
+  protected FheInt112() {
+    super(FheInt112.class, TfheWrapper::fhe_int112_destroy);
+  }
+
+  public static FheInt112 encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
+    FheInt112 fheint112 = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), fheint112.getAddress()));
+    return fheint112;
+  }
+
+  public static FheInt112 encryptWithPublicKey(I128 clearValue, PublicKey publicKey) {
+    FheInt112 fheint112 = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_try_encrypt_with_public_key_i128(clearValue.getAddress(), publicKey.getValue(), fheint112.getAddress()));
+    return fheint112;
+  }
+
+  public static FheInt112 encryptTrivial(I128 clearValue) {
+    FheInt112 fheint112 = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_try_encrypt_trivial_i128(clearValue.getAddress(), fheint112.getAddress()));
+    return fheint112;
+  }
+
+  public static FheInt112 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
+    FheInt112 fheint112 = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint112.getAddress()));
+    return fheint112;
+  }
+
+  public DynamicBufferView serialize() {
+    DynamicBuffer dynamicBuffer = new DynamicBuffer();
+    executeWithErrorHandling(() -> fhe_int112_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.destroy();
+    return dynamicBufferView;
+  }
+
+
+  public I128 decryptWithClientKey(ClientKey clientKey) {
+    I128 clearValue = new I128();
+    executeWithErrorHandling(() -> fhe_int112_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
+    return clearValue;
+  }
+
+  public I128 decryptTrivial() {
+    I128 clearValue = new I128();
+    executeWithErrorHandling(() -> fhe_int112_try_decrypt_trivial(getValue(), clearValue.getAddress()));
+    return clearValue;
+  }
+
+
+  public FheInt112 add(FheInt112 other) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt112 other) {
+    executeWithErrorHandling(() -> fhe_int112_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt112 sub(FheInt112 other) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt112 other) {
+    executeWithErrorHandling(() -> fhe_int112_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt112 mul(FheInt112 other) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt112 other) {
+    executeWithErrorHandling(() -> fhe_int112_mul_assign(getValue(), other.getValue()));
+  }
+
+
+  public FheInt112 and(FheInt112 other) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_bitand(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void andAssign(FheInt112 other) {
+    executeWithErrorHandling(() -> fhe_int112_bitand_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt112 or(FheInt112 other) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_bitor(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void orAssign(FheInt112 other) {
+    executeWithErrorHandling(() -> fhe_int112_bitor_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt112 xor(FheInt112 other) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_bitxor(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void xorAssign(FheInt112 other) {
+    executeWithErrorHandling(() -> fhe_int112_bitxor_assign(getValue(), other.getValue()));
+  }
+
+
+  public FheInt112 scalarAdd(I128 scalar) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_scalar_add(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAddAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int112_scalar_add_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt112 scalarSub(I128 scalar) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_scalar_sub(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarSubAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int112_scalar_sub_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt112 scalarMul(I128 scalar) {
+    FheInt112 result = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_scalar_mul(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarMulAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int112_scalar_mul_assign(getValue(), scalar.getAddress()));
+  }
+
+
+  public FheBool eq(FheInt112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+
+  public FheBool ge(FheInt112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_ge(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool gt(FheInt112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_gt(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool le(FheInt112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_le(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool lt(FheInt112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_lt(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarGe(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_scalar_ge(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarGt(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_scalar_gt(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarLe(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_scalar_le(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarLt(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int112_scalar_lt(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+
+  public CompressedFheInt112 compress() {
+    CompressedFheInt112 compressed = new CompressedFheInt112();
+    executeWithErrorHandling(() -> fhe_int112_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt112 clone() {
+    FheInt112 fheint112 = new FheInt112();
+    executeWithErrorHandling(() -> fhe_int112_clone(getValue(), fheint112.getAddress()));
+    return fheint112;
+  }
+}

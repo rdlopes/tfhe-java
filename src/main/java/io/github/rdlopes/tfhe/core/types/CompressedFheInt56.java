@@ -1,0 +1,51 @@
+package io.github.rdlopes.tfhe.core.types;
+
+import io.github.rdlopes.tfhe.core.keys.ClientKey;
+import io.github.rdlopes.tfhe.core.keys.ServerKey;
+import io.github.rdlopes.tfhe.core.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
+import io.github.rdlopes.tfhe.ffm.AddressLayoutPointer;
+import io.github.rdlopes.tfhe.ffm.TfheWrapper;
+
+import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
+
+public class CompressedFheInt56 extends AddressLayoutPointer implements Cloneable {
+
+  protected CompressedFheInt56() {
+    super(CompressedFheInt56.class, TfheWrapper::compressed_fhe_int56_destroy);
+  }
+
+  public static CompressedFheInt56 encryptWithClientKey(long clearValue, ClientKey clientKey) {
+    CompressedFheInt56 compressedFheInt56 = new CompressedFheInt56();
+    executeWithErrorHandling(() -> compressed_fhe_int56_try_encrypt_with_client_key_i64(clearValue, clientKey.getValue(), compressedFheInt56.getAddress()));
+    return compressedFheInt56;
+  }
+
+  public static CompressedFheInt56 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
+    CompressedFheInt56 compressedFheInt56 = new CompressedFheInt56();
+    executeWithErrorHandling(() -> compressed_fhe_int56_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheInt56.getAddress()));
+    return compressedFheInt56;
+  }
+
+  public DynamicBufferView serialize() {
+    DynamicBuffer dynamicBuffer = new DynamicBuffer();
+    executeWithErrorHandling(() -> compressed_fhe_int56_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    DynamicBufferView dynamicBufferView = dynamicBuffer.view();
+    dynamicBuffer.destroy();
+    return dynamicBufferView;
+  }
+
+  public FheInt56 decompress() {
+    FheInt56 fheint56 = new FheInt56();
+    executeWithErrorHandling(() -> compressed_fhe_int56_decompress(getValue(), fheint56.getAddress()));
+    return fheint56;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public CompressedFheInt56 clone() {
+    CompressedFheInt56 compressedFheInt56 = new CompressedFheInt56();
+    executeWithErrorHandling(() -> compressed_fhe_int56_clone(getValue(), compressedFheInt56.getAddress()));
+    return compressedFheInt56;
+  }
+}

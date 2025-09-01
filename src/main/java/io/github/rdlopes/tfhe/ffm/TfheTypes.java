@@ -85,8 +85,7 @@ public enum TfheTypes {
   FHE_INT_256(Type_FheInt256(), 256, 256, true, false),
   FHE_INT_512(Type_FheInt512(), 512, 512, true, false),
   FHE_INT_1024(Type_FheInt1024(), 1024, 1024, true, false),
-  FHE_INT_2048(Type_FheInt2048(), 2048, 2048, true, false),
-  FHE_ASCII_STRING(Type_FheAsciiString(), 8, 8, false, false);
+  FHE_INT_2048(Type_FheInt2048(), 2048, 2048, true, false);
 
   private final int fheType;
   private final int bitSize;

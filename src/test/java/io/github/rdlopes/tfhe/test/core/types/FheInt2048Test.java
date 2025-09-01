@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 
-@Tag("largeBitSize")
 class FheInt2048Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
@@ -122,6 +121,7 @@ class FheInt2048Test {
   }
 
   @Test
+  @Tag("largeBitSize")
   void performsMulOperation() {
     FheInt2048 encrypted1 = FheInt2048.encryptWithClientKey(I2048.valueOf(15), clientKey);
     FheInt2048 encrypted2 = FheInt2048.encryptWithClientKey(I2048.valueOf(20), clientKey);
@@ -134,6 +134,7 @@ class FheInt2048Test {
   }
 
   @Test
+  @Tag("largeBitSize")
   void performsMulAssignOperation() {
     FheInt2048 encrypted1 = FheInt2048.encryptWithClientKey(I2048.valueOf(15), clientKey);
     FheInt2048 encrypted2 = FheInt2048.encryptWithClientKey(I2048.valueOf(20), clientKey);
