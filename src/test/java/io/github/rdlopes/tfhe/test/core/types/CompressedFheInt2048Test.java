@@ -9,6 +9,7 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt2048;
 import io.github.rdlopes.tfhe.core.types.FheInt2048;
 import io.github.rdlopes.tfhe.core.types.I2048;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,11 @@ class CompressedFheInt2048Test {
     serverKey.setAsKey();
   }
 
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    serverKey.destroy();
+  }
 
   @Test
   void encryptsWithClientKey() {

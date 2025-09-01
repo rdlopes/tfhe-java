@@ -29,6 +29,10 @@ class CompressedServerKeyTest {
 
     assertThat(deserializedCompressedServerKey).isNotNull();
     assertThat(deserializedCompressedServerKey.getAddress()).isNotNull();
+
+    clientKey.destroy();
+    compressedServerKey.destroy();
+    deserializedCompressedServerKey.destroy();
   }
 
   @Test
@@ -42,5 +46,9 @@ class CompressedServerKeyTest {
 
     assertThat(serverKey).isNotNull();
     assertThat(serverKey.getAddress()).isNotNull();
+
+    clientKey.destroy();
+    compressedServerKey.destroy();
+    serverKey.destroy();
   }
 }

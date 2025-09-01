@@ -8,6 +8,7 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt32;
 import io.github.rdlopes.tfhe.core.types.FheInt32;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +29,11 @@ class CompressedFheInt32Test {
     serverKey.setAsKey();
   }
 
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    serverKey.destroy();
+  }
 
   @Test
   void encryptsWithClientKey() {

@@ -22,5 +22,8 @@ class ClientKeyTest {
     ClientKey deserialized = ClientKey.deserialize(buffer);
 
     assertThat(deserialized.getAddress()).isNotNull();
+
+    clientKey.destroy();
+    deserialized.destroy();
   }
 }

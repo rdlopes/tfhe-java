@@ -11,6 +11,7 @@ import io.github.rdlopes.tfhe.core.types.CompressedFheInt2048;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheInt2048;
 import io.github.rdlopes.tfhe.core.types.I2048;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,11 @@ class FheInt2048Test {
     serverKey.setAsKey();
   }
 
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    serverKey.destroy();
+  }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
@@ -55,6 +61,8 @@ class FheInt2048Test {
 
     I2048 decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    publicKey.destroy();
   }
 
   @Test

@@ -10,6 +10,7 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt64;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheInt64;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,11 @@ class FheInt64Test {
     serverKey.setAsKey();
   }
 
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    serverKey.destroy();
+  }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
@@ -52,6 +58,8 @@ class FheInt64Test {
 
     long decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    publicKey.destroy();
   }
 
   @Test

@@ -28,5 +28,9 @@ class CompressedCompactPublicKeyTest {
 
     assertThat(deserializedCompressedCompactPublicKey).isNotNull();
     assertThat(deserializedCompressedCompactPublicKey.getAddress()).isNotNull();
+
+    clientKey.destroy();
+    deserializedCompressedCompactPublicKey.destroy();
+    compressedCompactPublicKey.destroy();
   }
 }

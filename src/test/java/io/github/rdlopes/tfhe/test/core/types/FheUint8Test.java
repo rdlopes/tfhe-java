@@ -10,6 +10,7 @@ import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheUint8;
 import io.github.rdlopes.tfhe.core.types.FheBool;
 import io.github.rdlopes.tfhe.core.types.FheUint8;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,11 @@ class FheUint8Test {
     serverKey.setAsKey();
   }
 
+  @AfterEach
+  void tearDown() {
+    clientKey.destroy();
+    serverKey.destroy();
+  }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
@@ -52,6 +58,8 @@ class FheUint8Test {
 
     byte decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
+
+    publicKey.destroy();
   }
 
   @Test

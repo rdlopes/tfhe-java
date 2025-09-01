@@ -35,6 +35,6 @@ public class DynamicBuffer extends GroupLayoutPointer {
   }
 
   public void destroy() {
-    super.cleanNativeResources();
+    cleanNativeResources();
   }
 }

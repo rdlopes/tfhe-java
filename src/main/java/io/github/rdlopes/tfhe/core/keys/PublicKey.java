@@ -32,4 +32,8 @@ public class PublicKey extends AddressLayoutPointer {
     dynamicBuffer.destroy();
     return dynamicBufferView;
   }
+
+  public void destroy() {
+    cleanNativeResources();
+  }
 }

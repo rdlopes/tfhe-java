@@ -28,4 +28,8 @@ public class ClientKey extends AddressLayoutPointer {
     return dynamicBufferView;
   }
 
+  public void destroy() {
+    cleanNativeResources();
+  }
+
 }

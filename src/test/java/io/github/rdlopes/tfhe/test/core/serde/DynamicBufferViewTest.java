@@ -19,6 +19,8 @@ class DynamicBufferViewTest {
     byte[] bytes = buffer.toByteArray();
 
     assertThat(bytes.length).isEqualTo(buffer.getLength());
+
+    clientKey.destroy();
   }
 
   @Test
@@ -31,5 +33,7 @@ class DynamicBufferViewTest {
     DynamicBufferView reconstructed = DynamicBufferView.fromByteArray(bytes);
 
     assertThat(reconstructed.getLength()).isEqualTo(view.getLength());
+
+    clientKey.destroy();
   }
 }

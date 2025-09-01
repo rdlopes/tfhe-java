@@ -29,4 +29,8 @@ public class ServerKey extends AddressLayoutPointer {
   public void setAsKey() {
     executeWithErrorHandling(() -> set_server_key(getValue()));
   }
+
+  public void destroy() {
+    cleanNativeResources();
+  }
 }

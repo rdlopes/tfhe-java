@@ -38,4 +38,8 @@ public class CompressedServerKey extends AddressLayoutPointer {
     executeWithErrorHandling(() -> compressed_server_key_decompress(getValue(), serverKey.getAddress()));
     return serverKey;
   }
+
+  public void destroy() {
+    cleanNativeResources();
+  }
 }
