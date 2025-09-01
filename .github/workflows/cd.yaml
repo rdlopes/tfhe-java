@@ -1,7 +1,7 @@
 name: CD
 
 env:
-  JAVA_VERSION: '24'
+  JAVA_VERSION: '25-ea'
   JAVA_DISTRIBUTION: 'temurin'
 
 on:

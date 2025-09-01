@@ -23,7 +23,7 @@
 
   <properties>
     <!-- Project properties -->
-    <java.version>24</java.version>
+    <java.version>25</java.version>
     <native.basedir>${project.basedir}/.native</native.basedir>
     <native-libs.basedir>${native.basedir}/libs</native-libs.basedir>
     <native-bindings.basedir>${native.basedir}/bindings</native-bindings.basedir>
