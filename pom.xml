@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.rdlopes</groupId>
@@ -9,7 +8,7 @@
   </parent>
 
   <artifactId>tfhe-java</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
+  <version>0.9.0</version>
   <name>TFHE Java</name>
   <description>TFHE encryption scheme for Java</description>
   <url>https://github.com/rdlopes/tfhe-java</url>
@@ -17,7 +16,7 @@
   <scm>
     <connection>scm:git:https://github.com/rdlopes/${project.artifactId}.git</connection>
     <developerConnection>scm:git:https://github.com/rdlopes/${project.artifactId}.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>0.9.0</tag>
     <url>https://github.com/rdlopes/${project.artifactId}</url>
   </scm>
 
@@ -28,8 +27,7 @@
     <native-libs.basedir>${native.basedir}/libs</native-libs.basedir>
     <native-bindings.basedir>${native.basedir}/bindings</native-bindings.basedir>
     <native-libs.output.directory>${project.build.outputDirectory}/native</native-libs.output.directory>
-    <native-bindings.output.directory>${project.build.directory}/generated-sources/tfhe-rs
-    </native-bindings.output.directory>
+    <native-bindings.output.directory>${project.build.directory}/generated-sources/tfhe-rs</native-bindings.output.directory>
     <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
     <!--suppress XmlUnresolvedReference -->
     <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
@@ -101,8 +99,7 @@
             <RUST_BACKTRACE>full</RUST_BACKTRACE>
           </environmentVariables>
           <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
-            -Djava.library.path=${java.library.path}
-          </argLine>
+            -Djava.library.path=${java.library.path}</argLine>
           <excludedGroups>largeBitSize</excludedGroups>
         </configuration>
       </plugin>
