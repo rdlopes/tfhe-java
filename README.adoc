@@ -1,4 +1,4 @@
-= TFHE Java image:{badges}/License-MIT-yellow.svg[link={license},title=MIT License]
+= TFHE Java image:{maven-badge}[link={maven-central},window=_blank]
 :author:        Rui LOPES
 :owner:         rdlopes
 :email:         mailto:rui.d.lopes@me.com
@@ -9,12 +9,15 @@
 :ci:            {repo}/actions/workflows/ci.yaml
 :cd:            {repo}/actions/workflows/cd.yaml
 :linkedin:      https://www.linkedin.com/in/rdlopes-fr
-:badges:        https://img.shields.io/badge
+:badges:        https://img.shields.io
+:maven-central: https://central.sonatype.com/artifact/io.github.rdlopes/{project}
+:maven-badge:   {badges}/maven-central/v/io.github.rdlopes/tfhe-java
 :license:       https://opensource.org/licenses/MIT
 
 image:{native}/badge.svg[link={native},window=_blank]
 image:{ci}/badge.svg[link={ci},window=_blank]
 image:{cd}/badge.svg[link={cd},window=_blank]
+image:{badges}/badge/License-MIT-yellow.svg[link={license},title=MIT License]
 
 https://docs.zama.ai/tfhe-rs[Zama TFHE^] wrapper enabling homomorphic encryption in Java using the Foreign Function & Memory API (Project Panama).
 
@@ -87,6 +90,6 @@ A copy of their license is available within the jar in `/native/LICENSE` file.
 
 == Author
 
-image:{badges}/By_Mail-white?style=social&logo=icloud&label=Rui_LOPES[link={email},window=_blank]
+image:{badges}/badge/By_Mail-white?style=social&logo=icloud&label=Rui_LOPES[link={email},window=_blank]
 
-image:{badges}/On_LinkedIn-white?style=social&logo=logmein&label=Rui_LOPES[link={linkedin},window=_blank]
+image:{badges}/badge/On_LinkedIn-white?style=social&logo=logmein&label=Rui_LOPES[link={linkedin},window=_blank]
