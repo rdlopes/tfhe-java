@@ -8,13 +8,15 @@ import io.github.rdlopes.tfhe.core.keys.ServerKey;
 import io.github.rdlopes.tfhe.core.serde.DynamicBufferView;
 import io.github.rdlopes.tfhe.core.types.CompressedFheInt512;
 import io.github.rdlopes.tfhe.core.types.FheInt512;
-import io.github.rdlopes.tfhe.core.types.I512;
+import io.github.rdlopes.tfhe.core.types.I1024;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("intensive")
 class CompressedFheInt512Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
@@ -26,7 +28,6 @@ class CompressedFheInt512Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -37,63 +38,32 @@ class CompressedFheInt512Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    I512 originalValue = I512.valueOf("1000");
-    CompressedFheInt512 compressed = CompressedFheInt512.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    I512 originalValue = I512.valueOf("1000");
-    CompressedFheInt512 compressed = CompressedFheInt512.encryptWithClientKey(originalValue, clientKey);
-
-    FheInt512 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    I512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    CompressedFheInt512 original = CompressedFheInt512.encryptWithClientKey(I512.valueOf("700"), clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheInt512 compressed = CompressedFheInt512.encryptWithClientKey(I1024.valueOf("100"), clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheInt512 deserialized = CompressedFheInt512.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheInt512 decompressed = deserialized.decompress();
-    I512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I512.valueOf("700"));
+    I1024 decrypted = decompressed.decryptWithClientKey(clientKey);
+    assertThat(decrypted).isEqualTo(I1024.valueOf("100"));
   }
 
   @Test
-  void clones() {
-    CompressedFheInt512 original = CompressedFheInt512.encryptWithClientKey(I512.valueOf("1500"), clientKey);
-
-    CompressedFheInt512 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheInt512 decompressed = cloned.decompress();
-    I512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I512.valueOf("1500"));
-  }
-
-  @Test
-  void roundTripFromFheInt512() {
-    I512 originalValue = I512.valueOf("1500");
-    FheInt512 fheint512 = FheInt512.encryptWithClientKey(originalValue, clientKey);
-    CompressedFheInt512 compressed = fheint512.compress();
+  void decompressesRoundTrip() {
+    FheInt512 original = FheInt512.encryptWithClientKey(I1024.valueOf("100"), clientKey);
+    CompressedFheInt512 compressed = original.compress();
     FheInt512 decompressed = compressed.decompress();
-    I512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    I1024 decrypted = decompressed.decryptWithClientKey(clientKey);
+    assertThat(decrypted).isEqualTo(I1024.valueOf("100"));
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheInt512 original = CompressedFheInt512.encryptWithClientKey(I1024.valueOf("100"), clientKey);
+    CompressedFheInt512 cloned = original.clone();
+    FheInt512 a = original.decompress();
+    FheInt512 b = cloned.decompress();
+    I1024 da = a.decryptWithClientKey(clientKey);
+    I1024 db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

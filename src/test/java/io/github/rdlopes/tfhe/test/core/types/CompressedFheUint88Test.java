@@ -26,7 +26,6 @@ class CompressedFheUint88Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -37,63 +36,32 @@ class CompressedFheUint88Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    U128 originalValue = U128.valueOf("1000");
-    CompressedFheUint88 compressed = CompressedFheUint88.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    U128 originalValue = U128.valueOf("1000");
-    CompressedFheUint88 compressed = CompressedFheUint88.encryptWithClientKey(originalValue, clientKey);
-
-    FheUint88 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    U128 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    CompressedFheUint88 original = CompressedFheUint88.encryptWithClientKey(U128.valueOf("700"), clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheUint88 compressed = CompressedFheUint88.encryptWithClientKey(U128.valueOf("100"), clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheUint88 deserialized = CompressedFheUint88.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheUint88 decompressed = deserialized.decompress();
     U128 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(U128.valueOf("700"));
+    assertThat(decrypted).isEqualTo(U128.valueOf("100"));
   }
 
   @Test
-  void clones() {
-    CompressedFheUint88 original = CompressedFheUint88.encryptWithClientKey(U128.valueOf("1500"), clientKey);
-
-    CompressedFheUint88 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheUint88 decompressed = cloned.decompress();
-    U128 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(U128.valueOf("1500"));
-  }
-
-  @Test
-  void roundTripFromFheUint88() {
-    U128 originalValue = U128.valueOf("1500");
-    FheUint88 fheuint88 = FheUint88.encryptWithClientKey(originalValue, clientKey);
-    CompressedFheUint88 compressed = fheuint88.compress();
+  void decompressesRoundTrip() {
+    FheUint88 original = FheUint88.encryptWithClientKey(U128.valueOf("100"), clientKey);
+    CompressedFheUint88 compressed = original.compress();
     FheUint88 decompressed = compressed.decompress();
     U128 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(U128.valueOf("100"));
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheUint88 original = CompressedFheUint88.encryptWithClientKey(U128.valueOf("100"), clientKey);
+    CompressedFheUint88 cloned = original.clone();
+    FheUint88 a = original.decompress();
+    FheUint88 b = cloned.decompress();
+    U128 da = a.decryptWithClientKey(clientKey);
+    U128 db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

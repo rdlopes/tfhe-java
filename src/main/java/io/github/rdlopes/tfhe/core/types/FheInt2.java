@@ -18,28 +18,30 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
     super(FheInt2.class, TfheWrapper::fhe_int2_destroy);
   }
 
-  public static FheInt2 encryptWithClientKey(byte clearValue, ClientKey clientKey) {
-    FheInt2 fheint2 = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_try_encrypt_with_client_key_i8(clearValue, clientKey.getValue(), fheint2.getAddress()));
-    return fheint2;
+  public static FheInt2
+  encryptWithClientKey(byte clearValue, ClientKey clientKey) {
+    FheInt2 fhe = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_try_encrypt_with_client_key_i8(clearValue, clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt2 encryptWithPublicKey(byte clearValue, PublicKey publicKey) {
-    FheInt2 fheint2 = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_try_encrypt_with_public_key_i8(clearValue, publicKey.getValue(), fheint2.getAddress()));
-    return fheint2;
+  public static FheInt2
+  encryptWithPublicKey(byte clearValue, PublicKey publicKey) {
+    FheInt2 fhe = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_try_encrypt_with_public_key_i8(clearValue, publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt2 encryptTrivial(byte clearValue) {
-    FheInt2 fheint2 = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_try_encrypt_trivial_i8(clearValue, fheint2.getAddress()));
-    return fheint2;
+    FheInt2 fhe = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_try_encrypt_trivial_i8(clearValue, fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt2 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt2 fheint2 = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint2.getAddress()));
-    return fheint2;
+    FheInt2 fhe = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -50,8 +52,8 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public byte decryptWithClientKey(ClientKey clientKey) {
+  public byte
+  decryptWithClientKey(ClientKey clientKey) {
     MemorySegment clearValue = ARENA.allocate(C_CHAR);
     executeWithErrorHandling(() -> fhe_int2_decrypt(getValue(), clientKey.getValue(), clearValue));
     return clearValue.get(C_CHAR, 0);
@@ -62,38 +64,6 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
     int result = fhe_int2_try_decrypt_trivial(getValue(), clearValue);
     return result == 0 ? clearValue.get(C_CHAR, 0) : null;
   }
-
-
-  public FheInt2 add(FheInt2 other) {
-    FheInt2 result = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt2 other) {
-    executeWithErrorHandling(() -> fhe_int2_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt2 sub(FheInt2 other) {
-    FheInt2 result = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt2 other) {
-    executeWithErrorHandling(() -> fhe_int2_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt2 mul(FheInt2 other) {
-    FheInt2 result = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt2 other) {
-    executeWithErrorHandling(() -> fhe_int2_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt2 and(FheInt2 other) {
     FheInt2 result = new FheInt2();
@@ -125,6 +95,103 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int2_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheInt2 scalarAnd(byte scalar) {
+    FheInt2 result = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_scalar_bitand(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(byte scalar) {
+    executeWithErrorHandling(() -> fhe_int2_scalar_bitand_assign(getValue(), scalar));
+  }
+
+  public FheInt2 scalarOr(byte scalar) {
+    FheInt2 result = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_scalar_bitor(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(byte scalar) {
+    executeWithErrorHandling(() -> fhe_int2_scalar_bitor_assign(getValue(), scalar));
+  }
+
+  public FheInt2 scalarXor(byte scalar) {
+    FheInt2 result = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_scalar_bitxor(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(byte scalar) {
+    executeWithErrorHandling(() -> fhe_int2_scalar_bitxor_assign(getValue(), scalar));
+  }
+
+  public FheBool eq(FheInt2 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int2_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt2 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int2_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(byte scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int2_scalar_eq(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(byte scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int2_scalar_ne(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt2 compress() {
+    CompressedFheInt2 compressed = new CompressedFheInt2();
+    executeWithErrorHandling(() -> fhe_int2_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt2 clone() {
+    FheInt2 cloned = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt2 add(FheInt2 other) {
+    FheInt2 result = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt2 other) {
+    executeWithErrorHandling(() -> fhe_int2_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt2 sub(FheInt2 other) {
+    FheInt2 result = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt2 other) {
+    executeWithErrorHandling(() -> fhe_int2_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt2 mul(FheInt2 other) {
+    FheInt2 result = new FheInt2();
+    executeWithErrorHandling(() -> fhe_int2_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt2 other) {
+    executeWithErrorHandling(() -> fhe_int2_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheInt2 scalarAdd(byte scalar) {
     FheInt2 result = new FheInt2();
@@ -156,20 +223,6 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int2_scalar_mul_assign(getValue(), scalar));
   }
 
-
-  public FheBool eq(FheInt2 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int2_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheInt2 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int2_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheInt2 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int2_ge(getValue(), other.getValue(), result.getAddress()));
@@ -191,18 +244,6 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheInt2 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int2_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(byte scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int2_scalar_eq(getValue(), scalar, result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(byte scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int2_scalar_ne(getValue(), scalar, result.getAddress()));
     return result;
   }
 
@@ -231,17 +272,4 @@ public class FheInt2 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheInt2 compress() {
-    CompressedFheInt2 compressed = new CompressedFheInt2();
-    executeWithErrorHandling(() -> fhe_int2_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt2 clone() {
-    FheInt2 fheint2 = new FheInt2();
-    executeWithErrorHandling(() -> fhe_int2_clone(getValue(), fheint2.getAddress()));
-    return fheint2;
-  }
 }

@@ -16,15 +16,15 @@ public class CompressedFheBool extends AddressLayoutPointer implements Cloneable
   }
 
   public static CompressedFheBool encryptWithClientKey(boolean clearValue, ClientKey clientKey) {
-    CompressedFheBool compressedFheBool = new CompressedFheBool();
-    executeWithErrorHandling(() -> compressed_fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), compressedFheBool.getAddress()));
-    return compressedFheBool;
+    CompressedFheBool compressed = new CompressedFheBool();
+    executeWithErrorHandling(() -> compressed_fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheBool deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheBool compressedFheBool = new CompressedFheBool();
-    executeWithErrorHandling(() -> compressed_fhe_bool_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheBool.getAddress()));
-    return compressedFheBool;
+    CompressedFheBool compressed = new CompressedFheBool();
+    executeWithErrorHandling(() -> compressed_fhe_bool_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheBool extends AddressLayoutPointer implements Cloneable
   }
 
   public FheBool decompress() {
-    FheBool fheBool = new FheBool();
-    executeWithErrorHandling(() -> compressed_fhe_bool_decompress(getValue(), fheBool.getAddress()));
-    return fheBool;
+    FheBool fhe = new FheBool();
+    executeWithErrorHandling(() -> compressed_fhe_bool_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheBool clone() {
-    CompressedFheBool compressedFheBool = new CompressedFheBool();
-    executeWithErrorHandling(() -> compressed_fhe_bool_clone(getValue(), compressedFheBool.getAddress()));
-    return compressedFheBool;
+    CompressedFheBool cloned = new CompressedFheBool();
+    executeWithErrorHandling(() -> compressed_fhe_bool_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

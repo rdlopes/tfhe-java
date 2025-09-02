@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FheInt12Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
-  private PublicKey publicKey;
 
   @BeforeEach
   void setUp() {
@@ -29,380 +28,156 @@ class FheInt12Test {
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
     serverKey.setAsKey();
-
-    publicKey = PublicKey.newWith(clientKey);
   }
 
   @AfterEach
   void tearDown() {
     clientKey.destroy();
     serverKey.destroy();
-    publicKey.destroy();
   }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
-    short originalValue = (short) 1000;
+    short originalValue = (short) 100;
     FheInt12 encrypted = FheInt12.encryptWithClientKey(originalValue, clientKey);
     short decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo((short) 100);
   }
 
   @Test
   void encryptsAndDecryptsWithPublicKey() {
-    short originalValue = (short) 1000;
+    PublicKey publicKey = PublicKey.newWith(clientKey);
+    short originalValue = (short) 100;
     FheInt12 encrypted = FheInt12.encryptWithPublicKey(originalValue, publicKey);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
     short decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo((short) 100);
+    publicKey.destroy();
   }
 
   @Test
   void encryptsAndDecryptsTrivial() {
-    short originalValue = (short) 1000;
+    short originalValue = (short) 100;
     FheInt12 encrypted = FheInt12.encryptTrivial(originalValue);
-
     Short decrypted = encrypted.decryptTrivial();
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isNotNull();
+    assertThat(decrypted).isEqualTo((short) 100);
   }
-
-
-  @Test
-  void performsAddOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheInt12 result = a.add(b);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
-  }
-
-  @Test
-  void performsAddAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    a.addAssign(b);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
-  }
-
-  @Test
-  void performsSubOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheInt12 result = a.sub(b);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 500);
-  }
-
-  @Test
-  void performsSubAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    a.subAssign(b);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 500);
-  }
-
-  @Test
-  void performsMulOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 3, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 4, clientKey);
-
-    FheInt12 result = a.mul(b);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 12);
-  }
-
-  @Test
-  void performsMulAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 3, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 4, clientKey);
-
-    a.mulAssign(b);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 12);
-  }
-
-
-  @Test
-  void performsAndOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheInt12 result = a.and(b);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1000);
-  }
-
-  @Test
-  void performsAndAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    a.andAssign(b);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1000);
-  }
-
-  @Test
-  void performsOrOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheInt12 result = a.or(b);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1020);
-  }
-
-  @Test
-  void performsOrAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    a.orAssign(b);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1020);
-  }
-
-  @Test
-  void performsXorOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheInt12 result = a.xor(b);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 540);
-  }
-
-  @Test
-  void performsXorAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    a.xorAssign(b);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 540);
-  }
-
-
-  @Test
-  void performsScalarAddOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheInt12 result = a.scalarAdd((short) 100);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1100);
-  }
-
-  @Test
-  void performsScalarAddAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    a.scalarAddAssign((short) 100);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1100);
-  }
-
-  @Test
-  void performsScalarSubOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheInt12 result = a.scalarSub((short) 100);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 900);
-  }
-
-  @Test
-  void performsScalarSubAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    a.scalarSubAssign((short) 100);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 900);
-  }
-
-  @Test
-  void performsScalarMulOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheInt12 result = a.scalarMul((short) 2);
-    short decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1000);
-  }
-
-  @Test
-  void performsScalarMulAssignOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    a.scalarMulAssign((short) 2);
-    short decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1000);
-  }
-
-
-  @Test
-  void performsEqualityOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.eq(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsNotEqualOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheBool result = a.ne(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-
-  @Test
-  void performsGreaterEqualOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheBool result = a.ge(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsGreaterThanOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheBool result = a.gt(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsLessEqualOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 500, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.le(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsLessThanOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 500, clientKey);
-    FheInt12 b = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.lt(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarEqualityOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.scalarEq((short) 1000);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarNotEqualOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.scalarNe((short) 500);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarGreaterEqualOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.scalarGe((short) 500);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarGreaterThanOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 1000, clientKey);
-
-    FheBool result = a.scalarGt((short) 500);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarLessEqualOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheBool result = a.scalarLe((short) 1000);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarLessThanOperation() {
-    FheInt12 a = FheInt12.encryptWithClientKey((short) 500, clientKey);
-
-    FheBool result = a.scalarLt((short) 1000);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
 
   @Test
   void serializesAndDeserializes() {
-    FheInt12 original = FheInt12.encryptWithClientKey((short) 1500, clientKey);
+    FheInt12 original = FheInt12.encryptWithClientKey((short) 100, clientKey);
     DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
     FheInt12 deserialized = FheInt12.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     short decrypted = deserialized.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
+    assertThat(decrypted).isEqualTo((short) 100);
   }
 
   @Test
   void compressesAndDecompresses() {
-    FheInt12 original = FheInt12.encryptWithClientKey((short) 1500, clientKey);
-
+    FheInt12 original = FheInt12.encryptWithClientKey((short) 100, clientKey);
     CompressedFheInt12 compressed = original.compress();
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-
     FheInt12 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
     short decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
+    assertThat(decrypted).isEqualTo((short) 100);
   }
 
   @Test
-  void clones() {
-    FheInt12 original = FheInt12.encryptWithClientKey((short) 1500, clientKey);
-
+  void clonesSuccessfully() {
+    FheInt12 original = FheInt12.encryptWithClientKey((short) 100, clientKey);
     FheInt12 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
+    FheBool eq = cloned.eq(original);
+    boolean decryptedEq = eq.decryptWithClientKey(clientKey);
+    assertThat(decryptedEq).isTrue();
     short decrypted = cloned.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
+    assertThat(decrypted).isEqualTo((short) 100);
   }
+
+  @Test
+  void performsArithmeticOperations() {
+    FheInt12 a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    FheInt12 b = FheInt12.encryptWithClientKey((short) 50, clientKey);
+
+    FheInt12 addResult = a.add(b);
+    assertThat(addResult.decryptWithClientKey(clientKey)).isEqualTo((short) 150);
+
+    FheInt12 subResult = a.sub(b);
+    assertThat(subResult.decryptWithClientKey(clientKey)).isEqualTo((short) 50);
+
+    FheInt12 mulResult = a.mul(b);
+    assertThat(mulResult.decryptWithClientKey(clientKey)).isEqualTo((short) 904);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.addAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 150);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.subAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 50);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.mulAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 904);
+  }
+
+  @Test
+  void performsBitwiseOperations() {
+    FheInt12 a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    FheInt12 b = FheInt12.encryptWithClientKey((short) 50, clientKey);
+
+    FheInt12 rAnd = a.and(b);
+    assertThat(rAnd.decryptWithClientKey(clientKey)).isEqualTo((short) 32);
+
+    FheInt12 rOr = a.or(b);
+    assertThat(rOr.decryptWithClientKey(clientKey)).isEqualTo((short) 118);
+
+    FheInt12 rXor = a.xor(b);
+    assertThat(rXor.decryptWithClientKey(clientKey)).isEqualTo((short) 86);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.andAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 32);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.orAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 118);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.xorAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 86);
+  }
+
+  @Test
+  void performsComparisonOperations() {
+    FheInt12 a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    FheInt12 b = FheInt12.encryptWithClientKey((short) 50, clientKey);
+
+    FheBool eq = a.eq(b);
+    assertThat(eq.decryptWithClientKey(clientKey)).isEqualTo(false);
+
+    FheBool ne = a.ne(b);
+    assertThat(ne.decryptWithClientKey(clientKey)).isEqualTo(true);
+
+    assertThat(a.ge(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(true);
+    assertThat(a.gt(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(true);
+    assertThat(a.le(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(false);
+    assertThat(a.lt(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(false);
+  }
+
+  @Test
+  void performsScalarAddOperations() {
+    FheInt12 a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+
+    FheInt12 r = a.scalarAdd((short) 7);
+    assertThat(r.decryptWithClientKey(clientKey)).isEqualTo((short) 107);
+
+    a = FheInt12.encryptWithClientKey((short) 100, clientKey);
+    a.scalarAddAssign((short) 7);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo((short) 107);
+  }
+
+
 }

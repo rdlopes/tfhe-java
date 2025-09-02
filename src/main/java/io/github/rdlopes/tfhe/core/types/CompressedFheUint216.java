@@ -16,15 +16,15 @@ public class CompressedFheUint216 extends AddressLayoutPointer implements Clonea
   }
 
   public static CompressedFheUint216 encryptWithClientKey(U256 clearValue, ClientKey clientKey) {
-    CompressedFheUint216 compressedFheUint216 = new CompressedFheUint216();
-    executeWithErrorHandling(() -> compressed_fhe_uint216_try_encrypt_with_client_key_u256(clearValue.getAddress(), clientKey.getValue(), compressedFheUint216.getAddress()));
-    return compressedFheUint216;
+    CompressedFheUint216 compressed = new CompressedFheUint216();
+    executeWithErrorHandling(() -> compressed_fhe_uint216_try_encrypt_with_client_key_u256(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheUint216 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheUint216 compressedFheUint216 = new CompressedFheUint216();
-    executeWithErrorHandling(() -> compressed_fhe_uint216_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheUint216.getAddress()));
-    return compressedFheUint216;
+    CompressedFheUint216 compressed = new CompressedFheUint216();
+    executeWithErrorHandling(() -> compressed_fhe_uint216_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheUint216 extends AddressLayoutPointer implements Clonea
   }
 
   public FheUint216 decompress() {
-    FheUint216 fheuint216 = new FheUint216();
-    executeWithErrorHandling(() -> compressed_fhe_uint216_decompress(getValue(), fheuint216.getAddress()));
-    return fheuint216;
+    FheUint216 fhe = new FheUint216();
+    executeWithErrorHandling(() -> compressed_fhe_uint216_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheUint216 clone() {
-    CompressedFheUint216 compressedFheUint216 = new CompressedFheUint216();
-    executeWithErrorHandling(() -> compressed_fhe_uint216_clone(getValue(), compressedFheUint216.getAddress()));
-    return compressedFheUint216;
+    CompressedFheUint216 cloned = new CompressedFheUint216();
+    executeWithErrorHandling(() -> compressed_fhe_uint216_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

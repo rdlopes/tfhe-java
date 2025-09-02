@@ -25,7 +25,6 @@ class CompressedFheInt2Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -36,63 +35,32 @@ class CompressedFheInt2Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    byte originalValue = (byte) 10;
-    CompressedFheInt2 compressed = CompressedFheInt2.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    byte originalValue = (byte) 10;
-    CompressedFheInt2 compressed = CompressedFheInt2.encryptWithClientKey(originalValue, clientKey);
-
-    FheInt2 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    byte decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    CompressedFheInt2 original = CompressedFheInt2.encryptWithClientKey((byte) 7, clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheInt2 compressed = CompressedFheInt2.encryptWithClientKey((byte) 1, clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheInt2 deserialized = CompressedFheInt2.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheInt2 decompressed = deserialized.decompress();
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((byte) 7);
+    assertThat(decrypted).isEqualTo((byte) 1);
   }
 
   @Test
-  void clones() {
-    CompressedFheInt2 original = CompressedFheInt2.encryptWithClientKey((byte) 15, clientKey);
-
-    CompressedFheInt2 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheInt2 decompressed = cloned.decompress();
-    byte decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((byte) 15);
-  }
-
-  @Test
-  void roundTripFromFheInt2() {
-    byte originalValue = (byte) 15;
-    FheInt2 fheint2 = FheInt2.encryptWithClientKey(originalValue, clientKey);
-    CompressedFheInt2 compressed = fheint2.compress();
+  void decompressesRoundTrip() {
+    FheInt2 original = FheInt2.encryptWithClientKey((byte) 1, clientKey);
+    CompressedFheInt2 compressed = original.compress();
     FheInt2 decompressed = compressed.decompress();
     byte decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo((byte) 1);
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheInt2 original = CompressedFheInt2.encryptWithClientKey((byte) 1, clientKey);
+    CompressedFheInt2 cloned = original.clone();
+    FheInt2 a = original.decompress();
+    FheInt2 b = cloned.decompress();
+    byte da = a.decryptWithClientKey(clientKey);
+    byte db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

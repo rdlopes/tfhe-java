@@ -16,15 +16,15 @@ public class CompressedFheUint1024 extends AddressLayoutPointer implements Clone
   }
 
   public static CompressedFheUint1024 encryptWithClientKey(U1024 clearValue, ClientKey clientKey) {
-    CompressedFheUint1024 compressedFheUint1024 = new CompressedFheUint1024();
-    executeWithErrorHandling(() -> compressed_fhe_uint1024_try_encrypt_with_client_key_u1024(clearValue.getAddress(), clientKey.getValue(), compressedFheUint1024.getAddress()));
-    return compressedFheUint1024;
+    CompressedFheUint1024 compressed = new CompressedFheUint1024();
+    executeWithErrorHandling(() -> compressed_fhe_uint1024_try_encrypt_with_client_key_u1024(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheUint1024 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheUint1024 compressedFheUint1024 = new CompressedFheUint1024();
-    executeWithErrorHandling(() -> compressed_fhe_uint1024_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheUint1024.getAddress()));
-    return compressedFheUint1024;
+    CompressedFheUint1024 compressed = new CompressedFheUint1024();
+    executeWithErrorHandling(() -> compressed_fhe_uint1024_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheUint1024 extends AddressLayoutPointer implements Clone
   }
 
   public FheUint1024 decompress() {
-    FheUint1024 fheuint1024 = new FheUint1024();
-    executeWithErrorHandling(() -> compressed_fhe_uint1024_decompress(getValue(), fheuint1024.getAddress()));
-    return fheuint1024;
+    FheUint1024 fhe = new FheUint1024();
+    executeWithErrorHandling(() -> compressed_fhe_uint1024_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheUint1024 clone() {
-    CompressedFheUint1024 compressedFheUint1024 = new CompressedFheUint1024();
-    executeWithErrorHandling(() -> compressed_fhe_uint1024_clone(getValue(), compressedFheUint1024.getAddress()));
-    return compressedFheUint1024;
+    CompressedFheUint1024 cloned = new CompressedFheUint1024();
+    executeWithErrorHandling(() -> compressed_fhe_uint1024_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

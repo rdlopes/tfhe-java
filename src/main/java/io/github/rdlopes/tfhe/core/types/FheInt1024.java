@@ -16,28 +16,30 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
     super(FheInt1024.class, TfheWrapper::fhe_int1024_destroy);
   }
 
-  public static FheInt1024 encryptWithClientKey(I1024 clearValue, ClientKey clientKey) {
-    FheInt1024 fheint1024 = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_try_encrypt_with_client_key_i1024(clearValue.getAddress(), clientKey.getValue(), fheint1024.getAddress()));
-    return fheint1024;
+  public static FheInt1024
+  encryptWithClientKey(I1024 clearValue, ClientKey clientKey) {
+    FheInt1024 fhe = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_try_encrypt_with_client_key_i1024(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt1024 encryptWithPublicKey(I1024 clearValue, PublicKey publicKey) {
-    FheInt1024 fheint1024 = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_try_encrypt_with_public_key_i1024(clearValue.getAddress(), publicKey.getValue(), fheint1024.getAddress()));
-    return fheint1024;
+  public static FheInt1024
+  encryptWithPublicKey(I1024 clearValue, PublicKey publicKey) {
+    FheInt1024 fhe = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_try_encrypt_with_public_key_i1024(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt1024 encryptTrivial(I1024 clearValue) {
-    FheInt1024 fheint1024 = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_try_encrypt_trivial_i1024(clearValue.getAddress(), fheint1024.getAddress()));
-    return fheint1024;
+    FheInt1024 fhe = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_try_encrypt_trivial_i1024(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt1024 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt1024 fheint1024 = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint1024.getAddress()));
-    return fheint1024;
+    FheInt1024 fhe = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public I1024 decryptWithClientKey(ClientKey clientKey) {
+  public I1024
+  decryptWithClientKey(ClientKey clientKey) {
     I1024 clearValue = new I1024();
     executeWithErrorHandling(() -> fhe_int1024_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int1024_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheInt1024 add(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt1024 other) {
-    executeWithErrorHandling(() -> fhe_int1024_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt1024 sub(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt1024 other) {
-    executeWithErrorHandling(() -> fhe_int1024_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt1024 mul(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt1024 other) {
-    executeWithErrorHandling(() -> fhe_int1024_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt1024 and(FheInt1024 other) {
     FheInt1024 result = new FheInt1024();
@@ -123,6 +93,103 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int1024_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheInt1024 scalarAnd(I1024 scalar) {
+    FheInt1024 result = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int1024_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt1024 scalarOr(I1024 scalar) {
+    FheInt1024 result = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int1024_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt1024 scalarXor(I1024 scalar) {
+    FheInt1024 result = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int1024_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheInt1024 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int1024_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt1024 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int1024_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(I1024 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int1024_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I1024 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int1024_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt1024 compress() {
+    CompressedFheInt1024 compressed = new CompressedFheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt1024 clone() {
+    FheInt1024 cloned = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt1024 add(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt1024 other) {
+    executeWithErrorHandling(() -> fhe_int1024_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt1024 sub(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt1024 other) {
+    executeWithErrorHandling(() -> fhe_int1024_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt1024 mul(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
+    executeWithErrorHandling(() -> fhe_int1024_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt1024 other) {
+    executeWithErrorHandling(() -> fhe_int1024_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheInt1024 scalarAdd(I1024 scalar) {
     FheInt1024 result = new FheInt1024();
@@ -154,20 +221,6 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int1024_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheInt1024 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int1024_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheInt1024 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int1024_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheInt1024 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int1024_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheInt1024 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int1024_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(I1024 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int1024_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(I1024 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int1024_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheInt1024 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheInt1024 compress() {
-    CompressedFheInt1024 compressed = new CompressedFheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt1024 clone() {
-    FheInt1024 fheint1024 = new FheInt1024();
-    executeWithErrorHandling(() -> fhe_int1024_clone(getValue(), fheint1024.getAddress()));
-    return fheint1024;
-  }
 }

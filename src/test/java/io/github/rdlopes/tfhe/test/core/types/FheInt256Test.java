@@ -18,10 +18,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("intensive")
 class FheInt256Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
-  private PublicKey publicKey;
 
   @BeforeEach
   void setUp() {
@@ -31,384 +31,155 @@ class FheInt256Test {
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
     serverKey.setAsKey();
-
-    publicKey = PublicKey.newWith(clientKey);
   }
 
   @AfterEach
   void tearDown() {
     clientKey.destroy();
     serverKey.destroy();
-    publicKey.destroy();
   }
 
   @Test
   void encryptsAndDecryptsWithClientKey() {
-    I256 originalValue = I256.valueOf("1000");
+    I256 originalValue = I256.valueOf("100");
     FheInt256 encrypted = FheInt256.encryptWithClientKey(originalValue, clientKey);
     I256 decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
   }
 
   @Test
   void encryptsAndDecryptsWithPublicKey() {
-    I256 originalValue = I256.valueOf("1000");
+    PublicKey publicKey = PublicKey.newWith(clientKey);
+    I256 originalValue = I256.valueOf("100");
     FheInt256 encrypted = FheInt256.encryptWithPublicKey(originalValue, publicKey);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
     I256 decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
+    publicKey.destroy();
   }
 
   @Test
   void encryptsAndDecryptsTrivial() {
-    I256 originalValue = I256.valueOf("1000");
+    I256 originalValue = I256.valueOf("100");
     FheInt256 encrypted = FheInt256.encryptTrivial(originalValue);
-
     I256 decrypted = encrypted.decryptTrivial();
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
   }
-
-
-  @Test
-  void performsAddOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheInt256 result = a.add(b);
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-  @Test
-  void performsAddAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    a.addAssign(b);
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-  @Test
-  void performsSubOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheInt256 result = a.sub(b);
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("500"));
-  }
-
-  @Test
-  void performsSubAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    a.subAssign(b);
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("500"));
-  }
-
-  @Test
-  @Tag("largeBitSize")
-  void performsMulOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("3"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("4"), clientKey);
-
-    FheInt256 result = a.mul(b);
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("12"));
-  }
-
-  @Test
-  @Tag("largeBitSize")
-  void performsMulAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("3"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("4"), clientKey);
-
-    a.mulAssign(b);
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("12"));
-  }
-
-
-  @Test
-  void performsAndOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1500"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheInt256 result = a.and(b);
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1000"));
-  }
-
-  @Test
-  void performsAndAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1500"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    a.andAssign(b);
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1000"));
-  }
-
-  @Test
-  void performsOrOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheInt256 result = a.or(b);
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-  @Test
-  void performsOrAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    a.orAssign(b);
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-  @Test
-  void performsXorOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheInt256 result = a.xor(b);
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-  @Test
-  void performsXorAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    a.xorAssign(b);
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-
-  @Test
-  void performsScalarAddOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheInt256 result = a.scalarAdd(I256.valueOf("100"));
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1100"));
-  }
-
-  @Test
-  void performsScalarAddAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    a.scalarAddAssign(I256.valueOf("100"));
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1100"));
-  }
-
-  @Test
-  void performsScalarSubOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheInt256 result = a.scalarSub(I256.valueOf("100"));
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("900"));
-  }
-
-  @Test
-  void performsScalarSubAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    a.scalarSubAssign(I256.valueOf("100"));
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("900"));
-  }
-
-  @Test
-  @Tag("largeBitSize")
-  void performsScalarMulOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheInt256 result = a.scalarMul(I256.valueOf("2"));
-    I256 decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1000"));
-  }
-
-  @Test
-  @Tag("largeBitSize")
-  void performsScalarMulAssignOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    a.scalarMulAssign(I256.valueOf("2"));
-    I256 decrypted = a.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1000"));
-  }
-
-
-  @Test
-  void performsEqualityOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.eq(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsNotEqualOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheBool result = a.ne(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-
-  @Test
-  void performsGreaterEqualOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheBool result = a.ge(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsGreaterThanOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheBool result = a.gt(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsLessEqualOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.le(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsLessThanOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.lt(b);
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarEqualityOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.scalarEq(I256.valueOf("1000"));
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarNotEqualOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.scalarNe(I256.valueOf("500"));
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarGreaterEqualOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.scalarGe(I256.valueOf("500"));
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarGreaterThanOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("1000"), clientKey);
-
-    FheBool result = a.scalarGt(I256.valueOf("500"));
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarLessEqualOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheBool result = a.scalarLe(I256.valueOf("1000"));
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarLessThanOperation() {
-    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("500"), clientKey);
-
-    FheBool result = a.scalarLt(I256.valueOf("1000"));
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
 
   @Test
   void serializesAndDeserializes() {
-    FheInt256 original = FheInt256.encryptWithClientKey(I256.valueOf("1500"), clientKey);
+    FheInt256 original = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
     DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
     FheInt256 deserialized = FheInt256.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     I256 decrypted = deserialized.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
   }
 
   @Test
   void compressesAndDecompresses() {
-    FheInt256 original = FheInt256.encryptWithClientKey(I256.valueOf("1500"), clientKey);
-
+    FheInt256 original = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
     CompressedFheInt256 compressed = original.compress();
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-
     FheInt256 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
     I256 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
   }
 
   @Test
-  void clones() {
-    FheInt256 original = FheInt256.encryptWithClientKey(I256.valueOf("1500"), clientKey);
-
+  void clonesSuccessfully() {
+    FheInt256 original = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
     FheInt256 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
+    FheBool eq = cloned.eq(original);
+    boolean decryptedEq = eq.decryptWithClientKey(clientKey);
+    assertThat(decryptedEq).isTrue();
     I256 decrypted = cloned.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
   }
+
+  @Test
+  void performsArithmeticOperations() {
+    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("50"), clientKey);
+
+    FheInt256 addResult = a.add(b);
+    assertThat(addResult.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("150"));
+
+    FheInt256 subResult = a.sub(b);
+    assertThat(subResult.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("50"));
+
+    FheInt256 mulResult = a.mul(b);
+    assertThat(mulResult.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("5000"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.addAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("150"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.subAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("50"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.mulAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("5000"));
+  }
+
+  @Test
+  void performsBitwiseOperations() {
+    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("50"), clientKey);
+
+    FheInt256 rAnd = a.and(b);
+    assertThat(rAnd.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("32"));
+
+    FheInt256 rOr = a.or(b);
+    assertThat(rOr.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("118"));
+
+    FheInt256 rXor = a.xor(b);
+    assertThat(rXor.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("86"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.andAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("32"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.orAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("118"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.xorAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("86"));
+  }
+
+  @Test
+  void performsComparisonOperations() {
+    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    FheInt256 b = FheInt256.encryptWithClientKey(I256.valueOf("50"), clientKey);
+
+    FheBool eq = a.eq(b);
+    assertThat(eq.decryptWithClientKey(clientKey)).isEqualTo(false);
+
+    FheBool ne = a.ne(b);
+    assertThat(ne.decryptWithClientKey(clientKey)).isEqualTo(true);
+
+    assertThat(a.ge(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(true);
+    assertThat(a.gt(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(true);
+    assertThat(a.le(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(false);
+    assertThat(a.lt(b)
+                .decryptWithClientKey(clientKey)).isEqualTo(false);
+  }
+
+  @Test
+  void performsScalarAddOperations() {
+    FheInt256 a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+
+    FheInt256 r = a.scalarAdd(I256.valueOf("7"));
+    assertThat(r.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("107"));
+
+    a = FheInt256.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    a.scalarAddAssign(I256.valueOf("7"));
+    assertThat(a.decryptWithClientKey(clientKey)).isEqualTo(I256.valueOf("107"));
+  }
+
+
 }

@@ -16,15 +16,15 @@ public class CompressedFheInt184 extends AddressLayoutPointer implements Cloneab
   }
 
   public static CompressedFheInt184 encryptWithClientKey(I256 clearValue, ClientKey clientKey) {
-    CompressedFheInt184 compressedFheInt184 = new CompressedFheInt184();
-    executeWithErrorHandling(() -> compressed_fhe_int184_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), compressedFheInt184.getAddress()));
-    return compressedFheInt184;
+    CompressedFheInt184 compressed = new CompressedFheInt184();
+    executeWithErrorHandling(() -> compressed_fhe_int184_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheInt184 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheInt184 compressedFheInt184 = new CompressedFheInt184();
-    executeWithErrorHandling(() -> compressed_fhe_int184_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheInt184.getAddress()));
-    return compressedFheInt184;
+    CompressedFheInt184 compressed = new CompressedFheInt184();
+    executeWithErrorHandling(() -> compressed_fhe_int184_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheInt184 extends AddressLayoutPointer implements Cloneab
   }
 
   public FheInt184 decompress() {
-    FheInt184 fheint184 = new FheInt184();
-    executeWithErrorHandling(() -> compressed_fhe_int184_decompress(getValue(), fheint184.getAddress()));
-    return fheint184;
+    FheInt184 fhe = new FheInt184();
+    executeWithErrorHandling(() -> compressed_fhe_int184_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheInt184 clone() {
-    CompressedFheInt184 compressedFheInt184 = new CompressedFheInt184();
-    executeWithErrorHandling(() -> compressed_fhe_int184_clone(getValue(), compressedFheInt184.getAddress()));
-    return compressedFheInt184;
+    CompressedFheInt184 cloned = new CompressedFheInt184();
+    executeWithErrorHandling(() -> compressed_fhe_int184_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

@@ -16,28 +16,30 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
     super(FheUint136.class, TfheWrapper::fhe_uint136_destroy);
   }
 
-  public static FheUint136 encryptWithClientKey(U256 clearValue, ClientKey clientKey) {
-    FheUint136 fheuint136 = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_try_encrypt_with_client_key_u256(clearValue.getAddress(), clientKey.getValue(), fheuint136.getAddress()));
-    return fheuint136;
+  public static FheUint136
+  encryptWithClientKey(U256 clearValue, ClientKey clientKey) {
+    FheUint136 fhe = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_try_encrypt_with_client_key_u256(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheUint136 encryptWithPublicKey(U256 clearValue, PublicKey publicKey) {
-    FheUint136 fheuint136 = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_try_encrypt_with_public_key_u256(clearValue.getAddress(), publicKey.getValue(), fheuint136.getAddress()));
-    return fheuint136;
+  public static FheUint136
+  encryptWithPublicKey(U256 clearValue, PublicKey publicKey) {
+    FheUint136 fhe = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_try_encrypt_with_public_key_u256(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheUint136 encryptTrivial(U256 clearValue) {
-    FheUint136 fheuint136 = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_try_encrypt_trivial_u256(clearValue.getAddress(), fheuint136.getAddress()));
-    return fheuint136;
+    FheUint136 fhe = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_try_encrypt_trivial_u256(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheUint136 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheUint136 fheuint136 = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheuint136.getAddress()));
-    return fheuint136;
+    FheUint136 fhe = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public U256 decryptWithClientKey(ClientKey clientKey) {
+  public U256
+  decryptWithClientKey(ClientKey clientKey) {
     U256 clearValue = new U256();
     executeWithErrorHandling(() -> fhe_uint136_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint136_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheUint136 add(FheUint136 other) {
-    FheUint136 result = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheUint136 other) {
-    executeWithErrorHandling(() -> fhe_uint136_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheUint136 sub(FheUint136 other) {
-    FheUint136 result = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheUint136 other) {
-    executeWithErrorHandling(() -> fhe_uint136_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheUint136 mul(FheUint136 other) {
-    FheUint136 result = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheUint136 other) {
-    executeWithErrorHandling(() -> fhe_uint136_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheUint136 and(FheUint136 other) {
     FheUint136 result = new FheUint136();
@@ -123,6 +93,103 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint136_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheUint136 scalarAnd(U256 scalar) {
+    FheUint136 result = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(U256 scalar) {
+    executeWithErrorHandling(() -> fhe_uint136_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheUint136 scalarOr(U256 scalar) {
+    FheUint136 result = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(U256 scalar) {
+    executeWithErrorHandling(() -> fhe_uint136_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheUint136 scalarXor(U256 scalar) {
+    FheUint136 result = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(U256 scalar) {
+    executeWithErrorHandling(() -> fhe_uint136_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheUint136 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint136_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheUint136 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint136_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(U256 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint136_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(U256 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint136_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheUint136 compress() {
+    CompressedFheUint136 compressed = new CompressedFheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheUint136 clone() {
+    FheUint136 cloned = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheUint136 add(FheUint136 other) {
+    FheUint136 result = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheUint136 other) {
+    executeWithErrorHandling(() -> fhe_uint136_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheUint136 sub(FheUint136 other) {
+    FheUint136 result = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheUint136 other) {
+    executeWithErrorHandling(() -> fhe_uint136_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheUint136 mul(FheUint136 other) {
+    FheUint136 result = new FheUint136();
+    executeWithErrorHandling(() -> fhe_uint136_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheUint136 other) {
+    executeWithErrorHandling(() -> fhe_uint136_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheUint136 scalarAdd(U256 scalar) {
     FheUint136 result = new FheUint136();
@@ -154,20 +221,6 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint136_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheUint136 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint136_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheUint136 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint136_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheUint136 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_uint136_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheUint136 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_uint136_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(U256 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint136_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(U256 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint136_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheUint136 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheUint136 compress() {
-    CompressedFheUint136 compressed = new CompressedFheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheUint136 clone() {
-    FheUint136 fheuint136 = new FheUint136();
-    executeWithErrorHandling(() -> fhe_uint136_clone(getValue(), fheuint136.getAddress()));
-    return fheuint136;
-  }
 }

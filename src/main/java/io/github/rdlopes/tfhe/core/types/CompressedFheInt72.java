@@ -16,15 +16,15 @@ public class CompressedFheInt72 extends AddressLayoutPointer implements Cloneabl
   }
 
   public static CompressedFheInt72 encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
-    CompressedFheInt72 compressedFheInt72 = new CompressedFheInt72();
-    executeWithErrorHandling(() -> compressed_fhe_int72_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), compressedFheInt72.getAddress()));
-    return compressedFheInt72;
+    CompressedFheInt72 compressed = new CompressedFheInt72();
+    executeWithErrorHandling(() -> compressed_fhe_int72_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheInt72 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheInt72 compressedFheInt72 = new CompressedFheInt72();
-    executeWithErrorHandling(() -> compressed_fhe_int72_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheInt72.getAddress()));
-    return compressedFheInt72;
+    CompressedFheInt72 compressed = new CompressedFheInt72();
+    executeWithErrorHandling(() -> compressed_fhe_int72_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheInt72 extends AddressLayoutPointer implements Cloneabl
   }
 
   public FheInt72 decompress() {
-    FheInt72 fheint72 = new FheInt72();
-    executeWithErrorHandling(() -> compressed_fhe_int72_decompress(getValue(), fheint72.getAddress()));
-    return fheint72;
+    FheInt72 fhe = new FheInt72();
+    executeWithErrorHandling(() -> compressed_fhe_int72_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheInt72 clone() {
-    CompressedFheInt72 compressedFheInt72 = new CompressedFheInt72();
-    executeWithErrorHandling(() -> compressed_fhe_int72_clone(getValue(), compressedFheInt72.getAddress()));
-    return compressedFheInt72;
+    CompressedFheInt72 cloned = new CompressedFheInt72();
+    executeWithErrorHandling(() -> compressed_fhe_int72_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

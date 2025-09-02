@@ -16,28 +16,30 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
     super(FheInt160.class, TfheWrapper::fhe_int160_destroy);
   }
 
-  public static FheInt160 encryptWithClientKey(I256 clearValue, ClientKey clientKey) {
-    FheInt160 fheint160 = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), fheint160.getAddress()));
-    return fheint160;
+  public static FheInt160
+  encryptWithClientKey(I256 clearValue, ClientKey clientKey) {
+    FheInt160 fhe = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt160 encryptWithPublicKey(I256 clearValue, PublicKey publicKey) {
-    FheInt160 fheint160 = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_try_encrypt_with_public_key_i256(clearValue.getAddress(), publicKey.getValue(), fheint160.getAddress()));
-    return fheint160;
+  public static FheInt160
+  encryptWithPublicKey(I256 clearValue, PublicKey publicKey) {
+    FheInt160 fhe = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_try_encrypt_with_public_key_i256(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt160 encryptTrivial(I256 clearValue) {
-    FheInt160 fheint160 = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_try_encrypt_trivial_i256(clearValue.getAddress(), fheint160.getAddress()));
-    return fheint160;
+    FheInt160 fhe = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_try_encrypt_trivial_i256(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt160 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt160 fheint160 = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint160.getAddress()));
-    return fheint160;
+    FheInt160 fhe = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public I256 decryptWithClientKey(ClientKey clientKey) {
+  public I256
+  decryptWithClientKey(ClientKey clientKey) {
     I256 clearValue = new I256();
     executeWithErrorHandling(() -> fhe_int160_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int160_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheInt160 add(FheInt160 other) {
-    FheInt160 result = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt160 other) {
-    executeWithErrorHandling(() -> fhe_int160_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt160 sub(FheInt160 other) {
-    FheInt160 result = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt160 other) {
-    executeWithErrorHandling(() -> fhe_int160_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt160 mul(FheInt160 other) {
-    FheInt160 result = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt160 other) {
-    executeWithErrorHandling(() -> fhe_int160_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt160 and(FheInt160 other) {
     FheInt160 result = new FheInt160();
@@ -123,6 +93,103 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int160_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheInt160 scalarAnd(I256 scalar) {
+    FheInt160 result = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(I256 scalar) {
+    executeWithErrorHandling(() -> fhe_int160_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt160 scalarOr(I256 scalar) {
+    FheInt160 result = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(I256 scalar) {
+    executeWithErrorHandling(() -> fhe_int160_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt160 scalarXor(I256 scalar) {
+    FheInt160 result = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(I256 scalar) {
+    executeWithErrorHandling(() -> fhe_int160_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheInt160 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int160_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt160 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int160_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(I256 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int160_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I256 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int160_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt160 compress() {
+    CompressedFheInt160 compressed = new CompressedFheInt160();
+    executeWithErrorHandling(() -> fhe_int160_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt160 clone() {
+    FheInt160 cloned = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt160 add(FheInt160 other) {
+    FheInt160 result = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt160 other) {
+    executeWithErrorHandling(() -> fhe_int160_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt160 sub(FheInt160 other) {
+    FheInt160 result = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt160 other) {
+    executeWithErrorHandling(() -> fhe_int160_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt160 mul(FheInt160 other) {
+    FheInt160 result = new FheInt160();
+    executeWithErrorHandling(() -> fhe_int160_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt160 other) {
+    executeWithErrorHandling(() -> fhe_int160_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheInt160 scalarAdd(I256 scalar) {
     FheInt160 result = new FheInt160();
@@ -154,20 +221,6 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int160_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheInt160 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int160_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheInt160 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int160_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheInt160 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int160_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheInt160 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int160_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(I256 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int160_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(I256 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int160_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheInt160 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheInt160 compress() {
-    CompressedFheInt160 compressed = new CompressedFheInt160();
-    executeWithErrorHandling(() -> fhe_int160_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt160 clone() {
-    FheInt160 fheint160 = new FheInt160();
-    executeWithErrorHandling(() -> fhe_int160_clone(getValue(), fheint160.getAddress()));
-    return fheint160;
-  }
 }

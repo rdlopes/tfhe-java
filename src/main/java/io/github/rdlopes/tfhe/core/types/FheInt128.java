@@ -16,28 +16,30 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
     super(FheInt128.class, TfheWrapper::fhe_int128_destroy);
   }
 
-  public static FheInt128 encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
-    FheInt128 fheint128 = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), fheint128.getAddress()));
-    return fheint128;
+  public static FheInt128
+  encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
+    FheInt128 fhe = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt128 encryptWithPublicKey(I128 clearValue, PublicKey publicKey) {
-    FheInt128 fheint128 = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_try_encrypt_with_public_key_i128(clearValue.getAddress(), publicKey.getValue(), fheint128.getAddress()));
-    return fheint128;
+  public static FheInt128
+  encryptWithPublicKey(I128 clearValue, PublicKey publicKey) {
+    FheInt128 fhe = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_try_encrypt_with_public_key_i128(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt128 encryptTrivial(I128 clearValue) {
-    FheInt128 fheint128 = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_try_encrypt_trivial_i128(clearValue.getAddress(), fheint128.getAddress()));
-    return fheint128;
+    FheInt128 fhe = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_try_encrypt_trivial_i128(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt128 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt128 fheint128 = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint128.getAddress()));
-    return fheint128;
+    FheInt128 fhe = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public I128 decryptWithClientKey(ClientKey clientKey) {
+  public I128
+  decryptWithClientKey(ClientKey clientKey) {
     I128 clearValue = new I128();
     executeWithErrorHandling(() -> fhe_int128_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int128_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheInt128 add(FheInt128 other) {
-    FheInt128 result = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt128 other) {
-    executeWithErrorHandling(() -> fhe_int128_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt128 sub(FheInt128 other) {
-    FheInt128 result = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt128 other) {
-    executeWithErrorHandling(() -> fhe_int128_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt128 mul(FheInt128 other) {
-    FheInt128 result = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt128 other) {
-    executeWithErrorHandling(() -> fhe_int128_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt128 and(FheInt128 other) {
     FheInt128 result = new FheInt128();
@@ -123,6 +93,103 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int128_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheInt128 scalarAnd(I128 scalar) {
+    FheInt128 result = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int128_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt128 scalarOr(I128 scalar) {
+    FheInt128 result = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int128_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt128 scalarXor(I128 scalar) {
+    FheInt128 result = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int128_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheInt128 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int128_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt128 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int128_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int128_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int128_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt128 compress() {
+    CompressedFheInt128 compressed = new CompressedFheInt128();
+    executeWithErrorHandling(() -> fhe_int128_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt128 clone() {
+    FheInt128 cloned = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt128 add(FheInt128 other) {
+    FheInt128 result = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt128 other) {
+    executeWithErrorHandling(() -> fhe_int128_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt128 sub(FheInt128 other) {
+    FheInt128 result = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt128 other) {
+    executeWithErrorHandling(() -> fhe_int128_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt128 mul(FheInt128 other) {
+    FheInt128 result = new FheInt128();
+    executeWithErrorHandling(() -> fhe_int128_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt128 other) {
+    executeWithErrorHandling(() -> fhe_int128_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheInt128 scalarAdd(I128 scalar) {
     FheInt128 result = new FheInt128();
@@ -154,20 +221,6 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int128_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheInt128 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int128_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheInt128 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int128_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheInt128 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int128_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheInt128 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int128_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(I128 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int128_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(I128 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int128_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheInt128 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheInt128 compress() {
-    CompressedFheInt128 compressed = new CompressedFheInt128();
-    executeWithErrorHandling(() -> fhe_int128_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt128 clone() {
-    FheInt128 fheint128 = new FheInt128();
-    executeWithErrorHandling(() -> fhe_int128_clone(getValue(), fheint128.getAddress()));
-    return fheint128;
-  }
 }

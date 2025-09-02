@@ -18,28 +18,30 @@ public class FheBool extends AddressLayoutPointer implements Cloneable {
     super(FheBool.class, TfheWrapper::fhe_bool_destroy);
   }
 
-  public static FheBool encryptWithClientKey(boolean clearValue, ClientKey clientKey) {
-    FheBool fheBool = new FheBool();
-    executeWithErrorHandling(() -> fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), fheBool.getAddress()));
-    return fheBool;
+  public static FheBool
+  encryptWithClientKey(boolean clearValue, ClientKey clientKey) {
+    FheBool fhe = new FheBool();
+    executeWithErrorHandling(() -> fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheBool encryptWithPublicKey(boolean clearValue, PublicKey publicKey) {
-    FheBool fheBool = new FheBool();
-    executeWithErrorHandling(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), fheBool.getAddress()));
-    return fheBool;
+  public static FheBool
+  encryptWithPublicKey(boolean clearValue, PublicKey publicKey) {
+    FheBool fhe = new FheBool();
+    executeWithErrorHandling(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheBool encryptTrivial(boolean clearValue) {
-    FheBool fheBool = new FheBool();
-    executeWithErrorHandling(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, fheBool.getAddress()));
-    return fheBool;
+    FheBool fhe = new FheBool();
+    executeWithErrorHandling(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, fhe.getAddress()));
+    return fhe;
   }
 
   public static FheBool deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheBool fheBool = new FheBool();
-    executeWithErrorHandling(() -> fhe_bool_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheBool.getAddress()));
-    return fheBool;
+    FheBool fhe = new FheBool();
+    executeWithErrorHandling(() -> fhe_bool_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -50,7 +52,8 @@ public class FheBool extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-  public boolean decryptWithClientKey(ClientKey clientKey) {
+  public boolean
+  decryptWithClientKey(ClientKey clientKey) {
     MemorySegment clearValue = ARENA.allocate(C_BOOL);
     executeWithErrorHandling(() -> fhe_bool_decrypt(getValue(), clientKey.getValue(), clearValue));
     return clearValue.get(C_BOOL, 0);
@@ -90,12 +93,6 @@ public class FheBool extends AddressLayoutPointer implements Cloneable {
 
   public void xorAssign(FheBool other) {
     executeWithErrorHandling(() -> fhe_bool_bitxor_assign(getValue(), other.getValue()));
-  }
-
-  public FheBool not() {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_bool_not(getValue(), result.getAddress()));
-    return result;
   }
 
   public FheBool scalarAnd(boolean scalar) {
@@ -161,8 +158,15 @@ public class FheBool extends AddressLayoutPointer implements Cloneable {
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public FheBool clone() {
-    FheBool fheBool = new FheBool();
-    executeWithErrorHandling(() -> fhe_bool_clone(getValue(), fheBool.getAddress()));
-    return fheBool;
+    FheBool cloned = new FheBool();
+    executeWithErrorHandling(() -> fhe_bool_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+
+  public FheBool not() {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_bool_not(getValue(), result.getAddress()));
+    return result;
   }
 }

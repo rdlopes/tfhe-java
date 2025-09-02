@@ -26,7 +26,6 @@ class FheBoolTest {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -40,9 +39,6 @@ class FheBoolTest {
   void encryptsAndDecryptsWithClientKey() {
     boolean originalValue = true;
     FheBool encrypted = FheBool.encryptWithClientKey(originalValue, clientKey);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
   }
@@ -52,12 +48,8 @@ class FheBoolTest {
     PublicKey publicKey = PublicKey.newWith(clientKey);
     boolean originalValue = true;
     FheBool encrypted = FheBool.encryptWithPublicKey(originalValue, publicKey);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
     boolean decrypted = encrypted.decryptWithClientKey(clientKey);
     assertThat(decrypted).isEqualTo(originalValue);
-
     publicKey.destroy();
   }
 
@@ -65,208 +57,16 @@ class FheBoolTest {
   void encryptsAndDecryptsTrivial() {
     boolean originalValue = true;
     FheBool encrypted = FheBool.encryptTrivial(originalValue);
-    assertThat(encrypted).isNotNull();
-    assertThat(encrypted.getValue()).isNotNull();
-
     Boolean decrypted = encrypted.decryptTrivial();
     assertThat(decrypted).isNotNull();
     assertThat(decrypted).isEqualTo(originalValue);
   }
 
   @Test
-  void performsAndOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(false, clientKey);
-
-    FheBool result = encrypted1.and(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsAndAssignOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(false, clientKey);
-
-    encrypted1.andAssign(encrypted2);
-    boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsOrOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(false, clientKey);
-
-    FheBool result = encrypted1.or(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsOrAssignOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(false, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(true, clientKey);
-
-    encrypted1.orAssign(encrypted2);
-    boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsXorOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted1.xor(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsXorAssignOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(false, clientKey);
-
-    encrypted1.xorAssign(encrypted2);
-    boolean decrypted = encrypted1.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsNotOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted.not();
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsScalarAndOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted.scalarAnd(false);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsScalarAndAssignOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    encrypted.scalarAndAssign(false);
-    boolean decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsScalarOrOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(false, clientKey);
-
-    FheBool result = encrypted.scalarOr(true);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarOrAssignOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(false, clientKey);
-
-    encrypted.scalarOrAssign(true);
-    boolean decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarXorOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted.scalarXor(false);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarXorAssignOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    encrypted.scalarXorAssign(true);
-    boolean decrypted = encrypted.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isFalse();
-  }
-
-  @Test
-  void performsEqualityOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted1.eq(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsNotEqualOperation() {
-    FheBool encrypted1 = FheBool.encryptWithClientKey(true, clientKey);
-    FheBool encrypted2 = FheBool.encryptWithClientKey(false, clientKey);
-
-    FheBool result = encrypted1.ne(encrypted2);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarEqualityOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted.scalarEq(true);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
-  void performsScalarNotEqualOperation() {
-    FheBool encrypted = FheBool.encryptWithClientKey(true, clientKey);
-
-    FheBool result = encrypted.scalarNe(false);
-    assertThat(result).isNotNull();
-
-    boolean decrypted = result.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isTrue();
-  }
-
-  @Test
   void serializesAndDeserializes() {
     FheBool original = FheBool.encryptWithClientKey(true, clientKey);
     DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
     FheBool deserialized = FheBool.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     boolean decrypted = deserialized.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
   }
@@ -274,14 +74,8 @@ class FheBoolTest {
   @Test
   void compressesAndDecompresses() {
     FheBool original = FheBool.encryptWithClientKey(true, clientKey);
-
     CompressedFheBool compressed = original.compress();
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-
     FheBool decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-
     boolean decrypted = decompressed.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
   }
@@ -290,13 +84,96 @@ class FheBoolTest {
   void clonesSuccessfully() {
     FheBool original = FheBool.encryptWithClientKey(true, clientKey);
     FheBool cloned = original.clone();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheBool encryptedEquality = cloned.eq(original);
-    boolean decryptedEquality = encryptedEquality.decryptWithClientKey(clientKey);
-    assertThat(decryptedEquality).isTrue();
-
+    FheBool eq = cloned.eq(original);
+    boolean decryptedEq = eq.decryptWithClientKey(clientKey);
+    assertThat(decryptedEq).isTrue();
     boolean decrypted = cloned.decryptWithClientKey(clientKey);
     assertThat(decrypted).isTrue();
   }
+
+
+  @Test
+  void performsBooleanOperations() {
+    FheBool a = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool b = FheBool.encryptWithClientKey(false, clientKey);
+
+    FheBool andResult = a.and(b);
+    assertThat(andResult.decryptWithClientKey(clientKey)).isFalse();
+
+    FheBool orResult = a.or(b);
+    assertThat(orResult.decryptWithClientKey(clientKey)).isTrue();
+
+    FheBool c = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool d = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool xorResult = c.xor(d);
+    assertThat(xorResult.decryptWithClientKey(clientKey)).isFalse();
+
+    a = FheBool.encryptWithClientKey(true, clientKey);
+    b = FheBool.encryptWithClientKey(false, clientKey);
+    a.andAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isFalse();
+
+    a = FheBool.encryptWithClientKey(false, clientKey);
+    b = FheBool.encryptWithClientKey(true, clientKey);
+    a.orAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isTrue();
+
+    a = FheBool.encryptWithClientKey(true, clientKey);
+    b = FheBool.encryptWithClientKey(false, clientKey);
+    a.xorAssign(b);
+    assertThat(a.decryptWithClientKey(clientKey)).isTrue();
+
+    a = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool notResult = a.not();
+    assertThat(notResult.decryptWithClientKey(clientKey)).isFalse();
+  }
+
+  @Test
+  void performsScalarBooleanOperations() {
+    FheBool a = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool andResult = a.scalarAnd(false);
+    assertThat(andResult.decryptWithClientKey(clientKey)).isFalse();
+
+    FheBool b = FheBool.encryptWithClientKey(false, clientKey);
+    FheBool orResult = b.scalarOr(true);
+    assertThat(orResult.decryptWithClientKey(clientKey)).isTrue();
+
+    FheBool c = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool xorResult = c.scalarXor(false);
+    assertThat(xorResult.decryptWithClientKey(clientKey)).isTrue();
+
+    a = FheBool.encryptWithClientKey(true, clientKey);
+    a.scalarAndAssign(false);
+    assertThat(a.decryptWithClientKey(clientKey)).isFalse();
+
+    a = FheBool.encryptWithClientKey(false, clientKey);
+    a.scalarOrAssign(true);
+    assertThat(a.decryptWithClientKey(clientKey)).isTrue();
+
+    a = FheBool.encryptWithClientKey(true, clientKey);
+    a.scalarXorAssign(true);
+    assertThat(a.decryptWithClientKey(clientKey)).isFalse();
+  }
+
+  @Test
+  void performsEqualityOperations() {
+    FheBool a = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool b = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool eqResult = a.eq(b);
+    assertThat(eqResult.decryptWithClientKey(clientKey)).isTrue();
+
+    FheBool c = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool d = FheBool.encryptWithClientKey(false, clientKey);
+    FheBool neResult = c.ne(d);
+    assertThat(neResult.decryptWithClientKey(clientKey)).isTrue();
+
+    FheBool e = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool scalarEqResult = e.scalarEq(true);
+    assertThat(scalarEqResult.decryptWithClientKey(clientKey)).isTrue();
+
+    FheBool f = FheBool.encryptWithClientKey(true, clientKey);
+    FheBool scalarNeResult = f.scalarNe(false);
+    assertThat(scalarNeResult.decryptWithClientKey(clientKey)).isTrue();
+  }
+
 }

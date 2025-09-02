@@ -16,15 +16,15 @@ public class CompressedFheInt88 extends AddressLayoutPointer implements Cloneabl
   }
 
   public static CompressedFheInt88 encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
-    CompressedFheInt88 compressedFheInt88 = new CompressedFheInt88();
-    executeWithErrorHandling(() -> compressed_fhe_int88_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), compressedFheInt88.getAddress()));
-    return compressedFheInt88;
+    CompressedFheInt88 compressed = new CompressedFheInt88();
+    executeWithErrorHandling(() -> compressed_fhe_int88_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheInt88 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheInt88 compressedFheInt88 = new CompressedFheInt88();
-    executeWithErrorHandling(() -> compressed_fhe_int88_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheInt88.getAddress()));
-    return compressedFheInt88;
+    CompressedFheInt88 compressed = new CompressedFheInt88();
+    executeWithErrorHandling(() -> compressed_fhe_int88_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheInt88 extends AddressLayoutPointer implements Cloneabl
   }
 
   public FheInt88 decompress() {
-    FheInt88 fheint88 = new FheInt88();
-    executeWithErrorHandling(() -> compressed_fhe_int88_decompress(getValue(), fheint88.getAddress()));
-    return fheint88;
+    FheInt88 fhe = new FheInt88();
+    executeWithErrorHandling(() -> compressed_fhe_int88_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheInt88 clone() {
-    CompressedFheInt88 compressedFheInt88 = new CompressedFheInt88();
-    executeWithErrorHandling(() -> compressed_fhe_int88_clone(getValue(), compressedFheInt88.getAddress()));
-    return compressedFheInt88;
+    CompressedFheInt88 cloned = new CompressedFheInt88();
+    executeWithErrorHandling(() -> compressed_fhe_int88_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

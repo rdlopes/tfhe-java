@@ -16,15 +16,15 @@ public class CompressedFheInt248 extends AddressLayoutPointer implements Cloneab
   }
 
   public static CompressedFheInt248 encryptWithClientKey(I256 clearValue, ClientKey clientKey) {
-    CompressedFheInt248 compressedFheInt248 = new CompressedFheInt248();
-    executeWithErrorHandling(() -> compressed_fhe_int248_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), compressedFheInt248.getAddress()));
-    return compressedFheInt248;
+    CompressedFheInt248 compressed = new CompressedFheInt248();
+    executeWithErrorHandling(() -> compressed_fhe_int248_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheInt248 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheInt248 compressedFheInt248 = new CompressedFheInt248();
-    executeWithErrorHandling(() -> compressed_fhe_int248_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheInt248.getAddress()));
-    return compressedFheInt248;
+    CompressedFheInt248 compressed = new CompressedFheInt248();
+    executeWithErrorHandling(() -> compressed_fhe_int248_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheInt248 extends AddressLayoutPointer implements Cloneab
   }
 
   public FheInt248 decompress() {
-    FheInt248 fheint248 = new FheInt248();
-    executeWithErrorHandling(() -> compressed_fhe_int248_decompress(getValue(), fheint248.getAddress()));
-    return fheint248;
+    FheInt248 fhe = new FheInt248();
+    executeWithErrorHandling(() -> compressed_fhe_int248_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheInt248 clone() {
-    CompressedFheInt248 compressedFheInt248 = new CompressedFheInt248();
-    executeWithErrorHandling(() -> compressed_fhe_int248_clone(getValue(), compressedFheInt248.getAddress()));
-    return compressedFheInt248;
+    CompressedFheInt248 cloned = new CompressedFheInt248();
+    executeWithErrorHandling(() -> compressed_fhe_int248_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

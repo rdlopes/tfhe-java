@@ -16,28 +16,30 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
     super(FheUint112.class, TfheWrapper::fhe_uint112_destroy);
   }
 
-  public static FheUint112 encryptWithClientKey(U128 clearValue, ClientKey clientKey) {
-    FheUint112 fheuint112 = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_try_encrypt_with_client_key_u128(clearValue.getAddress(), clientKey.getValue(), fheuint112.getAddress()));
-    return fheuint112;
+  public static FheUint112
+  encryptWithClientKey(U128 clearValue, ClientKey clientKey) {
+    FheUint112 fhe = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_try_encrypt_with_client_key_u128(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheUint112 encryptWithPublicKey(U128 clearValue, PublicKey publicKey) {
-    FheUint112 fheuint112 = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_try_encrypt_with_public_key_u128(clearValue.getAddress(), publicKey.getValue(), fheuint112.getAddress()));
-    return fheuint112;
+  public static FheUint112
+  encryptWithPublicKey(U128 clearValue, PublicKey publicKey) {
+    FheUint112 fhe = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_try_encrypt_with_public_key_u128(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheUint112 encryptTrivial(U128 clearValue) {
-    FheUint112 fheuint112 = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_try_encrypt_trivial_u128(clearValue.getAddress(), fheuint112.getAddress()));
-    return fheuint112;
+    FheUint112 fhe = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_try_encrypt_trivial_u128(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheUint112 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheUint112 fheuint112 = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheuint112.getAddress()));
-    return fheuint112;
+    FheUint112 fhe = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public U128 decryptWithClientKey(ClientKey clientKey) {
+  public U128
+  decryptWithClientKey(ClientKey clientKey) {
     U128 clearValue = new U128();
     executeWithErrorHandling(() -> fhe_uint112_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint112_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheUint112 add(FheUint112 other) {
-    FheUint112 result = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheUint112 other) {
-    executeWithErrorHandling(() -> fhe_uint112_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheUint112 sub(FheUint112 other) {
-    FheUint112 result = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheUint112 other) {
-    executeWithErrorHandling(() -> fhe_uint112_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheUint112 mul(FheUint112 other) {
-    FheUint112 result = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheUint112 other) {
-    executeWithErrorHandling(() -> fhe_uint112_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheUint112 and(FheUint112 other) {
     FheUint112 result = new FheUint112();
@@ -123,6 +93,103 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint112_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheUint112 scalarAnd(U128 scalar) {
+    FheUint112 result = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(U128 scalar) {
+    executeWithErrorHandling(() -> fhe_uint112_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheUint112 scalarOr(U128 scalar) {
+    FheUint112 result = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(U128 scalar) {
+    executeWithErrorHandling(() -> fhe_uint112_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheUint112 scalarXor(U128 scalar) {
+    FheUint112 result = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(U128 scalar) {
+    executeWithErrorHandling(() -> fhe_uint112_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheUint112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint112_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheUint112 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint112_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(U128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint112_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(U128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint112_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheUint112 compress() {
+    CompressedFheUint112 compressed = new CompressedFheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheUint112 clone() {
+    FheUint112 cloned = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheUint112 add(FheUint112 other) {
+    FheUint112 result = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheUint112 other) {
+    executeWithErrorHandling(() -> fhe_uint112_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheUint112 sub(FheUint112 other) {
+    FheUint112 result = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheUint112 other) {
+    executeWithErrorHandling(() -> fhe_uint112_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheUint112 mul(FheUint112 other) {
+    FheUint112 result = new FheUint112();
+    executeWithErrorHandling(() -> fhe_uint112_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheUint112 other) {
+    executeWithErrorHandling(() -> fhe_uint112_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheUint112 scalarAdd(U128 scalar) {
     FheUint112 result = new FheUint112();
@@ -154,20 +221,6 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint112_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheUint112 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint112_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheUint112 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint112_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheUint112 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_uint112_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheUint112 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_uint112_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(U128 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint112_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(U128 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint112_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheUint112 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheUint112 compress() {
-    CompressedFheUint112 compressed = new CompressedFheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheUint112 clone() {
-    FheUint112 fheuint112 = new FheUint112();
-    executeWithErrorHandling(() -> fhe_uint112_clone(getValue(), fheuint112.getAddress()));
-    return fheuint112;
-  }
 }

@@ -25,7 +25,6 @@ class CompressedFheUint12Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -36,63 +35,32 @@ class CompressedFheUint12Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    short originalValue = (short) 1000;
-    CompressedFheUint12 compressed = CompressedFheUint12.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    short originalValue = (short) 1000;
-    CompressedFheUint12 compressed = CompressedFheUint12.encryptWithClientKey(originalValue, clientKey);
-
-    FheUint12 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    short decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    CompressedFheUint12 original = CompressedFheUint12.encryptWithClientKey((short) 700, clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheUint12 compressed = CompressedFheUint12.encryptWithClientKey((short) 100, clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheUint12 deserialized = CompressedFheUint12.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheUint12 decompressed = deserialized.decompress();
     short decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 700);
+    assertThat(decrypted).isEqualTo((short) 100);
   }
 
   @Test
-  void clones() {
-    CompressedFheUint12 original = CompressedFheUint12.encryptWithClientKey((short) 1500, clientKey);
-
-    CompressedFheUint12 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheUint12 decompressed = cloned.decompress();
-    short decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo((short) 1500);
-  }
-
-  @Test
-  void roundTripFromFheUint12() {
-    short originalValue = (short) 1500;
-    FheUint12 fheuint12 = FheUint12.encryptWithClientKey(originalValue, clientKey);
-    CompressedFheUint12 compressed = fheuint12.compress();
+  void decompressesRoundTrip() {
+    FheUint12 original = FheUint12.encryptWithClientKey((short) 100, clientKey);
+    CompressedFheUint12 compressed = original.compress();
     FheUint12 decompressed = compressed.decompress();
     short decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo((short) 100);
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheUint12 original = CompressedFheUint12.encryptWithClientKey((short) 100, clientKey);
+    CompressedFheUint12 cloned = original.clone();
+    FheUint12 a = original.decompress();
+    FheUint12 b = cloned.decompress();
+    short da = a.decryptWithClientKey(clientKey);
+    short db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

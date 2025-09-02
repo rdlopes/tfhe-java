@@ -16,28 +16,30 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
     super(FheInt120.class, TfheWrapper::fhe_int120_destroy);
   }
 
-  public static FheInt120 encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
-    FheInt120 fheint120 = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), fheint120.getAddress()));
-    return fheint120;
+  public static FheInt120
+  encryptWithClientKey(I128 clearValue, ClientKey clientKey) {
+    FheInt120 fhe = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt120 encryptWithPublicKey(I128 clearValue, PublicKey publicKey) {
-    FheInt120 fheint120 = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_try_encrypt_with_public_key_i128(clearValue.getAddress(), publicKey.getValue(), fheint120.getAddress()));
-    return fheint120;
+  public static FheInt120
+  encryptWithPublicKey(I128 clearValue, PublicKey publicKey) {
+    FheInt120 fhe = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_try_encrypt_with_public_key_i128(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt120 encryptTrivial(I128 clearValue) {
-    FheInt120 fheint120 = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_try_encrypt_trivial_i128(clearValue.getAddress(), fheint120.getAddress()));
-    return fheint120;
+    FheInt120 fhe = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_try_encrypt_trivial_i128(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt120 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt120 fheint120 = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint120.getAddress()));
-    return fheint120;
+    FheInt120 fhe = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public I128 decryptWithClientKey(ClientKey clientKey) {
+  public I128
+  decryptWithClientKey(ClientKey clientKey) {
     I128 clearValue = new I128();
     executeWithErrorHandling(() -> fhe_int120_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int120_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheInt120 add(FheInt120 other) {
-    FheInt120 result = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt120 other) {
-    executeWithErrorHandling(() -> fhe_int120_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt120 sub(FheInt120 other) {
-    FheInt120 result = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt120 other) {
-    executeWithErrorHandling(() -> fhe_int120_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt120 mul(FheInt120 other) {
-    FheInt120 result = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt120 other) {
-    executeWithErrorHandling(() -> fhe_int120_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt120 and(FheInt120 other) {
     FheInt120 result = new FheInt120();
@@ -123,6 +93,103 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int120_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheInt120 scalarAnd(I128 scalar) {
+    FheInt120 result = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int120_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt120 scalarOr(I128 scalar) {
+    FheInt120 result = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int120_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt120 scalarXor(I128 scalar) {
+    FheInt120 result = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(I128 scalar) {
+    executeWithErrorHandling(() -> fhe_int120_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheInt120 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int120_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt120 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int120_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int120_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I128 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int120_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt120 compress() {
+    CompressedFheInt120 compressed = new CompressedFheInt120();
+    executeWithErrorHandling(() -> fhe_int120_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt120 clone() {
+    FheInt120 cloned = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt120 add(FheInt120 other) {
+    FheInt120 result = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt120 other) {
+    executeWithErrorHandling(() -> fhe_int120_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt120 sub(FheInt120 other) {
+    FheInt120 result = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt120 other) {
+    executeWithErrorHandling(() -> fhe_int120_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt120 mul(FheInt120 other) {
+    FheInt120 result = new FheInt120();
+    executeWithErrorHandling(() -> fhe_int120_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt120 other) {
+    executeWithErrorHandling(() -> fhe_int120_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheInt120 scalarAdd(I128 scalar) {
     FheInt120 result = new FheInt120();
@@ -154,20 +221,6 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int120_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheInt120 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int120_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheInt120 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int120_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheInt120 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int120_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheInt120 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int120_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(I128 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int120_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(I128 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int120_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheInt120 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheInt120 compress() {
-    CompressedFheInt120 compressed = new CompressedFheInt120();
-    executeWithErrorHandling(() -> fhe_int120_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt120 clone() {
-    FheInt120 fheint120 = new FheInt120();
-    executeWithErrorHandling(() -> fhe_int120_clone(getValue(), fheint120.getAddress()));
-    return fheint120;
-  }
 }

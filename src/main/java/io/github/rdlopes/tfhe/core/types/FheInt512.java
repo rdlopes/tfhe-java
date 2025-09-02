@@ -16,28 +16,30 @@ public class FheInt512 extends AddressLayoutPointer implements Cloneable {
     super(FheInt512.class, TfheWrapper::fhe_int512_destroy);
   }
 
-  public static FheInt512 encryptWithClientKey(I512 clearValue, ClientKey clientKey) {
-    FheInt512 fheint512 = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_try_encrypt_with_client_key_i512(clearValue.getAddress(), clientKey.getValue(), fheint512.getAddress()));
-    return fheint512;
+  public static FheInt512
+  encryptWithClientKey(I1024 clearValue, ClientKey clientKey) {
+    FheInt512 fhe = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_try_encrypt_with_client_key_i512(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt512 encryptWithPublicKey(I512 clearValue, PublicKey publicKey) {
-    FheInt512 fheint512 = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_try_encrypt_with_public_key_i512(clearValue.getAddress(), publicKey.getValue(), fheint512.getAddress()));
-    return fheint512;
+  public static FheInt512
+  encryptWithPublicKey(I1024 clearValue, PublicKey publicKey) {
+    FheInt512 fhe = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_try_encrypt_with_public_key_i512(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt512 encryptTrivial(I512 clearValue) {
-    FheInt512 fheint512 = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_try_encrypt_trivial_i512(clearValue.getAddress(), fheint512.getAddress()));
-    return fheint512;
+  public static FheInt512 encryptTrivial(I1024 clearValue) {
+    FheInt512 fhe = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_try_encrypt_trivial_i512(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt512 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt512 fheint512 = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint512.getAddress()));
-    return fheint512;
+    FheInt512 fhe = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,50 +50,18 @@ public class FheInt512 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public I512 decryptWithClientKey(ClientKey clientKey) {
-    I512 clearValue = new I512();
+  public I1024
+  decryptWithClientKey(ClientKey clientKey) {
+    I1024 clearValue = new I1024();
     executeWithErrorHandling(() -> fhe_int512_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
   }
 
-  public I512 decryptTrivial() {
-    I512 clearValue = new I512();
+  public I1024 decryptTrivial() {
+    I1024 clearValue = new I1024();
     executeWithErrorHandling(() -> fhe_int512_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheInt512 add(FheInt512 other) {
-    FheInt512 result = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt512 other) {
-    executeWithErrorHandling(() -> fhe_int512_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt512 sub(FheInt512 other) {
-    FheInt512 result = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt512 other) {
-    executeWithErrorHandling(() -> fhe_int512_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt512 mul(FheInt512 other) {
-    FheInt512 result = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt512 other) {
-    executeWithErrorHandling(() -> fhe_int512_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt512 and(FheInt512 other) {
     FheInt512 result = new FheInt512();
@@ -123,37 +93,35 @@ public class FheInt512 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int512_bitxor_assign(getValue(), other.getValue()));
   }
 
-
-  public FheInt512 scalarAdd(I512 scalar) {
+  public FheInt512 scalarAnd(I1024 scalar) {
     FheInt512 result = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_scalar_add(getValue(), scalar.getAddress(), result.getAddress()));
+    executeWithErrorHandling(() -> fhe_int512_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
-  public void scalarAddAssign(I512 scalar) {
-    executeWithErrorHandling(() -> fhe_int512_scalar_add_assign(getValue(), scalar.getAddress()));
+  public void scalarAndAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int512_scalar_bitand_assign(getValue(), scalar.getAddress()));
   }
 
-  public FheInt512 scalarSub(I512 scalar) {
+  public FheInt512 scalarOr(I1024 scalar) {
     FheInt512 result = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_scalar_sub(getValue(), scalar.getAddress(), result.getAddress()));
+    executeWithErrorHandling(() -> fhe_int512_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
-  public void scalarSubAssign(I512 scalar) {
-    executeWithErrorHandling(() -> fhe_int512_scalar_sub_assign(getValue(), scalar.getAddress()));
+  public void scalarOrAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int512_scalar_bitor_assign(getValue(), scalar.getAddress()));
   }
 
-  public FheInt512 scalarMul(I512 scalar) {
+  public FheInt512 scalarXor(I1024 scalar) {
     FheInt512 result = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_scalar_mul(getValue(), scalar.getAddress(), result.getAddress()));
+    executeWithErrorHandling(() -> fhe_int512_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
-  public void scalarMulAssign(I512 scalar) {
-    executeWithErrorHandling(() -> fhe_int512_scalar_mul_assign(getValue(), scalar.getAddress()));
+  public void scalarXorAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int512_scalar_bitxor_assign(getValue(), scalar.getAddress()));
   }
-
 
   public FheBool eq(FheInt512 other) {
     FheBool result = new FheBool();
@@ -167,6 +135,91 @@ public class FheInt512 extends AddressLayoutPointer implements Cloneable {
     return result;
   }
 
+  public FheBool scalarEq(I1024 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int512_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I1024 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int512_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt512 compress() {
+    CompressedFheInt512 compressed = new CompressedFheInt512();
+    executeWithErrorHandling(() -> fhe_int512_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt512 clone() {
+    FheInt512 cloned = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt512 add(FheInt512 other) {
+    FheInt512 result = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt512 other) {
+    executeWithErrorHandling(() -> fhe_int512_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt512 sub(FheInt512 other) {
+    FheInt512 result = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt512 other) {
+    executeWithErrorHandling(() -> fhe_int512_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt512 mul(FheInt512 other) {
+    FheInt512 result = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt512 other) {
+    executeWithErrorHandling(() -> fhe_int512_mul_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt512 scalarAdd(I1024 scalar) {
+    FheInt512 result = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_scalar_add(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAddAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int512_scalar_add_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt512 scalarSub(I1024 scalar) {
+    FheInt512 result = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_scalar_sub(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarSubAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int512_scalar_sub_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt512 scalarMul(I1024 scalar) {
+    FheInt512 result = new FheInt512();
+    executeWithErrorHandling(() -> fhe_int512_scalar_mul(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarMulAssign(I1024 scalar) {
+    executeWithErrorHandling(() -> fhe_int512_scalar_mul_assign(getValue(), scalar.getAddress()));
+  }
 
   public FheBool ge(FheInt512 other) {
     FheBool result = new FheBool();
@@ -192,54 +245,29 @@ public class FheInt512 extends AddressLayoutPointer implements Cloneable {
     return result;
   }
 
-  public FheBool scalarEq(I512 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int512_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(I512 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int512_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarGe(I512 scalar) {
+  public FheBool scalarGe(I1024 scalar) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int512_scalar_ge(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
-  public FheBool scalarGt(I512 scalar) {
+  public FheBool scalarGt(I1024 scalar) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int512_scalar_gt(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
-  public FheBool scalarLe(I512 scalar) {
+  public FheBool scalarLe(I1024 scalar) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int512_scalar_le(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
-  public FheBool scalarLt(I512 scalar) {
+  public FheBool scalarLt(I1024 scalar) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int512_scalar_lt(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
 
-  public CompressedFheInt512 compress() {
-    CompressedFheInt512 compressed = new CompressedFheInt512();
-    executeWithErrorHandling(() -> fhe_int512_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt512 clone() {
-    FheInt512 fheint512 = new FheInt512();
-    executeWithErrorHandling(() -> fhe_int512_clone(getValue(), fheint512.getAddress()));
-    return fheint512;
-  }
 }

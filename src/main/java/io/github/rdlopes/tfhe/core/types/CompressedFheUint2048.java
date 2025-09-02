@@ -16,15 +16,15 @@ public class CompressedFheUint2048 extends AddressLayoutPointer implements Clone
   }
 
   public static CompressedFheUint2048 encryptWithClientKey(U2048 clearValue, ClientKey clientKey) {
-    CompressedFheUint2048 compressedFheUint2048 = new CompressedFheUint2048();
-    executeWithErrorHandling(() -> compressed_fhe_uint2048_try_encrypt_with_client_key_u2048(clearValue.getAddress(), clientKey.getValue(), compressedFheUint2048.getAddress()));
-    return compressedFheUint2048;
+    CompressedFheUint2048 compressed = new CompressedFheUint2048();
+    executeWithErrorHandling(() -> compressed_fhe_uint2048_try_encrypt_with_client_key_u2048(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheUint2048 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheUint2048 compressedFheUint2048 = new CompressedFheUint2048();
-    executeWithErrorHandling(() -> compressed_fhe_uint2048_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheUint2048.getAddress()));
-    return compressedFheUint2048;
+    CompressedFheUint2048 compressed = new CompressedFheUint2048();
+    executeWithErrorHandling(() -> compressed_fhe_uint2048_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheUint2048 extends AddressLayoutPointer implements Clone
   }
 
   public FheUint2048 decompress() {
-    FheUint2048 fheuint2048 = new FheUint2048();
-    executeWithErrorHandling(() -> compressed_fhe_uint2048_decompress(getValue(), fheuint2048.getAddress()));
-    return fheuint2048;
+    FheUint2048 fhe = new FheUint2048();
+    executeWithErrorHandling(() -> compressed_fhe_uint2048_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheUint2048 clone() {
-    CompressedFheUint2048 compressedFheUint2048 = new CompressedFheUint2048();
-    executeWithErrorHandling(() -> compressed_fhe_uint2048_clone(getValue(), compressedFheUint2048.getAddress()));
-    return compressedFheUint2048;
+    CompressedFheUint2048 cloned = new CompressedFheUint2048();
+    executeWithErrorHandling(() -> compressed_fhe_uint2048_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

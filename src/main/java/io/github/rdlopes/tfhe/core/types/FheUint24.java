@@ -18,28 +18,30 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
     super(FheUint24.class, TfheWrapper::fhe_uint24_destroy);
   }
 
-  public static FheUint24 encryptWithClientKey(int clearValue, ClientKey clientKey) {
-    FheUint24 fheuint24 = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_try_encrypt_with_client_key_u32(clearValue, clientKey.getValue(), fheuint24.getAddress()));
-    return fheuint24;
+  public static FheUint24
+  encryptWithClientKey(int clearValue, ClientKey clientKey) {
+    FheUint24 fhe = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_try_encrypt_with_client_key_u32(clearValue, clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheUint24 encryptWithPublicKey(int clearValue, PublicKey publicKey) {
-    FheUint24 fheuint24 = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_try_encrypt_with_public_key_u32(clearValue, publicKey.getValue(), fheuint24.getAddress()));
-    return fheuint24;
+  public static FheUint24
+  encryptWithPublicKey(int clearValue, PublicKey publicKey) {
+    FheUint24 fhe = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_try_encrypt_with_public_key_u32(clearValue, publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheUint24 encryptTrivial(int clearValue) {
-    FheUint24 fheuint24 = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_try_encrypt_trivial_u32(clearValue, fheuint24.getAddress()));
-    return fheuint24;
+    FheUint24 fhe = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_try_encrypt_trivial_u32(clearValue, fhe.getAddress()));
+    return fhe;
   }
 
   public static FheUint24 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheUint24 fheuint24 = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheuint24.getAddress()));
-    return fheuint24;
+    FheUint24 fhe = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -50,8 +52,8 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public int decryptWithClientKey(ClientKey clientKey) {
+  public int
+  decryptWithClientKey(ClientKey clientKey) {
     MemorySegment clearValue = ARENA.allocate(C_INT);
     executeWithErrorHandling(() -> fhe_uint24_decrypt(getValue(), clientKey.getValue(), clearValue));
     return clearValue.get(C_INT, 0);
@@ -62,38 +64,6 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
     int result = fhe_uint24_try_decrypt_trivial(getValue(), clearValue);
     return result == 0 ? clearValue.get(C_INT, 0) : null;
   }
-
-
-  public FheUint24 add(FheUint24 other) {
-    FheUint24 result = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheUint24 other) {
-    executeWithErrorHandling(() -> fhe_uint24_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheUint24 sub(FheUint24 other) {
-    FheUint24 result = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheUint24 other) {
-    executeWithErrorHandling(() -> fhe_uint24_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheUint24 mul(FheUint24 other) {
-    FheUint24 result = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheUint24 other) {
-    executeWithErrorHandling(() -> fhe_uint24_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheUint24 and(FheUint24 other) {
     FheUint24 result = new FheUint24();
@@ -125,6 +95,103 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint24_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheUint24 scalarAnd(int scalar) {
+    FheUint24 result = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_scalar_bitand(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(int scalar) {
+    executeWithErrorHandling(() -> fhe_uint24_scalar_bitand_assign(getValue(), scalar));
+  }
+
+  public FheUint24 scalarOr(int scalar) {
+    FheUint24 result = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_scalar_bitor(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(int scalar) {
+    executeWithErrorHandling(() -> fhe_uint24_scalar_bitor_assign(getValue(), scalar));
+  }
+
+  public FheUint24 scalarXor(int scalar) {
+    FheUint24 result = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_scalar_bitxor(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(int scalar) {
+    executeWithErrorHandling(() -> fhe_uint24_scalar_bitxor_assign(getValue(), scalar));
+  }
+
+  public FheBool eq(FheUint24 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint24_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheUint24 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint24_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(int scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint24_scalar_eq(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(int scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_uint24_scalar_ne(getValue(), scalar, result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheUint24 compress() {
+    CompressedFheUint24 compressed = new CompressedFheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheUint24 clone() {
+    FheUint24 cloned = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheUint24 add(FheUint24 other) {
+    FheUint24 result = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheUint24 other) {
+    executeWithErrorHandling(() -> fhe_uint24_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheUint24 sub(FheUint24 other) {
+    FheUint24 result = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheUint24 other) {
+    executeWithErrorHandling(() -> fhe_uint24_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheUint24 mul(FheUint24 other) {
+    FheUint24 result = new FheUint24();
+    executeWithErrorHandling(() -> fhe_uint24_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheUint24 other) {
+    executeWithErrorHandling(() -> fhe_uint24_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheUint24 scalarAdd(int scalar) {
     FheUint24 result = new FheUint24();
@@ -156,20 +223,6 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_uint24_scalar_mul_assign(getValue(), scalar));
   }
 
-
-  public FheBool eq(FheUint24 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint24_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheUint24 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint24_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheUint24 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_uint24_ge(getValue(), other.getValue(), result.getAddress()));
@@ -191,18 +244,6 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheUint24 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_uint24_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(int scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint24_scalar_eq(getValue(), scalar, result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(int scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_uint24_scalar_ne(getValue(), scalar, result.getAddress()));
     return result;
   }
 
@@ -231,17 +272,4 @@ public class FheUint24 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheUint24 compress() {
-    CompressedFheUint24 compressed = new CompressedFheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheUint24 clone() {
-    FheUint24 fheuint24 = new FheUint24();
-    executeWithErrorHandling(() -> fhe_uint24_clone(getValue(), fheuint24.getAddress()));
-    return fheuint24;
-  }
 }

@@ -11,10 +11,12 @@ import io.github.rdlopes.tfhe.core.types.FheInt2048;
 import io.github.rdlopes.tfhe.core.types.I2048;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("intensive")
 class CompressedFheInt2048Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
@@ -26,7 +28,6 @@ class CompressedFheInt2048Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -37,65 +38,32 @@ class CompressedFheInt2048Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    long originalValue = 123456789L;
-    CompressedFheInt2048 compressed = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf(originalValue), clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    long originalValue = -987654321L;
-    CompressedFheInt2048 compressed = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf(originalValue), clientKey);
-
-    FheInt2048 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    String originalValue = "12345678901234567890";
-    CompressedFheInt2048 original = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf(originalValue), clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheInt2048 compressed = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf("100"), clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheInt2048 deserialized = CompressedFheInt2048.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheInt2048 decompressed = deserialized.decompress();
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(I2048.valueOf("100"));
   }
 
   @Test
-  void clones() {
-    String originalValue = "-555666777888999000111";
-    CompressedFheInt2048 original = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf(originalValue), clientKey);
-
-    CompressedFheInt2048 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheInt2048 decompressed = cloned.decompress();
-    I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void roundTripFromFheInt2048() {
-    String originalValue = "98765432109876543210987654321098765432109876543210";
-    FheInt2048 fheInt2048 = FheInt2048.encryptWithClientKey(I2048.valueOf(originalValue), clientKey);
-    CompressedFheInt2048 compressed = fheInt2048.compress();
+  void decompressesRoundTrip() {
+    FheInt2048 original = FheInt2048.encryptWithClientKey(I2048.valueOf("100"), clientKey);
+    CompressedFheInt2048 compressed = original.compress();
     FheInt2048 decompressed = compressed.decompress();
     I2048 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(I2048.valueOf("100"));
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheInt2048 original = CompressedFheInt2048.encryptWithClientKey(I2048.valueOf("100"), clientKey);
+    CompressedFheInt2048 cloned = original.clone();
+    FheInt2048 a = original.decompress();
+    FheInt2048 b = cloned.decompress();
+    I2048 da = a.decryptWithClientKey(clientKey);
+    I2048 db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

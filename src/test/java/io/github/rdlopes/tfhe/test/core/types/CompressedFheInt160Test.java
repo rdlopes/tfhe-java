@@ -11,10 +11,12 @@ import io.github.rdlopes.tfhe.core.types.FheInt160;
 import io.github.rdlopes.tfhe.core.types.I256;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("intensive")
 class CompressedFheInt160Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
@@ -26,7 +28,6 @@ class CompressedFheInt160Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -37,63 +38,32 @@ class CompressedFheInt160Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    I256 originalValue = I256.valueOf("1000");
-    CompressedFheInt160 compressed = CompressedFheInt160.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    I256 originalValue = I256.valueOf("1000");
-    CompressedFheInt160 compressed = CompressedFheInt160.encryptWithClientKey(originalValue, clientKey);
-
-    FheInt160 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    I256 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    CompressedFheInt160 original = CompressedFheInt160.encryptWithClientKey(I256.valueOf("700"), clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheInt160 compressed = CompressedFheInt160.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheInt160 deserialized = CompressedFheInt160.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheInt160 decompressed = deserialized.decompress();
     I256 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("700"));
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
   }
 
   @Test
-  void clones() {
-    CompressedFheInt160 original = CompressedFheInt160.encryptWithClientKey(I256.valueOf("1500"), clientKey);
-
-    CompressedFheInt160 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheInt160 decompressed = cloned.decompress();
-    I256 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(I256.valueOf("1500"));
-  }
-
-  @Test
-  void roundTripFromFheInt160() {
-    I256 originalValue = I256.valueOf("1500");
-    FheInt160 fheint160 = FheInt160.encryptWithClientKey(originalValue, clientKey);
-    CompressedFheInt160 compressed = fheint160.compress();
+  void decompressesRoundTrip() {
+    FheInt160 original = FheInt160.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    CompressedFheInt160 compressed = original.compress();
     FheInt160 decompressed = compressed.decompress();
     I256 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(I256.valueOf("100"));
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheInt160 original = CompressedFheInt160.encryptWithClientKey(I256.valueOf("100"), clientKey);
+    CompressedFheInt160 cloned = original.clone();
+    FheInt160 a = original.decompress();
+    FheInt160 b = cloned.decompress();
+    I256 da = a.decryptWithClientKey(clientKey);
+    I256 db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

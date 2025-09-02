@@ -15,16 +15,16 @@ public class CompressedFheInt512 extends AddressLayoutPointer implements Cloneab
     super(CompressedFheInt512.class, TfheWrapper::compressed_fhe_int512_destroy);
   }
 
-  public static CompressedFheInt512 encryptWithClientKey(I512 clearValue, ClientKey clientKey) {
-    CompressedFheInt512 compressedFheInt512 = new CompressedFheInt512();
-    executeWithErrorHandling(() -> compressed_fhe_int512_try_encrypt_with_client_key_i512(clearValue.getAddress(), clientKey.getValue(), compressedFheInt512.getAddress()));
-    return compressedFheInt512;
+  public static CompressedFheInt512 encryptWithClientKey(I1024 clearValue, ClientKey clientKey) {
+    CompressedFheInt512 compressed = new CompressedFheInt512();
+    executeWithErrorHandling(() -> compressed_fhe_int512_try_encrypt_with_client_key_i512(clearValue.getAddress(), clientKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public static CompressedFheInt512 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    CompressedFheInt512 compressedFheInt512 = new CompressedFheInt512();
-    executeWithErrorHandling(() -> compressed_fhe_int512_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressedFheInt512.getAddress()));
-    return compressedFheInt512;
+    CompressedFheInt512 compressed = new CompressedFheInt512();
+    executeWithErrorHandling(() -> compressed_fhe_int512_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), compressed.getAddress()));
+    return compressed;
   }
 
   public DynamicBufferView serialize() {
@@ -36,16 +36,16 @@ public class CompressedFheInt512 extends AddressLayoutPointer implements Cloneab
   }
 
   public FheInt512 decompress() {
-    FheInt512 fheint512 = new FheInt512();
-    executeWithErrorHandling(() -> compressed_fhe_int512_decompress(getValue(), fheint512.getAddress()));
-    return fheint512;
+    FheInt512 fhe = new FheInt512();
+    executeWithErrorHandling(() -> compressed_fhe_int512_decompress(getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheInt512 clone() {
-    CompressedFheInt512 compressedFheInt512 = new CompressedFheInt512();
-    executeWithErrorHandling(() -> compressed_fhe_int512_clone(getValue(), compressedFheInt512.getAddress()));
-    return compressedFheInt512;
+    CompressedFheInt512 cloned = new CompressedFheInt512();
+    executeWithErrorHandling(() -> compressed_fhe_int512_clone(getValue(), cloned.getAddress()));
+    return cloned;
   }
 }

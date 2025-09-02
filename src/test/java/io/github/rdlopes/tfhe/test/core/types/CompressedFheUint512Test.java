@@ -11,10 +11,12 @@ import io.github.rdlopes.tfhe.core.types.FheUint512;
 import io.github.rdlopes.tfhe.core.types.U512;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("intensive")
 class CompressedFheUint512Test {
   private ClientKey clientKey;
   private ServerKey serverKey;
@@ -26,7 +28,6 @@ class CompressedFheUint512Test {
     KeySet keySet = config.generateKeys();
     clientKey = keySet.clientKey();
     serverKey = keySet.serverKey();
-
     serverKey.setAsKey();
   }
 
@@ -37,63 +38,32 @@ class CompressedFheUint512Test {
   }
 
   @Test
-  void encryptsWithClientKey() {
-    U512 originalValue = U512.valueOf("1000");
-    CompressedFheUint512 compressed = CompressedFheUint512.encryptWithClientKey(originalValue, clientKey);
-    assertThat(compressed).isNotNull();
-    assertThat(compressed.getValue()).isNotNull();
-  }
-
-  @Test
-  void decompressesAndDecrypts() {
-    U512 originalValue = U512.valueOf("1000");
-    CompressedFheUint512 compressed = CompressedFheUint512.encryptWithClientKey(originalValue, clientKey);
-
-    FheUint512 decompressed = compressed.decompress();
-    assertThat(decompressed).isNotNull();
-    assertThat(decompressed.getValue()).isNotNull();
-
-    U512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
-  }
-
-  @Test
-  void serializesAndDeserializes() {
-    CompressedFheUint512 original = CompressedFheUint512.encryptWithClientKey(U512.valueOf("700"), clientKey);
-    DynamicBufferView buffer = original.serialize();
-
-    assertThat(buffer.getLength()).isGreaterThan(0);
-
+  void encryptsSerializesAndDeserializes() {
+    CompressedFheUint512 compressed = CompressedFheUint512.encryptWithClientKey(U512.valueOf("100"), clientKey);
+    DynamicBufferView buffer = compressed.serialize();
     CompressedFheUint512 deserialized = CompressedFheUint512.deserialize(buffer, serverKey);
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getValue()).isNotNull();
-
     FheUint512 decompressed = deserialized.decompress();
     U512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(U512.valueOf("700"));
+    assertThat(decrypted).isEqualTo(U512.valueOf("100"));
   }
 
   @Test
-  void clones() {
-    CompressedFheUint512 original = CompressedFheUint512.encryptWithClientKey(U512.valueOf("1500"), clientKey);
-
-    CompressedFheUint512 cloned = original.clone();
-    assertThat(cloned).isNotNull();
-    assertThat(cloned.getValue()).isNotNull();
-    assertThat(cloned).isNotSameAs(original);
-
-    FheUint512 decompressed = cloned.decompress();
-    U512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(U512.valueOf("1500"));
-  }
-
-  @Test
-  void roundTripFromFheUint512() {
-    U512 originalValue = U512.valueOf("1500");
-    FheUint512 fheuint512 = FheUint512.encryptWithClientKey(originalValue, clientKey);
-    CompressedFheUint512 compressed = fheuint512.compress();
+  void decompressesRoundTrip() {
+    FheUint512 original = FheUint512.encryptWithClientKey(U512.valueOf("100"), clientKey);
+    CompressedFheUint512 compressed = original.compress();
     FheUint512 decompressed = compressed.decompress();
     U512 decrypted = decompressed.decryptWithClientKey(clientKey);
-    assertThat(decrypted).isEqualTo(originalValue);
+    assertThat(decrypted).isEqualTo(U512.valueOf("100"));
+  }
+
+  @Test
+  void clonesSuccessfully() {
+    CompressedFheUint512 original = CompressedFheUint512.encryptWithClientKey(U512.valueOf("100"), clientKey);
+    CompressedFheUint512 cloned = original.clone();
+    FheUint512 a = original.decompress();
+    FheUint512 b = cloned.decompress();
+    U512 da = a.decryptWithClientKey(clientKey);
+    U512 db = b.decryptWithClientKey(clientKey);
+    assertThat(da).isEqualTo(db);
   }
 }

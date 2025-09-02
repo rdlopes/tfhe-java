@@ -16,28 +16,30 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
     super(FheInt232.class, TfheWrapper::fhe_int232_destroy);
   }
 
-  public static FheInt232 encryptWithClientKey(I256 clearValue, ClientKey clientKey) {
-    FheInt232 fheint232 = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), fheint232.getAddress()));
-    return fheint232;
+  public static FheInt232
+  encryptWithClientKey(I256 clearValue, ClientKey clientKey) {
+    FheInt232 fhe = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
-  public static FheInt232 encryptWithPublicKey(I256 clearValue, PublicKey publicKey) {
-    FheInt232 fheint232 = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_try_encrypt_with_public_key_i256(clearValue.getAddress(), publicKey.getValue(), fheint232.getAddress()));
-    return fheint232;
+  public static FheInt232
+  encryptWithPublicKey(I256 clearValue, PublicKey publicKey) {
+    FheInt232 fhe = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_try_encrypt_with_public_key_i256(clearValue.getAddress(), publicKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt232 encryptTrivial(I256 clearValue) {
-    FheInt232 fheint232 = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_try_encrypt_trivial_i256(clearValue.getAddress(), fheint232.getAddress()));
-    return fheint232;
+    FheInt232 fhe = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_try_encrypt_trivial_i256(clearValue.getAddress(), fhe.getAddress()));
+    return fhe;
   }
 
   public static FheInt232 deserialize(DynamicBufferView bufferView, ServerKey serverKey) {
-    FheInt232 fheint232 = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fheint232.getAddress()));
-    return fheint232;
+    FheInt232 fhe = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_safe_deserialize_conformant(bufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), fhe.getAddress()));
+    return fhe;
   }
 
   public DynamicBufferView serialize() {
@@ -48,8 +50,8 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
     return dynamicBufferView;
   }
 
-
-  public I256 decryptWithClientKey(ClientKey clientKey) {
+  public I256
+  decryptWithClientKey(ClientKey clientKey) {
     I256 clearValue = new I256();
     executeWithErrorHandling(() -> fhe_int232_decrypt(getValue(), clientKey.getValue(), clearValue.getAddress()));
     return clearValue;
@@ -60,38 +62,6 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int232_try_decrypt_trivial(getValue(), clearValue.getAddress()));
     return clearValue;
   }
-
-
-  public FheInt232 add(FheInt232 other) {
-    FheInt232 result = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void addAssign(FheInt232 other) {
-    executeWithErrorHandling(() -> fhe_int232_add_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt232 sub(FheInt232 other) {
-    FheInt232 result = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void subAssign(FheInt232 other) {
-    executeWithErrorHandling(() -> fhe_int232_sub_assign(getValue(), other.getValue()));
-  }
-
-  public FheInt232 mul(FheInt232 other) {
-    FheInt232 result = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public void mulAssign(FheInt232 other) {
-    executeWithErrorHandling(() -> fhe_int232_mul_assign(getValue(), other.getValue()));
-  }
-
 
   public FheInt232 and(FheInt232 other) {
     FheInt232 result = new FheInt232();
@@ -123,6 +93,103 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int232_bitxor_assign(getValue(), other.getValue()));
   }
 
+  public FheInt232 scalarAnd(I256 scalar) {
+    FheInt232 result = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_scalar_bitand(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarAndAssign(I256 scalar) {
+    executeWithErrorHandling(() -> fhe_int232_scalar_bitand_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt232 scalarOr(I256 scalar) {
+    FheInt232 result = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_scalar_bitor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarOrAssign(I256 scalar) {
+    executeWithErrorHandling(() -> fhe_int232_scalar_bitor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheInt232 scalarXor(I256 scalar) {
+    FheInt232 result = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_scalar_bitxor(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public void scalarXorAssign(I256 scalar) {
+    executeWithErrorHandling(() -> fhe_int232_scalar_bitxor_assign(getValue(), scalar.getAddress()));
+  }
+
+  public FheBool eq(FheInt232 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int232_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool ne(FheInt232 other) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int232_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarEq(I256 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int232_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public FheBool scalarNe(I256 scalar) {
+    FheBool result = new FheBool();
+    executeWithErrorHandling(() -> fhe_int232_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
+    return result;
+  }
+
+  public CompressedFheInt232 compress() {
+    CompressedFheInt232 compressed = new CompressedFheInt232();
+    executeWithErrorHandling(() -> fhe_int232_compress(getValue(), compressed.getAddress()));
+    return compressed;
+  }
+
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheInt232 clone() {
+    FheInt232 cloned = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_clone(getValue(), cloned.getAddress()));
+    return cloned;
+  }
+
+  public FheInt232 add(FheInt232 other) {
+    FheInt232 result = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void addAssign(FheInt232 other) {
+    executeWithErrorHandling(() -> fhe_int232_add_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt232 sub(FheInt232 other) {
+    FheInt232 result = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void subAssign(FheInt232 other) {
+    executeWithErrorHandling(() -> fhe_int232_sub_assign(getValue(), other.getValue()));
+  }
+
+  public FheInt232 mul(FheInt232 other) {
+    FheInt232 result = new FheInt232();
+    executeWithErrorHandling(() -> fhe_int232_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void mulAssign(FheInt232 other) {
+    executeWithErrorHandling(() -> fhe_int232_mul_assign(getValue(), other.getValue()));
+  }
 
   public FheInt232 scalarAdd(I256 scalar) {
     FheInt232 result = new FheInt232();
@@ -154,20 +221,6 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
     executeWithErrorHandling(() -> fhe_int232_scalar_mul_assign(getValue(), scalar.getAddress()));
   }
 
-
-  public FheBool eq(FheInt232 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int232_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool ne(FheInt232 other) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int232_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-
   public FheBool ge(FheInt232 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int232_ge(getValue(), other.getValue(), result.getAddress()));
@@ -189,18 +242,6 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
   public FheBool lt(FheInt232 other) {
     FheBool result = new FheBool();
     executeWithErrorHandling(() -> fhe_int232_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarEq(I256 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int232_scalar_eq(getValue(), scalar.getAddress(), result.getAddress()));
-    return result;
-  }
-
-  public FheBool scalarNe(I256 scalar) {
-    FheBool result = new FheBool();
-    executeWithErrorHandling(() -> fhe_int232_scalar_ne(getValue(), scalar.getAddress(), result.getAddress()));
     return result;
   }
 
@@ -229,17 +270,4 @@ public class FheInt232 extends AddressLayoutPointer implements Cloneable {
   }
 
 
-  public CompressedFheInt232 compress() {
-    CompressedFheInt232 compressed = new CompressedFheInt232();
-    executeWithErrorHandling(() -> fhe_int232_compress(getValue(), compressed.getAddress()));
-    return compressed;
-  }
-
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt232 clone() {
-    FheInt232 fheint232 = new FheInt232();
-    executeWithErrorHandling(() -> fhe_int232_clone(getValue(), fheint232.getAddress()));
-    return fheint232;
-  }
 }
