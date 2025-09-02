@@ -10,7 +10,9 @@ import io.github.rdlopes.tfhe.ffm.TfheWrapper;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public class FheInt200 extends AddressLayoutPointer implements Cloneable {
+public class FheInt200 extends AddressLayoutPointer implements
+
+  Cloneable {
 
   protected FheInt200() {
     super(FheInt200.class, TfheWrapper::fhe_int200_destroy);

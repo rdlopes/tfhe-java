@@ -12,7 +12,9 @@ import java.lang.foreign.MemorySegment;
 
 import static io.github.rdlopes.tfhe.ffm.TfheWrapper.*;
 
-public class FheInt16 extends AddressLayoutPointer implements Cloneable {
+public class FheInt16 extends AddressLayoutPointer implements
+
+  Cloneable {
 
   protected FheInt16() {
     super(FheInt16.class, TfheWrapper::fhe_int16_destroy);
