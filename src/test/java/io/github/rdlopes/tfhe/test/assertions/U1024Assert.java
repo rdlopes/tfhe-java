@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.test.assertions;
 
-import io.github.rdlopes.tfhe.core.types.U1024;
+import io.github.rdlopes.tfhe.internal.data.U1024;
 import org.assertj.core.api.AbstractAssert;
 
 import java.math.BigInteger;
@@ -24,7 +24,7 @@ public class U1024Assert extends AbstractAssert<U1024Assert, U1024> {
     return this;
   }
 
-  public U1024Assert isEqualTo(BigInteger expected) {
+  public U1024Assert hasValue(BigInteger expected) {
     isNotNull();
     if (expected == null) {
       failWithMessage("Expected BigInteger should not be null");
@@ -34,19 +34,19 @@ public class U1024Assert extends AbstractAssert<U1024Assert, U1024> {
     }
     BigInteger actualValue = actual.getValue();
     if (!actualValue.equals(expected)) {
-      failWithMessage("Expected U1024 to be equal to <%s> but was <%s>", expected, actualValue);
+      failWithMessage("Expected U1024 to have value <%s> but was <%s>", expected, actualValue);
     }
     return this;
   }
 
-  public U1024Assert isEqualTo(long expected) {
+  public U1024Assert hasValue(long expected) {
     if (expected < 0) {
       failWithMessage("Expected long should not be negative for U1024 comparison");
     }
-    return isEqualTo(BigInteger.valueOf(expected));
+    return hasValue(BigInteger.valueOf(expected));
   }
 
-  public U1024Assert isEqualTo(String expected) {
+  public U1024Assert hasValue(String expected) {
     if (expected == null) {
       failWithMessage("Expected String should not be null");
     }
@@ -54,7 +54,7 @@ public class U1024Assert extends AbstractAssert<U1024Assert, U1024> {
     if (expectedBigInt.signum() < 0) {
       failWithMessage("Expected String should not represent a negative value for U1024 comparison");
     }
-    return isEqualTo(expectedBigInt);
+    return hasValue(expectedBigInt);
   }
 
   public U1024Assert isGreaterThan(U1024 expected) {
@@ -103,29 +103,4 @@ public class U1024Assert extends AbstractAssert<U1024Assert, U1024> {
     return isGreaterThan(expectedBigInt);
   }
 
-  public U1024Assert hasWord(int index, long expectedWord) {
-    isNotNull();
-    long actualWord = actual.getWord(index);
-    if (actualWord != expectedWord) {
-      failWithMessage("Expected U1024 word[%d] to be <%s> but was <%s>", index, expectedWord, actualWord);
-    }
-    return this;
-  }
-
-  public U1024Assert hasWords(long[] expectedWords) {
-    isNotNull();
-    if (expectedWords == null) {
-      failWithMessage("Expected word array should not be null");
-    }
-    if (expectedWords.length != 16) {
-      failWithMessage("Expected word array should have exactly 16 elements but had <%d>", expectedWords.length);
-    }
-    long[] actualWords = actual.getWords();
-    for (int i = 0; i < 16; i++) {
-      if (actualWords[i] != expectedWords[i]) {
-        failWithMessage("Expected U1024 word[%d] to be <%s> but was <%s>", i, expectedWords[i], actualWords[i]);
-      }
-    }
-    return this;
-  }
 }

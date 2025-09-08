@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.test.assertions;
 
-import io.github.rdlopes.tfhe.core.types.I128;
+import io.github.rdlopes.tfhe.internal.data.I128;
 import org.assertj.core.api.AbstractAssert;
 
 import java.math.BigInteger;
@@ -24,27 +24,27 @@ public class I128Assert extends AbstractAssert<I128Assert, I128> {
     return this;
   }
 
-  public I128Assert isEqualTo(BigInteger expected) {
+  public I128Assert hasValue(BigInteger expected) {
     isNotNull();
     if (expected == null) {
       failWithMessage("Expected BigInteger should not be null");
     }
     BigInteger actualValue = actual.getValue();
     if (!actualValue.equals(expected)) {
-      failWithMessage("Expected I128 to be equal to <%s> but was <%s>", expected, actualValue);
+      failWithMessage("Expected I128 to have value <%s> but was <%s>", expected, actualValue);
     }
     return this;
   }
 
-  public I128Assert isEqualTo(long expected) {
-    return isEqualTo(BigInteger.valueOf(expected));
+  public I128Assert hasValue(long expected) {
+    return hasValue(BigInteger.valueOf(expected));
   }
 
-  public I128Assert isEqualTo(String expected) {
+  public I128Assert hasValue(String expected) {
     if (expected == null) {
       failWithMessage("Expected String should not be null");
     }
-    return isEqualTo(new BigInteger(expected));
+    return hasValue(new BigInteger(expected));
   }
 
   public I128Assert isGreaterThan(I128 expected) {
@@ -83,25 +83,4 @@ public class I128Assert extends AbstractAssert<I128Assert, I128> {
     return isGreaterThan(new BigInteger(expected));
   }
 
-  public I128Assert hasW0(long expectedW0) {
-    isNotNull();
-    long actualW0 = actual.getW0();
-    if (actualW0 != expectedW0) {
-      failWithMessage("Expected I128 w0 to be <%s> but was <%s>", expectedW0, actualW0);
-    }
-    return this;
-  }
-
-  public I128Assert hasW1(long expectedW1) {
-    isNotNull();
-    long actualW1 = actual.getW1();
-    if (actualW1 != expectedW1) {
-      failWithMessage("Expected I128 w1 to be <%s> but was <%s>", expectedW1, actualW1);
-    }
-    return this;
-  }
-
-  public I128Assert hasComponents(long expectedW1, long expectedW0) {
-    return hasW1(expectedW1).hasW0(expectedW0);
-  }
 }

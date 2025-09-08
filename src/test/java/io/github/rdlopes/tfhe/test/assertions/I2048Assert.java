@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.test.assertions;
 
-import io.github.rdlopes.tfhe.core.types.I2048;
+import io.github.rdlopes.tfhe.internal.data.I2048;
 import org.assertj.core.api.AbstractAssert;
 
 import java.math.BigInteger;
@@ -24,27 +24,27 @@ public class I2048Assert extends AbstractAssert<I2048Assert, I2048> {
     return this;
   }
 
-  public I2048Assert isEqualTo(BigInteger expected) {
+  public I2048Assert hasValue(BigInteger expected) {
     isNotNull();
     if (expected == null) {
       failWithMessage("Expected BigInteger should not be null");
     }
     BigInteger actualValue = actual.getValue();
     if (!actualValue.equals(expected)) {
-      failWithMessage("Expected I2048 to be equal to <%s> but was <%s>", expected, actualValue);
+      failWithMessage("Expected I2048 to have value <%s> but was <%s>", expected, actualValue);
     }
     return this;
   }
 
-  public I2048Assert isEqualTo(long expected) {
-    return isEqualTo(BigInteger.valueOf(expected));
+  public I2048Assert hasValue(long expected) {
+    return hasValue(BigInteger.valueOf(expected));
   }
 
-  public I2048Assert isEqualTo(String expected) {
+  public I2048Assert hasValue(String expected) {
     if (expected == null) {
       failWithMessage("Expected String should not be null");
     }
-    return isEqualTo(new BigInteger(expected));
+    return hasValue(new BigInteger(expected));
   }
 
   public I2048Assert isGreaterThan(I2048 expected) {

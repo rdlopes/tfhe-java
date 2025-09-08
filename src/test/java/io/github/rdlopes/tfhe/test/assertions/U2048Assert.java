@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.test.assertions;
 
-import io.github.rdlopes.tfhe.core.types.U2048;
+import io.github.rdlopes.tfhe.internal.data.U2048;
 import org.assertj.core.api.AbstractAssert;
 
 import java.math.BigInteger;
@@ -24,7 +24,7 @@ public class U2048Assert extends AbstractAssert<U2048Assert, U2048> {
     return this;
   }
 
-  public U2048Assert isEqualTo(BigInteger expected) {
+  public U2048Assert hasValue(BigInteger expected) {
     isNotNull();
     if (expected == null) {
       failWithMessage("Expected BigInteger should not be null");
@@ -34,19 +34,19 @@ public class U2048Assert extends AbstractAssert<U2048Assert, U2048> {
     }
     BigInteger actualValue = actual.getValue();
     if (!actualValue.equals(expected)) {
-      failWithMessage("Expected U2048 to be equal to <%s> but was <%s>", expected, actualValue);
+      failWithMessage("Expected U2048 to have value <%s> but was <%s>", expected, actualValue);
     }
     return this;
   }
 
-  public U2048Assert isEqualTo(long expected) {
+  public U2048Assert hasValue(long expected) {
     if (expected < 0) {
       failWithMessage("Expected long should not be negative for U2048 comparison");
     }
-    return isEqualTo(BigInteger.valueOf(expected));
+    return hasValue(BigInteger.valueOf(expected));
   }
 
-  public U2048Assert isEqualTo(String expected) {
+  public U2048Assert hasValue(String expected) {
     if (expected == null) {
       failWithMessage("Expected String should not be null");
     }
@@ -54,7 +54,7 @@ public class U2048Assert extends AbstractAssert<U2048Assert, U2048> {
     if (expectedBigInt.signum() < 0) {
       failWithMessage("Expected String should not represent a negative value for U2048 comparison");
     }
-    return isEqualTo(expectedBigInt);
+    return hasValue(expectedBigInt);
   }
 
   public U2048Assert isGreaterThan(U2048 expected) {
@@ -103,29 +103,4 @@ public class U2048Assert extends AbstractAssert<U2048Assert, U2048> {
     return isGreaterThan(expectedBigInt);
   }
 
-  public U2048Assert hasWord(int index, long expectedWord) {
-    isNotNull();
-    long actualWord = actual.getWord(index);
-    if (actualWord != expectedWord) {
-      failWithMessage("Expected U2048 word[%d] to be <%s> but was <%s>", index, expectedWord, actualWord);
-    }
-    return this;
-  }
-
-  public U2048Assert hasWords(long[] expectedWords) {
-    isNotNull();
-    if (expectedWords == null) {
-      failWithMessage("Expected word array should not be null");
-    }
-    if (expectedWords.length != 32) {
-      failWithMessage("Expected word array should have exactly 32 elements but had <%d>", expectedWords.length);
-    }
-    long[] actualWords = actual.getWords();
-    for (int i = 0; i < 32; i++) {
-      if (actualWords[i] != expectedWords[i]) {
-        failWithMessage("Expected U2048 word[%d] to be <%s> but was <%s>", i, expectedWords[i], actualWords[i]);
-      }
-    }
-    return this;
-  }
 }

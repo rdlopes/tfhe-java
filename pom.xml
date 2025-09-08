@@ -27,19 +27,29 @@
     <native-libs.basedir>${native.basedir}/libs</native-libs.basedir>
     <native-bindings.basedir>${native.basedir}/bindings</native-bindings.basedir>
     <native-libs.output.directory>${project.build.outputDirectory}/native</native-libs.output.directory>
-    <native-bindings.output.directory>${project.build.directory}/generated-sources/tfhe-rs</native-bindings.output.directory>
+    <generated.output.directory>${project.build.directory}/generated-sources</generated.output.directory>
+    <generated.test.output.directory>${project.build.directory}/generated-test-sources</generated.test.output.directory>
+    <native-bindings.output.directory>${generated.output.directory}/tfhe-rs</native-bindings.output.directory>
     <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
     <!--suppress XmlUnresolvedReference -->
     <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Library dependencies -->
     <commons-io.version>2.20.0</commons-io.version>
     <commons-lang3.version>3.18.0</commons-lang3.version>
+    <freemarker.version>2.3.34</freemarker.version>
+    <jspecify.version>1.0.0</jspecify.version>
+    <picocli.version>4.7.7</picocli.version>
     <!-- Plugin dependencies-->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.jspecify</groupId>
+        <artifactId>jspecify</artifactId>
+        <version>${jspecify.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
@@ -50,13 +60,23 @@
         <artifactId>commons-io</artifactId>
         <version>${commons-io.version}</version>
       </dependency>
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>${picocli.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>${freemarker.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -66,7 +86,22 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -82,15 +117,17 @@
       <artifactId>assertj-core</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgs>--enable-preview</compilerArgs>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -98,7 +135,8 @@
           <environmentVariables>
             <RUST_BACKTRACE>full</RUST_BACKTRACE>
           </environmentVariables>
-          <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
+          <argLine combine.children="append">--enable-preview
+            --enable-native-access=ALL-UNNAMED
             -Djava.library.path=${java.library.path}</argLine>
           <excludedGroups>intensive</excludedGroups>
           <runOrder>alphabetical</runOrder>
@@ -155,11 +193,11 @@
         <artifactId>build-helper-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>add-native-bindings</id>
+            <id>add-generated-classes</id>
             <goals>
               <goal>add-source</goal>
             </goals>
-            <phase>process-sources</phase>
+            <phase>process-resources</phase>
             <configuration>
               <sources>
                 <source>${native-bindings.output.directory}</source>
