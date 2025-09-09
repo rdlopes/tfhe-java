@@ -13,14 +13,14 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public class CompressedFheBool extends NativeValue implements Cloneable {
-  private static final Logger logger = LoggerFactory.getLogger(CompressedFheBool.class);
+  private static final Logger logger = LoggerFactory.getLogger(CompressedFheBool. class);
 
   /**
    * {@snippet lang = "c":
    * &#47;&#42;&#42;
-   *  &#42;ptr can be null (no-op in that case)
+   *  *ptr can be null (no-op in that case)
    *  &#42;&#47;
-   * int compressed_fhe_bool_destroy(struct CompressedFheBool &#42;ptr);
+   * int compressed_fhe_bool_destroy(struct CompressedFheBool *ptr);
    *}
    */
   CompressedFheBool() {
@@ -31,8 +31,8 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
   /**
    * {@snippet lang = "c":
    * int compressed_fhe_bool_try_encrypt_with_client_key_bool(bool value,
-   *                                                          const struct ClientKey &#42;client_key,
-   *                                                          struct CompressedFheBool &#42;&#42;result);
+   *                                                          const struct ClientKey *client_key,
+   *                                                          struct CompressedFheBool **result);
    *}
    */
   public static CompressedFheBool encryptWithClientKey(Boolean clearValue, ClientKey clientKey) {
@@ -45,23 +45,23 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
   /**
    * {@snippet lang = "c":
    * &#47;&#42;&#42;
-   *  &#42; Deserializes safely, and checks that the resulting ciphertext
-   *  &#42; is in compliance with the shape of ciphertext that the `server_key` expects.
-   *  &#42;
-   *  &#42; This function can only deserialize types which have been serialized
-   *  &#42; by a `safe_serialize` function.
-   *  &#42;
-   *  &#42; - `serialized_size_limit`: size limit (in number of byte) of the serialized object
-   *  &#42;    (to avoid out of memory attacks)
-   *  &#42; - `server_key`: ServerKey used in the conformance check
-   *  &#42; - `result`: pointer where resulting deserialized object needs to be stored.
-   *  &#42;    &#42; cannot be NULL
-   *  &#42;    &#42; (&#42;result) will point the deserialized object on success, else NULL
+   *  * Deserializes safely, and checks that the resulting ciphertext
+   *  * is in compliance with the shape of ciphertext that the `server_key` expects.
+   *  *
+   *  * This function can only deserialize types which have been serialized
+   *  * by a `safe_serialize` function.
+   *  *
+   *  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+   *  *    (to avoid out of memory attacks)
+   *  * - `server_key`: ServerKey used in the conformance check
+   *  * - `result`: pointer where resulting deserialized object needs to be stored.
+   *  *    * cannot be NULL
+   *  *    * (*result) will point the deserialized object on success, else NULL
    *  &#42;&#47;
    * int compressed_fhe_bool_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
    *                                                     uint64_t serialized_size_limit,
-   *                                                     const struct ServerKey &#42;server_key,
-   *                                                     struct CompressedFheBool &#42;&#42;result);
+   *                                                     const struct ServerKey *server_key,
+   *                                                     struct CompressedFheBool **result);
    *}
    */
   public static CompressedFheBool deserialize(byte[] buffer, ServerKey serverKey) {
@@ -72,20 +72,19 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
     ;
     return deserialized;
   }
-
   /**
    * {@snippet lang = "c":
    * &#47;&#42;&#42;
-   *  &#42; Serializes safely.
-   *  &#42;
-   *  &#42; This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
-   *  &#42; versions of TFHE-rs.
-   *  &#42;
-   *  &#42; - `serialized_size_limit`: size limit (in number of byte) of the serialized object
-   *  &#42;    (to avoid out of memory attacks)
+   *  * Serializes safely.
+   *  *
+   *  * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+   *  * versions of TFHE-rs.
+   *  *
+   *  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+   *  *    (to avoid out of memory attacks)
    *  &#42;&#47;
-   * int compressed_fhe_bool_safe_serialize(const struct CompressedFheBool &#42;sself,
-   *                                        struct DynamicBuffer &#42;result,
+   * int compressed_fhe_bool_safe_serialize(const struct CompressedFheBool *sself,
+   *                                        struct DynamicBuffer *result,
    *                                        uint64_t serialized_size_limit);
    *}
    */
@@ -96,11 +95,10 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
       return dynamicBuffer.toByteArray();
     }
   }
-
   /**
    * {@snippet lang = "c":
-   * int compressed_fhe_bool_serialize(const struct CompressedFheBool &#42;sself,
-   *                                   struct DynamicBuffer &#42;result);
+   * int compressed_fhe_bool_serialize(const struct CompressedFheBool *sself,
+   *                                   struct DynamicBuffer *result);
    *}
    */
   public byte[] unsafeSerialize() {
@@ -110,11 +108,10 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
       return dynamicBuffer.toByteArray();
     }
   }
-
   /**
    * {@snippet lang = "c":
    * int compressed_fhe_bool_deserialize(struct DynamicBufferView buffer_view,
-   *                                     struct CompressedFheBool &#42;&#42;result);
+   *                                     struct CompressedFheBool **result);
    *}
    */
   public static CompressedFheBool unsafeDeserialize(byte[] buffer) {
@@ -127,7 +124,7 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
 
   /**
    * {@snippet lang = "c":
-   * int compressed_fhe_bool_decompress(const struct CompressedFheBool &#42;sself, struct FheBool &#42;&#42;result);
+   * int compressed_fhe_bool_decompress(const struct CompressedFheBool *sself, struct FheBool **result);
    *}
    */
   public FheBool decompress() {
@@ -139,8 +136,8 @@ public class CompressedFheBool extends NativeValue implements Cloneable {
 
   /**
    * {@snippet lang = "c":
-   * int compressed_fhe_bool_clone(const struct CompressedFheBool &#42;sself,
-   *                               struct CompressedFheBool &#42;&#42;result);
+   * int compressed_fhe_bool_clone(const struct CompressedFheBool *sself,
+   *                               struct CompressedFheBool **result);
    *}
    */
   @Override

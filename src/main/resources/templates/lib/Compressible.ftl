@@ -25,11 +25,13 @@
 <#macro testCompressDecompress className compressedClassName testValues dataClass>
   @Test
   void compressesAndDecompresses() {
+    logger.trace("compressesAndDecompresses");
+
     ${dataClass.simpleName} value = ${testValues.first()};
-    ${className} original = ${className}.encryptWithClientKey(value, clientKey);
+    ${className} original = ${className}.encryptWithClientKey(value, keySet.clientKey());
     ${compressedClassName} compressed = original.compress();
     ${className} decompressed = compressed.decompress();
-    ${dataClass.simpleName} decrypted = decompressed.decryptWithClientKey(clientKey);
+    ${dataClass.simpleName} decrypted = decompressed.decryptWithClientKey(keySet.clientKey());
 
     assertThat(decrypted).isEqualTo(${testValues.first()});
   }
@@ -38,6 +40,8 @@
 <#macro testRoundTrip className compressedClassName testValues dataClass>
   @Test
   void roundTrip() {
+    logger.trace("roundTrip");
+
     ${dataClass.simpleName} value = ${testValues.first()};
     ${className} original = ${className}.encryptWithClientKey(value, clientKey);
     ${compressedClassName} compressed = original.compress();

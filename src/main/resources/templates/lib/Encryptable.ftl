@@ -50,9 +50,11 @@
 <#macro testEncryptDecryptWithClientKey className testValues dataClass>
   @Test
   void encryptsAndDecryptsWithClientKey() {
+    logger.trace("encryptsAndDecryptsWithClientKey");
+
     ${dataClass.simpleName} originalValue = ${testValues.first()};
-    ${className} encrypted = ${className}.encryptWithClientKey(originalValue, clientKey);
-    ${dataClass.simpleName} decrypted = encrypted.decryptWithClientKey(clientKey);
+    ${className} encrypted = ${className}.encryptWithClientKey(originalValue, keySet.clientKey());
+    ${dataClass.simpleName} decrypted = encrypted.decryptWithClientKey(keySet.clientKey());
 
     assertThat(decrypted).isEqualTo(${testValues.first()});
   }
@@ -61,10 +63,12 @@
 <#macro testEncryptDecryptWithPublicKey className testValues dataClass>
   @Test
   void encryptsAndDecryptsWithPublicKey() {
-    PublicKey publicKey = PublicKey.newWith(clientKey);
+    logger.trace("encryptsAndDecryptsWithPublicKey");
+
+    PublicKey publicKey = PublicKey.createFromClientKey(keySet.clientKey());
     ${dataClass.simpleName} originalValue = ${testValues.first()};
     ${className} encrypted = ${className}.encryptWithPublicKey(originalValue, publicKey);
-    ${dataClass.simpleName} decrypted = encrypted.decryptWithClientKey(clientKey);
+    ${dataClass.simpleName} decrypted = encrypted.decryptWithClientKey(keySet.clientKey());
 
     assertThat(decrypted).isEqualTo(${testValues.first()});
   }
@@ -73,6 +77,8 @@
 <#macro testEncryptDecryptTrivial className testValues dataClass>
   @Test
   void encryptsAndDecryptsTrivial() {
+    logger.trace("encryptsAndDecryptsTrivial");
+
     ${dataClass.simpleName} originalValue = ${testValues.first()};
     ${className} encrypted = ${className}.encryptTrivial(originalValue);
     ${dataClass.simpleName} decrypted = encrypted.decryptTrivial();

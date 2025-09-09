@@ -1,6 +1,4 @@
-<#-- Shared variables -->
 <#-- @ftlvariable name="symbolsIndex" type="io.github.rdlopes.tfhe.generator.SymbolsIndex" -->
-<#-- Default variables -->
 <#-- @ftlvariable name="sourcePackageName" type="String" -->
 <#-- @ftlvariable name="testPackageName" type="String" -->
 <#-- @ftlvariable name="className" type="String" -->
@@ -9,10 +7,8 @@
 <#-- @ftlvariable name="testCompressedClassName" type="String" -->
 <#-- @ftlvariable name="dataClass" type="java.lang.Class" -->
 <#-- @ftlvariable name="testValues" type="io.github.rdlopes.tfhe.generator.mappers.TestValues" -->
-<#-- Template variables -->
 <#import "lib/snippets.ftl" as s>
 <#import "lib/Object.ftl" as object>
-<#import "lib/Cloneable.ftl" as cloneable>
 <#import "lib/Compressible.ftl" as compressible>
 <#import "lib/Encryptable.ftl" as encryptable>
 <#import "lib/Logical.ftl" as logical>
@@ -20,24 +16,12 @@
 <#import "lib/Serializable.ftl" as serializable>
 package ${sourcePackageName};
 
-import io.github.rdlopes.tfhe.api.keys.ClientKey;
-import io.github.rdlopes.tfhe.api.keys.PublicKey;
-import io.github.rdlopes.tfhe.api.keys.ServerKey;
-import io.github.rdlopes.tfhe.ffm.NativeValue;
-import io.github.rdlopes.tfhe.ffm.TfheHeader;
-import io.github.rdlopes.tfhe.internal.serde.DynamicBuffer;
-import io.github.rdlopes.tfhe.internal.serde.DynamicBufferView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+<@s.sourceImports/>
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.NativeCall.executeWithBoolean;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
-
-public class ${className} extends NativeValue implements
-
-Cloneable {
+<#-- @formatter:off -->
+public class ${className} extends NativeValue implements Cloneable {
   private static final Logger logger = LoggerFactory.getLogger(${className}. class);
+<#-- @formatter:on -->
 
 <@object.constructor className "fhe_bool_destroy"/>
 
@@ -68,12 +52,12 @@ Cloneable {
 <@comparable.scalarEq className "fhe_bool_scalar_eq"  dataClass.simpleName/>
 <@comparable.scalarNe className "fhe_bool_scalar_ne"  dataClass.simpleName/>
 
-<@serializable.serialize "fhe_bool_safe_serialize"/>
+<@serializable.serialize className "fhe_bool_safe_serialize"/>
 <@serializable.deserialize className "fhe_bool_safe_deserialize_conformant"/>
 <@serializable.unsafeSerialize "fhe_bool_serialize"/>
 <@serializable.unsafeDeserialize className "fhe_bool_deserialize"/>
 
-<@cloneable.clone className "fhe_bool_clone"/>
+<@object.clone className "fhe_bool_clone"/>
 
 }
 

@@ -22,8 +22,8 @@ public class FheBoolMapper extends AbstractFheTypeMapper {
   protected Collection<ClassMapping> generateSourceMappings(SymbolsIndex symbolsIndex) {
     logger.trace("generateSourceMappings - symbolsIndex: {}", symbolsIndex);
     return List.of(
-      sourceClass("FheBool", "FheBool"),
-      sourceClass("Compressed", "CompressedFheBool")
+      sourceClass("FheBool", "FheBool", dataModel(getSymbolName())),
+      sourceClass("Compressed", "CompressedFheBool", dataModel(getSymbolName()))
     );
   }
 
@@ -31,8 +31,8 @@ public class FheBoolMapper extends AbstractFheTypeMapper {
   protected Collection<ClassMapping> generateTestMappings(SymbolsIndex symbolsIndex) {
     logger.trace("generateTestMappings - symbolsIndex: {}", symbolsIndex);
     return List.of(
-      testClass("FheBoolTest", "FheBoolTest"),
-      testClass("CompressedTest", "CompressedFheBoolTest")
+      testClass("FheBoolTest", "FheBoolTest", dataModel(getSymbolName())),
+      testClass("CompressedTest", "CompressedFheBoolTest", dataModel(getSymbolName()))
     );
   }
 
@@ -48,7 +48,7 @@ public class FheBoolMapper extends AbstractFheTypeMapper {
 
   @Override
   protected String getPackage() {
-    return "booleans";
+    return "types.booleans";
   }
 
 }

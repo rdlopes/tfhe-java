@@ -45,30 +45,34 @@
 <#macro testComparisonOperations className testValues dataClass>
   @Test
   void performsComparisonOperations() {
+    logger.trace("performsComparisonOperations");
+
     ${dataClass.simpleName} first = ${testValues.first()};
     ${dataClass.simpleName} second = ${testValues.second()};
-    ${className} a = ${className}.encryptWithClientKey(first, clientKey);
-    ${className} b = ${className}.encryptWithClientKey(second, clientKey);
+    ${className} a = ${className}.encryptWithClientKey(first, keySet.clientKey());
+    ${className} b = ${className}.encryptWithClientKey(second, keySet.clientKey());
 
     ${className} eq = a.eq(b);
-    assertThat(eq.decryptWithClientKey(clientKey)).isEqualTo(first == second);
+    assertThat(eq.decryptWithClientKey(keySet.clientKey())).isEqualTo(first == second);
 
     ${className} ne = a.ne(b);
-    assertThat(ne.decryptWithClientKey(clientKey)).isEqualTo(first != second);
+    assertThat(ne.decryptWithClientKey(keySet.clientKey())).isEqualTo(first != second);
   }
 </#macro>
 
 <#macro testScalarComparisonOperations className testValues dataClass>
   @Test
   void performsScalarComparisonOperations() {
+    logger.trace("performsScalarComparisonOperations");
+
     ${dataClass.simpleName} value = ${testValues.first()};
-    ${className} a = ${className}.encryptWithClientKey(value, clientKey);
+    ${className} a = ${className}.encryptWithClientKey(value, keySet.clientKey());
     ${dataClass.simpleName} scalar = ${testValues.second()};
 
     ${className} scalarEq = a.scalarEq(scalar);
-    assertThat(scalarEq.decryptWithClientKey(clientKey)).isEqualTo(value == scalar);
+    assertThat(scalarEq.decryptWithClientKey(keySet.clientKey())).isEqualTo(value == scalar);
 
     ${className} scalarNe = a.scalarNe(scalar);
-    assertThat(scalarNe.decryptWithClientKey(clientKey)).isEqualTo(value != scalar);
+    assertThat(scalarNe.decryptWithClientKey(keySet.clientKey())).isEqualTo(value != scalar);
   }
 </#macro>

@@ -42,7 +42,7 @@ Add the following dependency to your `pom.xml`:
 === Requirements
 
 * **Java 24** or later (requires Foreign Function & Memory API support)
-* **JVM Arguments**: `--enable-native-access=ALL-UNNAMED` (or tfhe.core with module system active)
+* **JVM Arguments**: `--enable-native-access=ALL-UNNAMED`
 * **Native Libraries**: Automatically included in the JAR (supports macOS ARM64, Linux x86_64, Windows x86_64)
 
 === Generated Bindings

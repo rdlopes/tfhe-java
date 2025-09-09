@@ -1,7 +1,7 @@
 package io.github.rdlopes.tfhe.generator;
 
 import io.github.rdlopes.tfhe.generator.mappers.ClassMapping;
-import io.github.rdlopes.tfhe.generator.mappers.FheTypesMapper;
+import io.github.rdlopes.tfhe.generator.mappers.FheSymbolsMapper;
 import io.github.rdlopes.tfhe.generator.parsers.SymbolsParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +30,13 @@ public class Generator implements Callable<Integer> {
   Path sourcesPath;
   @Option(names = {"--test-output"}, description = "directory where to generate Java test sources (optional)", defaultValue = "src/test/java")
   Path testSourcesPath;
-  @Option(names = {"--source-package"}, description = "base package for generated sources (optional)", defaultValue = "io.github.rdlopes.tfhe.api.types")
+  @Option(names = {"--source-package"}, description = "base package for generated sources (optional)", defaultValue = "io.github.rdlopes.tfhe.api")
   String baseSourcePackage;
-  @Option(names = {"--test-package"}, description = "base package for generated sources (optional)", defaultValue = "io.github.rdlopes.tfhe.test.api.types")
+  @Option(names = {"--test-package"}, description = "base package for generated sources (optional)", defaultValue = "io.github.rdlopes.tfhe.api")
   String baseTestPackage;
 
-  static void main(String[] args) {
+  @SuppressWarnings("UnnecessaryModifier")
+  public static void main(String[] args) {
     logger.info("Starting Generator");
     System.exit(new CommandLine(new Generator()).execute(args));
   }
@@ -47,8 +48,8 @@ public class Generator implements Callable<Integer> {
     SymbolsIndex symbolsIndex = SymbolsParser.parse(headerClassName, nativeHeaderPath, jextractIncludesPath);
     logger.trace("Symbols parsed: {}", symbolsIndex.prettyPrint());
 
-    FheTypesMapper fheTypesMapper = new FheTypesMapper(sourcesPath, testSourcesPath, baseSourcePackage, baseTestPackage);
-    Collection<ClassMapping> classMappings = fheTypesMapper.generateMappings(symbolsIndex);
+    FheSymbolsMapper symbolsMapper = new FheSymbolsMapper(sourcesPath, testSourcesPath, baseSourcePackage, baseTestPackage);
+    Collection<ClassMapping> classMappings = symbolsMapper.generateMappings(symbolsIndex);
     logger.debug("Sources mapped: {}", classMappings);
 
     TemplateWriter templateWriter = new TemplateWriter(templatesPath, symbolsIndex);

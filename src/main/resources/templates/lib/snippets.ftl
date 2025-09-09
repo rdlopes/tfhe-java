@@ -6,9 +6,52 @@
   /**
    * {@snippet lang = "c":
     <#list definition?split("\n") as line>
-   * ${line?replace("/", "&#47;")?replace("*", "&#42;")}
+   * ${line?replace("/**", "&#47;&#42;&#42;")?replace("*/", "&#42;&#47;")}
     </#list>
    *}
    */
   </#if>
 </#macro>
+
+<#macro sourceImports>
+import io.github.rdlopes.tfhe.api.keys.*;
+import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.internal.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.internal.serde.DynamicBufferView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeaderExtension.*;
+</#macro>
+
+<#macro testSetup>
+<#-- @formatter:off -->
+  private KeySet keySet;
+
+  @BeforeEach
+  void setUp() {
+    ConfigBuilder configBuilder = new ConfigBuilder();
+    Config config = configBuilder.build();
+    keySet = config.generateKeys();
+    keySet.serverKey()
+          .setAsKey();
+  }
+
+  @AfterEach
+  void tearDown() {
+    keySet.destroy();
+  }
+<#-- @formatter:on -->
+</#macro>
+
+<#macro testImports>
+import org.junit.jupiter.api .*;
+  import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.github.rdlopes.tfhe.api.keys .*;
+
+  import static io.github.rdlopes.tfhe.assertions.TfheAssertions .*;
+</#macro>
+

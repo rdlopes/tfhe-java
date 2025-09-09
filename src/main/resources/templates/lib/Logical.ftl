@@ -123,39 +123,43 @@
 <#macro testLogicalOperations className testValues dataClass>
   @Test
   void performsLogicalOperations() {
+    logger.trace("performsLogicalOperations");
+
     ${dataClass.simpleName} first = ${testValues.first()};
     ${dataClass.simpleName} second = ${testValues.second()};
-    ${className} a = ${className}.encryptWithClientKey(first, clientKey);
-    ${className} b = ${className}.encryptWithClientKey(second, clientKey);
+    ${className} a = ${className}.encryptWithClientKey(first, keySet.clientKey());
+    ${className} b = ${className}.encryptWithClientKey(second, keySet.clientKey());
 
     ${className} andResult = a.and(b);
-    assertThat(andResult.decryptWithClientKey(clientKey)).isEqualTo(first && second);
+    assertThat(andResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(first && second);
 
     ${className} orResult = a.or(b);
-    assertThat(orResult.decryptWithClientKey(clientKey)).isEqualTo(first || second);
+    assertThat(orResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(first || second);
 
     ${className} xorResult = a.xor(b);
-    assertThat(xorResult.decryptWithClientKey(clientKey)).isEqualTo(first ^ second);
+    assertThat(xorResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(first ^ second);
 
     ${className} notResult = a.not();
-    assertThat(notResult.decryptWithClientKey(clientKey)).isEqualTo(!first);
+    assertThat(notResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(!first);
   }
 </#macro>
 
 <#macro testScalarLogicalOperations className testValues dataClass>
   @Test
   void performsScalarLogicalOperations() {
+    logger.trace("performsScalarLogicalOperations");
+
     ${dataClass.simpleName} value = ${testValues.first()};
-    ${className} a = ${className}.encryptWithClientKey(value, clientKey);
+    ${className} a = ${className}.encryptWithClientKey(value, keySet.clientKey());
     ${dataClass.simpleName} scalar = ${testValues.second()};
 
     ${className} scalarAndResult = a.scalarAnd(scalar);
-    assertThat(scalarAndResult.decryptWithClientKey(clientKey)).isEqualTo(value && scalar);
+    assertThat(scalarAndResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(value && scalar);
 
     ${className} scalarOrResult = a.scalarOr(scalar);
-    assertThat(scalarOrResult.decryptWithClientKey(clientKey)).isEqualTo(value || scalar);
+    assertThat(scalarOrResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(value || scalar);
 
     ${className} scalarXorResult = a.scalarXor(scalar);
-    assertThat(scalarXorResult.decryptWithClientKey(clientKey)).isEqualTo(value ^ scalar);
+    assertThat(scalarXorResult.decryptWithClientKey(keySet.clientKey())).isEqualTo(value ^ scalar);
   }
 </#macro>

@@ -16,20 +16,20 @@ import java.util.Map;
 public abstract class AbstractFheTypeMapper implements FheTypeMapper {
   private static final Logger logger = LoggerFactory.getLogger(AbstractFheTypeMapper.class);
   private final FheTypeMapperContext context;
-  private final String typeName;
+  private final String symbolName;
 
-  protected AbstractFheTypeMapper(FheTypeMapperContext context, String typeName) {
-    logger.trace("init - context: {}, typeName: {}", context, typeName);
+  protected AbstractFheTypeMapper(FheTypeMapperContext context, String symbolName) {
+    logger.trace("init - context: {}, typeName: {}", context, symbolName);
     this.context = context;
-    this.typeName = typeName;
+    this.symbolName = symbolName;
   }
 
   public FheTypeMapperContext getContext() {
     return context;
   }
 
-  public String getTypeName() {
-    return typeName;
+  public String getSymbolName() {
+    return symbolName;
   }
 
   @SafeVarargs
@@ -48,25 +48,23 @@ public abstract class AbstractFheTypeMapper implements FheTypeMapper {
     return baseModel;
   }
 
-  @SafeVarargs
-  protected final ClassMapping sourceClass(String templateName, String generatedClassName, Map.Entry<String, Object>... entries) {
+  protected final ClassMapping sourceClass(String templateName, String generatedClassName, Map<String, Object> dataModel) {
     return new ClassMapping(
       templateName + ".ftl",
       getContext().sourcesPath(),
       getContext().resolveSourcePackage(getPackage()),
       generatedClassName + ".java",
-      dataModel(getTypeName(), entries)
+      dataModel
     );
   }
 
-  @SafeVarargs
-  protected final ClassMapping testClass(String templateName, String generatedClassName, Map.Entry<String, Object>... entries) {
+  protected final ClassMapping testClass(String templateName, String generatedClassName, Map<String, Object> dataModel) {
     return new ClassMapping(
       templateName + ".ftl",
       getContext().testSourcesPath(),
       getContext().resolveTestPackage(getPackage()),
       generatedClassName + ".java",
-      dataModel(getTypeName(), entries)
+      dataModel
     );
   }
 

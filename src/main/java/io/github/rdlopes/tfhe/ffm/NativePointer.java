@@ -57,7 +57,7 @@ public class NativePointer {
                               .orElse(0);
   }
 
-  protected void destroy() {
+  public void destroy() {
     if (cleanable != null) {
       cleanable.clean();
     }

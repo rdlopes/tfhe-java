@@ -29,4 +29,11 @@ public record SymbolsIndex(SortedSet<String> names,
                   .filter(name -> name.startsWith(typePrefix))
                   .map(name -> name.substring(typePrefix.length()));
   }
+
+  public Stream<String> fheKeys() {
+    String keyDestroySuffix = "_key_destroy";
+    return names().stream()
+                  .filter(name -> name.endsWith(keyDestroySuffix))
+                  .map(name -> name.replace("_destroy", ""));
+  }
 }
