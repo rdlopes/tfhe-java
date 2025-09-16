@@ -7,14 +7,14 @@ import java.math.BigInteger;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-public final class U1024 extends AbstractIntegerWrapper {
+public final class U1024 extends DataValue {
   public static final int BIT_SIZE = 1024;
   public static final BigInteger MIN_VALUE = ZERO;
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE)
                                                        .subtract(ONE);
 
-  U1024() {
+  public U1024() {
     super(io.github.rdlopes.tfhe.ffm.U1024::allocate, BIT_SIZE, false, MIN_VALUE, MAX_VALUE);
   }
 

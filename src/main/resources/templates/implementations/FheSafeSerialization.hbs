@@ -1,0 +1,19 @@
+{{javadoc this "safe_serialize"}}
+public byte[] serializeSafely() {
+  logger.trace("serializeSafely");
+  try (DynamicBuffer dynamicBuffer = new DynamicBuffer()) {
+    execute(() -> {{nativeMethod this "safe_serialize"}}(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    return dynamicBuffer.toByteArray();
+  }
+}
+
+{{javadoc this "safe_deserialize"}}
+public static {{className}} deserializeSafely(byte[] buffer, ServerKey serverKey) {
+  logger.trace("deserializeSafely - buffer: {}, serverKey: {}", buffer, serverKey);
+  DynamicBufferView dynamicBufferView = DynamicBufferView.fromByteArray(buffer);
+  {{className}} deserialized = new {{className}}();
+  execute(() -> {{nativeMethod this
+                               "safe_deserialize"}}(dynamicBufferView.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()))
+  ;
+  return deserialized;
+}

@@ -1,0 +1,23 @@
+{{javadoc this "shl_assign"}}
+public void shiftLeftAssign({{className}} other) {
+  logger.trace("shiftLeftAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "shl_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "shr_assign"}}
+public void shiftRightAssign({{className}} other) {
+  logger.trace("shiftRightAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "shr_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "rotate_left_assign"}}
+public void rotateLeftAssign({{className}} other) {
+  logger.trace("rotateLeftAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "rotate_left_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "rotate_right_assign"}}
+public void rotateRightAssign({{className}} other) {
+  logger.trace("rotateRightAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "rotate_right_assign"}}(getValue(), other.getValue()));
+}

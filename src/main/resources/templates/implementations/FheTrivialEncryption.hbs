@@ -1,0 +1,27 @@
+{{javadoc this "try_encrypt_trivial"}}
+public static {{className}} encrypt({{dataClass.simpleName}} clearValue) {
+  logger.trace("encrypt - clearValue: {}", clearValue);
+  {{className}} encrypted = new {{className}}();
+  {{#if valueClass}}
+    {{valueClass.simpleName}} value = {{valueClass.simpleName}}.valueOf(clearValue);
+    execute(() ->{{nativeMethod this "try_encrypt_trivial"}}(value.getAddress(), encrypted.getAddress()));
+  {{else}}
+    execute(() ->{{nativeMethod this "try_encrypt_trivial"}}(clearValue, encrypted.getAddress()));
+  {{/if}}
+  return encrypted;
+}
+
+  {{javadoc this "try_decrypt_trivial"}}
+public {{dataClass.simpleName}} decrypt() {
+  logger.trace("decrypt");
+  {{#if valueClass}}
+    {{valueClass.simpleName}} dataValue = new {{valueClass.simpleName}}();
+    executeWithAddress(dataValue.getAddress(), address -> {{nativeMethod this
+                                                                         "try_decrypt_trivial"}}(getValue(), address));
+    return dataValue.getValue();
+  {{else}}
+    return executeAndReturn({{dataClass.simpleName}}. class,
+    address -> {{nativeMethod this "try_decrypt_trivial"}}(getValue(), address));
+  {{/if}}
+}
+//@formatter:on

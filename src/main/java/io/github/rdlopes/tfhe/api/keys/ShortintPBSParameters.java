@@ -5,7 +5,6 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
 import java.lang.foreign.MemorySegment;
 
-
 public class ShortintPBSParameters extends NativePointer {
 
   public static final ShortintPBSParameters SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 = new ShortintPBSParameters(TfheHeader.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128());

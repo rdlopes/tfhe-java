@@ -39,6 +39,7 @@
     <freemarker.version>2.3.34</freemarker.version>
     <jspecify.version>1.0.0</jspecify.version>
     <picocli.version>4.7.7</picocli.version>
+    <handlebars.version>4.5.0</handlebars.version>
     <!-- Plugin dependencies-->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
   </properties>
@@ -66,9 +67,9 @@
         <version>${picocli.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.freemarker</groupId>
-        <artifactId>freemarker</artifactId>
-        <version>${freemarker.version}</version>
+        <groupId>com.github.jknack</groupId>
+        <artifactId>handlebars</artifactId>
+        <version>${handlebars.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -91,8 +92,8 @@
       <artifactId>picocli</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
+      <groupId>com.github.jknack</groupId>
+      <artifactId>handlebars</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -105,11 +106,6 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -201,6 +197,19 @@
             <configuration>
               <sources>
                 <source>${native-bindings.output.directory}</source>
+                <source>${generated.output.directory}/generator</source>
+              </sources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>add-generated-test-classes</id>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <sources>
+                <source>${generated.test.output.directory}/generator</source>
               </sources>
             </configuration>
           </execution>

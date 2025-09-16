@@ -1,0 +1,53 @@
+{{javadoc this "scalar_shl"}}
+public {{className}} scalarShiftLeft({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarShiftLeft - scalar: {}", scalar);
+  {{className}} result = new {{className}}();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_shl"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_shl"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_shr"}}
+public {{className}} scalarShiftRight({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarShiftRight - scalar: {}", scalar);
+  {{className}} result = new {{className}}();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_shr"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_shr"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_rotate_left"}}
+public {{className}} scalarRotateLeft({{this.dataClass.simpleName}} positions) {
+  logger.trace("scalarRotateLeft - positions: {}", positions);
+  {{className}} result = new {{className}}();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} positionsValue = {{this.valueClass.simpleName}}.valueOf(positions);
+    execute(() -> {{nativeMethod this
+                                 "scalar_rotate_left"}}(getValue(), positionsValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_rotate_left"}}(getValue(), positions, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_rotate_right"}}
+public {{className}} scalarRotateRight({{this.dataClass.simpleName}} positions) {
+  logger.trace("scalarRotateRight - positions: {}", positions);
+  {{className}} result = new {{className}}();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} positionsValue = {{this.valueClass.simpleName}}.valueOf(positions);
+    execute(() -> {{nativeMethod this
+                                 "scalar_rotate_right"}}(getValue(), positionsValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_rotate_right"}}(getValue(), positions, result.getAddress()));
+  {{/if}}
+  return result;
+}

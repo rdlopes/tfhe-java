@@ -1,0 +1,36 @@
+@Test
+  {{#if tested.highBitSize}}
+  @Tag("intensive"){{/if}}
+@Tag("FheArithmeticsAssign")
+@Tag("assign")
+void arithmeticsAssign() {
+  logger.trace("arithmeticsAssign");
+
+  {{testSet tested}}
+  {{tested.className}} rhsEncrypted = {{tested.className}}.encrypt(rhs, keySet.clientKey());
+
+  {{tested.className}} lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.addAssign(rhsEncrypted);
+  {{tested.dataClass.simpleName}} decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{add tested "lhs" "rhs"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.subtractAssign(rhsEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{subtract tested "lhs" "rhs"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.multiplyAssign(rhsEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{multiply tested "lhs" "rhs"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.divideAssign(rhsEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{divide tested "lhs" "rhs"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.remainderAssign(rhsEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{remainder tested "lhs" "rhs"}});
+}

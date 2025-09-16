@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import static java.math.BigInteger.ONE;
 
-public final class I256 extends AbstractIntegerWrapper {
+public final class I256 extends DataValue {
   public static final int BIT_SIZE = 256;
   public static final BigInteger MIN_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)
@@ -15,7 +15,7 @@ public final class I256 extends AbstractIntegerWrapper {
                                                        .pow(BIT_SIZE - 1)
                                                        .subtract(ONE);
 
-  I256() {
+  public I256() {
     super(io.github.rdlopes.tfhe.ffm.I256::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
   }
 

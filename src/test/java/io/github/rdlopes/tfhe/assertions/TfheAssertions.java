@@ -3,7 +3,6 @@ package io.github.rdlopes.tfhe.assertions;
 import io.github.rdlopes.tfhe.internal.data.*;
 import org.assertj.core.api.Assertions;
 
-@SuppressWarnings("ClassEscapesDefinedScope")
 public class TfheAssertions extends Assertions {
   public static I128Assert assertThat(I128 actual) {
     return new I128Assert(actual);

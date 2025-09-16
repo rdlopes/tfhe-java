@@ -1,0 +1,16 @@
+@Test
+@Tag("FheCloneable")
+void cloneable() {
+  logger.trace("cloneable");
+
+  {{testValue tested}}
+  {{tested.className}} encrypted = {{tested.className}}.encrypt(originalValue, keySet.clientKey());
+  {{tested.className}} encryptedClone = encrypted.clone();
+  {{#if tested.compressed}}
+    {{tested.compressed.className}} decompressedClone = encryptedClone.decompress();
+    {{tested.dataClass.simpleName}} decryptedClone = decompressedClone.decrypt(keySet.clientKey());
+  {{else}}
+    {{tested.dataClass.simpleName}} decryptedClone = encryptedClone.decrypt(keySet.clientKey());
+  {{/if}}
+  assertThat(decryptedClone).isEqualTo(originalValue);
+}

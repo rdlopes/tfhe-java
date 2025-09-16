@@ -1,0 +1,27 @@
+@Test
+  {{#if tested.highBitSize}}
+  @Tag("intensive"){{/if}}
+@Tag("FheScalarBitwise")
+@Tag("scalar")
+void scalarBitwise() {
+  logger.trace("scalarBitwise");
+
+  {{testSet tested}}
+  {{tested.className}} lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+
+  {{tested.className}} result = lhsEncrypted.scalarShiftLeft(shift);
+  {{tested.dataClass.simpleName}} decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{shiftLeft tested "lhs" "shift"}});
+
+  result = lhsEncrypted.scalarShiftRight(shift);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{shiftRight tested "lhs" "shift"}});
+
+  result = lhsEncrypted.scalarRotateLeft(shift);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isNotNull();
+
+  result = lhsEncrypted.scalarRotateRight(shift);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isNotNull();
+}

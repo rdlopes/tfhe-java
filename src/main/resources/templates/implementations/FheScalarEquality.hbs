@@ -1,0 +1,25 @@
+{{javadoc this "scalar_eq"}}
+public FheBool scalarEq({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarEq - scalar: {}", scalar);
+  FheBool result = new FheBool();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_eq"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_eq"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_ne"}}
+public FheBool scalarNe({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarNe - scalar: {}", scalar);
+  FheBool result = new FheBool();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_ne"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_ne"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}

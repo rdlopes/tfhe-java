@@ -1,0 +1,11 @@
+@Test
+@Tag("FheEncryption")
+void encryption() {
+  logger.trace("encryption");
+
+  {{testValue tested}}
+  {{tested.className}} encrypted = {{tested.className}}.encrypt(originalValue, keySet.clientKey());
+
+  assertThat(encrypted).isNotNull();
+}
+

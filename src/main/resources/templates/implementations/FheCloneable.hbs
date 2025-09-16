@@ -1,0 +1,9 @@
+{{javadoc this "clone"}}
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public {{className}} clone() {
+  logger.trace("clone");
+  {{className}} clone = new {{className}}();
+  execute(() -> {{nativeMethod this "clone"}}(getValue(), clone.getAddress()));
+  return clone;
+}

@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import static java.math.BigInteger.ONE;
 
-public final class I128 extends AbstractIntegerWrapper {
+public final class I128 extends DataValue {
   public static final int BIT_SIZE = 128;
   public static final BigInteger MIN_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)
@@ -15,7 +15,7 @@ public final class I128 extends AbstractIntegerWrapper {
                                                        .pow(BIT_SIZE - 1)
                                                        .subtract(ONE);
 
-  I128() {
+  public I128() {
     super(io.github.rdlopes.tfhe.ffm.I128::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
   }
 

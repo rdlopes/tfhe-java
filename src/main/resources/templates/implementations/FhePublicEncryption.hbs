@@ -1,0 +1,15 @@
+//@formatter:off
+{{javadoc this "try_encrypt_with_public_key"}}
+public static {{className}} encrypt({{dataClass.simpleName}} clearValue, PublicKey publicKey) {
+  logger.trace("encrypt - clearValue: {}, publicKey: {}", clearValue, publicKey);
+  {{className}} encrypted = new {{className}}();
+  {{#if valueClass}}
+    {{valueClass.simpleName}} value = {{valueClass.simpleName}}.valueOf(clearValue);
+    execute(()->{{nativeMethod this "try_encrypt_with_public_key"}}(value.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+  {{else}}
+    execute(()->{{nativeMethod this "try_encrypt_with_public_key"}}(clearValue, publicKey.getValue(), encrypted.getAddress()));
+  {{/if}}
+  return encrypted;
+}
+//@formatter:on
+

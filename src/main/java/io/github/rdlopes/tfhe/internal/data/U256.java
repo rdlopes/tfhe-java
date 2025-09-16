@@ -7,14 +7,14 @@ import java.math.BigInteger;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-public final class U256 extends AbstractIntegerWrapper {
+public final class U256 extends DataValue {
   public static final int BIT_SIZE = 256;
   public static final BigInteger MIN_VALUE = ZERO;
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE)
                                                        .subtract(ONE);
 
-  U256() {
+  public U256() {
     super(io.github.rdlopes.tfhe.ffm.U256::allocate, BIT_SIZE, false, MIN_VALUE, MAX_VALUE);
   }
 

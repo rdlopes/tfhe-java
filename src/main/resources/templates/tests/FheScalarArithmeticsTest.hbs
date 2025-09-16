@@ -1,0 +1,37 @@
+@Test
+  {{#if tested.highBitSize}}
+  @Tag("intensive"){{/if}}
+@Tag("FheScalarArithmetics")
+@Tag("scalar")
+void scalarArithmetics() {
+  logger.trace("scalarArithmetics");
+
+  {{testSet tested}}
+  {{tested.className}} lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+
+  {{tested.className}} result = lhsEncrypted.scalarAdd(rhs);
+  {{tested.dataClass.simpleName}} decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{add tested "lhs" "rhs"}});
+
+  result = lhsEncrypted.scalarSubtract(rhs);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{subtract tested "lhs" "rhs"}});
+
+  result = lhsEncrypted.scalarMultiply(rhs);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{multiply tested "lhs" "rhs"}});
+
+  result = lhsEncrypted.scalarDivide(rhs);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{divide tested "lhs" "rhs"}});
+
+  result = lhsEncrypted.scalarRemainder(rhs);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{remainder tested "lhs" "rhs"}});
+
+  {{tested.className}}[]dividerAndRemainder = lhsEncrypted.scalarDividerAndRemainder(rhs);
+  decryptedResult = dividerAndRemainder[0].decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{divide tested "lhs" "rhs"}});
+  decryptedResult = dividerAndRemainder[1].decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{remainder tested "lhs" "rhs"}});
+}

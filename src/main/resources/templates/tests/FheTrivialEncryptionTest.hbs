@@ -1,0 +1,11 @@
+@Test
+@Tag("FheTrivialEncryption")
+void trivialEncryption() {
+  logger.trace("encryptsAndDecryptsTrivial");
+
+  {{testValue tested}}
+  {{tested.className}} encrypted = {{tested.className}}.encrypt(originalValue);
+  {{tested.dataClass.simpleName}} decrypted = encrypted.decrypt();
+
+  assertThat(decrypted).isEqualTo(originalValue);
+}

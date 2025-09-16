@@ -1,0 +1,12 @@
+@Test
+@Tag("FheDecryption")
+void decryption() {
+  logger.trace("decryption");
+
+  {{testValue tested}}
+  {{tested.className}} encrypted = {{tested.className}}.encrypt(originalValue, keySet.clientKey());
+  {{tested.dataClass.simpleName}} decrypted = encrypted.decrypt(keySet.clientKey());
+
+  assertThat(decrypted).isEqualTo(originalValue);
+}
+

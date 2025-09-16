@@ -1,39 +1,73 @@
 package io.github.rdlopes.tfhe.generator;
 
-import java.util.SortedMap;
-import java.util.SortedSet;
+import org.jspecify.annotations.NonNull;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludesFile.Type;
-
 public record SymbolsIndex(SortedSet<String> names,
-                           SortedMap<String, Type> types,
-                           SortedMap<String, String> definitions) {
+                           SortedMap<String, String> definitions,
+                           SortedSet<String> symbolsUsed) {
+
+  public SymbolsIndex(SortedSet<String> names, SortedMap<String, String> definitions) {
+    this(names, definitions, new TreeSet<>());
+  }
+
   public SymbolsIndex {
     if (names.stream()
-             .anyMatch(name -> !types.containsKey(name) || !definitions.containsKey(name))) {
+             .anyMatch(name -> !definitions.containsKey(name))) {
       throw new IllegalStateException("SymbolsIndex is not complete");
     }
   }
 
-  public String prettyPrint() {
-    StringBuilder result = new StringBuilder("SymbolsIndex - " + names.size() + " symbols available:\n");
-    names.forEach(name -> result.append("- %s %s".formatted(types.get(name), name)
-                                                 .indent(2)));
-    return result.toString();
+  public SymbolsIndex filtered(Predicate<String> filter) {
+    Collection<String> newNames = names.stream()
+                                       .filter(filter)
+                                       .toList();
+    Map<String, String> newDefinitions = definitions.entrySet()
+                                                    .stream()
+                                                    .filter(e -> filter.test(e.getKey()))
+                                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    Collection<String> newSymbolsUsed = symbolsUsed.stream()
+                                                   .filter(filter)
+                                                   .toList();
+    return new SymbolsIndex(new TreeSet<>(newNames),
+      new TreeMap<>(newDefinitions),
+      new TreeSet<>(newSymbolsUsed));
   }
 
-  public Stream<String> fheTypes() {
-    String typePrefix = "Type_";
-    return names().stream()
-                  .filter(name -> name.startsWith(typePrefix))
-                  .map(name -> name.substring(typePrefix.length()));
+  @Override
+  public @NonNull String toString() {
+    return "SymbolsIndex{" + names + '}';
   }
 
-  public Stream<String> fheKeys() {
-    String keyDestroySuffix = "_key_destroy";
-    return names().stream()
-                  .filter(name -> name.endsWith(keyDestroySuffix))
-                  .map(name -> name.replace("_destroy", ""));
+  public String lookupPrefixed(String symbolPrefix) {
+    String symbol = names.contains(symbolPrefix)
+      ? symbolPrefix
+      : names.stream()
+             .filter(n -> n.startsWith(symbolPrefix))
+             .findFirst()
+             .orElseThrow(() -> new IllegalArgumentException("No native method found for " + symbolPrefix));
+    symbolsUsed.add(symbol);
+    return symbol;
+  }
+
+  public Stream<String> lookupFiltered(Predicate<String> filter) {
+    return names.stream()
+                .filter(filter)
+                .peek(symbolsUsed::add);
+  }
+
+  public String lookupDefinition(String symbol) {
+    symbolsUsed.add(symbol);
+    return definitions.getOrDefault(symbol, "");
+  }
+
+  public Collection<String> getUnusedSymbols() {
+    Collection<String> unusedSymbols = new TreeSet<>(names);
+    unusedSymbols.removeAll(symbolsUsed);
+    return unusedSymbols;
   }
 }

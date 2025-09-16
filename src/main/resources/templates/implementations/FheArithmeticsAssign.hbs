@@ -1,0 +1,29 @@
+{{javadoc this "add_assign"}}
+public void addAssign({{className}} other) {
+  logger.trace("addAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "add_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "sub_assign"}}
+public void subtractAssign({{className}} other) {
+  logger.trace("subtractAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "sub_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "mul_assign"}}
+public void multiplyAssign({{className}} other) {
+  logger.trace("multiplyAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "mul_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "div_assign"}}
+public void divideAssign({{className}} other) {
+  logger.trace("divideAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "div_assign"}}(getValue(), other.getValue()));
+}
+
+{{javadoc this "rem_assign"}}
+public void remainderAssign({{className}} other) {
+  logger.trace("remainderAssign - other: {}", other);
+  execute(() -> {{nativeMethod this "rem_assign"}}(getValue(), other.getValue()));
+}

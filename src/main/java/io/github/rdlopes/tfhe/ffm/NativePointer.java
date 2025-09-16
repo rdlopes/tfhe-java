@@ -1,6 +1,5 @@
 package io.github.rdlopes.tfhe.ffm;
 
-import io.github.rdlopes.tfhe.utils.TfheLibrary;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ public class NativePointer {
   private static final Cleaner CLEANER = create();
 
   static {
-    TfheLibrary.load();
+    NativeLibrary.load();
     System.setProperty("jextract.trace.downcalls", String.valueOf(logger.isTraceEnabled()));
     tfhe_error_disable_automatic_prints();
   }
@@ -47,14 +46,14 @@ public class NativePointer {
     this(allocator.apply(LIBRARY_ARENA), null);
   }
 
-  public MemorySegment getAddress() {
-    return address;
-  }
-
   protected static @NonNull Function<MemorySegment, Integer> valueDestroyerOf(@Nullable Function<MemorySegment, Integer> destroyer) {
     return address -> Optional.ofNullable(destroyer)
                               .map(d -> d.apply(address.get(C_POINTER, 0)))
                               .orElse(0);
+  }
+
+  public MemorySegment getAddress() {
+    return address;
   }
 
   public void destroy() {

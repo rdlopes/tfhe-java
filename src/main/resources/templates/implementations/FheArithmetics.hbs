@@ -1,0 +1,111 @@
+{{javadoc this "add"}}
+public {{className}} add({{className}} other) {
+  logger.trace("add - other: {}", other);
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "add"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "overflowing_add"}}
+public java.util.Map.Entry<{{className}}, FheBool> checkedAdd({{className}} other) {
+  logger.trace("checkedAdd - other: {}", other);
+  {{className}} result = new {{className}}();
+  FheBool check = new FheBool();
+  execute(() -> {{nativeMethod this
+                               "overflowing_add"}}(getValue(), other.getValue(), result.getAddress(), check.getAddress()))
+  ;
+  return java.util.Map.entry(result, check);
+}
+
+{{javadoc this "sub"}}
+public {{className}} subtract({{className}} other) {
+  logger.trace("subtract - other: {}", other);
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "sub"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "overflowing_sub"}}
+public java.util.Map.Entry<{{className}}, FheBool> checkedSubtract({{className}} other) {
+  logger.trace("checkedSubtract - other: {}", other);
+  {{className}} result = new {{className}}();
+  FheBool check = new FheBool();
+  execute(() -> {{nativeMethod this
+                               "overflowing_sub"}}(getValue(), other.getValue(), result.getAddress(), check.getAddress()))
+  ;
+  return java.util.Map.entry(result, check);
+}
+
+{{javadoc this "mul"}}
+public {{className}} multiply({{className}} other) {
+  logger.trace("multiply - other: {}", other);
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "mul"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "overflowing_mul"}}
+public java.util.Map.Entry<{{className}}, FheBool> checkedMultiply({{className}} other) {
+  logger.trace("checkedMultiply - other: {}", other);
+  {{className}} result = new {{className}}();
+  FheBool check = new FheBool();
+  execute(() -> {{nativeMethod this
+                               "overflowing_mul"}}(getValue(), other.getValue(), result.getAddress(), check.getAddress()))
+  ;
+  return java.util.Map.entry(result, check);
+}
+
+{{javadoc this "div"}}
+public {{className}} divide({{className}} other) {
+  logger.trace("divide - other: {}", other);
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "div"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "div_rem"}}
+public {{className}}[]
+
+dividerAndRemainder({{className}} other) {
+  logger.trace("dividerAndRemainder - other: {}", other);
+  {{className}} divider = new {{className}}();
+  {{className}} remainder = new {{className}}();
+  execute(() -> {{nativeMethod this
+                               "div_rem"}}(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
+  return new {{className}}[]{
+    divider, remainder
+  } ;
+}
+
+{{javadoc this "rem"}}
+public {{className}} remainder({{className}} other) {
+  logger.trace("remainder - other: {}", other);
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "rem"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "neg"}}
+public {{className}} negate() {
+  logger.trace("negate");
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "neg"}}(getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "ilog2"}}
+public {{className}} ilog2() {
+  logger.trace("ilog2");
+  {{className}} result = new {{className}}();
+  execute(() -> {{nativeMethod this "ilog2"}}(getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "checked_ilog2"}}
+public java.util.Map.Entry<{{className}}, FheBool> checkedIlog2() {
+  logger.trace("checkedIlog2");
+  {{className}} result = new {{className}}();
+  FheBool check = new FheBool();
+  execute(() -> {{nativeMethod this "checked_ilog2"}}(getValue(), result.getAddress(), check.getAddress()));
+  return java.util.Map.entry(result, check);
+}

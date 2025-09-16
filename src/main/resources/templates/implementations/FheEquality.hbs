@@ -1,0 +1,15 @@
+{{javadoc this "eq"}}
+public FheBool eq({{className}} other) {
+  logger.trace("eq - other: {}", other);
+  FheBool result = new FheBool();
+  execute(() -> {{nativeMethod this "eq"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}
+
+{{javadoc this "ne"}}
+public FheBool ne({{className}} other) {
+  logger.trace("ne - other: {}", other);
+  FheBool result = new FheBool();
+  execute(() -> {{nativeMethod this "ne"}}(getValue(), other.getValue(), result.getAddress()));
+  return result;
+}

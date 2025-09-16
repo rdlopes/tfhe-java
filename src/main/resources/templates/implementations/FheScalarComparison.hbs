@@ -1,0 +1,77 @@
+{{javadoc this "scalar_lt"}}
+public FheBool scalarLt({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarLt - scalar: {}", scalar);
+  FheBool result = new FheBool();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_lt"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_lt"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_le"}}
+public FheBool scalarLe({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarLe - scalar: {}", scalar);
+  FheBool result = new FheBool();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_le"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_le"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_gt"}}
+public FheBool scalarGt({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarGt - scalar: {}", scalar);
+  FheBool result = new FheBool();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_gt"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_gt"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_ge"}}
+public FheBool scalarGe({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarGe - scalar: {}", scalar);
+  FheBool result = new FheBool();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_ge"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_ge"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_min"}}
+public {{className}} scalarMin({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarMin - scalar: {}", scalar);
+  {{className}} result = new {{className}}();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_min"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_min"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}
+
+{{javadoc this "scalar_max"}}
+public {{className}} scalarMax({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarMax - scalar: {}", scalar);
+  {{className}} result = new {{className}}();
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() -> {{nativeMethod this "scalar_max"}}(getValue(), scalarValue.getAddress(), result.getAddress()));
+  {{else}}
+    execute(() -> {{nativeMethod this "scalar_max"}}(getValue(), scalar, result.getAddress()));
+  {{/if}}
+  return result;
+}

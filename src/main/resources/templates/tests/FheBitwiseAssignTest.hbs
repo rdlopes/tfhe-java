@@ -1,0 +1,32 @@
+@Test
+  {{#if tested.highBitSize}}
+  @Tag("intensive"){{/if}}
+@Tag("FheBitwiseAssign")
+@Tag("assign")
+void bitwiseAssign() {
+  logger.trace("bitwiseAssign");
+
+  {{testSet tested}}
+  {{tested.className}} lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  {{tested.className}} rhsEncrypted = {{tested.className}}.encrypt(rhs, keySet.clientKey());
+  {{tested.className}} shiftEncrypted = {{tested.className}}.encrypt(shift, keySet.clientKey());
+
+  lhsEncrypted.shiftLeftAssign(shiftEncrypted);
+  {{tested.dataClass.simpleName}} decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{shiftLeft tested "lhs" "shift"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.shiftRightAssign(shiftEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{shiftRight tested "lhs" "shift"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.rotateLeftAssign(shiftEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  assertThat(decryptedResult).isEqualTo({{rotateLeft tested "lhs" "shift"}});
+
+  lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  lhsEncrypted.rotateRightAssign(shiftEncrypted);
+  decryptedResult = lhsEncrypted.decrypt(keySet.clientKey());
+  //assertThat(decryptedResult).isEqualTo({{rotateRight tested "lhs" "shift"}});
+}

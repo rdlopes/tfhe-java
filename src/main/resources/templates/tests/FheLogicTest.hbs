@@ -1,0 +1,37 @@
+@Test
+@Tag("FheLogic")
+void logic() {
+  logger.trace("logic");
+
+  {{testSet tested}}
+  {{tested.className}} lhsEncrypted = {{tested.className}}.encrypt(lhs, keySet.clientKey());
+  {{tested.className}} rhsEncrypted = {{tested.className}}.encrypt(rhs, keySet.clientKey());
+
+  {{tested.className}} result = lhsEncrypted.bitAnd(rhsEncrypted);
+  {{tested.dataClass.simpleName}} decryptedResult = result.decrypt(keySet.clientKey());
+  {{#if tested.highBitSize}}
+    assertThat(decryptedResult).isEqualTo(lhs.and(rhs));
+  {{else}}
+    assertThat(decryptedResult).isEqualTo(({{tested.dataClass.simpleName}}) (lhs & rhs));
+  {{/if}}
+
+  result = lhsEncrypted.bitOr(rhsEncrypted);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  {{#if tested.highBitSize}}
+    assertThat(decryptedResult).isEqualTo(lhs.or(rhs));
+  {{else}}
+    assertThat(decryptedResult).isEqualTo(({{tested.dataClass.simpleName}}) (lhs | rhs));
+  {{/if}}
+
+  result = lhsEncrypted.bitXor(rhsEncrypted);
+  decryptedResult = result.decrypt(keySet.clientKey());
+  {{#if tested.highBitSize}}
+    assertThat(decryptedResult).isEqualTo(lhs.xor(rhs));
+  {{else}}
+    assertThat(decryptedResult).isEqualTo(({{tested.dataClass.simpleName}}) (lhs ^ rhs));
+  {{/if}}
+
+  result = lhsEncrypted.not();
+  decryptedResult = result.decrypt(keySet.clientKey());
+  //assertThat(decryptedResult).isEqualTo({{not tested "lhs"}});
+}

@@ -1,0 +1,40 @@
+package {{packageName}};
+
+import io.github.rdlopes.tfhe.api.keys.*;
+
+import java.util.Map.Entry;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.*;
+  {{#each imports}}
+  import {{this}};
+  {{/each}}
+
+import static io.github.rdlopes.tfhe.assertions.TfheAssertions.*;
+import static io.github.rdlopes.tfhe.test.TestUtils.*;
+
+class {{className}} {
+private static final Logger logger = LoggerFactory.getLogger({{className}}.
+class);
+private KeySet keySet;
+
+@BeforeEach
+void setUp() {
+  ConfigBuilder configBuilder = new ConfigBuilder();
+  Config config = configBuilder.build();
+  keySet = config.generateKeys();
+  keySet.serverKey()
+        .set();
+}
+
+@AfterEach
+void tearDown() {
+  keySet.destroy();
+}
+
+  {{#each tested.interfaces}}
+    {{test this indent="2"}}
+  {{/each}}
+
+}

@@ -1,0 +1,14 @@
+{{javadoc this "decrypt"}}
+public {{dataClass.simpleName}} decrypt(ClientKey clientKey) {
+  logger.trace("decrypt - clientKey: {}", clientKey);
+  {{#if valueClass}}
+    {{valueClass.simpleName}} dataValue = new {{valueClass.simpleName}}();
+    executeWithAddress(dataValue.getAddress(), address -> {{nativeMethod this
+                                                                         "decrypt"}}(getValue(), clientKey.getValue(), address))
+    ;
+    return dataValue.getValue();
+  {{else}}
+    return executeAndReturn({{dataClass.simpleName}}. class,
+    address -> {{nativeMethod this "decrypt"}}(getValue(), clientKey.getValue(), address));
+  {{/if}}
+}

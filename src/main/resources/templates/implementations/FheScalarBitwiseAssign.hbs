@@ -1,0 +1,43 @@
+{{javadoc this "scalar_shl_assign"}}
+public void scalarShiftLeftAssign({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarShiftLeftAssign - scalar: {}", scalar);
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() ->{{nativeMethod this "scalar_shl_assign"}}(getValue(), scalarValue.getAddress()));
+  {{else}}
+    execute(() ->{{nativeMethod this "scalar_shl_assign"}}(getValue(), scalar));
+  {{/if}}
+}
+
+{{javadoc this "scalar_shr_assign"}}
+public void scalarShiftRightAssign({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarShiftRightAssign - scalar: {}", scalar);
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() ->{{nativeMethod this "scalar_shr_assign"}}(getValue(), scalarValue.getAddress()));
+  {{else}}
+    execute(() ->{{nativeMethod this "scalar_shr_assign"}}(getValue(), scalar));
+  {{/if}}
+}
+
+{{javadoc this "scalar_rotate_left_assign"}}
+public void scalarRotateLeftAssign({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarRotateLeftAssign - scalar: {}", scalar);
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() ->{{nativeMethod this "scalar_rotate_left_assign"}}(getValue(), scalarValue.getAddress()));
+  {{else}}
+    execute(() ->{{nativeMethod this "scalar_rotate_left_assign"}}(getValue(), scalar));
+  {{/if}}
+}
+
+{{javadoc this "scalar_rotate_right_assign"}}
+public void scalarRotateRightAssign({{this.dataClass.simpleName}} scalar) {
+  logger.trace("scalarRotateRightAssign - scalar: {}", scalar);
+  {{#if this.highBitSize}}
+    {{this.valueClass.simpleName}} scalarValue = {{this.valueClass.simpleName}}.valueOf(scalar);
+    execute(() ->{{nativeMethod this "scalar_rotate_right_assign"}}(getValue(), scalarValue.getAddress()));
+  {{else}}
+    execute(() ->{{nativeMethod this "scalar_rotate_right_assign"}}(getValue(), scalar));
+  {{/if}}
+}

@@ -20,7 +20,7 @@ class PublicKeyTest {
     Config config = configBuilder.build();
     keySet = config.generateKeys();
     keySet.serverKey()
-          .setAsKey();
+          .set();
   }
 
   @AfterEach
