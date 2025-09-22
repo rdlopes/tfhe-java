@@ -56,7 +56,7 @@ implements CompressedFheType<U256, FheUint240, CompressedFheUint240> {
   ///                                           uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint240_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +84,7 @@ implements CompressedFheType<U256, FheUint240, CompressedFheUint240> {
   ///                                                        const struct ServerKey *server_key,
   ///                                                        struct CompressedFheUint240 **result);
   ///```
-  public static CompressedFheUint240 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheUint240 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheUint240 deserialized = new CompressedFheUint240();
     execute(() -> compressed_fhe_uint240_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +109,10 @@ implements CompressedFheType<U256, FheUint240, CompressedFheUint240> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheUint240 clone() {
+public CompressedFheUint240 clone(){
     CompressedFheUint240 cloned = new CompressedFheUint240();
     execute(() -> compressed_fhe_uint240_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

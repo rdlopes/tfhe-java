@@ -197,3 +197,10 @@
   {{execute "ilog2" "getValue(), result.getAddress()"}}
   return result;
 {{/method}}
+
+{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "ilog2WithCheck" "checked_ilog2"}}
+  {{declare "result"}}
+  {{declare "check" class="FheBool"}}
+  {{execute "checked_ilog2" "getValue(), result.getAddress(), check.getAddress()"}}
+  return Map.entry(result, check);
+{{/method}}

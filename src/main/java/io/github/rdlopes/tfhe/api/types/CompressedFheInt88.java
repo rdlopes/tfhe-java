@@ -56,7 +56,7 @@ implements CompressedFheType<I128, FheInt88, CompressedFheInt88> {
   ///                                         uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int88_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +84,7 @@ implements CompressedFheType<I128, FheInt88, CompressedFheInt88> {
   ///                                                      const struct ServerKey *server_key,
   ///                                                      struct CompressedFheInt88 **result);
   ///```
-  public static CompressedFheInt88 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt88 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt88 deserialized = new CompressedFheInt88();
     execute(() -> compressed_fhe_int88_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +109,10 @@ implements CompressedFheType<I128, FheInt88, CompressedFheInt88> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt88 clone() {
+public CompressedFheInt88 clone(){
     CompressedFheInt88 cloned = new CompressedFheInt88();
     execute(() -> compressed_fhe_int88_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

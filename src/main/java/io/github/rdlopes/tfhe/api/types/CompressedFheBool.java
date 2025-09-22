@@ -55,7 +55,7 @@ implements CompressedFheType<Boolean, FheBool, CompressedFheBool> {
   ///                                        uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_bool_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -83,7 +83,7 @@ implements CompressedFheType<Boolean, FheBool, CompressedFheBool> {
   ///                                                     const struct ServerKey *server_key,
   ///                                                     struct CompressedFheBool **result);
   ///```
-  public static CompressedFheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheBool deserialized = new CompressedFheBool();
     execute(() -> compressed_fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -108,10 +108,10 @@ implements CompressedFheType<Boolean, FheBool, CompressedFheBool> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheBool clone() {
+public CompressedFheBool clone(){
     CompressedFheBool cloned = new CompressedFheBool();
     execute(() -> compressed_fhe_bool_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

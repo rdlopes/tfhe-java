@@ -62,7 +62,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///                        struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 bitAnd(FheInt2048 other) {
+  public FheInt2048 bitAnd(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -75,7 +75,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///                               struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 bitAndScalar(I2048 other) {
+  public FheInt2048 bitAndScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_bitand(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -86,7 +86,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// int fhe_int2048_bitand_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheInt2048 other) {
+  public void bitAndAssign(FheInt2048 other){
     execute(() -> fhe_int2048_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -106,7 +106,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///                       struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 bitOr(FheInt2048 other) {
+public FheInt2048 bitOr(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_bitor(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -117,23 +117,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// int fhe_int2048_scalar_bitor(const struct FheInt2048 *lhs,
   ///                              struct I2048 rhs,
   ///                              struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 bitOrScalar(I2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+  /// ```
+@Override
+public FheInt2048 bitOrScalar(I2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_bitor_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void bitOrAssign(FheInt2048 other) {
+  /// ```
+@Override
+public void bitOrAssign(FheInt2048 other){
     execute(() -> fhe_int2048_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_bitor_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -148,36 +148,36 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// int fhe_int2048_bitxor(const struct FheInt2048 *lhs,
   ///                        const struct FheInt2048 *rhs,
   ///                        struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 bitXor(FheInt2048 other) {
+/// ```
+@Override
+public FheInt2048 bitXor(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_bitxor(const struct FheInt2048 *lhs,
   ///                               struct I2048 rhs,
   ///                               struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 bitXorScalar(I2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+  /// ```
+@Override
+public FheInt2048 bitXorScalar(I2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_bitxor_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheInt2048 other) {
+/// ```
+@Override
+public void bitXorAssign(FheInt2048 other){
     execute(() -> fhe_int2048_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_bitxor_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -190,14 +190,14 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_not(const struct FheInt2048 *input, struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 bitNot() {
+/// ```
+@Override
+public FheInt2048 bitNot(){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_not(getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_if_then_else(const struct FheBool *condition_ct,
@@ -217,49 +217,49 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// int fhe_int2048_eq(const struct FheInt2048 *lhs,
   ///                    const struct FheInt2048 *rhs,
   ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheInt2048 other) {
+/// ```
+@Override
+public FheBool equalTo(FheInt2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int2048_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_eq(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalToScalar(I2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+/// ```
+@Override
+public FheBool equalToScalar(I2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_ne(const struct FheInt2048 *lhs,
   ///                    const struct FheInt2048 *rhs,
   ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheInt2048 other) {
+/// ```
+@Override
+public FheBool notEqualTo(FheInt2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int2048_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_ne(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualToScalar(I2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+/// ```
+@Override
+public FheBool notEqualToScalar(I2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
@@ -281,7 +281,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///                                             const struct ServerKey *server_key,
   ///                                             struct FheInt2048 **result);
   ///```
-  public static FheInt2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static FheInt2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt2048 deserialized = new FheInt2048();
     execute(() -> fhe_int2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -292,86 +292,86 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// int fhe_int2048_try_encrypt_with_client_key_i2048(struct I2048 value,
   ///                                                   const struct ClientKey *client_key,
   ///                                                   struct FheInt2048 **result);
-  ///```
-  public static FheInt2048 encrypt(I2048 clearValue, ClientKey clientKey) {
-    FheInt2048 encrypted = new FheInt2048();
-    execute(() -> fhe_int2048_try_encrypt_with_client_key_i2048(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+/// ```
+public static FheInt2048 encrypt(I2048 clearValue, ClientKey clientKey) {
+  FheInt2048 encrypted = new FheInt2048();
+  execute(() -> fhe_int2048_try_encrypt_with_client_key_i2048(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_try_encrypt_with_public_key_i2048(struct I2048 value,
   ///                                                   const struct PublicKey *public_key,
   ///                                                   struct FheInt2048 **result);
-  ///```
-  public static FheInt2048 encrypt(I2048 clearValue, PublicKey publicKey) {
-    FheInt2048 encrypted = new FheInt2048();
-    execute(() -> fhe_int2048_try_encrypt_with_public_key_i2048(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+/// ```
+public static FheInt2048 encrypt(I2048 clearValue, PublicKey publicKey) {
+  FheInt2048 encrypted = new FheInt2048();
+  execute(() -> fhe_int2048_try_encrypt_with_public_key_i2048(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_try_encrypt_trivial_i2048(struct I2048 value, struct FheInt2048 **result);
   ///```
   public static FheInt2048 encrypt(I2048 clearValue) {
     FheInt2048 encrypted = new FheInt2048();
-    execute(() -> fhe_int2048_try_encrypt_trivial_i2048(clearValue.getAddress(), encrypted.getAddress()));
+      execute(() -> fhe_int2048_try_encrypt_trivial_i2048(clearValue.getAddress(), encrypted.getAddress()));
     return encrypted;
 
   }
 
   /// ```c
   /// int fhe_int2048_clone(const struct FheInt2048 *sself, struct FheInt2048 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt2048 clone() {
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheInt2048 clone(){
     FheInt2048 cloned = new FheInt2048();
-    execute(() -> fhe_int2048_clone(getValue(), cloned.getAddress()));
-    return cloned;
+  execute(() -> fhe_int2048_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_compress(const struct FheInt2048 *sself, struct CompressedFheInt2048 **result);
-  ///```
-  @Override
-  public CompressedFheInt2048 compress() {
+/// ```
+@Override
+public CompressedFheInt2048 compress(){
     CompressedFheInt2048 compressed = new CompressedFheInt2048();
-    execute(() -> fhe_int2048_compress(getValue(), compressed.getAddress()));
-    return compressed;
+  execute(() -> fhe_int2048_compress(getValue(), compressed.getAddress()));
+  return compressed;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_add(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 add(FheInt2048 other) {
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 add(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_add(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_overflowing_add(const struct FheInt2048 *lhs,
   ///                                 const struct FheInt2048 *rhs,
   ///                                 struct FheInt2048 **out_result,
   ///                                 struct FheBool **out_overflowed);
-  ///```
-  @Override
-  public Map.Entry<FheInt2048, FheBool> addWithOverflow(FheInt2048 other) {
+/// ```
+@Override
+public Map.Entry<FheInt2048, FheBool> addWithOverflow(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int2048_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_add(const struct FheInt2048 *lhs,
@@ -388,12 +388,12 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_add_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void addAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_add_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void addAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_add_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_add_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -407,30 +407,30 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_sub(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 subtract(FheInt2048 other) {
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 subtract(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_sub(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_overflowing_sub(const struct FheInt2048 *lhs,
   ///                                 const struct FheInt2048 *rhs,
   ///                                 struct FheInt2048 **out_result,
   ///                                 struct FheBool **out_overflowed);
-  ///```
-  @Override
-  public Map.Entry<FheInt2048, FheBool> subtractWithOverflow(FheInt2048 other) {
+/// ```
+@Override
+public Map.Entry<FheInt2048, FheBool> subtractWithOverflow(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int2048_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_sub(const struct FheInt2048 *lhs,
@@ -447,12 +447,12 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_sub_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void subtractAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_sub_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void subtractAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_sub_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_sub_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -466,30 +466,30 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_mul(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 multiply(FheInt2048 other) {
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 multiply(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_mul(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_overflowing_mul(const struct FheInt2048 *lhs,
   ///                                 const struct FheInt2048 *rhs,
   ///                                 struct FheInt2048 **out_result,
   ///                                 struct FheBool **out_overflowed);
-  ///```
-  @Override
-  public Map.Entry<FheInt2048, FheBool> multiplyWithOverflow(FheInt2048 other) {
+/// ```
+@Override
+public Map.Entry<FheInt2048, FheBool> multiplyWithOverflow(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int2048_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_mul(const struct FheInt2048 *lhs,
@@ -506,12 +506,12 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_mul_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void multiplyAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_mul_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void multiplyAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_mul_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_mul_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -525,20 +525,20 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_div(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 divide(FheInt2048 other) {
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 divide(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_div(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_div(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_div(const struct FheInt2048 *lhs,
   ///                            struct I2048 rhs,
-  ///                            struct FheInt2048 **result);
+///                            struct FheInt2048 **result);
   ///```
   @Override
   public FheInt2048 divideScalar(I2048 other) {
@@ -550,12 +550,12 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_div_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void divideAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_div_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void divideAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_div_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_div_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -569,20 +569,20 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_rem(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 remainder(FheInt2048 other) {
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 remainder(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_rem(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_rem(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_rem(const struct FheInt2048 *lhs,
   ///                            struct I2048 rhs,
-  ///                            struct FheInt2048 **result);
+///                            struct FheInt2048 **result);
   ///```
   @Override
   public FheInt2048 remainderScalar(I2048 other) {
@@ -594,12 +594,12 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_rem_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
-  ///```
-  @Override
-  public void remainderAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_rem_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void remainderAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_rem_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_rem_assign(struct FheInt2048 *lhs, struct I2048 rhs);
@@ -615,41 +615,41 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///                         const struct FheInt2048 *rhs,
   ///                         struct FheInt2048 **q_result,
   ///                         struct FheInt2048 **r_result);
-  ///```
-  @Override
-  public Map.Entry<FheInt2048, FheInt2048> divideWithRemainder(FheInt2048 other) {
+/// ```
+@Override
+public Map.Entry<FheInt2048,FheInt2048> divideWithRemainder(FheInt2048 other){
     FheInt2048 divider = new FheInt2048();
     FheInt2048 remainder = new FheInt2048();
     execute(() -> fhe_int2048_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
-    return Map.entry(divider, remainder);
+  return Map.entry(divider, remainder);
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_div_rem(const struct FheInt2048 *lhs,
   ///                                struct I2048 rhs,
   ///                                struct FheInt2048 **q_result,
   ///                                struct FheInt2048 **r_result);
-  ///```
-  @Override
-  public Map.Entry<FheInt2048, FheInt2048> divideWithRemainderScalar(I2048 other) {
-    FheInt2048 divider = new FheInt2048();
-    FheInt2048 remainder = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
-    return Map.entry(divider, remainder);
+/// ```
+@Override
+public Map.Entry<FheInt2048,FheInt2048> divideWithRemainderScalar(I2048 other) {
+  FheInt2048 divider = new FheInt2048();
+  FheInt2048 remainder = new FheInt2048();
+      execute(() -> fhe_int2048_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
+  return Map.entry(divider, remainder);
 
-  }
+}
 
   /// ```c
-  /// int fhe_int2048_neg(const struct FheInt2048 *input, struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 negate() {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_neg(getValue(), result.getAddress()));
-    return result;
+/// int fhe_int2048_neg(const struct FheInt2048 *input, struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 negate() {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_neg(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
@@ -658,34 +658,53 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///  * Result has no meaning if self encrypts a value that is <= 0.
   ///  * See `checked_ilog2`
   ///  */
-  /// int fhe_int2048_ilog2(const struct FheInt2048 *input, struct FheUint32 **result);
+/// int fhe_int2048_ilog2(const struct FheInt2048 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheInt2048 ilog2(){
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_ilog2(getValue(), result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
+  ////**
+  ///  * Returns the base 2 logarithm of the number, rounded down.
+  ///  *
+  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
+  ///  */
+  /// int fhe_int2048_checked_ilog2(const struct FheInt2048 *input,
+  ///                               struct FheUint32 **result_1,
+  ///                               struct FheBool **result_2);
   ///```
   @Override
-  public FheInt2048 ilog2() {
+  public Map.Entry<FheInt2048, FheBool> ilog2WithCheck() {
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_ilog2(getValue(), result.getAddress()));
-    return result;
+    FheBool check = new FheBool();
+    execute(() -> fhe_int2048_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
+    return Map.entry(result, check);
 
   }
 
   /// ```c
   /// int fhe_int2048_lt(const struct FheInt2048 *lhs,
   ///                    const struct FheInt2048 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThan(FheInt2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheBool **result);
+/// ```
+@Override
+public FheBool lessThan(FheInt2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_lt(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_lt(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool lessThanScalar(I2048 other) {
+  public FheBool lessThanScalar(I2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int2048_scalar_lt(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -695,21 +714,21 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_le(const struct FheInt2048 *lhs,
   ///                    const struct FheInt2048 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThanOrEqualTo(FheInt2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_le(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheBool **result);
+/// ```
+@Override
+public FheBool lessThanOrEqualTo(FheInt2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_le(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_le(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool lessThanOrEqualToScalar(I2048 other) {
+  public FheBool lessThanOrEqualToScalar(I2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int2048_scalar_le(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -719,21 +738,21 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_gt(const struct FheInt2048 *lhs,
   ///                    const struct FheInt2048 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThan(FheInt2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_gt(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheBool **result);
+/// ```
+@Override
+public FheBool greaterThan(FheInt2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_gt(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_gt(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool greaterThanScalar(I2048 other) {
+  public FheBool greaterThanScalar(I2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int2048_scalar_gt(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -743,21 +762,21 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_ge(const struct FheInt2048 *lhs,
   ///                    const struct FheInt2048 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualTo(FheInt2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_ge(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheBool **result);
+/// ```
+@Override
+public FheBool greaterThanOrEqualTo(FheInt2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_ge(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_ge(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool greaterThanOrEqualToScalar(I2048 other) {
+  public FheBool greaterThanOrEqualToScalar(I2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int2048_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -767,23 +786,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_min(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 min(FheInt2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_min(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 min(FheInt2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_min(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_min(const struct FheInt2048 *lhs,
   ///                            struct I2048 rhs,
-  ///                            struct FheInt2048 **result);
+///                            struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 minScalar(I2048 other) {
+  public FheInt2048 minScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_min(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -793,23 +812,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_max(const struct FheInt2048 *lhs,
   ///                     const struct FheInt2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 max(FheInt2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_max(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 max(FheInt2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_max(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_max(const struct FheInt2048 *lhs,
   ///                            struct I2048 rhs,
-  ///                            struct FheInt2048 **result);
+///                            struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 maxScalar(I2048 other) {
+  public FheInt2048 maxScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_max(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -819,23 +838,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_shl(const struct FheInt2048 *lhs,
   ///                     const struct FheUint2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 shiftLeft(FheInt2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_shl(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 shiftLeft(FheInt2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_shl(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_shl(const struct FheInt2048 *lhs,
   ///                            struct U2048 rhs,
-  ///                            struct FheInt2048 **result);
+///                            struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 shiftLeftScalar(I2048 other) {
+  public FheInt2048 shiftLeftScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -843,7 +862,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   }
 
   /// ```c
-  /// int fhe_int2048_shl_assign(struct FheInt2048 *lhs, const struct FheUint2048 *rhs);
+/// int fhe_int2048_shl_assign(struct FheInt2048 *lhs, const struct FheUint2048 *rhs);
   ///```
   @Override
   public void shiftLeftAssign(FheInt2048 other) {
@@ -863,23 +882,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_shr(const struct FheInt2048 *lhs,
   ///                     const struct FheUint2048 *rhs,
-  ///                     struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 shiftRight(FheInt2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_shr(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                     struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 shiftRight(FheInt2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_shr(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_shr(const struct FheInt2048 *lhs,
   ///                            struct U2048 rhs,
-  ///                            struct FheInt2048 **result);
+///                            struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 shiftRightScalar(I2048 other) {
+  public FheInt2048 shiftRightScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -907,23 +926,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_rotate_left(const struct FheInt2048 *lhs,
   ///                             const struct FheUint2048 *rhs,
-  ///                             struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 rotateLeft(FheInt2048 other) {
+///                             struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 rotateLeft(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_rotate_left(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_rotate_left(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_rotate_left(const struct FheInt2048 *lhs,
   ///                                    struct U2048 rhs,
-  ///                                    struct FheInt2048 **result);
+///                                    struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 rotateLeftScalar(I2048 other) {
+  public FheInt2048 rotateLeftScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_rotate_left(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -951,23 +970,23 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   /// int fhe_int2048_rotate_right(const struct FheInt2048 *lhs,
   ///                              const struct FheUint2048 *rhs,
-  ///                              struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 rotateRight(FheInt2048 other) {
+///                              struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 rotateRight(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_rotate_right(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int2048_rotate_right(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_scalar_rotate_right(const struct FheInt2048 *lhs,
   ///                                     struct U2048 rhs,
-  ///                                     struct FheInt2048 **result);
+///                                     struct FheInt2048 **result);
   ///```
   @Override
-  public FheInt2048 rotateRightScalar(I2048 other) {
+  public FheInt2048 rotateRightScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -995,58 +1014,58 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   /// ```c
   ////**
   ///  * Returns the number of leading ones in the binary representation of input.
-  ///  */
-  /// int fhe_int2048_leading_ones(const struct FheInt2048 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheInt2048 leadingOnes() {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_leading_ones(getValue(), result.getAddress()));
-    return result;
+///  */
+/// int fhe_int2048_leading_ones(const struct FheInt2048 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheInt2048 leadingOnes() {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_leading_ones(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
   ///  * Returns the number of leading zeros in the binary representation of input.
-  ///  */
-  /// int fhe_int2048_leading_zeros(const struct FheInt2048 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheInt2048 leadingZeros() {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_leading_zeros(getValue(), result.getAddress()));
-    return result;
+///  */
+/// int fhe_int2048_leading_zeros(const struct FheInt2048 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheInt2048 leadingZeros() {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_leading_zeros(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
   ///  * Returns the number of trailing ones in the binary representation of input.
-  ///  */
-  /// int fhe_int2048_trailing_ones(const struct FheInt2048 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheInt2048 trailingOnes() {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_trailing_ones(getValue(), result.getAddress()));
-    return result;
+///  */
+/// int fhe_int2048_trailing_ones(const struct FheInt2048 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheInt2048 trailingOnes() {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_trailing_ones(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
   ///  * Returns the number of trailing zeros in the binary representation of input.
-  ///  */
-  /// int fhe_int2048_trailing_zeros(const struct FheInt2048 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheInt2048 trailingZeros() {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_trailing_zeros(getValue(), result.getAddress()));
-    return result;
+///  */
+/// int fhe_int2048_trailing_zeros(const struct FheInt2048 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheInt2048 trailingZeros() {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_trailing_zeros(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_decrypt(const struct FheInt2048 *encrypted_value,
@@ -1066,16 +1085,16 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   ///  * Returns the absolute value.
   ///  *
   ///  * (if x < 0 { -x } else { x })
-  ///  */
-  /// int fhe_int2048_abs(const struct FheInt2048 *input, struct FheInt2048 **result);
-  ///```
-  @Override
-  public FheInt2048 abs() {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_abs(getValue(), result.getAddress()));
-    return result;
+///  */
+/// int fhe_int2048_abs(const struct FheInt2048 *input, struct FheInt2048 **result);
+/// ```
+@Override
+public FheInt2048 abs() {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_abs(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int10(const struct FheInt2048 *sself, struct FheInt10 **result);
@@ -1133,7 +1152,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int128(const struct FheInt2048 *sself, struct FheInt128 **result);
-  ///```
+  /// ```
   public FheInt128 castIntoFheInt128() {
     FheInt128 result = new FheInt128();
     execute(() -> fhe_int2048_cast_into_fhe_int128(getValue(), result.getAddress()));
@@ -1142,7 +1161,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int136(const struct FheInt2048 *sself, struct FheInt136 **result);
-  ///```
+  /// ```
   public FheInt136 castIntoFheInt136() {
     FheInt136 result = new FheInt136();
     execute(() -> fhe_int2048_cast_into_fhe_int136(getValue(), result.getAddress()));
@@ -1160,7 +1179,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int144(const struct FheInt2048 *sself, struct FheInt144 **result);
-  ///```
+  /// ```
   public FheInt144 castIntoFheInt144() {
     FheInt144 result = new FheInt144();
     execute(() -> fhe_int2048_cast_into_fhe_int144(getValue(), result.getAddress()));
@@ -1169,7 +1188,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int152(const struct FheInt2048 *sself, struct FheInt152 **result);
-  ///```
+  /// ```
   public FheInt152 castIntoFheInt152() {
     FheInt152 result = new FheInt152();
     execute(() -> fhe_int2048_cast_into_fhe_int152(getValue(), result.getAddress()));
@@ -1187,7 +1206,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int160(const struct FheInt2048 *sself, struct FheInt160 **result);
-  ///```
+  /// ```
   public FheInt160 castIntoFheInt160() {
     FheInt160 result = new FheInt160();
     execute(() -> fhe_int2048_cast_into_fhe_int160(getValue(), result.getAddress()));
@@ -1196,7 +1215,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int168(const struct FheInt2048 *sself, struct FheInt168 **result);
-  ///```
+  /// ```
   public FheInt168 castIntoFheInt168() {
     FheInt168 result = new FheInt168();
     execute(() -> fhe_int2048_cast_into_fhe_int168(getValue(), result.getAddress()));
@@ -1205,7 +1224,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int176(const struct FheInt2048 *sself, struct FheInt176 **result);
-  ///```
+  /// ```
   public FheInt176 castIntoFheInt176() {
     FheInt176 result = new FheInt176();
     execute(() -> fhe_int2048_cast_into_fhe_int176(getValue(), result.getAddress()));
@@ -1214,7 +1233,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int184(const struct FheInt2048 *sself, struct FheInt184 **result);
-  ///```
+  /// ```
   public FheInt184 castIntoFheInt184() {
     FheInt184 result = new FheInt184();
     execute(() -> fhe_int2048_cast_into_fhe_int184(getValue(), result.getAddress()));
@@ -1223,7 +1242,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int192(const struct FheInt2048 *sself, struct FheInt192 **result);
-  ///```
+  /// ```
   public FheInt192 castIntoFheInt192() {
     FheInt192 result = new FheInt192();
     execute(() -> fhe_int2048_cast_into_fhe_int192(getValue(), result.getAddress()));
@@ -1241,7 +1260,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int200(const struct FheInt2048 *sself, struct FheInt200 **result);
-  ///```
+  /// ```
   public FheInt200 castIntoFheInt200() {
     FheInt200 result = new FheInt200();
     execute(() -> fhe_int2048_cast_into_fhe_int200(getValue(), result.getAddress()));
@@ -1259,7 +1278,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int208(const struct FheInt2048 *sself, struct FheInt208 **result);
-  ///```
+///```
   public FheInt208 castIntoFheInt208() {
     FheInt208 result = new FheInt208();
     execute(() -> fhe_int2048_cast_into_fhe_int208(getValue(), result.getAddress()));
@@ -1268,7 +1287,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int216(const struct FheInt2048 *sself, struct FheInt216 **result);
-  ///```
+///```
   public FheInt216 castIntoFheInt216() {
     FheInt216 result = new FheInt216();
     execute(() -> fhe_int2048_cast_into_fhe_int216(getValue(), result.getAddress()));
@@ -1277,7 +1296,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int224(const struct FheInt2048 *sself, struct FheInt224 **result);
-  ///```
+///```
   public FheInt224 castIntoFheInt224() {
     FheInt224 result = new FheInt224();
     execute(() -> fhe_int2048_cast_into_fhe_int224(getValue(), result.getAddress()));
@@ -1286,7 +1305,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int232(const struct FheInt2048 *sself, struct FheInt232 **result);
-  ///```
+///```
   public FheInt232 castIntoFheInt232() {
     FheInt232 result = new FheInt232();
     execute(() -> fhe_int2048_cast_into_fhe_int232(getValue(), result.getAddress()));
@@ -1304,7 +1323,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int240(const struct FheInt2048 *sself, struct FheInt240 **result);
-  ///```
+///```
   public FheInt240 castIntoFheInt240() {
     FheInt240 result = new FheInt240();
     execute(() -> fhe_int2048_cast_into_fhe_int240(getValue(), result.getAddress()));
@@ -1313,7 +1332,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int248(const struct FheInt2048 *sself, struct FheInt248 **result);
-  ///```
+///```
   public FheInt248 castIntoFheInt248() {
     FheInt248 result = new FheInt248();
     execute(() -> fhe_int2048_cast_into_fhe_int248(getValue(), result.getAddress()));
@@ -1322,7 +1341,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int256(const struct FheInt2048 *sself, struct FheInt256 **result);
-  ///```
+///```
   public FheInt256 castIntoFheInt256() {
     FheInt256 result = new FheInt256();
     execute(() -> fhe_int2048_cast_into_fhe_int256(getValue(), result.getAddress()));
@@ -1367,7 +1386,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_int512(const struct FheInt2048 *sself, struct FheInt512 **result);
-  ///```
+///```
   public FheInt512 castIntoFheInt512() {
     FheInt512 result = new FheInt512();
     execute(() -> fhe_int2048_cast_into_fhe_int512(getValue(), result.getAddress()));
@@ -1448,7 +1467,7 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_uint10(const struct FheInt2048 *sself, struct FheUint10 **result);
-  ///```
+///```
   public FheUint10 castIntoFheUint10() {
     FheUint10 result = new FheUint10();
     execute(() -> fhe_int2048_cast_into_fhe_uint10(getValue(), result.getAddress()));
@@ -1808,11 +1827,11 @@ implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int fhe_int2048_cast_into_fhe_uint96(const struct FheInt2048 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_int2048_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_int2048_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
 
 }

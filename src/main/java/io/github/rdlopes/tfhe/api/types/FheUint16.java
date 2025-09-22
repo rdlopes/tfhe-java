@@ -62,7 +62,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   ///                       struct FheUint16 **result);
   ///```
   @Override
-  public FheUint16 bitAnd(FheUint16 other) {
+  public FheUint16 bitAnd(FheUint16 other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -73,7 +73,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// int fhe_uint16_scalar_bitand(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
   ///```
   @Override
-  public FheUint16 bitAndScalar(Short other) {
+  public FheUint16 bitAndScalar(Short other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_scalar_bitand(getValue(), other, result.getAddress()));
     return result;
@@ -84,7 +84,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// int fhe_uint16_bitand_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheUint16 other) {
+  public void bitAndAssign(FheUint16 other){
     execute(() -> fhe_uint16_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -104,7 +104,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   ///                      struct FheUint16 **result);
   ///```
   @Override
-  public FheUint16 bitOr(FheUint16 other) {
+public FheUint16 bitOr(FheUint16 other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_bitor(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -114,22 +114,22 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_scalar_bitor(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
   ///```
-  @Override
-  public FheUint16 bitOrScalar(Short other) {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_scalar_bitor(getValue(), other, result.getAddress()));
-    return result;
+@Override
+public FheUint16 bitOrScalar(Short other) {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_scalar_bitor(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_bitor_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
   ///```
-  @Override
-  public void bitOrAssign(FheUint16 other) {
+@Override
+public void bitOrAssign(FheUint16 other){
     execute(() -> fhe_uint16_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_bitor_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -144,34 +144,34 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// int fhe_uint16_bitxor(const struct FheUint16 *lhs,
   ///                       const struct FheUint16 *rhs,
   ///                       struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 bitXor(FheUint16 other) {
+  /// ```
+@Override
+public FheUint16 bitXor(FheUint16 other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_bitxor(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 bitXorScalar(Short other) {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_scalar_bitxor(getValue(), other, result.getAddress()));
-    return result;
+  /// ```
+@Override
+public FheUint16 bitXorScalar(Short other) {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_scalar_bitxor(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_bitxor_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheUint16 other) {
+  /// ```
+@Override
+public void bitXorAssign(FheUint16 other){
     execute(() -> fhe_uint16_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_bitxor_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -184,14 +184,14 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_not(const struct FheUint16 *input, struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 bitNot() {
+/// ```
+@Override
+public FheUint16 bitNot(){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_not(getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_if_then_else(const struct FheBool *condition_ct,
@@ -211,49 +211,49 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// int fhe_uint16_eq(const struct FheUint16 *lhs,
   ///                   const struct FheUint16 *rhs,
   ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheUint16 other) {
+/// ```
+@Override
+public FheBool equalTo(FheUint16 other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint16_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_eq(const struct FheUint16 *lhs, uint16_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint16_scalar_eq(getValue(), other, result.getAddress()));
-    return result;
+/// ```
+@Override
+public FheBool equalToScalar(Short other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint16_scalar_eq(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_ne(const struct FheUint16 *lhs,
   ///                   const struct FheUint16 *rhs,
   ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheUint16 other) {
+/// ```
+@Override
+public FheBool notEqualTo(FheUint16 other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint16_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_ne(const struct FheUint16 *lhs, uint16_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint16_scalar_ne(getValue(), other, result.getAddress()));
-    return result;
+/// ```
+@Override
+public FheBool notEqualToScalar(Short other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint16_scalar_ne(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
@@ -275,7 +275,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   ///                                            const struct ServerKey *server_key,
   ///                                            struct FheUint16 **result);
   ///```
-  public static FheUint16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static FheUint16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheUint16 deserialized = new FheUint16();
     execute(() -> fhe_uint16_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -286,25 +286,25 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// int fhe_uint16_try_encrypt_with_client_key_u16(uint16_t value,
   ///                                                const struct ClientKey *client_key,
   ///                                                struct FheUint16 **result);
-  ///```
-  public static FheUint16 encrypt(Short clearValue, ClientKey clientKey) {
-    FheUint16 encrypted = new FheUint16();
-    execute(() -> fhe_uint16_try_encrypt_with_client_key_u16(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+/// ```
+public static FheUint16 encrypt(Short clearValue, ClientKey clientKey) {
+  FheUint16 encrypted = new FheUint16();
+  execute(() -> fhe_uint16_try_encrypt_with_client_key_u16(clearValue, clientKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_try_encrypt_with_public_key_u16(uint16_t value,
   ///                                                const struct PublicKey *public_key,
   ///                                                struct FheUint16 **result);
-  ///```
-  public static FheUint16 encrypt(Short clearValue, PublicKey publicKey) {
-    FheUint16 encrypted = new FheUint16();
-    execute(() -> fhe_uint16_try_encrypt_with_public_key_u16(clearValue, publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+/// ```
+public static FheUint16 encrypt(Short clearValue, PublicKey publicKey) {
+  FheUint16 encrypted = new FheUint16();
+  execute(() -> fhe_uint16_try_encrypt_with_public_key_u16(clearValue, publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_try_encrypt_trivial_u16(uint16_t value, struct FheUint16 **result);
@@ -318,54 +318,54 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_clone(const struct FheUint16 *sself, struct FheUint16 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheUint16 clone() {
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheUint16 clone(){
     FheUint16 cloned = new FheUint16();
-    execute(() -> fhe_uint16_clone(getValue(), cloned.getAddress()));
-    return cloned;
+  execute(() -> fhe_uint16_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_compress(const struct FheUint16 *sself, struct CompressedFheUint16 **result);
-  ///```
-  @Override
-  public CompressedFheUint16 compress() {
+/// ```
+@Override
+public CompressedFheUint16 compress(){
     CompressedFheUint16 compressed = new CompressedFheUint16();
-    execute(() -> fhe_uint16_compress(getValue(), compressed.getAddress()));
-    return compressed;
+  execute(() -> fhe_uint16_compress(getValue(), compressed.getAddress()));
+  return compressed;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_add(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 add(FheUint16 other) {
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 add(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_add(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_overflowing_add(const struct FheUint16 *lhs,
   ///                                const struct FheUint16 *rhs,
   ///                                struct FheUint16 **out_result,
   ///                                struct FheBool **out_overflowed);
-  ///```
-  @Override
-  public Map.Entry<FheUint16, FheBool> addWithOverflow(FheUint16 other) {
+/// ```
+@Override
+public Map.Entry<FheUint16, FheBool> addWithOverflow(FheUint16 other){
     FheUint16 result = new FheUint16();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint16_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_add(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -380,12 +380,12 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_add_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
-  ///```
-  @Override
-  public void addAssign(FheUint16 other) {
-    execute(() -> fhe_uint16_add_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void addAssign(FheUint16 other) {
+  execute(() -> fhe_uint16_add_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_add_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -399,30 +399,30 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_sub(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 subtract(FheUint16 other) {
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 subtract(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_sub(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_overflowing_sub(const struct FheUint16 *lhs,
   ///                                const struct FheUint16 *rhs,
   ///                                struct FheUint16 **out_result,
   ///                                struct FheBool **out_overflowed);
-  ///```
-  @Override
-  public Map.Entry<FheUint16, FheBool> subtractWithOverflow(FheUint16 other) {
+/// ```
+@Override
+public Map.Entry<FheUint16, FheBool> subtractWithOverflow(FheUint16 other){
     FheUint16 result = new FheUint16();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint16_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_sub(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -437,12 +437,12 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_sub_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
-  ///```
-  @Override
-  public void subtractAssign(FheUint16 other) {
-    execute(() -> fhe_uint16_sub_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void subtractAssign(FheUint16 other) {
+  execute(() -> fhe_uint16_sub_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_sub_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -456,30 +456,30 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_mul(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 multiply(FheUint16 other) {
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 multiply(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_mul(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_overflowing_mul(const struct FheUint16 *lhs,
   ///                                const struct FheUint16 *rhs,
   ///                                struct FheUint16 **out_result,
   ///                                struct FheBool **out_overflowed);
-  ///```
-  @Override
-  public Map.Entry<FheUint16, FheBool> multiplyWithOverflow(FheUint16 other) {
+/// ```
+@Override
+public Map.Entry<FheUint16, FheBool> multiplyWithOverflow(FheUint16 other){
     FheUint16 result = new FheUint16();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint16_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_mul(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -494,12 +494,12 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_mul_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
-  ///```
-  @Override
-  public void multiplyAssign(FheUint16 other) {
-    execute(() -> fhe_uint16_mul_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void multiplyAssign(FheUint16 other) {
+  execute(() -> fhe_uint16_mul_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_mul_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -513,15 +513,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_div(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 divide(FheUint16 other) {
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 divide(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_div(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_div(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_div(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -536,12 +536,12 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_div_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
-  ///```
-  @Override
-  public void divideAssign(FheUint16 other) {
-    execute(() -> fhe_uint16_div_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void divideAssign(FheUint16 other) {
+  execute(() -> fhe_uint16_div_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_div_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -555,21 +555,21 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_rem(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 remainder(FheUint16 other) {
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 remainder(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_rem(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_rem(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_rem(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
   ///```
   @Override
-  public FheUint16 remainderScalar(Short other) {
+  public FheUint16 remainderScalar(Short other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_scalar_rem(getValue(), other, result.getAddress()));
     return result;
@@ -578,12 +578,12 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_rem_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
-  ///```
-  @Override
-  public void remainderAssign(FheUint16 other) {
-    execute(() -> fhe_uint16_rem_assign(getValue(), other.getValue()));
+/// ```
+@Override
+public void remainderAssign(FheUint16 other) {
+  execute(() -> fhe_uint16_rem_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_rem_assign(struct FheUint16 *lhs, uint16_t rhs);
@@ -599,41 +599,41 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   ///                        const struct FheUint16 *rhs,
   ///                        struct FheUint16 **q_result,
   ///                        struct FheUint16 **r_result);
-  ///```
-  @Override
-  public Map.Entry<FheUint16, FheUint16> divideWithRemainder(FheUint16 other) {
+/// ```
+@Override
+public Map.Entry<FheUint16,FheUint16> divideWithRemainder(FheUint16 other){
     FheUint16 divider = new FheUint16();
     FheUint16 remainder = new FheUint16();
     execute(() -> fhe_uint16_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
-    return Map.entry(divider, remainder);
+  return Map.entry(divider, remainder);
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_div_rem(const struct FheUint16 *lhs,
   ///                               uint16_t rhs,
   ///                               struct FheUint16 **q_result,
   ///                               struct FheUint16 **r_result);
-  ///```
-  @Override
-  public Map.Entry<FheUint16, FheUint16> divideWithRemainderScalar(Short other) {
-    FheUint16 divider = new FheUint16();
-    FheUint16 remainder = new FheUint16();
-    execute(() -> fhe_uint16_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
-    return Map.entry(divider, remainder);
+/// ```
+@Override
+public Map.Entry<FheUint16,FheUint16> divideWithRemainderScalar(Short other) {
+  FheUint16 divider = new FheUint16();
+  FheUint16 remainder = new FheUint16();
+      execute(() -> fhe_uint16_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
+  return Map.entry(divider, remainder);
 
-  }
+}
 
   /// ```c
-  /// int fhe_uint16_neg(const struct FheUint16 *input, struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 negate() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_neg(getValue(), result.getAddress()));
-    return result;
+/// int fhe_uint16_neg(const struct FheUint16 *input, struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 negate() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_neg(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
@@ -642,28 +642,47 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   ///  * Result has no meaning if self encrypts a value that is <= 0.
   ///  * See `checked_ilog2`
   ///  */
-  /// int fhe_uint16_ilog2(const struct FheUint16 *input, struct FheUint32 **result);
+/// int fhe_uint16_ilog2(const struct FheUint16 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheUint16 ilog2(){
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_ilog2(getValue(), result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
+  ////**
+  ///  * Returns the base 2 logarithm of the number, rounded down.
+  ///  *
+  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
+  ///  */
+  /// int fhe_uint16_checked_ilog2(const struct FheUint16 *input,
+  ///                              struct FheUint32 **result_1,
+  ///                              struct FheBool **result_2);
   ///```
   @Override
-  public FheUint16 ilog2() {
+  public Map.Entry<FheUint16, FheBool> ilog2WithCheck() {
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_ilog2(getValue(), result.getAddress()));
-    return result;
+    FheBool check = new FheBool();
+    execute(() -> fhe_uint16_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
+    return Map.entry(result, check);
 
   }
 
   /// ```c
   /// int fhe_uint16_lt(const struct FheUint16 *lhs,
   ///                   const struct FheUint16 *rhs,
-  ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThan(FheUint16 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint16_lt(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                   struct FheBool **result);
+/// ```
+@Override
+public FheBool lessThan(FheUint16 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint16_lt(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_lt(const struct FheUint16 *lhs, uint16_t rhs, struct FheBool **result);
@@ -679,15 +698,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_le(const struct FheUint16 *lhs,
   ///                   const struct FheUint16 *rhs,
-  ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThanOrEqualTo(FheUint16 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint16_le(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                   struct FheBool **result);
+/// ```
+@Override
+public FheBool lessThanOrEqualTo(FheUint16 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint16_le(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_le(const struct FheUint16 *lhs, uint16_t rhs, struct FheBool **result);
@@ -703,15 +722,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_gt(const struct FheUint16 *lhs,
   ///                   const struct FheUint16 *rhs,
-  ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThan(FheUint16 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint16_gt(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                   struct FheBool **result);
+/// ```
+@Override
+public FheBool greaterThan(FheUint16 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint16_gt(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_gt(const struct FheUint16 *lhs, uint16_t rhs, struct FheBool **result);
@@ -727,15 +746,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_ge(const struct FheUint16 *lhs,
   ///                   const struct FheUint16 *rhs,
-  ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualTo(FheUint16 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint16_ge(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                   struct FheBool **result);
+/// ```
+@Override
+public FheBool greaterThanOrEqualTo(FheUint16 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint16_ge(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_ge(const struct FheUint16 *lhs, uint16_t rhs, struct FheBool **result);
@@ -751,15 +770,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_min(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 min(FheUint16 other) {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_min(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 min(FheUint16 other) {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_min(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_min(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -775,15 +794,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_max(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 max(FheUint16 other) {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_max(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 max(FheUint16 other) {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_max(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_max(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -799,15 +818,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_shl(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 shiftLeft(FheUint16 other) {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_shl(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 shiftLeft(FheUint16 other) {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_shl(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_shl(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -821,7 +840,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   }
 
   /// ```c
-  /// int fhe_uint16_shl_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
+/// int fhe_uint16_shl_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
   ///```
   @Override
   public void shiftLeftAssign(FheUint16 other) {
@@ -841,15 +860,15 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_shr(const struct FheUint16 *lhs,
   ///                    const struct FheUint16 *rhs,
-  ///                    struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 shiftRight(FheUint16 other) {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_shr(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                    struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 shiftRight(FheUint16 other) {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_shr(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_shr(const struct FheUint16 *lhs, uint16_t rhs, struct FheUint16 **result);
@@ -863,7 +882,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   }
 
   /// ```c
-  /// int fhe_uint16_shr_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
+/// int fhe_uint16_shr_assign(struct FheUint16 *lhs, const struct FheUint16 *rhs);
   ///```
   @Override
   public void shiftRightAssign(FheUint16 other) {
@@ -883,23 +902,23 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_rotate_left(const struct FheUint16 *lhs,
   ///                            const struct FheUint16 *rhs,
-  ///                            struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 rotateLeft(FheUint16 other) {
+///                            struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 rotateLeft(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_rotate_left(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_rotate_left(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_rotate_left(const struct FheUint16 *lhs,
   ///                                   uint16_t rhs,
-  ///                                   struct FheUint16 **result);
+///                                   struct FheUint16 **result);
   ///```
   @Override
-  public FheUint16 rotateLeftScalar(Short other) {
+  public FheUint16 rotateLeftScalar(Short other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_scalar_rotate_left(getValue(), other, result.getAddress()));
     return result;
@@ -927,23 +946,23 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   /// ```c
   /// int fhe_uint16_rotate_right(const struct FheUint16 *lhs,
   ///                             const struct FheUint16 *rhs,
-  ///                             struct FheUint16 **result);
-  ///```
-  @Override
-  public FheUint16 rotateRight(FheUint16 other) {
+///                             struct FheUint16 **result);
+/// ```
+@Override
+public FheUint16 rotateRight(FheUint16 other){
     FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_rotate_right(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint16_rotate_right(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_scalar_rotate_right(const struct FheUint16 *lhs,
   ///                                    uint16_t rhs,
-  ///                                    struct FheUint16 **result);
+///                                    struct FheUint16 **result);
   ///```
   @Override
-  public FheUint16 rotateRightScalar(Short other) {
+  public FheUint16 rotateRightScalar(Short other){
     FheUint16 result = new FheUint16();
     execute(() -> fhe_uint16_scalar_rotate_right(getValue(), other, result.getAddress()));
     return result;
@@ -972,57 +991,57 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
   ////**
   ///  * Returns the number of leading ones in the binary representation of input.
   ///  */
-  /// int fhe_uint16_leading_ones(const struct FheUint16 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheUint16 leadingOnes() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_leading_ones(getValue(), result.getAddress()));
-    return result;
+/// int fhe_uint16_leading_ones(const struct FheUint16 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheUint16 leadingOnes() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_leading_ones(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
   ///  * Returns the number of leading zeros in the binary representation of input.
   ///  */
-  /// int fhe_uint16_leading_zeros(const struct FheUint16 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheUint16 leadingZeros() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_leading_zeros(getValue(), result.getAddress()));
-    return result;
+/// int fhe_uint16_leading_zeros(const struct FheUint16 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheUint16 leadingZeros() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_leading_zeros(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
   ///  * Returns the number of trailing ones in the binary representation of input.
   ///  */
-  /// int fhe_uint16_trailing_ones(const struct FheUint16 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheUint16 trailingOnes() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_trailing_ones(getValue(), result.getAddress()));
-    return result;
+/// int fhe_uint16_trailing_ones(const struct FheUint16 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheUint16 trailingOnes() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_trailing_ones(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
   ///  * Returns the number of trailing zeros in the binary representation of input.
   ///  */
-  /// int fhe_uint16_trailing_zeros(const struct FheUint16 *input, struct FheUint32 **result);
-  ///```
-  @Override
-  public FheUint16 trailingZeros() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_uint16_trailing_zeros(getValue(), result.getAddress()));
-    return result;
+/// int fhe_uint16_trailing_zeros(const struct FheUint16 *input, struct FheUint32 **result);
+/// ```
+@Override
+public FheUint16 trailingZeros() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_uint16_trailing_zeros(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint16_decrypt(const struct FheUint16 *encrypted_value,
@@ -1424,7 +1443,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint104(const struct FheUint16 *sself, struct FheUint104 **result);
-  ///```
+  /// ```
   public FheUint104 castIntoFheUint104() {
     FheUint104 result = new FheUint104();
     execute(() -> fhe_uint16_cast_into_fhe_uint104(getValue(), result.getAddress()));
@@ -1433,7 +1452,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint112(const struct FheUint16 *sself, struct FheUint112 **result);
-  ///```
+  /// ```
   public FheUint112 castIntoFheUint112() {
     FheUint112 result = new FheUint112();
     execute(() -> fhe_uint16_cast_into_fhe_uint112(getValue(), result.getAddress()));
@@ -1451,7 +1470,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint120(const struct FheUint16 *sself, struct FheUint120 **result);
-  ///```
+  /// ```
   public FheUint120 castIntoFheUint120() {
     FheUint120 result = new FheUint120();
     execute(() -> fhe_uint16_cast_into_fhe_uint120(getValue(), result.getAddress()));
@@ -1460,7 +1479,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint128(const struct FheUint16 *sself, struct FheUint128 **result);
-  ///```
+  /// ```
   public FheUint128 castIntoFheUint128() {
     FheUint128 result = new FheUint128();
     execute(() -> fhe_uint16_cast_into_fhe_uint128(getValue(), result.getAddress()));
@@ -1469,7 +1488,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint136(const struct FheUint16 *sself, struct FheUint136 **result);
-  ///```
+  /// ```
   public FheUint136 castIntoFheUint136() {
     FheUint136 result = new FheUint136();
     execute(() -> fhe_uint16_cast_into_fhe_uint136(getValue(), result.getAddress()));
@@ -1487,7 +1506,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint144(const struct FheUint16 *sself, struct FheUint144 **result);
-  ///```
+  /// ```
   public FheUint144 castIntoFheUint144() {
     FheUint144 result = new FheUint144();
     execute(() -> fhe_uint16_cast_into_fhe_uint144(getValue(), result.getAddress()));
@@ -1496,7 +1515,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint152(const struct FheUint16 *sself, struct FheUint152 **result);
-  ///```
+  /// ```
   public FheUint152 castIntoFheUint152() {
     FheUint152 result = new FheUint152();
     execute(() -> fhe_uint16_cast_into_fhe_uint152(getValue(), result.getAddress()));
@@ -1514,7 +1533,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint160(const struct FheUint16 *sself, struct FheUint160 **result);
-  ///```
+  /// ```
   public FheUint160 castIntoFheUint160() {
     FheUint160 result = new FheUint160();
     execute(() -> fhe_uint16_cast_into_fhe_uint160(getValue(), result.getAddress()));
@@ -1523,7 +1542,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint168(const struct FheUint16 *sself, struct FheUint168 **result);
-  ///```
+  /// ```
   public FheUint168 castIntoFheUint168() {
     FheUint168 result = new FheUint168();
     execute(() -> fhe_uint16_cast_into_fhe_uint168(getValue(), result.getAddress()));
@@ -1532,7 +1551,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint176(const struct FheUint16 *sself, struct FheUint176 **result);
-  ///```
+  /// ```
   public FheUint176 castIntoFheUint176() {
     FheUint176 result = new FheUint176();
     execute(() -> fhe_uint16_cast_into_fhe_uint176(getValue(), result.getAddress()));
@@ -1541,7 +1560,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint184(const struct FheUint16 *sself, struct FheUint184 **result);
-  ///```
+  /// ```
   public FheUint184 castIntoFheUint184() {
     FheUint184 result = new FheUint184();
     execute(() -> fhe_uint16_cast_into_fhe_uint184(getValue(), result.getAddress()));
@@ -1550,7 +1569,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint192(const struct FheUint16 *sself, struct FheUint192 **result);
-  ///```
+  /// ```
   public FheUint192 castIntoFheUint192() {
     FheUint192 result = new FheUint192();
     execute(() -> fhe_uint16_cast_into_fhe_uint192(getValue(), result.getAddress()));
@@ -1568,7 +1587,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint200(const struct FheUint16 *sself, struct FheUint200 **result);
-  ///```
+  /// ```
   public FheUint200 castIntoFheUint200() {
     FheUint200 result = new FheUint200();
     execute(() -> fhe_uint16_cast_into_fhe_uint200(getValue(), result.getAddress()));
@@ -1586,7 +1605,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint208(const struct FheUint16 *sself, struct FheUint208 **result);
-  ///```
+///```
   public FheUint208 castIntoFheUint208() {
     FheUint208 result = new FheUint208();
     execute(() -> fhe_uint16_cast_into_fhe_uint208(getValue(), result.getAddress()));
@@ -1595,7 +1614,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint216(const struct FheUint16 *sself, struct FheUint216 **result);
-  ///```
+///```
   public FheUint216 castIntoFheUint216() {
     FheUint216 result = new FheUint216();
     execute(() -> fhe_uint16_cast_into_fhe_uint216(getValue(), result.getAddress()));
@@ -1604,7 +1623,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint224(const struct FheUint16 *sself, struct FheUint224 **result);
-  ///```
+///```
   public FheUint224 castIntoFheUint224() {
     FheUint224 result = new FheUint224();
     execute(() -> fhe_uint16_cast_into_fhe_uint224(getValue(), result.getAddress()));
@@ -1613,7 +1632,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint232(const struct FheUint16 *sself, struct FheUint232 **result);
-  ///```
+///```
   public FheUint232 castIntoFheUint232() {
     FheUint232 result = new FheUint232();
     execute(() -> fhe_uint16_cast_into_fhe_uint232(getValue(), result.getAddress()));
@@ -1631,7 +1650,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint240(const struct FheUint16 *sself, struct FheUint240 **result);
-  ///```
+///```
   public FheUint240 castIntoFheUint240() {
     FheUint240 result = new FheUint240();
     execute(() -> fhe_uint16_cast_into_fhe_uint240(getValue(), result.getAddress()));
@@ -1640,7 +1659,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint248(const struct FheUint16 *sself, struct FheUint248 **result);
-  ///```
+///```
   public FheUint248 castIntoFheUint248() {
     FheUint248 result = new FheUint248();
     execute(() -> fhe_uint16_cast_into_fhe_uint248(getValue(), result.getAddress()));
@@ -1649,7 +1668,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint256(const struct FheUint16 *sself, struct FheUint256 **result);
-  ///```
+///```
   public FheUint256 castIntoFheUint256() {
     FheUint256 result = new FheUint256();
     execute(() -> fhe_uint16_cast_into_fhe_uint256(getValue(), result.getAddress()));
@@ -1694,7 +1713,7 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint512(const struct FheUint16 *sself, struct FheUint512 **result);
-  ///```
+///```
   public FheUint512 castIntoFheUint512() {
     FheUint512 result = new FheUint512();
     execute(() -> fhe_uint16_cast_into_fhe_uint512(getValue(), result.getAddress()));
@@ -1766,11 +1785,11 @@ implements FheUnsignedInteger<Short, FheUint16, CompressedFheUint16> {
 
   /// ```c
   /// int fhe_uint16_cast_into_fhe_uint96(const struct FheUint16 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_uint16_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_uint16_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
 
 }

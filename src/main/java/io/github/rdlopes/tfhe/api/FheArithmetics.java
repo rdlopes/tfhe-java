@@ -58,4 +58,6 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
   T negate();
 
   T ilog2();
+
+  Map.Entry<T, FheBool> ilog2WithCheck();
 }

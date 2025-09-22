@@ -56,7 +56,7 @@ implements CompressedFheType<U2048, FheUint2048, CompressedFheUint2048> {
   ///                                            uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint2048_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +84,7 @@ implements CompressedFheType<U2048, FheUint2048, CompressedFheUint2048> {
   ///                                                         const struct ServerKey *server_key,
   ///                                                         struct CompressedFheUint2048 **result);
   ///```
-  public static CompressedFheUint2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheUint2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheUint2048 deserialized = new CompressedFheUint2048();
     execute(() -> compressed_fhe_uint2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +109,10 @@ implements CompressedFheType<U2048, FheUint2048, CompressedFheUint2048> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheUint2048 clone() {
+public CompressedFheUint2048 clone(){
     CompressedFheUint2048 cloned = new CompressedFheUint2048();
     execute(() -> compressed_fhe_uint2048_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

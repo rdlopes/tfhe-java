@@ -59,7 +59,7 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// int fhe_bool_bitand(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool bitAnd(FheBool other) {
+  public FheBool bitAnd(FheBool other){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -70,7 +70,7 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// int fhe_bool_scalar_bitand(const struct FheBool *lhs, bool rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool bitAndScalar(Boolean other) {
+  public FheBool bitAndScalar(Boolean other){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_scalar_bitand(getValue(), other, result.getAddress()));
     return result;
@@ -81,7 +81,7 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// int fhe_bool_bitand_assign(struct FheBool *lhs, const struct FheBool *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheBool other) {
+  public void bitAndAssign(FheBool other){
     execute(() -> fhe_bool_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -99,7 +99,7 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// int fhe_bool_bitor(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool bitOr(FheBool other) {
+public FheBool bitOr(FheBool other){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_bitor(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -110,7 +110,7 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// int fhe_bool_scalar_bitor(const struct FheBool *lhs, bool rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool bitOrScalar(Boolean other) {
+public FheBool bitOrScalar(Boolean other) {
     FheBool result = new FheBool();
     execute(() -> fhe_bool_scalar_bitor(getValue(), other, result.getAddress()));
     return result;
@@ -120,11 +120,11 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// ```c
   /// int fhe_bool_bitor_assign(struct FheBool *lhs, const struct FheBool *rhs);
   ///```
-  @Override
-  public void bitOrAssign(FheBool other) {
+@Override
+public void bitOrAssign(FheBool other){
     execute(() -> fhe_bool_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_scalar_bitor_assign(struct FheBool *lhs, bool rhs);
@@ -137,34 +137,34 @@ implements FheBoolean<FheBool, CompressedFheBool> {
 
   /// ```c
   /// int fhe_bool_bitxor(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool bitXor(FheBool other) {
+/// ```
+@Override
+public FheBool bitXor(FheBool other){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_scalar_bitxor(const struct FheBool *lhs, bool rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool bitXorScalar(Boolean other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_bool_scalar_bitxor(getValue(), other, result.getAddress()));
-    return result;
+  /// ```
+@Override
+public FheBool bitXorScalar(Boolean other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_bool_scalar_bitxor(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_bitxor_assign(struct FheBool *lhs, const struct FheBool *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheBool other) {
+  /// ```
+@Override
+public void bitXorAssign(FheBool other){
     execute(() -> fhe_bool_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_scalar_bitxor_assign(struct FheBool *lhs, bool rhs);
@@ -177,14 +177,14 @@ implements FheBoolean<FheBool, CompressedFheBool> {
 
   /// ```c
   /// int fhe_bool_not(const struct FheBool *input, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool bitNot() {
+/// ```
+@Override
+public FheBool bitNot(){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_not(getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// Not implemented
   @SuppressWarnings("unused")
@@ -195,47 +195,47 @@ implements FheBoolean<FheBool, CompressedFheBool> {
 
   /// ```c
   /// int fhe_bool_eq(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheBool other) {
+/// ```
+@Override
+public FheBool equalTo(FheBool other){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_scalar_eq(const struct FheBool *lhs, bool rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalToScalar(Boolean other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_bool_scalar_eq(getValue(), other, result.getAddress()));
-    return result;
+  /// ```
+@Override
+public FheBool equalToScalar(Boolean other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_bool_scalar_eq(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_ne(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheBool other) {
+/// ```
+@Override
+public FheBool notEqualTo(FheBool other){
     FheBool result = new FheBool();
     execute(() -> fhe_bool_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_scalar_ne(const struct FheBool *lhs, bool rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualToScalar(Boolean other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_bool_scalar_ne(getValue(), other, result.getAddress()));
-    return result;
+  /// ```
+@Override
+public FheBool notEqualToScalar(Boolean other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_bool_scalar_ne(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   ////**
@@ -257,7 +257,7 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   ///                                          const struct ServerKey *server_key,
   ///                                          struct FheBool **result);
   ///```
-  public static FheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static FheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheBool deserialized = new FheBool();
     execute(() -> fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -268,58 +268,58 @@ implements FheBoolean<FheBool, CompressedFheBool> {
   /// int fhe_bool_try_encrypt_with_client_key_bool(bool value,
   ///                                               const struct ClientKey *client_key,
   ///                                               struct FheBool **result);
-  ///```
-  public static FheBool encrypt(Boolean clearValue, ClientKey clientKey) {
-    FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+/// ```
+public static FheBool encrypt(Boolean clearValue, ClientKey clientKey) {
+  FheBool encrypted = new FheBool();
+  execute(() -> fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_try_encrypt_with_public_key_bool(bool value,
   ///                                               const struct PublicKey *public_key,
   ///                                               struct FheBool **result);
-  ///```
-  public static FheBool encrypt(Boolean clearValue, PublicKey publicKey) {
-    FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+/// ```
+public static FheBool encrypt(Boolean clearValue, PublicKey publicKey) {
+  FheBool encrypted = new FheBool();
+  execute(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_try_encrypt_trivial_bool(bool value, struct FheBool **result);
   ///```
   public static FheBool encrypt(Boolean clearValue) {
     FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, encrypted.getAddress()));
+      execute(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, encrypted.getAddress()));
     return encrypted;
 
   }
 
   /// ```c
   /// int fhe_bool_clone(const struct FheBool *sself, struct FheBool **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheBool clone() {
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheBool clone(){
     FheBool cloned = new FheBool();
-    execute(() -> fhe_bool_clone(getValue(), cloned.getAddress()));
-    return cloned;
+  execute(() -> fhe_bool_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_compress(const struct FheBool *sself, struct CompressedFheBool **result);
-  ///```
-  @Override
-  public CompressedFheBool compress() {
+/// ```
+@Override
+public CompressedFheBool compress(){
     CompressedFheBool compressed = new CompressedFheBool();
-    execute(() -> fhe_bool_compress(getValue(), compressed.getAddress()));
-    return compressed;
+  execute(() -> fhe_bool_compress(getValue(), compressed.getAddress()));
+  return compressed;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_decrypt(const struct FheBool *encrypted_value,
@@ -1063,11 +1063,11 @@ implements FheBoolean<FheBool, CompressedFheBool> {
 
   /// ```c
   /// int fhe_bool_cast_into_fhe_uint96(const struct FheBool *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_bool_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_bool_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
 
 }
