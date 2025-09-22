@@ -1,0 +1,11 @@
+{{#method this (stringFormat "public static %s" className) "encrypt" "try_encrypt_with_client_key"
+          (stringFormat "%s clearValue" valueClassName) "ClientKey clientKey" override=false}}
+  {{declare "encrypted"}}
+  {{#if isHighBitSize}}
+    {{execute "try_encrypt_with_client_key" "clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()"}}
+  {{else}}
+    {{execute "try_encrypt_with_client_key" "clearValue, clientKey.getValue(), encrypted.getAddress()"}}
+  {{/if}}
+  return encrypted;
+{{/method}}
+

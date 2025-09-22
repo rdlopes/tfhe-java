@@ -1,0 +1,6 @@
+{{#method this (stringFormat "public %s" className) "clone" "clone"
+          annotation="@SuppressWarnings(\"MethodDoesntCallSuperMethod\")"}}
+  {{declare "cloned"}}
+  {{execute "clone" "getValue(), cloned.getAddress()"}}
+  return cloned;
+{{/method}}

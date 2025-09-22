@@ -1,52 +1,26 @@
-
 package io.github.rdlopes.tfhe.api.keys;
 
-import org.junit.jupiter.api.AfterEach;
+import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static io.github.rdlopes.tfhe.assertions.TfheAssertions.assertThat;
-import static io.github.rdlopes.tfhe.assertions.TfheAssertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class PublicKeyTest {
-  private static final Logger logger = LoggerFactory.getLogger(PublicKeyTest.class);
-  private KeySet keySet;
+  private FheKeySet keySet;
 
   @BeforeEach
   void setUp() {
-    ConfigBuilder configBuilder = new ConfigBuilder();
-    Config config = configBuilder.build();
-    keySet = config.generateKeys();
-    keySet.serverKey()
-          .set();
-  }
-
-  @AfterEach
-  void tearDown() {
-    keySet.destroy();
+    keySet = new FheKeySet();
   }
 
   @Test
-  void cannotSerialize() {
-    logger.trace("cannotSerialize");
+  void serializesAndDeserializes() {
+    PublicKey publicKey = new PublicKey(keySet.getClientKey());
 
-    PublicKey key = PublicKey.createFromClientKey(keySet.clientKey());
-
-    assertThatThrownBy(key::serialize)
-      .isInstanceOf(UnsupportedOperationException.class)
-      .hasMessage("PublicKey cannot be serialized");
+    try (DynamicBuffer buffer = publicKey.serialize()) {
+      assertThatCode(() -> PublicKey.deserialize(buffer))
+        .doesNotThrowAnyException();
+    }
   }
-
-  @Test
-  void createsFromClientKey() {
-    logger.trace("createsFromClientKey");
-
-    PublicKey key = PublicKey.createFromClientKey(keySet.clientKey());
-
-    assertThat(key).isNotNull();
-    assertThat(key.getAddress()).isNotNull();
-  }
-
 }

@@ -1,0 +1,7 @@
+{{#method this (stringFormat "public static %s" className) "deserialize" "safe_deserialize_conformant"
+          "DynamicBuffer dynamicBuffer" "ServerKey serverKey" override=false}}
+  {{declare "deserialized"}}
+  {{execute "safe_deserialize_conformant"
+            "dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()"}}
+  return deserialized;
+{{/method}}

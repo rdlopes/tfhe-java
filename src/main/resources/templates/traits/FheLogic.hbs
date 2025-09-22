@@ -1,0 +1,105 @@
+{{#method this (stringFormat "public %s" className) "bitAnd" "bitand" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "bitand" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "bitAndScalar" "scalar_bitand"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_bitand" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_bitand" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "bitAndAssign" "bitand_assign" (stringFormat "%s other" className)}}
+  {{execute "bitand_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "bitAndScalarAssign" "scalar_bitand_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_bitand_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_bitand_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "bitOr" "bitor" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "bitor" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "bitOrScalar" "scalar_bitor"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_bitor" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_bitor" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "bitOrAssign" "bitor_assign" (stringFormat "%s other" className)}}
+  {{execute "bitor_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "bitOrScalarAssign" "scalar_bitor_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_bitor_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_bitor_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "bitXor" "bitxor" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "bitxor" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "bitXorScalar" "scalar_bitxor"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_bitxor" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_bitxor" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "bitXorAssign" "bitxor_assign" (stringFormat "%s other" className)}}
+  {{execute "bitxor_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "bitXorScalarAssign" "scalar_bitxor_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_bitxor_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_bitxor_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "bitNot" "not"}}
+  {{declare "result"}}
+  {{execute "not" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public static %s" className) "ifThenElse" "if_then_else"
+          "FheBool condition" (stringFormat "%s thenValue" className) (stringFormat "%s elseValue" className)
+          override=false}}
+  {{#if isInteger}}
+    {{declare "result"}}
+    {{execute "if_then_else" "condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()"}}
+    return result;
+  {{else}}
+    throw new NotImplementedException("Unavailable for {{className}}");
+  {{/if}}
+{{/method}}
+

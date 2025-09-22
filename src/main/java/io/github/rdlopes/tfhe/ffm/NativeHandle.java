@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.foreign.MemorySegment;
 import java.util.function.Function;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.executeWithAddress;
+import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 
 public record NativeHandle(
   Class<?> javaClass,
@@ -15,12 +15,14 @@ public record NativeHandle(
   private static final Logger logger = LoggerFactory.getLogger(NativeHandle.class);
 
   public NativeHandle {
-    logger.trace("init - javaClass: {}, address: 0x{}, destroyer: {}", javaClass.getSimpleName(), Long.toHexString(address.address()), destroyer);
+    logger.trace("init - javaClass: {}, address: {}, destroyer: {}", javaClass, address, destroyer);
   }
 
   @Override
   public void run() {
-    logger.debug("destroy {}[0x{}]", javaClass.getSimpleName(), Long.toHexString(address.address()));
-    executeWithAddress(address, destroyer);
+    logger.trace("run {}[0x{}]", javaClass.getSimpleName(), Long.toHexString(address.address()));
+
+    execute(() -> destroyer.apply(address));
   }
+
 }

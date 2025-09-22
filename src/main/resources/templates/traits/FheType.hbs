@@ -1,0 +1,14 @@
+{{> traits/FheObject}}
+{{> traits/FheLogic}}
+{{> traits/FheEquality}}
+{{> traits/FheDeserializationConformant}}
+{{> traits/FheEncryption}}
+{{> traits/FheEncryptionPublic}}
+{{> traits/FheEncryptionTrivial}}
+{{> traits/FheCloneable}}
+
+{{#method this (stringFormat "public Compressed%s" className) "compress" "compress"}}
+  {{declare "compressed" class=(stringFormat "Compressed%s" className) }}
+  {{execute "compress" "getValue(), compressed.getAddress()"}}
+  return compressed;
+{{/method}}

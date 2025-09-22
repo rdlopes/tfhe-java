@@ -26,15 +26,15 @@ public record NativeHeaderFile(Collection<String> definitions) {
     return new NativeHeaderFile(definitions);
   }
 
-  public Optional<String> lookup(String symbol) {
+  public String lookup(String symbol) {
     Function<String, Optional<String>> search =
       (match) -> definitions.stream()
                             .filter(s -> s.contains(match))
                             .findFirst();
 
     return search.apply(" " + symbol + " ")
-                 .or(() -> search.apply(" " + symbol + "("))
-                 .or(() -> search.apply(" " + symbol + ";"))
-                 .or(() -> search.apply(symbol));
+                 .or(() -> search.apply(" " + symbol))
+                 .or(() -> search.apply(symbol))
+                 .orElse("");
   }
 }

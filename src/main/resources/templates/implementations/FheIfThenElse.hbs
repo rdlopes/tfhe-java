@@ -1,9 +1,0 @@
-{{javadoc this "if_then_else"}}
-public {{className}} ifThenElse({{className}} condition, {{className}} thenValue) {
-  logger.trace("ifThenElse - condition: {}, thenValue: {}", condition, thenValue);
-  {{className}} result = new {{className}}();
-  execute(() -> {{nativeMethod this
-                               "if_then_else"}}(getValue(), condition.getValue(), thenValue.getValue(), result.getAddress()))
-  ;
-  return result;
-}

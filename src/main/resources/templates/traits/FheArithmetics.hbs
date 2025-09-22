@@ -1,0 +1,199 @@
+{{#method this (stringFormat "public %s" className) "add" "add" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "add" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "addWithOverflow" "overflowing_add"
+          (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{declare "overflow" class="FheBool"}}
+  {{execute "overflowing_add" "getValue(), other.getValue(), result.getAddress(), overflow.getAddress()"}}
+  return Map.entry(result, overflow);
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "addScalar" "scalar_add" (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_add" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_add" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "addAssign" "add_assign" (stringFormat "%s other" className)}}
+  {{execute "add_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "addScalarAssign" "scalar_add_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_add_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_add_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "subtract" "sub" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "sub" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "subtractWithOverflow" "overflowing_sub"
+          (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{declare "overflow" class="FheBool"}}
+  {{execute "overflowing_sub" "getValue(), other.getValue(), result.getAddress(), overflow.getAddress()"}}
+  return Map.entry(result, overflow);
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "subtractScalar" "scalar_sub"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_sub" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_sub" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "subtractAssign" "sub_assign" (stringFormat "%s other" className)}}
+  {{execute "sub_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "subtractScalarAssign" "scalar_sub_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_sub_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_sub_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "multiply" "mul" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "mul" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "multiplyWithOverflow" "overflowing_mul"
+          (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{declare "overflow" class="FheBool"}}
+  {{execute "overflowing_mul" "getValue(), other.getValue(), result.getAddress(), overflow.getAddress()"}}
+  return Map.entry(result, overflow);
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "multiplyScalar" "scalar_mul"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_mul" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_mul" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "multiplyAssign" "mul_assign" (stringFormat "%s other" className)}}
+  {{execute "mul_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "multiplyScalarAssign" "scalar_mul_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_mul_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_mul_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "divide" "div" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "div" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "divideScalar" "scalar_div"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_div" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_div" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "divideAssign" "div_assign" (stringFormat "%s other" className)}}
+  {{execute "div_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "divideScalarAssign" "scalar_div_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_div_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_div_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "remainder" "rem" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "rem" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "remainderScalar" "scalar_rem"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_rem" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_rem" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "remainderAssign" "rem_assign" (stringFormat "%s other" className)}}
+  {{execute "rem_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "remainderScalarAssign" "scalar_rem_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_rem_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_rem_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public Map.Entry<%s,%s>" className className) "divideWithRemainder" "div_rem"
+          (stringFormat "%s other" className)}}
+  {{declare "divider"}}
+  {{declare "remainder"}}
+  {{execute "div_rem" "getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()"}}
+  return Map.entry(divider, remainder);
+{{/method}}
+
+{{#method this (stringFormat "public Map.Entry<%s,%s>" className className) "divideWithRemainderScalar" "scalar_div_rem"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "divider"}}
+  {{declare "remainder"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_div_rem" "getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()"}}
+  {{else}}
+    {{execute "scalar_div_rem" "getValue(), other, divider.getAddress(), remainder.getAddress()"}}
+  {{/if}}
+  return Map.entry(divider, remainder);
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "negate" "neg"}}
+  {{declare "result"}}
+  {{execute "neg" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "ilog2" "ilog2"}}
+  {{declare "result"}}
+  {{execute "ilog2" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}

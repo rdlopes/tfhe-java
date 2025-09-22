@@ -1,4 +1,7 @@
 package io.github.rdlopes.tfhe.api.keys;
 
-public interface FheKey {
+import io.github.rdlopes.tfhe.api.FheObject;
+
+public interface FheKey extends FheObject {
+
 }

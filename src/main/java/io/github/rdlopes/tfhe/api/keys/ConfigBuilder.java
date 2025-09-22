@@ -1,41 +1,39 @@
 package io.github.rdlopes.tfhe.api.keys;
 
-import io.github.rdlopes.tfhe.ffm.NativeValue;
+import io.github.rdlopes.tfhe.ffm.NativePointer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
-public class ConfigBuilder extends NativeValue implements Cloneable {
+public class ConfigBuilder extends NativePointer implements Cloneable {
+  private static final Logger logger = LoggerFactory.getLogger(ConfigBuilder.class);
 
-  public ConfigBuilder() {
-    //super(TfheHeader::config_builder_destroy);
+  ConfigBuilder() {
+    logger.trace("init");
+
     super(null);
     execute(() -> config_builder_default(getAddress()));
   }
 
-  public void useCustomParameters(ShortintPBSParameters parameters) {
-    execute(() -> config_builder_use_custom_parameters(getAddress(), parameters.getAddress()));
-  }
-
-  public void enableCompression(CompressionParameters compressionParameters) {
-    execute(() -> config_builder_enable_compression(getAddress(), compressionParameters.getAddress()));
-  }
-
-  public void useDedicatedCompactPublicKeyParameters(ShortintCompactPublicKeyEncryptionParameters compactPublicKeyParameters) {
-    execute(() -> use_dedicated_compact_public_key_parameters(getAddress(), compactPublicKeyParameters.getAddress()));
-  }
-
   public Config build() {
+    logger.trace("build");
+
     Config config = new Config();
     execute(() -> config_builder_build(getValue(), config.getAddress()));
+
     return config;
   }
 
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public ConfigBuilder clone() {
+    logger.trace("clone");
+
     ConfigBuilder configBuilder = new ConfigBuilder();
     execute(() -> config_builder_clone(getValue(), configBuilder.getAddress()));
+
     return configBuilder;
   }
 }

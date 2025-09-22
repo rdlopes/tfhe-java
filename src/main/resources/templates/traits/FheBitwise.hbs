@@ -1,0 +1,141 @@
+{{#method this (stringFormat "public %s" className) "shiftLeft" "shl" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "shl" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "shiftLeftScalar" "scalar_shl"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_shl" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_shl" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "shiftLeftAssign" "shl_assign" (stringFormat "%s other" className)}}
+  {{execute "shl_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "shiftLeftScalarAssign" "scalar_shl_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_shl_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_shl_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "shiftRight" "shr" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "shr" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "shiftRightScalar" "scalar_shr"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_shr" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_shr" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "shiftRightAssign" "shr_assign" (stringFormat "%s other" className)}}
+  {{execute "shr_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "shiftRightScalarAssign" "scalar_shr_assign" (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_shr_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_shr_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "rotateLeft" "rotate_left" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "rotate_left" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "rotateLeftScalar" "scalar_rotate_left"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_rotate_left" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_rotate_left" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "rotateLeftAssign" "rotate_left_assign" (stringFormat "%s other" className)}}
+  {{execute "rotate_left_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "rotateLeftScalarAssign" "scalar_rotate_left_assign"
+          (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_rotate_left_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_rotate_left_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "rotateRight" "rotate_right" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "rotate_right" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "rotateRightScalar" "scalar_rotate_right"
+          (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_rotate_right" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_rotate_right" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public void" "rotateRightAssign" "rotate_right_assign" (stringFormat "%s other" className)}}
+  {{execute "rotate_right_assign" "getValue(), other.getValue()"}}
+{{/method}}
+
+{{#method this "public void" "rotateRightScalarAssign" "scalar_rotate_right_assign"
+          (stringFormat "%s other" valueClassName)}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_rotate_right_assign" "getValue(), other.getAddress()"}}
+  {{else}}
+    {{execute "scalar_rotate_right_assign" "getValue(), other"}}
+  {{/if}}
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "leadingOnes" "leading_ones"}}
+  {{declare "result"}}
+  {{execute "leading_ones" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "leadingZeros" "leading_zeros"}}
+  {{declare "result"}}
+  {{execute "leading_zeros" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "trailingOnes" "trailing_ones"}}
+  {{declare "result"}}
+  {{execute "trailing_ones" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "trailingZeros" "trailing_zeros"}}
+  {{declare "result"}}
+  {{execute "trailing_zeros" "getValue(), result.getAddress()"}}
+  return result;
+{{/method}}

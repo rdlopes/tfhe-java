@@ -1,0 +1,13 @@
+{{javadoc "destroy"}}
+{{className}}(){
+  {{trace "init"}}
+  super(TfheHeader::{{symbol "destroy"}});
+  }
+
+{{#method this (stringFormat "public %s" (decompressed className)) "decompress" "decompress"}}
+  {{declare "decompressed" class=(decompressed className) }}
+  {{execute "decompress" "getValue(), decompressed.getAddress()"}}
+    return decompressed;
+{{/method}}
+
+{{> traits/FheSerialization}}

@@ -1,0 +1,95 @@
+{{#method this "public FheBool" "lessThan" "lt" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "lt" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "lessThanScalar" "scalar_lt" (stringFormat "%s other" valueClassName)}}
+  {{declare "result" class="FheBool"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_lt" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_lt" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "lessThanOrEqualTo" "le" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "le" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "lessThanOrEqualToScalar" "scalar_le" (stringFormat "%s other" valueClassName)}}
+  {{declare "result" class="FheBool"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_le" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_le" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "greaterThan" "gt" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "gt" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "greaterThanScalar" "scalar_gt" (stringFormat "%s other" valueClassName)}}
+  {{declare "result" class="FheBool"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_gt" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_gt" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "greaterThanOrEqualTo" "ge" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "ge" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "greaterThanOrEqualToScalar" "scalar_ge" (stringFormat "%s other" valueClassName)}}
+  {{declare "result" class="FheBool"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_ge" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_ge" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "min" "min" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "min" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "minScalar" "scalar_min" (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_min" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_min" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "max" "max" (stringFormat "%s other" className)}}
+  {{declare "result"}}
+  {{execute "max" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "maxScalar" "scalar_max" (stringFormat "%s other" valueClassName)}}
+  {{declare "result"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_max" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_max" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}

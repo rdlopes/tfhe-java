@@ -1,27 +1,78 @@
 package io.github.rdlopes.tfhe.generator.templates;
 
-import java.util.Collection;
+import io.github.rdlopes.tfhe.api.types.*;
+import io.github.rdlopes.tfhe.generator.parsers.SymbolsIndex;
 
-public abstract class TemplateContext {
-  private final String packageName;
-  private final String className;
+import java.util.Arrays;
 
-  public TemplateContext(String packageName, String className) {
-    this.packageName = packageName;
-    this.className = className;
+import static java.lang.Integer.parseInt;
+import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.*;
+
+public record TemplateContext(String packageName, String className, SymbolsIndex symbolsIndex) {
+
+  public static TemplateContext fromType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
+    return new TemplateContext(packageName, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativePrefix(fheType))));
   }
 
-  public String getPackageName() {
-    return packageName;
+  public static String nativePrefix(String type) {
+    String nativeType = Arrays.stream(splitByCharacterTypeCamelCase(type))
+                              .map(String::toLowerCase)
+                              .map(s -> isAlpha(s) ? "_" + s : s)
+                              .collect(joining());
+
+    return substringAfter(nativeType, "_") + "_";
   }
 
-  public String getClassName() {
-    return className;
+  public boolean isBoolean() {
+    return className().startsWith("FheBool");
   }
 
-  public String getFullClassName() {
-    return packageName + "." + className;
+  public boolean isInteger() {
+    return className().startsWith("FheInt") || className().startsWith("FheUint");
   }
 
-  public abstract Collection<String> getImports();
+  @SuppressWarnings("unused")
+  public boolean isHighBitSize() {
+    return bitSize() > 64;
+  }
+
+  public String valueClassName() {
+    return valueClass().getSimpleName();
+  }
+
+  public Class<?> valueClass() {
+    return switch (bitSize()) {
+      case 1 -> Boolean.class;
+      case int bitSize when (bitSize <= 8) -> Byte.class;
+      case int bitSize when (bitSize <= 16) -> Short.class;
+      case int bitSize when (bitSize <= 32) -> Integer.class;
+      case int bitSize when (bitSize <= 64) -> Long.class;
+      case int bitSize when (bitSize <= 128) -> isSigned() ? I128.class : U128.class;
+      case int bitSize when (bitSize <= 256) -> isSigned() ? I256.class : U256.class;
+      case int bitSize when (bitSize <= 512) -> isSigned() ? I512.class : U512.class;
+      case int bitSize when (bitSize <= 1024) -> isSigned() ? I1024.class : U1024.class;
+      case int bitSize when (bitSize <= 2048) -> isSigned() ? I2048.class : U2048.class;
+      default -> throw new IllegalArgumentException("Unknown type: " + className());
+    };
+  }
+
+  public int bitSize() {
+    String[] parts = splitByCharacterTypeCamelCase(className());
+    String bitSizeString = parts[parts.length - 1];
+    return isNumeric(bitSizeString) ? parseInt(bitSizeString) : 1;
+  }
+
+  public boolean isSigned() {
+    return !className().contains("Uint");
+  }
+
+  public String nativePrefix() {
+    String nativeType = Arrays.stream(splitByCharacterTypeCamelCase(className()))
+                              .map(String::toLowerCase)
+                              .map(s -> isAlpha(s) ? "_" + s : s)
+                              .collect(joining());
+
+    return substringAfter(nativeType, "_") + "_";
+  }
 }

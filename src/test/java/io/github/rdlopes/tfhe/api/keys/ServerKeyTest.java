@@ -1,46 +1,41 @@
-
 package io.github.rdlopes.tfhe.api.keys;
 
-import org.junit.jupiter.api.AfterEach;
+import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static io.github.rdlopes.tfhe.assertions.TfheAssertions.assertThat;
-import static io.github.rdlopes.tfhe.assertions.TfheAssertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class ServerKeyTest {
-  private static final Logger logger = LoggerFactory.getLogger(ServerKeyTest.class);
-  private KeySet keySet;
+  private FheKeySet keySet;
 
   @BeforeEach
   void setUp() {
-    ConfigBuilder configBuilder = new ConfigBuilder();
-    Config config = configBuilder.build();
-    keySet = config.generateKeys();
-    keySet.serverKey()
-          .set();
-  }
-
-  @AfterEach
-  void tearDown() {
-    keySet.destroy();
+    keySet = new FheKeySet();
   }
 
   @Test
-  void serializesButCannotDeserialize() {
-    logger.trace("serializesButCannotDeserialize");
-
-    byte[] buffer = keySet.serverKey()
-                          .serialize();
-
-    assertThat(buffer).isNotNull();
-    assertThat(buffer.length).isGreaterThan(0);
-
-    assertThatThrownBy(() -> ServerKey.deserialize(buffer))
-      .isInstanceOf(UnsupportedOperationException.class)
-      .hasMessage("ServerKey cannot be deserialized");
+  void serializesAndDeserializes() {
+    try (DynamicBuffer buffer = keySet.getServerKey()
+                                      .serialize()) {
+      assertThatCode(() -> ServerKey.deserialize(buffer))
+        .doesNotThrowAnyException();
+    }
   }
 
+  @Test
+  void canBeUsed() {
+    assertThatCode(() -> keySet.getServerKey()
+                               .use())
+      .doesNotThrowAnyException();
+  }
+
+  @Test
+  void canUnset() {
+    keySet.getServerKey()
+          .use();
+    assertThatCode(() -> keySet.getServerKey()
+                               .unset())
+      .doesNotThrowAnyException();
+  }
 }

@@ -1,7 +1,0 @@
-{{javadoc this "decompress"}}
-public {{compressed.className}} decompress() {
-  logger.trace("decompress");
-  {{compressed.className}} decompressed = new {{compressed.className}}();
-  execute(() -> {{nativeMethod this "decompress"}}(getValue(), decompressed.getAddress()));
-  return decompressed;
-}

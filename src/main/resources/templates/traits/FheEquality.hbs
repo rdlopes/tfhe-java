@@ -1,0 +1,31 @@
+{{#method this "public FheBool" "equalTo" "eq" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "eq" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "equalToScalar" "scalar_eq" (stringFormat "%s other" valueClassName)}}
+  {{declare "result" class="FheBool"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_eq" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_eq" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "notEqualTo" "ne" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "ne" "getValue(), other.getValue(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "notEqualToScalar" "scalar_ne" (stringFormat "%s other" valueClassName)}}
+  {{declare "result" class="FheBool"}}
+  {{#if isHighBitSize}}
+    {{execute "scalar_ne" "getValue(), other.getAddress(), result.getAddress()"}}
+  {{else}}
+    {{execute "scalar_ne" "getValue(), other, result.getAddress()"}}
+  {{/if}}
+  return result;
+{{/method}}

@@ -1,57 +1,27 @@
-
 package io.github.rdlopes.tfhe.api.keys;
 
-import org.junit.jupiter.api.AfterEach;
+import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static io.github.rdlopes.tfhe.assertions.TfheAssertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class CompactPublicKeyTest {
-  private static final Logger logger = LoggerFactory.getLogger(CompactPublicKeyTest.class);
-  private KeySet keySet;
+  private FheKeySet keySet;
 
   @BeforeEach
   void setUp() {
-    ConfigBuilder configBuilder = new ConfigBuilder();
-    Config config = configBuilder.build();
-    keySet = config.generateKeys();
-    keySet.serverKey()
-          .set();
-  }
-
-  @AfterEach
-  void tearDown() {
-    keySet.destroy();
+    keySet = new FheKeySet();
   }
 
   @Test
   void serializesAndDeserializes() {
-    logger.trace("serializesAndDeserializes");
+    CompactPublicKey publicKey = new CompactPublicKey(keySet.getClientKey());
 
-    CompactPublicKey key = CompactPublicKey.createFromClientKey(keySet.clientKey());
-
-    byte[] buffer = key.serialize();
-
-    assertThat(buffer).isNotNull();
-    assertThat(buffer.length).isGreaterThan(0);
-
-    CompactPublicKey deserialized = CompactPublicKey.deserialize(buffer);
-
-    assertThat(deserialized).isNotNull();
-    assertThat(deserialized.getAddress()).isNotNull();
-  }
-
-  @Test
-  void createsFromClientKey() {
-    logger.trace("createsFromClientKey");
-
-    CompactPublicKey key = CompactPublicKey.createFromClientKey(keySet.clientKey());
-
-    assertThat(key).isNotNull();
-    assertThat(key.getAddress()).isNotNull();
+    try (DynamicBuffer buffer = publicKey.serialize()) {
+      assertThatCode(() -> CompactPublicKey.deserialize(buffer))
+        .doesNotThrowAnyException();
+    }
   }
 
 }

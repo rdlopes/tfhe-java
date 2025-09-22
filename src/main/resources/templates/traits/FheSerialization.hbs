@@ -1,0 +1,6 @@
+{{#method this "public DynamicBuffer" "serialize" "safe_serialize"}}
+  {{declare "dynamicBuffer" class="DynamicBuffer"}}
+  {{execute "safe_serialize" "getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE"}}
+
+  return dynamicBuffer;
+{{/method}}

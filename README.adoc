@@ -41,17 +41,9 @@ Add the following dependency to your `pom.xml`:
 
 === Requirements
 
-* **Java 24** or later (requires Foreign Function & Memory API support)
+* **Java 25+** or later (requires Foreign Function & Memory API support)
 * **JVM Arguments**: `--enable-native-access=ALL-UNNAMED`
 * **Native Libraries**: Automatically included in the JAR (supports macOS ARM64, Linux x86_64, Windows x86_64)
-
-=== Generated Bindings
-
-The build process automatically generates Java bindings from the TFHE-rs C API:
-
-- **Native Package**: `io.github.rdlopes.tfhe.ffm`
-- **Main Class**: `TfheNative` - Contains all native function bindings
-- **Memory Management**: Uses Java's Foreign Function & Memory API with a simplified interface
 
 == Building from Source
 
