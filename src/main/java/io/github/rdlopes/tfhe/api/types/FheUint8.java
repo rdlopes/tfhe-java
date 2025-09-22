@@ -16,15 +16,17 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+// @formatter:off
 public class FheUint8 extends NativePointer
-  implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
+implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
   private static final Logger logger = LoggerFactory.getLogger(FheUint8.class);
+// @formatter:on
 
   /**
    {@snippet lang = "c":
-
-     ptr can be null (no-op in that case)
-
+    *
+    *ptr can be null (no-op in that case)
+    *
      int fhe_uint8_destroy(struct FheUint8 *ptr);
      }
    */
@@ -32,85 +34,36 @@ public class FheUint8 extends NativePointer
     logger.trace("init");
     super(TfheHeader::fhe_uint8_destroy);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheUint8 ifThenElse(FheBool condition, FheUint8 thenValue, FheUint8 elseValue) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-    return result;
-
+  
+/**
+{@snippet lang = "c":
+ *
+ * Serializes safely.
+ *
+ * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+ * versions of TFHE-rs.
+ *
+ * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+ *    (to avoid out of memory attacks)
+ *
+  int fhe_uint8_safe_serialize(const struct FheUint8 *sself,
+  struct DynamicBuffer *result,
+  uint64_t serialized_size_limit);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheUint8 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
-    FheUint8 deserialized = new FheUint8();
-    execute(() -> fhe_uint8_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheUint8 encrypt(Byte clearValue, ClientKey clientKey) {
-    FheUint8 encrypted = new FheUint8();
-    execute(() -> fhe_uint8_try_encrypt_with_client_key_u8(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheUint8 encrypt(Byte clearValue, PublicKey publicKey) {
-    FheUint8 encrypted = new FheUint8();
-    execute(() -> fhe_uint8_try_encrypt_with_public_key_u8(clearValue, publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheUint8 encrypt(Byte clearValue) {
-    FheUint8 encrypted = new FheUint8();
-    execute(() -> fhe_uint8_try_encrypt_trivial_u8(clearValue, encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public DynamicBuffer serialize() {
+ */
+@Override
+public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> fhe_uint8_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
-    return dynamicBuffer;
+  return dynamicBuffer;
 
+}/**
+{@snippet lang = "c":
+int fhe_uint8_bitand(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheUint8 bitAnd(FheUint8 other) {
@@ -122,7 +75,7 @@ public class FheUint8 extends NativePointer
 
   /**
    {@snippet lang = "c":
-
+     int fhe_uint8_scalar_bitand(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
      }
    */
   @Override
@@ -135,78 +88,79 @@ public class FheUint8 extends NativePointer
 
   /**
    {@snippet lang = "c":
-
+     int fhe_uint8_bitand_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
      }
    */
   @Override
-  public void bitAndAssign(FheUint8 other) {
+  public void bitAndAssign(FheUint8 other){
     execute(() -> fhe_uint8_bitand_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_bitand_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
+ */
+@Override
+public void bitAndScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_bitand_assign(getValue(), other));
+
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_uint8_bitor(const struct FheUint8 *lhs,
+     const struct FheUint8 *rhs,
+     struct FheUint8 **result);
      }
    */
   @Override
-  public void bitAndScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_bitand_assign(getValue(), other));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 bitOr(FheUint8 other) {
+  public FheUint8 bitOr(FheUint8 other){
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_bitor(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_bitor(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+}
+*/
+@Override
+public FheUint8 bitOrScalar(Byte other) {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_scalar_bitor(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 bitOrScalar(Byte other) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_bitor(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+int fhe_uint8_bitor_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void bitOrAssign(FheUint8 other) {
     execute(() -> fhe_uint8_bitor_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_bitor_assign(struct FheUint8 *lhs, uint8_t rhs);
+}
+*/
+@Override
+public void bitOrScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_bitor_assign(getValue(), other));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void bitOrScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_bitor_assign(getValue(), other));
-
+{@snippet lang = "c":
+int fhe_uint8_bitxor(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheUint8 bitXor(FheUint8 other) {
@@ -214,47 +168,45 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_bitxor(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_bitxor(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+}
+*/
+@Override
+public FheUint8 bitXorScalar(Byte other) {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_scalar_bitxor(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 bitXorScalar(Byte other) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_bitxor(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+int fhe_uint8_bitxor_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void bitXorAssign(FheUint8 other) {
     execute(() -> fhe_uint8_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_bitxor_assign(struct FheUint8 *lhs, uint8_t rhs);
+}
+*/
+@Override
+public void bitXorScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_bitxor_assign(getValue(), other));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void bitXorScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_bitxor_assign(getValue(), other));
-
+{@snippet lang = "c":
+int fhe_uint8_not(const struct FheUint8 *input, struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheUint8 bitNot() {
@@ -262,12 +214,27 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_not(getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_if_then_else(const struct FheBool *condition_ct,
+  const struct FheUint8 *then_ct,
+  const struct FheUint8 *else_ct,
+  struct FheUint8 **result);
   }
+ */
+@SuppressWarnings("unused")
+public static FheUint8 ifThenElse(FheBool condition, FheUint8 thenValue, FheUint8 elseValue) {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_eq(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
+  }
    */
   @Override
   public FheBool equalTo(FheUint8 other) {
@@ -275,25 +242,24 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_eq(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_eq(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool equalToScalar(Byte other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint8_scalar_eq(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool equalToScalar(Byte other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint8_scalar_eq(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+int fhe_uint8_ne(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheBool notEqualTo(FheUint8 other) {
@@ -301,25 +267,86 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_ne(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_ne(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool notEqualToScalar(Byte other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint8_scalar_ne(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
    {@snippet lang = "c":
-
+    *
+    * Deserializes safely, and checks that the resulting ciphertext
+    * is in compliance with the shape of ciphertext that the `server_key` expects.
+    *
+    * This function can only deserialize types which have been serialized
+    * by a `safe_serialize` function.
+    *
+    * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+    *    (to avoid out of memory attacks)
+    * - `server_key`: ServerKey used in the conformance check
+    * - `result`: pointer where resulting deserialized object needs to be stored.
+    *    * cannot be NULL
+    *    * (*result) will point the deserialized object on success, else NULL
+    *
+     int fhe_uint8_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
+     uint64_t serialized_size_limit,
+     const struct ServerKey *server_key,
+     struct FheUint8 **result);
      }
    */
-  @Override
-  public FheBool notEqualToScalar(Byte other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint8_scalar_ne(getValue(), other, result.getAddress()));
-    return result;
+  public static FheUint8 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+    FheUint8 deserialized = new FheUint8();
+    execute(() -> fhe_uint8_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
 
+}/**
+{@snippet lang = "c":
+  int fhe_uint8_try_encrypt_with_client_key_u8(uint8_t value,
+  const struct ClientKey *client_key,
+  struct FheUint8 **result);
   }
+   */
+  public static FheUint8 encrypt(Byte clearValue, ClientKey clientKey) {
+    FheUint8 encrypted = new FheUint8();
+      execute(() -> fhe_uint8_try_encrypt_with_client_key_u8(clearValue, clientKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
-  /**
-   {@snippet lang = "c":
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_try_encrypt_with_public_key_u8(uint8_t value,
+  const struct PublicKey *public_key,
+  struct FheUint8 **result);
+  }
+ */
+public static FheUint8 encrypt(Byte clearValue, PublicKey publicKey) {
+  FheUint8 encrypted = new FheUint8();
+      execute(() -> fhe_uint8_try_encrypt_with_public_key_u8(clearValue, publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-     }
+}/**
+{@snippet lang = "c":
+  int fhe_uint8_try_encrypt_trivial_u8(uint8_t value, struct FheUint8 **result);
+  }
+   */
+  public static FheUint8 encrypt(Byte clearValue) {
+    FheUint8 encrypted = new FheUint8();
+      execute(() -> fhe_uint8_try_encrypt_trivial_u8(clearValue, encrypted.getAddress()));
+    return encrypted;
+
+}/**
+{@snippet lang = "c":
+  int fhe_uint8_clone(const struct FheUint8 *sself, struct FheUint8 **result);
+  }
    */
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
@@ -328,76 +355,73 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public CompressedFheUint8 compress() {
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_compress(const struct FheUint8 *sself, struct CompressedFheUint8 **result);
+}
+*/
+@Override
+public CompressedFheUint8 compress(){
     CompressedFheUint8 compressed = new CompressedFheUint8();
     execute(() -> fhe_uint8_compress(getValue(), compressed.getAddress()));
     return compressed;
 
+}/**
+{@snippet lang = "c":
+int fhe_uint8_add(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+}
+*/
+@Override
+public FheUint8 add(FheUint8 other) {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_add(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_overflowing_add(const struct FheUint8 *lhs,
+                              const struct FheUint8 *rhs,
+  struct FheUint8 **out_result,
+  struct FheBool **out_overflowed);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 add(FheUint8 other) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheUint8, FheBool> addWithOverflow(FheUint8 other) {
+ */
+@Override
+public Map.Entry<FheUint8, FheBool> addWithOverflow(FheUint8 other){
     FheUint8 result = new FheUint8();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint8_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_scalar_add(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   }
+ */
+@Override
+public FheUint8 addScalar(Byte other) {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_scalar_add(getValue(), other, result.getAddress()));
+  return result;
 
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 addScalar(Byte other) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_add(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void addAssign(FheUint8 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_add_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void addAssign(FheUint8 other){
     execute(() -> fhe_uint8_add_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_add_assign(struct FheUint8 *lhs, uint8_t rhs);
+  }
    */
   @Override
   public void addScalarAssign(Byte other) {
@@ -406,60 +430,62 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
+{@snippet lang = "c":
+int fhe_uint8_sub(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+}
+*/
+@Override
+public FheUint8 subtract(FheUint8 other) {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_sub(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-     }
-   */
-  @Override
-  public FheUint8 subtract(FheUint8 other) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheUint8, FheBool> subtractWithOverflow(FheUint8 other) {
+{@snippet lang = "c":
+  int fhe_uint8_overflowing_sub(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **out_result,
+                              struct FheBool **out_overflowed);
+}
+*/
+@Override
+public Map.Entry<FheUint8, FheBool> subtractWithOverflow(FheUint8 other){
     FheUint8 result = new FheUint8();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint8_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_sub(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+  }
    */
   @Override
   public FheUint8 subtractScalar(Byte other) {
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_sub(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_sub(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_sub_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void subtractAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_sub_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void subtractAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_sub_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_sub_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void subtractScalarAssign(Byte other) {
@@ -468,12 +494,12 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_uint8_mul(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  }
    */
   @Override
-  public FheUint8 multiply(FheUint8 other) {
+public FheUint8 multiply(FheUint8 other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_mul(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -481,47 +507,49 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheUint8, FheBool> multiplyWithOverflow(FheUint8 other) {
+{@snippet lang = "c":
+  int fhe_uint8_overflowing_mul(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **out_result,
+                              struct FheBool **out_overflowed);
+}
+*/
+@Override
+public Map.Entry<FheUint8, FheBool> multiplyWithOverflow(FheUint8 other){
     FheUint8 result = new FheUint8();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint8_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_mul(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+  }
    */
   @Override
   public FheUint8 multiplyScalar(Byte other) {
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_mul(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_mul(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_mul_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void multiplyAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_mul_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void multiplyAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_mul_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_mul_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void multiplyScalarAssign(Byte other) {
@@ -530,12 +558,12 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_uint8_div(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  }
    */
   @Override
-  public FheUint8 divide(FheUint8 other) {
+public FheUint8 divide(FheUint8 other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_div(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -543,33 +571,32 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_div(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+  }
    */
   @Override
-  public FheUint8 divideScalar(Byte other) {
+public FheUint8 divideScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_div(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_div(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_div_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void divideAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_div_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void divideAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_div_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_div_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void divideScalarAssign(Byte other) {
@@ -578,12 +605,12 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_uint8_rem(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  }
    */
   @Override
-  public FheUint8 remainder(FheUint8 other) {
+public FheUint8 remainder(FheUint8 other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_rem(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -591,33 +618,32 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_rem(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+  }
    */
   @Override
-  public FheUint8 remainderScalar(Byte other) {
+public FheUint8 remainderScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_rem(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_rem(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_rem_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void remainderAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_rem_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void remainderAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_rem_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+int fhe_uint8_scalar_rem_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void remainderScalarAssign(Byte other) {
@@ -626,12 +652,15 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_uint8_div_rem(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **q_result,
+  struct FheUint8 **r_result);
+  }
    */
   @Override
-  public Map.Entry<FheUint8, FheUint8> divideWithRemainder(FheUint8 other) {
+public Map.Entry<FheUint8, FheUint8> divideWithRemainder(FheUint8 other) {
     FheUint8 divider = new FheUint8();
     FheUint8 remainder = new FheUint8();
     execute(() -> fhe_uint8_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -640,23 +669,26 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheUint8, FheUint8> divideWithRemainderScalar(Byte other) {
+{@snippet lang = "c":
+  int fhe_uint8_scalar_div_rem(const struct FheUint8 *lhs,
+                             uint8_t rhs,
+                             struct FheUint8 **q_result,
+                             struct FheUint8 **r_result);
+}
+*/
+@Override
+public Map.Entry<FheUint8,FheUint8> divideWithRemainderScalar(Byte other){
     FheUint8 divider = new FheUint8();
     FheUint8 remainder = new FheUint8();
-    execute(() -> fhe_uint8_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
+      execute(() -> fhe_uint8_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
     return Map.entry(divider, remainder);
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_neg(const struct FheUint8 *input, struct FheUint8 **result);
+  }
    */
   @Override
   public FheUint8 negate() {
@@ -664,77 +696,79 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_neg(getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 ilog2() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_ilog2(getValue(), result.getAddress()));
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the base 2 logarithm of the number, rounded down.
+ *
+ * Result has no meaning if self encrypts a value that is <= 0.
+ * See `checked_ilog2`
+ *
+int fhe_uint8_ilog2(const struct FheUint8 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheUint8 ilog2() {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_ilog2(getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool lessThan(FheUint8 other) {
+}/**
+{@snippet lang = "c":
+int fhe_uint8_lt(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool lessThan(FheUint8 other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint8_lt(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_lt(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool lessThanScalar(Byte other) {
+public FheBool lessThanScalar(Byte other) {
     FheBool result = new FheBool();
     execute(() -> fhe_uint8_scalar_lt(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_le(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool lessThanOrEqualTo(FheUint8 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint8_le(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_le(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool lessThanOrEqualTo(FheUint8 other) {
+public FheBool lessThanOrEqualToScalar(Byte other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint8_le(getValue(), other.getValue(), result.getAddress()));
+      execute(() -> fhe_uint8_scalar_le(getValue(), other, result.getAddress()));
     return result;
 
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool lessThanOrEqualToScalar(Byte other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint8_scalar_le(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+  int fhe_uint8_gt(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheBool greaterThan(FheUint8 other) {
@@ -742,28 +776,27 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_gt(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_scalar_gt(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool greaterThanScalar(Byte other) {
+ */
+@Override
+public FheBool greaterThanScalar(Byte other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint8_scalar_gt(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_gt(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_ge(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool greaterThanOrEqualTo(FheUint8 other) {
+public FheBool greaterThanOrEqualTo(FheUint8 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_uint8_ge(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -771,48 +804,47 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_ge(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool greaterThanOrEqualToScalar(Byte other) {
+public FheBool greaterThanOrEqualToScalar(Byte other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint8_scalar_ge(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_ge(getValue(), other, result.getAddress()));
     return result;
 
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 min(FheUint8 other) {
-    FheUint8 result = new FheUint8();
+{@snippet lang = "c":
+  int fhe_uint8_min(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+}
+*/
+@Override
+public FheUint8 min(FheUint8 other) {
+  FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_min(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_scalar_min(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 minScalar(Byte other) {
+ */
+@Override
+public FheUint8 minScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_min(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_min(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_max(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  }
    */
   @Override
   public FheUint8 max(FheUint8 other) {
@@ -820,28 +852,27 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_max(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_scalar_max(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 maxScalar(Byte other) {
+ */
+@Override
+public FheUint8 maxScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_max(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_max(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_uint8_shl(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
      }
    */
   @Override
-  public FheUint8 shiftLeft(FheUint8 other) {
+public FheUint8 shiftLeft(FheUint8 other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_shl(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -849,33 +880,32 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_scalar_shl(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+  }
    */
   @Override
-  public FheUint8 shiftLeftScalar(Byte other) {
+public FheUint8 shiftLeftScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_shl(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_shl(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_shl_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void shiftLeftAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_shl_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void shiftLeftAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_shl_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_shl_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void shiftLeftScalarAssign(Byte other) {
@@ -884,9 +914,9 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_shr(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  }
    */
   @Override
   public FheUint8 shiftRight(FheUint8 other) {
@@ -894,84 +924,81 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_shr(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_scalar_shr(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 shiftRightScalar(Byte other) {
+ */
+@Override
+public FheUint8 shiftRightScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_shr(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_shr(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_shr_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void shiftRightAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_shr_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void shiftRightAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_shr_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_shr_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void shiftRightScalarAssign(Byte other) {
     execute(() -> fhe_uint8_scalar_shr_assign(getValue(), other));
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_rotate_left(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 rotateLeft(FheUint8 other) {
-    FheUint8 result = new FheUint8();
+ */
+@Override
+public FheUint8 rotateLeft(FheUint8 other) {
+  FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_rotate_left(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_scalar_rotate_left(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 rotateLeftScalar(Byte other) {
+ */
+@Override
+public FheUint8 rotateLeftScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_rotate_left(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_rotate_left(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_rotate_left_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+}
+*/
+@Override
+public void rotateLeftAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_rotate_left_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateLeftAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_rotate_left_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_rotate_left_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void rotateLeftScalarAssign(Byte other) {
@@ -980,9 +1007,11 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_uint8_rotate_right(const struct FheUint8 *lhs,
+  const struct FheUint8 *rhs,
+  struct FheUint8 **result);
+  }
    */
   @Override
   public FheUint8 rotateRight(FheUint8 other) {
@@ -990,36 +1019,36 @@ public class FheUint8 extends NativePointer
     execute(() -> fhe_uint8_rotate_right(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 rotateRightScalar(Byte other) {
+}  
+/**
+{@snippet lang = "c":
+  int fhe_uint8_scalar_rotate_right(const struct FheUint8 *lhs,
+  uint8_t rhs,
+  struct FheUint8 **result);
+}
+*/
+@Override
+public FheUint8 rotateRightScalar(Byte other){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_rotate_right(getValue(), other, result.getAddress()));
+      execute(() -> fhe_uint8_scalar_rotate_right(getValue(), other, result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_uint8_rotate_right_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   }
+ */
+@Override
+public void rotateRightAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_rotate_right_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateRightAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_rotate_right_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_uint8_scalar_rotate_right_assign(struct FheUint8 *lhs, uint8_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void rotateRightScalarAssign(Byte other) {
@@ -1028,12 +1057,15 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+ *
+ * Returns the number of leading ones in the binary representation of input.
+ *
+int fhe_uint8_leading_ones(const struct FheUint8 *input, struct FheUint32 **result);
+  }
    */
   @Override
-  public FheUint8 leadingOnes() {
+public FheUint8 leadingOnes() {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_leading_ones(getValue(), result.getAddress()));
     return result;
@@ -1041,65 +1073,73 @@ public class FheUint8 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+ *
+ * Returns the number of leading zeros in the binary representation of input.
+ *
+  int fhe_uint8_leading_zeros(const struct FheUint8 *input, struct FheUint32 **result);
+  }
    */
   @Override
-  public FheUint8 leadingZeros() {
+public FheUint8 leadingZeros(){
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_leading_zeros(getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the number of trailing ones in the binary representation of input.
+ *
+int fhe_uint8_trailing_ones(const struct FheUint8 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheUint8 trailingOnes() {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_trailing_ones(getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 trailingOnes() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_trailing_ones(getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheUint8 trailingZeros() {
-    FheUint8 result = new FheUint8();
+{@snippet lang = "c":
+ *
+ * Returns the number of trailing zeros in the binary representation of input.
+ *
+int fhe_uint8_trailing_zeros(const struct FheUint8 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheUint8 trailingZeros() {
+  FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_trailing_zeros(getValue(), result.getAddress()));
     return result;
 
-  }
+}/**
+{@snippet lang = "c":
+  int fhe_uint8_decrypt(const struct FheUint8 *encrypted_value,
+                      const struct ClientKey *client_key,
+                      uint8_t *result);
+}
+*/
+@Override
+public Byte decrypt(ClientKey clientKey) {
+  return executeAndReturn(Byte.class, address -> fhe_uint8_decrypt(getValue(), clientKey.getValue(), address));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Byte decrypt(ClientKey clientKey) {
-    return executeAndReturn(Byte.class, address -> fhe_uint8_decrypt(getValue(), clientKey.getValue(), address));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-     int fhe_uint8_cast_into_fhe_int10(const struct FheUint8 *sself, struct FheInt10 **result);
-     }
-   */
-  public FheInt10 castIntoFheInt10() {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_uint8_cast_into_fhe_int10(getValue(), result.getAddress()));
-    return result;
-  }
+{@snippet lang = "c":
+int fhe_uint8_cast_into_fhe_int10(const struct FheUint8 *sself, struct FheInt10 **result);
+}
+*/
+public FheInt10 castIntoFheInt10() {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_uint8_cast_into_fhe_int10(getValue(), result.getAddress()));
+  return result;
+}
 
   /**
    {@snippet lang = "c":

@@ -12,15 +12,17 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+// @formatter:off
 public class CompressedFheInt6 extends NativePointer
-  implements CompressedFheType<Byte, FheInt6, CompressedFheInt6> {
+implements CompressedFheType<Byte, FheInt6, CompressedFheInt6> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt6.class);
+// @formatter:on
 
   /**
    {@snippet lang = "c":
-
-     ptr can be null (no-op in that case)
-
+    *
+    *ptr can be null (no-op in that case)
+    *
      int compressed_fhe_int6_destroy(struct CompressedFheInt6 *ptr);
      }
    */
@@ -31,31 +33,7 @@ public class CompressedFheInt6 extends NativePointer
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  public static CompressedFheInt6 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
-    CompressedFheInt6 deserialized = new CompressedFheInt6();
-    execute(() -> compressed_fhe_int6_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static CompressedFheInt6 encrypt(Byte clearValue, ClientKey clientKey) {
-    CompressedFheInt6 encrypted = new CompressedFheInt6();
-    execute(() -> compressed_fhe_int6_try_encrypt_with_client_key_i8(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int compressed_fhe_int6_decompress(const struct CompressedFheInt6 *sself, struct FheInt6 **result);
      }
    */
   @Override
@@ -69,20 +47,71 @@ public class CompressedFheInt6 extends NativePointer
   /**
    {@snippet lang = "c":
 
+     Serializes safely.
+
+     This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+     versions of TFHE-rs.
+
+     - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+     (to avoid out of memory attacks)
+
+     int compressed_fhe_int6_safe_serialize(const struct CompressedFheInt6 *sself,
+     struct DynamicBuffer *result,
+     uint64_t serialized_size_limit);
      }
    */
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int6_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-
+  
     return dynamicBuffer;
+
+}/**
+{@snippet lang = "c":
+ *
+ * Deserializes safely, and checks that the resulting ciphertext
+ * is in compliance with the shape of ciphertext that the `server_key` expects.
+ *
+ * This function can only deserialize types which have been serialized
+ * by a `safe_serialize` function.
+ *
+ * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+ *    (to avoid out of memory attacks)
+ * - `server_key`: ServerKey used in the conformance check
+ * - `result`: pointer where resulting deserialized object needs to be stored.
+ *    * cannot be NULL
+ *    * (*result) will point the deserialized object on success, else NULL
+ *
+  int compressed_fhe_int6_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
+  uint64_t serialized_size_limit,
+  const struct ServerKey *server_key,
+  struct CompressedFheInt6 **result);
+  }
+   */
+  public static CompressedFheInt6 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+    CompressedFheInt6 deserialized = new CompressedFheInt6();
+    execute(() -> compressed_fhe_int6_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
+
+}/**
+{@snippet lang = "c":
+int compressed_fhe_int6_try_encrypt_with_client_key_i8(int8_t value,
+  const struct ClientKey *client_key,
+  struct CompressedFheInt6 **result);
+  }
+   */
+  public static CompressedFheInt6 encrypt(Byte clearValue, ClientKey clientKey) {
+    CompressedFheInt6 encrypted = new CompressedFheInt6();
+    execute(() -> compressed_fhe_int6_try_encrypt_with_client_key_i8(clearValue, clientKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
   }
 
   /**
    {@snippet lang = "c":
-
+     int compressed_fhe_int6_clone(const struct CompressedFheInt6 *sself,
+     struct CompressedFheInt6 **result);
      }
    */
   @Override
@@ -92,5 +121,4 @@ public class CompressedFheInt6 extends NativePointer
     execute(() -> compressed_fhe_int6_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
-}
+}}

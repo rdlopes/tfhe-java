@@ -16,15 +16,17 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+// @formatter:off
 public class FheInt16 extends NativePointer
-  implements FheInteger<Short, FheInt16, CompressedFheInt16> {
+implements FheInteger<Short, FheInt16, CompressedFheInt16> {
   private static final Logger logger = LoggerFactory.getLogger(FheInt16.class);
+// @formatter:on
 
   /**
    {@snippet lang = "c":
-
-     ptr can be null (no-op in that case)
-
+    *
+    *ptr can be null (no-op in that case)
+    *
      int fhe_int16_destroy(struct FheInt16 *ptr);
      }
    */
@@ -32,85 +34,36 @@ public class FheInt16 extends NativePointer
     logger.trace("init");
     super(TfheHeader::fhe_int16_destroy);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt16 ifThenElse(FheBool condition, FheInt16 thenValue, FheInt16 elseValue) {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-    return result;
-
+  
+/**
+{@snippet lang = "c":
+ *
+ * Serializes safely.
+ *
+ * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+ * versions of TFHE-rs.
+ *
+ * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+ *    (to avoid out of memory attacks)
+ *
+  int fhe_int16_safe_serialize(const struct FheInt16 *sself,
+  struct DynamicBuffer *result,
+  uint64_t serialized_size_limit);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
-    FheInt16 deserialized = new FheInt16();
-    execute(() -> fhe_int16_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt16 encrypt(Short clearValue, ClientKey clientKey) {
-    FheInt16 encrypted = new FheInt16();
-    execute(() -> fhe_int16_try_encrypt_with_client_key_i16(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt16 encrypt(Short clearValue, PublicKey publicKey) {
-    FheInt16 encrypted = new FheInt16();
-    execute(() -> fhe_int16_try_encrypt_with_public_key_i16(clearValue, publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt16 encrypt(Short clearValue) {
-    FheInt16 encrypted = new FheInt16();
-    execute(() -> fhe_int16_try_encrypt_trivial_i16(clearValue, encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public DynamicBuffer serialize() {
+ */
+@Override
+public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> fhe_int16_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
-    return dynamicBuffer;
+  return dynamicBuffer;
 
+}/**
+{@snippet lang = "c":
+int fhe_int16_bitand(const struct FheInt16 *lhs,
+  const struct FheInt16 *rhs,
+  struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheInt16 bitAnd(FheInt16 other) {
@@ -122,7 +75,7 @@ public class FheInt16 extends NativePointer
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int16_scalar_bitand(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
      }
    */
   @Override
@@ -135,78 +88,79 @@ public class FheInt16 extends NativePointer
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int16_bitand_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
      }
    */
   @Override
-  public void bitAndAssign(FheInt16 other) {
+  public void bitAndAssign(FheInt16 other){
     execute(() -> fhe_int16_bitand_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_bitand_assign(struct FheInt16 *lhs, int16_t rhs);
   }
+ */
+@Override
+public void bitAndScalarAssign(Short other) {
+  execute(() -> fhe_int16_scalar_bitand_assign(getValue(), other));
+
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int16_bitor(const struct FheInt16 *lhs,
+     const struct FheInt16 *rhs,
+     struct FheInt16 **result);
      }
    */
   @Override
-  public void bitAndScalarAssign(Short other) {
-    execute(() -> fhe_int16_scalar_bitand_assign(getValue(), other));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 bitOr(FheInt16 other) {
+  public FheInt16 bitOr(FheInt16 other){
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_bitor(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_bitor(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 bitOrScalar(Short other) {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_scalar_bitor(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 bitOrScalar(Short other) {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_bitor(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+int fhe_int16_bitor_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void bitOrAssign(FheInt16 other) {
     execute(() -> fhe_int16_bitor_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_bitor_assign(struct FheInt16 *lhs, int16_t rhs);
+}
+*/
+@Override
+public void bitOrScalarAssign(Short other) {
+  execute(() -> fhe_int16_scalar_bitor_assign(getValue(), other));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void bitOrScalarAssign(Short other) {
-    execute(() -> fhe_int16_scalar_bitor_assign(getValue(), other));
-
+{@snippet lang = "c":
+int fhe_int16_bitxor(const struct FheInt16 *lhs,
+  const struct FheInt16 *rhs,
+  struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheInt16 bitXor(FheInt16 other) {
@@ -214,47 +168,45 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_bitxor(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_bitxor(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 bitXorScalar(Short other) {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_scalar_bitxor(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 bitXorScalar(Short other) {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_bitxor(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+int fhe_int16_bitxor_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void bitXorAssign(FheInt16 other) {
     execute(() -> fhe_int16_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_bitxor_assign(struct FheInt16 *lhs, int16_t rhs);
+}
+*/
+@Override
+public void bitXorScalarAssign(Short other) {
+  execute(() -> fhe_int16_scalar_bitxor_assign(getValue(), other));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void bitXorScalarAssign(Short other) {
-    execute(() -> fhe_int16_scalar_bitxor_assign(getValue(), other));
-
+{@snippet lang = "c":
+int fhe_int16_not(const struct FheInt16 *input, struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheInt16 bitNot() {
@@ -262,12 +214,27 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_not(getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_if_then_else(const struct FheBool *condition_ct,
+  const struct FheInt16 *then_ct,
+  const struct FheInt16 *else_ct,
+  struct FheInt16 **result);
   }
+ */
+@SuppressWarnings("unused")
+public static FheInt16 ifThenElse(FheBool condition, FheInt16 thenValue, FheInt16 elseValue) {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_eq(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheBool **result);
+  }
    */
   @Override
   public FheBool equalTo(FheInt16 other) {
@@ -275,25 +242,24 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_eq(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_eq(const struct FheInt16 *lhs, int16_t rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool equalToScalar(Short other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int16_scalar_eq(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool equalToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int16_scalar_eq(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+int fhe_int16_ne(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheBool notEqualTo(FheInt16 other) {
@@ -301,25 +267,86 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_ne(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_ne(const struct FheInt16 *lhs, int16_t rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool notEqualToScalar(Short other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int16_scalar_ne(getValue(), other, result.getAddress()));
+  return result;
+
+}
 
   /**
    {@snippet lang = "c":
-
+    *
+    * Deserializes safely, and checks that the resulting ciphertext
+    * is in compliance with the shape of ciphertext that the `server_key` expects.
+    *
+    * This function can only deserialize types which have been serialized
+    * by a `safe_serialize` function.
+    *
+    * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+    *    (to avoid out of memory attacks)
+    * - `server_key`: ServerKey used in the conformance check
+    * - `result`: pointer where resulting deserialized object needs to be stored.
+    *    * cannot be NULL
+    *    * (*result) will point the deserialized object on success, else NULL
+    *
+     int fhe_int16_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
+     uint64_t serialized_size_limit,
+     const struct ServerKey *server_key,
+     struct FheInt16 **result);
      }
    */
-  @Override
-  public FheBool notEqualToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int16_scalar_ne(getValue(), other, result.getAddress()));
-    return result;
+  public static FheInt16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+    FheInt16 deserialized = new FheInt16();
+    execute(() -> fhe_int16_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
 
+}/**
+{@snippet lang = "c":
+  int fhe_int16_try_encrypt_with_client_key_i16(int16_t value,
+  const struct ClientKey *client_key,
+  struct FheInt16 **result);
   }
+   */
+  public static FheInt16 encrypt(Short clearValue, ClientKey clientKey) {
+    FheInt16 encrypted = new FheInt16();
+      execute(() -> fhe_int16_try_encrypt_with_client_key_i16(clearValue, clientKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
-  /**
-   {@snippet lang = "c":
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_try_encrypt_with_public_key_i16(int16_t value,
+  const struct PublicKey *public_key,
+  struct FheInt16 **result);
+  }
+ */
+public static FheInt16 encrypt(Short clearValue, PublicKey publicKey) {
+  FheInt16 encrypted = new FheInt16();
+      execute(() -> fhe_int16_try_encrypt_with_public_key_i16(clearValue, publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
-     }
+}/**
+{@snippet lang = "c":
+  int fhe_int16_try_encrypt_trivial_i16(int16_t value, struct FheInt16 **result);
+  }
+   */
+  public static FheInt16 encrypt(Short clearValue) {
+    FheInt16 encrypted = new FheInt16();
+      execute(() -> fhe_int16_try_encrypt_trivial_i16(clearValue, encrypted.getAddress()));
+    return encrypted;
+
+}/**
+{@snippet lang = "c":
+  int fhe_int16_clone(const struct FheInt16 *sself, struct FheInt16 **result);
+  }
    */
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
@@ -328,138 +355,136 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public CompressedFheInt16 compress() {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_compress(const struct FheInt16 *sself, struct CompressedFheInt16 **result);
+}
+*/
+@Override
+public CompressedFheInt16 compress(){
     CompressedFheInt16 compressed = new CompressedFheInt16();
     execute(() -> fhe_int16_compress(getValue(), compressed.getAddress()));
     return compressed;
 
+}/**
+{@snippet lang = "c":
+int fhe_int16_add(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 add(FheInt16 other) {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_add(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_overflowing_add(const struct FheInt16 *lhs,
+                              const struct FheInt16 *rhs,
+  struct FheInt16 **out_result,
+  struct FheBool **out_overflowed);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 add(FheInt16 other) {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_add(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt16, FheBool> addWithOverflow(FheInt16 other) {
+ */
+@Override
+public Map.Entry<FheInt16, FheBool> addWithOverflow(FheInt16 other){
     FheInt16 result = new FheInt16();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int16_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
     return Map.entry(result, overflow);
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_scalar_add(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 addScalar(Short other) {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_scalar_add(getValue(), other, result.getAddress()));
+  return result;
 
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 addScalar(Short other) {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_add(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void addAssign(FheInt16 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_add_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
+}
+*/
+@Override
+public void addAssign(FheInt16 other){
     execute(() -> fhe_int16_add_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_add_assign(struct FheInt16 *lhs, int16_t rhs);
   }
+ */
+@Override
+public void addScalarAssign(Short other) {
+  execute(() -> fhe_int16_scalar_add_assign(getValue(), other));
+
+}
 
   /**
-   {@snippet lang = "c":
+{@snippet lang = "c":
+int fhe_int16_sub(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 subtract(FheInt16 other) {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_sub(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-     }
-   */
-  @Override
-  public void addScalarAssign(Short other) {
-    execute(() -> fhe_int16_scalar_add_assign(getValue(), other));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 subtract(FheInt16 other) {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_sub(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt16, FheBool> subtractWithOverflow(FheInt16 other) {
+{@snippet lang = "c":
+  int fhe_int16_overflowing_sub(const struct FheInt16 *lhs,
+  const struct FheInt16 *rhs,
+  struct FheInt16 **out_result,
+                              struct FheBool **out_overflowed);
+}
+*/
+@Override
+public Map.Entry<FheInt16, FheBool> subtractWithOverflow(FheInt16 other){
     FheInt16 result = new FheInt16();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int16_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
     return Map.entry(result, overflow);
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_sub(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+  }
    */
   @Override
   public FheInt16 subtractScalar(Short other) {
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_sub(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_sub(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_sub_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
+}
+*/
+@Override
+public void subtractAssign(FheInt16 other) {
+  execute(() -> fhe_int16_sub_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void subtractAssign(FheInt16 other) {
-    execute(() -> fhe_int16_sub_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_sub_assign(struct FheInt16 *lhs, int16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void subtractScalarAssign(Short other) {
@@ -468,12 +493,12 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_int16_mul(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 multiply(FheInt16 other) {
+public FheInt16 multiply(FheInt16 other) {
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_mul(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -481,47 +506,49 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt16, FheBool> multiplyWithOverflow(FheInt16 other) {
+{@snippet lang = "c":
+  int fhe_int16_overflowing_mul(const struct FheInt16 *lhs,
+  const struct FheInt16 *rhs,
+  struct FheInt16 **out_result,
+                              struct FheBool **out_overflowed);
+}
+*/
+@Override
+public Map.Entry<FheInt16, FheBool> multiplyWithOverflow(FheInt16 other){
     FheInt16 result = new FheInt16();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int16_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
     return Map.entry(result, overflow);
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_mul(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+  }
    */
   @Override
   public FheInt16 multiplyScalar(Short other) {
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_mul(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_mul(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_mul_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
+}
+*/
+@Override
+public void multiplyAssign(FheInt16 other) {
+  execute(() -> fhe_int16_mul_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void multiplyAssign(FheInt16 other) {
-    execute(() -> fhe_int16_mul_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_mul_assign(struct FheInt16 *lhs, int16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void multiplyScalarAssign(Short other) {
@@ -530,12 +557,12 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_int16_div(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 divide(FheInt16 other) {
+public FheInt16 divide(FheInt16 other) {
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_div(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -543,33 +570,32 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_div(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 divideScalar(Short other) {
+public FheInt16 divideScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_div(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_div(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_div_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
+}
+*/
+@Override
+public void divideAssign(FheInt16 other) {
+  execute(() -> fhe_int16_div_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void divideAssign(FheInt16 other) {
-    execute(() -> fhe_int16_div_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_div_assign(struct FheInt16 *lhs, int16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void divideScalarAssign(Short other) {
@@ -578,12 +604,12 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_int16_rem(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 remainder(FheInt16 other) {
+public FheInt16 remainder(FheInt16 other) {
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_rem(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -591,33 +617,32 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_rem(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 remainderScalar(Short other) {
+public FheInt16 remainderScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_rem(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_rem(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_rem_assign(struct FheInt16 *lhs, const struct FheInt16 *rhs);
+}
+*/
+@Override
+public void remainderAssign(FheInt16 other) {
+  execute(() -> fhe_int16_rem_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void remainderAssign(FheInt16 other) {
-    execute(() -> fhe_int16_rem_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_rem_assign(struct FheInt16 *lhs, int16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void remainderScalarAssign(Short other) {
@@ -626,12 +651,15 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_int16_div_rem(const struct FheInt16 *lhs,
+  const struct FheInt16 *rhs,
+  struct FheInt16 **q_result,
+  struct FheInt16 **r_result);
+  }
    */
   @Override
-  public Map.Entry<FheInt16, FheInt16> divideWithRemainder(FheInt16 other) {
+public Map.Entry<FheInt16, FheInt16> divideWithRemainder(FheInt16 other) {
     FheInt16 divider = new FheInt16();
     FheInt16 remainder = new FheInt16();
     execute(() -> fhe_int16_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -640,23 +668,26 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt16, FheInt16> divideWithRemainderScalar(Short other) {
+{@snippet lang = "c":
+  int fhe_int16_scalar_div_rem(const struct FheInt16 *lhs,
+                             int16_t rhs,
+                             struct FheInt16 **q_result,
+                             struct FheInt16 **r_result);
+}
+*/
+@Override
+public Map.Entry<FheInt16,FheInt16> divideWithRemainderScalar(Short other){
     FheInt16 divider = new FheInt16();
     FheInt16 remainder = new FheInt16();
-    execute(() -> fhe_int16_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
+      execute(() -> fhe_int16_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
     return Map.entry(divider, remainder);
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_neg(const struct FheInt16 *input, struct FheInt16 **result);
+  }
    */
   @Override
   public FheInt16 negate() {
@@ -664,77 +695,79 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_neg(getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 ilog2() {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_ilog2(getValue(), result.getAddress()));
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the base 2 logarithm of the number, rounded down.
+ *
+ * Result has no meaning if self encrypts a value that is <= 0.
+ * See `checked_ilog2`
+ *
+int fhe_int16_ilog2(const struct FheInt16 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheInt16 ilog2() {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_ilog2(getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool lessThan(FheInt16 other) {
+}/**
+{@snippet lang = "c":
+int fhe_int16_lt(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool lessThan(FheInt16 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int16_lt(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_lt(const struct FheInt16 *lhs, int16_t rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool lessThanScalar(Short other) {
+public FheBool lessThanScalar(Short other) {
     FheBool result = new FheBool();
     execute(() -> fhe_int16_scalar_lt(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_le(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool lessThanOrEqualTo(FheInt16 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int16_le(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_le(const struct FheInt16 *lhs, int16_t rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool lessThanOrEqualTo(FheInt16 other) {
+public FheBool lessThanOrEqualToScalar(Short other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int16_le(getValue(), other.getValue(), result.getAddress()));
+      execute(() -> fhe_int16_scalar_le(getValue(), other, result.getAddress()));
     return result;
 
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool lessThanOrEqualToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int16_scalar_le(getValue(), other, result.getAddress()));
-    return result;
-
+{@snippet lang = "c":
+  int fhe_int16_gt(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheBool greaterThan(FheInt16 other) {
@@ -742,28 +775,27 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_gt(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_gt(const struct FheInt16 *lhs, int16_t rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool greaterThanScalar(Short other) {
+ */
+@Override
+public FheBool greaterThanScalar(Short other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int16_scalar_gt(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_gt(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_ge(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool greaterThanOrEqualTo(FheInt16 other) {
+public FheBool greaterThanOrEqualTo(FheInt16 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_int16_ge(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -771,22 +803,22 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_ge(const struct FheInt16 *lhs, int16_t rhs, struct FheBool **result);
+  }
    */
   @Override
-  public FheBool greaterThanOrEqualToScalar(Short other) {
+public FheBool greaterThanOrEqualToScalar(Short other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int16_scalar_ge(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_ge(getValue(), other, result.getAddress()));
     return result;
 
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_min(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+  }
    */
   @Override
   public FheInt16 min(FheInt16 other) {
@@ -794,28 +826,27 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_min(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_min(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 minScalar(Short other) {
+ */
+@Override
+public FheInt16 minScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_min(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_min(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_max(const struct FheInt16 *lhs, const struct FheInt16 *rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 max(FheInt16 other) {
+public FheInt16 max(FheInt16 other) {
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_max(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -823,59 +854,59 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_scalar_max(const struct FheInt16 *lhs, int16_t rhs, struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 maxScalar(Short other) {
+public FheInt16 maxScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_max(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_max(getValue(), other, result.getAddress()));
     return result;
 
   }
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 shiftLeft(FheInt16 other) {
-    FheInt16 result = new FheInt16();
+     int fhe_int16_shl(const struct FheInt16 *lhs,
+     const struct FheUint16 *rhs,
+                  struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 shiftLeft(FheInt16 other) {
+  FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_shl(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_shl(const struct FheInt16 *lhs, uint16_t rhs, struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 shiftLeftScalar(Short other) {
+ */
+@Override
+public FheInt16 shiftLeftScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_shl(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_shl(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_shl_assign(struct FheInt16 *lhs, const struct FheUint16 *rhs);
+}
+*/
+@Override
+public void shiftLeftAssign(FheInt16 other) {
+  execute(() -> fhe_int16_shl_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void shiftLeftAssign(FheInt16 other) {
-    execute(() -> fhe_int16_shl_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_shl_assign(struct FheInt16 *lhs, uint16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void shiftLeftScalarAssign(Short other) {
@@ -884,9 +915,11 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+  int fhe_int16_shr(const struct FheInt16 *lhs,
+  const struct FheUint16 *rhs,
+  struct FheInt16 **result);
+  }
    */
   @Override
   public FheInt16 shiftRight(FheInt16 other) {
@@ -894,36 +927,34 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_shr(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_shr(const struct FheInt16 *lhs, uint16_t rhs, struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 shiftRightScalar(Short other) {
+ */
+@Override
+public FheInt16 shiftRightScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_shr(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_shr(getValue(), other, result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_shr_assign(struct FheInt16 *lhs, const struct FheUint16 *rhs);
+}
+*/
+@Override
+public void shiftRightAssign(FheInt16 other) {
+  execute(() -> fhe_int16_shr_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void shiftRightAssign(FheInt16 other) {
-    execute(() -> fhe_int16_shr_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_shr_assign(struct FheInt16 *lhs, uint16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void shiftRightScalarAssign(Short other) {
@@ -932,12 +963,14 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+int fhe_int16_rotate_left(const struct FheInt16 *lhs,
+  const struct FheUint16 *rhs,
+  struct FheInt16 **result);
+  }
    */
   @Override
-  public FheInt16 rotateLeft(FheInt16 other) {
+public FheInt16 rotateLeft(FheInt16 other) {
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_rotate_left(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -945,44 +978,46 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 rotateLeftScalar(Short other) {
+{@snippet lang = "c":
+  int fhe_int16_scalar_rotate_left(const struct FheInt16 *lhs,
+  uint16_t rhs,
+  struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 rotateLeftScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_rotate_left(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_rotate_left(getValue(), other, result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_rotate_left_assign(struct FheInt16 *lhs, const struct FheUint16 *rhs);
   }
+ */
+@Override
+public void rotateLeftAssign(FheInt16 other) {
+  execute(() -> fhe_int16_rotate_left_assign(getValue(), other.getValue()));
+
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_rotate_left_assign(struct FheInt16 *lhs, uint16_t rhs);
+  }
+ */
+@Override
+public void rotateLeftScalarAssign(Short other) {
+  execute(() -> fhe_int16_scalar_rotate_left_assign(getValue(), other));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateLeftAssign(FheInt16 other) {
-    execute(() -> fhe_int16_rotate_left_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_rotate_right(const struct FheInt16 *lhs,
+  const struct FheUint16 *rhs,
+  struct FheInt16 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateLeftScalarAssign(Short other) {
-    execute(() -> fhe_int16_scalar_rotate_left_assign(getValue(), other));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheInt16 rotateRight(FheInt16 other) {
@@ -990,36 +1025,36 @@ public class FheInt16 extends NativePointer
     execute(() -> fhe_int16_rotate_right(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 rotateRightScalar(Short other) {
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int16_scalar_rotate_right(const struct FheInt16 *lhs,
+  uint16_t rhs,
+  struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 rotateRightScalar(Short other){
     FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_scalar_rotate_right(getValue(), other, result.getAddress()));
+      execute(() -> fhe_int16_scalar_rotate_right(getValue(), other, result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int16_rotate_right_assign(struct FheInt16 *lhs, const struct FheUint16 *rhs);
   }
+ */
+@Override
+public void rotateRightAssign(FheInt16 other) {
+  execute(() -> fhe_int16_rotate_right_assign(getValue(), other.getValue()));
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateRightAssign(FheInt16 other) {
-    execute(() -> fhe_int16_rotate_right_assign(getValue(), other.getValue()));
-
+{@snippet lang = "c":
+  int fhe_int16_scalar_rotate_right_assign(struct FheInt16 *lhs, uint16_t rhs);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public void rotateRightScalarAssign(Short other) {
@@ -1028,12 +1063,15 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+ *
+ * Returns the number of leading ones in the binary representation of input.
+ *
+int fhe_int16_leading_ones(const struct FheInt16 *input, struct FheUint32 **result);
+  }
    */
   @Override
-  public FheInt16 leadingOnes() {
+public FheInt16 leadingOnes() {
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_leading_ones(getValue(), result.getAddress()));
     return result;
@@ -1041,111 +1079,123 @@ public class FheInt16 extends NativePointer
   }
 
   /**
-   {@snippet lang = "c":
-
-     }
+{@snippet lang = "c":
+ *
+ * Returns the number of leading zeros in the binary representation of input.
+ *
+  int fhe_int16_leading_zeros(const struct FheInt16 *input, struct FheUint32 **result);
+  }
    */
   @Override
-  public FheInt16 leadingZeros() {
+public FheInt16 leadingZeros(){
     FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_leading_zeros(getValue(), result.getAddress()));
     return result;
 
-  }
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the number of trailing ones in the binary representation of input.
+ *
+int fhe_int16_trailing_ones(const struct FheInt16 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheInt16 trailingOnes() {
+  FheInt16 result = new FheInt16();
+  execute(() -> fhe_int16_trailing_ones(getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 trailingOnes() {
-    FheInt16 result = new FheInt16();
-    execute(() -> fhe_int16_trailing_ones(getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 trailingZeros() {
-    FheInt16 result = new FheInt16();
+{@snippet lang = "c":
+ *
+ * Returns the number of trailing zeros in the binary representation of input.
+ *
+int fhe_int16_trailing_zeros(const struct FheInt16 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheInt16 trailingZeros() {
+  FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_trailing_zeros(getValue(), result.getAddress()));
     return result;
 
-  }
+}/**
+{@snippet lang = "c":
+  int fhe_int16_decrypt(const struct FheInt16 *encrypted_value,
+                      const struct ClientKey *client_key,
+                      int16_t *result);
+}
+*/
+@Override
+public Short decrypt(ClientKey clientKey) {
+  return executeAndReturn(Short.class, address -> fhe_int16_decrypt(getValue(), clientKey.getValue(), address));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Short decrypt(ClientKey clientKey) {
-    return executeAndReturn(Short.class, address -> fhe_int16_decrypt(getValue(), clientKey.getValue(), address));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt16 abs() {
-    FheInt16 result = new FheInt16();
+    *
+    * Returns the absolute value.
+ *
+ * (if x < 0 { -x } else { x })
+ *
+int fhe_int16_abs(const struct FheInt16 *input, struct FheInt16 **result);
+}
+*/
+@Override
+public FheInt16 abs() {
+  FheInt16 result = new FheInt16();
     execute(() -> fhe_int16_abs(getValue(), result.getAddress()));
     return result;
 
-  }
-
+}
   /**
-   {@snippet lang = "c":
-     int fhe_int16_cast_into_fhe_int10(const struct FheInt16 *sself, struct FheInt10 **result);
-     }
+{@snippet lang = "c":
+  int fhe_int16_cast_into_fhe_int10(const struct FheInt16 *sself, struct FheInt10 **result);
+  }
    */
   public FheInt10 castIntoFheInt10() {
     FheInt10 result = new FheInt10();
-    execute(() -> fhe_int16_cast_into_fhe_int10(getValue(), result.getAddress()));
-    return result;
-  }
+  execute(() -> fhe_int16_cast_into_fhe_int10(getValue(), result.getAddress()));
+  return result;
+}
 
-  /**
-   {@snippet lang = "c":
-     int fhe_int16_cast_into_fhe_int1024(const struct FheInt16 *sself, struct FheInt1024 **result);
-     }
-   */
-  public FheInt1024 castIntoFheInt1024() {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int16_cast_into_fhe_int1024(getValue(), result.getAddress()));
-    return result;
-  }
+/**
+{@snippet lang = "c":
+int fhe_int16_cast_into_fhe_int1024(const struct FheInt16 *sself, struct FheInt1024 **result);
+}
+*/
+public FheInt1024 castIntoFheInt1024() {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int16_cast_into_fhe_int1024(getValue(), result.getAddress()));
+  return result;
+}
 
-  /**
-   {@snippet lang = "c":
-     int fhe_int16_cast_into_fhe_int104(const struct FheInt16 *sself, struct FheInt104 **result);
-     }
-   */
-  public FheInt104 castIntoFheInt104() {
-    FheInt104 result = new FheInt104();
-    execute(() -> fhe_int16_cast_into_fhe_int104(getValue(), result.getAddress()));
-    return result;
-  }
+/**
+{@snippet lang = "c":
+int fhe_int16_cast_into_fhe_int104(const struct FheInt16 *sself, struct FheInt104 **result);
+}
+*/
+public FheInt104 castIntoFheInt104() {
+  FheInt104 result = new FheInt104();
+  execute(() -> fhe_int16_cast_into_fhe_int104(getValue(), result.getAddress()));
+  return result;
+}
 
-  /**
-   {@snippet lang = "c":
-     int fhe_int16_cast_into_fhe_int112(const struct FheInt16 *sself, struct FheInt112 **result);
-     }
-   */
-  public FheInt112 castIntoFheInt112() {
-    FheInt112 result = new FheInt112();
-    execute(() -> fhe_int16_cast_into_fhe_int112(getValue(), result.getAddress()));
-    return result;
+/**
+{@snippet lang = "c":
+  int fhe_int16_cast_into_fhe_int112(const struct FheInt16 *sself, struct FheInt112 **result);
   }
+ */
+public FheInt112 castIntoFheInt112() {
+  FheInt112 result = new FheInt112();
+  execute(() -> fhe_int16_cast_into_fhe_int112(getValue(), result.getAddress()));
+  return result;
+}
 
   /**
    {@snippet lang = "c":

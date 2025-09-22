@@ -12,15 +12,17 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+// @formatter:off
 public class CompressedFheInt96 extends NativePointer
-  implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
+implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt96.class);
+// @formatter:on
 
   /**
    {@snippet lang = "c":
-
-     ptr can be null (no-op in that case)
-
+    *
+    *ptr can be null (no-op in that case)
+    *
      int compressed_fhe_int96_destroy(struct CompressedFheInt96 *ptr);
      }
    */
@@ -31,66 +33,91 @@ public class CompressedFheInt96 extends NativePointer
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  public static CompressedFheInt96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
-    CompressedFheInt96 deserialized = new CompressedFheInt96();
-    execute(() -> compressed_fhe_int96_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static CompressedFheInt96 encrypt(I128 clearValue, ClientKey clientKey) {
-    CompressedFheInt96 encrypted = new CompressedFheInt96();
-    execute(() -> compressed_fhe_int96_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int compressed_fhe_int96_decompress(const struct CompressedFheInt96 *sself,
+     struct FheInt96 **result);
      }
    */
   @Override
   public FheInt96 decompress() {
     FheInt96 decompressed = new FheInt96();
     execute(() -> compressed_fhe_int96_decompress(getValue(), decompressed.getAddress()));
-    return decompressed;
+      return decompressed;
+
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Serializes safely.
+ *
+ * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+ * versions of TFHE-rs.
+ *
+ * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+ *    (to avoid out of memory attacks)
+ *
+int compressed_fhe_int96_safe_serialize(const struct CompressedFheInt96 *sself,
+  struct DynamicBuffer *result,
+  uint64_t serialized_size_limit);
+  }
+ */
+@Override
+public DynamicBuffer serialize() {
+  DynamicBuffer dynamicBuffer = new DynamicBuffer();
+  execute(() -> compressed_fhe_int96_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+
+  return dynamicBuffer;
+
+}/**
+{@snippet lang = "c":
+ *
+ * Deserializes safely, and checks that the resulting ciphertext
+ * is in compliance with the shape of ciphertext that the `server_key` expects.
+ *
+ * This function can only deserialize types which have been serialized
+ * by a `safe_serialize` function.
+ *
+ * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+ *    (to avoid out of memory attacks)
+ * - `server_key`: ServerKey used in the conformance check
+ * - `result`: pointer where resulting deserialized object needs to be stored.
+ *    * cannot be NULL
+ *    * (*result) will point the deserialized object on success, else NULL
+ *
+int compressed_fhe_int96_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
+  uint64_t serialized_size_limit,
+  const struct ServerKey *server_key,
+  struct CompressedFheInt96 **result);
+  }
+   */
+  public static CompressedFheInt96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+    CompressedFheInt96 deserialized = new CompressedFheInt96();
+    execute(() -> compressed_fhe_int96_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
+
+}/**
+{@snippet lang = "c":
+  int compressed_fhe_int96_try_encrypt_with_client_key_i128(struct I128 value,
+  const struct ClientKey *client_key,
+  struct CompressedFheInt96 **result);
+  }
+   */
+  public static CompressedFheInt96 encrypt(I128 clearValue, ClientKey clientKey) {
+    CompressedFheInt96 encrypted = new CompressedFheInt96();
+      execute(() -> compressed_fhe_int96_try_encrypt_with_client_key_i128(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public DynamicBuffer serialize() {
-    DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compressed_fhe_int96_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-
-    return dynamicBuffer;
-
+/**
+{@snippet lang = "c":
+  int compressed_fhe_int96_clone(const struct CompressedFheInt96 *sself,
+  struct CompressedFheInt96 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt96 clone() {
-    CompressedFheInt96 cloned = new CompressedFheInt96();
+ */
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public CompressedFheInt96 clone() {
+  CompressedFheInt96 cloned = new CompressedFheInt96();
     execute(() -> compressed_fhe_int96_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
-}
+}}

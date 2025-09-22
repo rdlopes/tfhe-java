@@ -16,15 +16,17 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.executeWithAddress;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+// @formatter:off
 public class FheInt2048 extends NativePointer
-  implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
+implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
   private static final Logger logger = LoggerFactory.getLogger(FheInt2048.class);
+// @formatter:on
 
   /**
    {@snippet lang = "c":
-
-     ptr can be null (no-op in that case)
-
+    *
+    *ptr can be null (no-op in that case)
+    *
      int fhe_int2048_destroy(struct FheInt2048 *ptr);
      }
    */
@@ -32,85 +34,36 @@ public class FheInt2048 extends NativePointer
     logger.trace("init");
     super(TfheHeader::fhe_int2048_destroy);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt2048 ifThenElse(FheBool condition, FheInt2048 thenValue, FheInt2048 elseValue) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-    return result;
-
+  
+/**
+{@snippet lang = "c":
+ *
+ * Serializes safely.
+ *
+ * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+ * versions of TFHE-rs.
+ *
+ * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+ *    (to avoid out of memory attacks)
+ *
+  int fhe_int2048_safe_serialize(const struct FheInt2048 *sself,
+  struct DynamicBuffer *result,
+  uint64_t serialized_size_limit);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
-    FheInt2048 deserialized = new FheInt2048();
-    execute(() -> fhe_int2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt2048 encrypt(I2048 clearValue, ClientKey clientKey) {
-    FheInt2048 encrypted = new FheInt2048();
-    execute(() -> fhe_int2048_try_encrypt_with_client_key_i2048(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt2048 encrypt(I2048 clearValue, PublicKey publicKey) {
-    FheInt2048 encrypted = new FheInt2048();
-    execute(() -> fhe_int2048_try_encrypt_with_public_key_i2048(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  public static FheInt2048 encrypt(I2048 clearValue) {
-    FheInt2048 encrypted = new FheInt2048();
-    execute(() -> fhe_int2048_try_encrypt_trivial_i2048(clearValue.getAddress(), encrypted.getAddress()));
-    return encrypted;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public DynamicBuffer serialize() {
+ */
+@Override
+public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> fhe_int2048_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
-    return dynamicBuffer;
+  return dynamicBuffer;
 
+}/**
+{@snippet lang = "c":
+int fhe_int2048_bitand(const struct FheInt2048 *lhs,
+  const struct FheInt2048 *rhs,
+  struct FheInt2048 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public FheInt2048 bitAnd(FheInt2048 other) {
@@ -119,93 +72,97 @@ public class FheInt2048 extends NativePointer
     return result;
 
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 bitAndScalar(I2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_bitand(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_bitand(const struct FheInt2048 *lhs,
+  struct I2048 rhs,
+  struct FheInt2048 **result);
   }
+ */
+@Override
+public FheInt2048 bitAndScalar(I2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_scalar_bitand(getValue(), other.getAddress(), result.getAddress()));
+  return result;
+
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_bitand_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
      }
    */
   @Override
   public void bitAndAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_bitand_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_bitand_assign(struct FheInt2048 *lhs, struct I2048 rhs);
+}
+*/
+@Override
+public void bitAndScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_bitand_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_bitor(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
-  public void bitAndScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_bitand_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 bitOr(FheInt2048 other) {
+  public FheInt2048 bitOr(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_bitor(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_bitor(const struct FheInt2048 *lhs,
+  struct I2048 rhs,
+  struct FheInt2048 **result);
   }
+ */
+@Override
+public FheInt2048 bitOrScalar(I2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 bitOrScalar(I2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_bitor_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
      }
    */
   @Override
   public void bitOrAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_bitor_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_bitor_assign(struct FheInt2048 *lhs, struct I2048 rhs);
+}
+*/
+@Override
+public void bitOrScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_bitor_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void bitOrScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_bitor_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_bitxor(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -214,46 +171,46 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_bitxor(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_bitxor(const struct FheInt2048 *lhs,
+  struct I2048 rhs,
+  struct FheInt2048 **result);
   }
+ */
+@Override
+public FheInt2048 bitXorScalar(I2048 other) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 bitXorScalar(I2048 other) {
-    FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_bitxor_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
      }
    */
   @Override
   public void bitXorAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_bitxor_assign(struct FheInt2048 *lhs, struct I2048 rhs);
+}
+*/
+@Override
+public void bitXorScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_bitxor_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void bitXorScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_bitxor_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_not(const struct FheInt2048 *input, struct FheInt2048 **result);
      }
    */
   @Override
@@ -262,11 +219,28 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_not(getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_if_then_else(const struct FheBool *condition_ct,
+  const struct FheInt2048 *then_ct,
+  const struct FheInt2048 *else_ct,
+  struct FheInt2048 **result);
   }
+ */
+@SuppressWarnings("unused")
+public static FheInt2048 ifThenElse(FheBool condition, FheInt2048 thenValue, FheInt2048 elseValue) {
+  FheInt2048 result = new FheInt2048();
+  execute(() -> fhe_int2048_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_eq(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheBool **result);
      }
    */
   @Override
@@ -275,24 +249,25 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_eq(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool equalToScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_eq(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool equalToScalar(I2048 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_ne(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheBool **result);
      }
    */
   @Override
@@ -301,25 +276,84 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_ne(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool notEqualToScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_ne(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool notEqualToScalar(I2048 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /**
+}/**
    {@snippet lang = "c":
-
+    *
+    * Deserializes safely, and checks that the resulting ciphertext
+    * is in compliance with the shape of ciphertext that the `server_key` expects.
+    *
+    * This function can only deserialize types which have been serialized
+    * by a `safe_serialize` function.
+    *
+    * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+    *    (to avoid out of memory attacks)
+    * - `server_key`: ServerKey used in the conformance check
+    * - `result`: pointer where resulting deserialized object needs to be stored.
+    *    * cannot be NULL
+    *    * (*result) will point the deserialized object on success, else NULL
+    *
+     int fhe_int2048_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
+     uint64_t serialized_size_limit,
+     const struct ServerKey *server_key,
+     struct FheInt2048 **result);
      }
+   */
+  public static FheInt2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+    FheInt2048 deserialized = new FheInt2048();
+    execute(() -> fhe_int2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
+
+}/**
+{@snippet lang = "c":
+  int fhe_int2048_try_encrypt_with_client_key_i2048(struct I2048 value,
+  const struct ClientKey *client_key,
+  struct FheInt2048 **result);
+  }
+   */
+  public static FheInt2048 encrypt(I2048 clearValue, ClientKey clientKey) {
+    FheInt2048 encrypted = new FheInt2048();
+      execute(() -> fhe_int2048_try_encrypt_with_client_key_i2048(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+    return encrypted;
+
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_try_encrypt_with_public_key_i2048(struct I2048 value,
+  const struct PublicKey *public_key,
+  struct FheInt2048 **result);
+  }
+ */
+public static FheInt2048 encrypt(I2048 clearValue, PublicKey publicKey) {
+  FheInt2048 encrypted = new FheInt2048();
+      execute(() -> fhe_int2048_try_encrypt_with_public_key_i2048(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
+
+}/**
+{@snippet lang = "c":
+  int fhe_int2048_try_encrypt_trivial_i2048(struct I2048 value, struct FheInt2048 **result);
+  }
+   */
+  public static FheInt2048 encrypt(I2048 clearValue) {
+    FheInt2048 encrypted = new FheInt2048();
+      execute(() -> fhe_int2048_try_encrypt_trivial_i2048(clearValue.getAddress(), encrypted.getAddress()));
+    return encrypted;
+
+}/**
+{@snippet lang = "c":
+  int fhe_int2048_clone(const struct FheInt2048 *sself, struct FheInt2048 **result);
+  }
    */
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
@@ -328,86 +362,89 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_clone(getValue(), cloned.getAddress()));
     return cloned;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_compress(const struct FheInt2048 *sself, struct CompressedFheInt2048 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public CompressedFheInt2048 compress() {
+ */
+@Override
+public CompressedFheInt2048 compress(){
     CompressedFheInt2048 compressed = new CompressedFheInt2048();
     execute(() -> fhe_int2048_compress(getValue(), compressed.getAddress()));
     return compressed;
 
+}/**
+{@snippet lang = "c":
+int fhe_int2048_add(const struct FheInt2048 *lhs,
+                    const struct FheInt2048 *rhs,
+  struct FheInt2048 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
-  public FheInt2048 add(FheInt2048 other) {
+  public FheInt2048 add(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_add(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt2048, FheBool> addWithOverflow(FheInt2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_overflowing_add(const struct FheInt2048 *lhs,
+  const struct FheInt2048 *rhs,
+  struct FheInt2048 **out_result,
+                                struct FheBool **out_overflowed);
+}
+*/
+@Override
+public Map.Entry<FheInt2048, FheBool> addWithOverflow(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int2048_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
     return Map.entry(result, overflow);
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_scalar_add(const struct FheInt2048 *lhs,
+     struct I2048 rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
   public FheInt2048 addScalar(I2048 other) {
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_add(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_add(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_add_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
   }
+ */
+@Override
+public void addAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_add_assign(getValue(), other.getValue()));
+
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_add_assign(struct FheInt2048 *lhs, struct I2048 rhs);
+}
+*/
+@Override
+public void addScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_add_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void addAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_add_assign(getValue(), other.getValue()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void addScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_add_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_sub(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -416,60 +453,64 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_sub(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_overflowing_sub(const struct FheInt2048 *lhs,
+  const struct FheInt2048 *rhs,
+  struct FheInt2048 **out_result,
+  struct FheBool **out_overflowed);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt2048, FheBool> subtractWithOverflow(FheInt2048 other) {
+ */
+@Override
+public Map.Entry<FheInt2048, FheBool> subtractWithOverflow(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int2048_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_scalar_sub(const struct FheInt2048 *lhs,
+     struct I2048 rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
   public FheInt2048 subtractScalar(I2048 other) {
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_sub_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
   }
+ */
+@Override
+public void subtractAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_sub_assign(getValue(), other.getValue()));
+
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_sub_assign(struct FheInt2048 *lhs, struct I2048 rhs);
+  }
+ */
+@Override
+public void subtractScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_sub_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void subtractAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_sub_assign(getValue(), other.getValue()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void subtractScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_sub_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_mul(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -478,60 +519,64 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_mul(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt2048, FheBool> multiplyWithOverflow(FheInt2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_overflowing_mul(const struct FheInt2048 *lhs,
+                                const struct FheInt2048 *rhs,
+                                struct FheInt2048 **out_result,
+                                struct FheBool **out_overflowed);
+}
+*/
+@Override
+public Map.Entry<FheInt2048, FheBool> multiplyWithOverflow(FheInt2048 other){
     FheInt2048 result = new FheInt2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int2048_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return Map.entry(result, overflow);
+  return Map.entry(result, overflow);
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_scalar_mul(const struct FheInt2048 *lhs,
+     struct I2048 rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
   public FheInt2048 multiplyScalar(I2048 other) {
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_mul(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_mul(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_mul_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
   }
+ */
+@Override
+public void multiplyAssign(FheInt2048 other) {
+  execute(() -> fhe_int2048_mul_assign(getValue(), other.getValue()));
+
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_mul_assign(struct FheInt2048 *lhs, struct I2048 rhs);
+  }
+ */
+@Override
+public void multiplyScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_mul_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void multiplyAssign(FheInt2048 other) {
-    execute(() -> fhe_int2048_mul_assign(getValue(), other.getValue()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void multiplyScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_mul_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_div(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -540,46 +585,48 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_div(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 divideScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_div(const struct FheInt2048 *lhs,
+                           struct I2048 rhs,
+                           struct FheInt2048 **result);
+}
+*/
+@Override
+public FheInt2048 divideScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_div(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_div(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_div_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
      }
    */
   @Override
   public void divideAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_div_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_div_assign(struct FheInt2048 *lhs, struct I2048 rhs);
   }
+ */
+@Override
+public void divideScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_div_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void divideScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_div_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_rem(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -588,46 +635,49 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_rem(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 remainderScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_rem(const struct FheInt2048 *lhs,
+                           struct I2048 rhs,
+                           struct FheInt2048 **result);
+}
+*/
+@Override
+public FheInt2048 remainderScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_rem(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_rem(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_rem_assign(struct FheInt2048 *lhs, const struct FheInt2048 *rhs);
      }
    */
   @Override
   public void remainderAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_rem_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_rem_assign(struct FheInt2048 *lhs, struct I2048 rhs);
   }
+ */
+@Override
+public void remainderScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_rem_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void remainderScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_rem_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_div_rem(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **q_result,
+     struct FheInt2048 **r_result);
      }
    */
   @Override
@@ -637,25 +687,27 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
     return Map.entry(divider, remainder);
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public Map.Entry<FheInt2048, FheInt2048> divideWithRemainderScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_div_rem(const struct FheInt2048 *lhs,
+                               struct I2048 rhs,
+                               struct FheInt2048 **q_result,
+                               struct FheInt2048 **r_result);
+}
+*/
+@Override
+public Map.Entry<FheInt2048,FheInt2048> divideWithRemainderScalar(I2048 other){
     FheInt2048 divider = new FheInt2048();
     FheInt2048 remainder = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
-    return Map.entry(divider, remainder);
+  execute(() -> fhe_int2048_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
+  return Map.entry(divider, remainder);
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_neg(const struct FheInt2048 *input, struct FheInt2048 **result);
      }
    */
   @Override
@@ -664,24 +716,29 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_neg(getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the base 2 logarithm of the number, rounded down.
+ *
+ * Result has no meaning if self encrypts a value that is <= 0.
+ * See `checked_ilog2`
+ *
+int fhe_int2048_ilog2(const struct FheInt2048 *input, struct FheUint32 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 ilog2() {
+ */
+@Override
+public FheInt2048 ilog2(){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_ilog2(getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
+}/**
    {@snippet lang = "c":
-
+     int fhe_int2048_lt(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheBool **result);
      }
    */
   @Override
@@ -690,128 +747,131 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_lt(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_lt(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool lessThanScalar(I2048 other) {
+ */
+@Override
+public FheBool lessThanScalar(I2048 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_lt(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_lt(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_le(const struct FheInt2048 *lhs,
+                   const struct FheInt2048 *rhs,
+  struct FheBool **result);
   }
+ */
+@Override
+public FheBool lessThanOrEqualTo(FheInt2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_le(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  /**
-   {@snippet lang = "c":
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_le(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool lessThanOrEqualToScalar(I2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_scalar_le(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-     }
-   */
-  @Override
-  public FheBool lessThanOrEqualTo(FheInt2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_le(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_gt(const struct FheInt2048 *lhs,
+  const struct FheInt2048 *rhs,
+  struct FheBool **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool lessThanOrEqualToScalar(I2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_le(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool greaterThan(FheInt2048 other) {
-    FheBool result = new FheBool();
+ */
+@Override
+public FheBool greaterThan(FheInt2048 other) {
+  FheBool result = new FheBool();
     execute(() -> fhe_int2048_gt(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_gt(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool greaterThanScalar(I2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_scalar_gt(getValue(), other.getAddress(), result.getAddress()));
+  return result;
+
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_ge(const struct FheInt2048 *lhs,
+                   const struct FheInt2048 *rhs,
+  struct FheBool **result);
   }
+ */
+@Override
+public FheBool greaterThanOrEqualTo(FheInt2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_ge(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool greaterThanScalar(I2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_gt(getValue(), other.getAddress(), result.getAddress()));
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_ge(const struct FheInt2048 *lhs, struct I2048 rhs, struct FheBool **result);
+}
+*/
+@Override
+public FheBool greaterThanOrEqualToScalar(I2048 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int2048_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_min(const struct FheInt2048 *lhs,
+  const struct FheInt2048 *rhs,
+  struct FheInt2048 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool greaterThanOrEqualTo(FheInt2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_ge(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheBool greaterThanOrEqualToScalar(I2048 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int2048_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 min(FheInt2048 other) {
-    FheInt2048 result = new FheInt2048();
+ */
+@Override
+public FheInt2048 min(FheInt2048 other) {
+  FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_min(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_min(const struct FheInt2048 *lhs,
+  struct I2048 rhs,
+  struct FheInt2048 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 minScalar(I2048 other) {
+ */
+@Override
+public FheInt2048 minScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_min(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_min(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_max(const struct FheInt2048 *lhs,
+     const struct FheInt2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -820,24 +880,25 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_max(getValue(), other.getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_max(const struct FheInt2048 *lhs,
+  struct I2048 rhs,
+  struct FheInt2048 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 maxScalar(I2048 other) {
+ */
+@Override
+public FheInt2048 maxScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_max(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_max(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /**
+}/**
    {@snippet lang = "c":
-
+     int fhe_int2048_shl(const struct FheInt2048 *lhs,
+     const struct FheUint2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -846,46 +907,48 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_shl(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 shiftLeftScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_shl(const struct FheInt2048 *lhs,
+                           struct U2048 rhs,
+                           struct FheInt2048 **result);
+}
+*/
+@Override
+public FheInt2048 shiftLeftScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_shl_assign(struct FheInt2048 *lhs, const struct FheUint2048 *rhs);
      }
    */
   @Override
   public void shiftLeftAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_shl_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_shl_assign(struct FheInt2048 *lhs, struct U2048 rhs);
   }
+ */
+@Override
+public void shiftLeftScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_shl_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void shiftLeftScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_shl_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_shr(const struct FheInt2048 *lhs,
+     const struct FheUint2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -894,46 +957,48 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_shr(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 shiftRightScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_shr(const struct FheInt2048 *lhs,
+                           struct U2048 rhs,
+                           struct FheInt2048 **result);
+}
+*/
+@Override
+public FheInt2048 shiftRightScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_shr_assign(struct FheInt2048 *lhs, const struct FheUint2048 *rhs);
      }
    */
   @Override
   public void shiftRightAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_shr_assign(getValue(), other.getValue()));
 
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_shr_assign(struct FheInt2048 *lhs, struct U2048 rhs);
   }
+ */
+@Override
+public void shiftRightScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_shr_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void shiftRightScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_shr_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_rotate_left(const struct FheInt2048 *lhs,
+     const struct FheUint2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -942,46 +1007,48 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_rotate_left(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 rotateLeftScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_rotate_left(const struct FheInt2048 *lhs,
+                                   struct U2048 rhs,
+                                   struct FheInt2048 **result);
+}
+*/
+@Override
+public FheInt2048 rotateLeftScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_rotate_left(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int2048_scalar_rotate_left(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_rotate_left_assign(struct FheInt2048 *lhs, const struct FheUint2048 *rhs);
      }
    */
   @Override
   public void rotateLeftAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_rotate_left_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_rotate_left_assign(struct FheInt2048 *lhs, struct U2048 rhs);
+}
+*/
+@Override
+public void rotateLeftScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_rotate_left_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateLeftScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_rotate_left_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+     int fhe_int2048_rotate_right(const struct FheInt2048 *lhs,
+     const struct FheUint2048 *rhs,
+     struct FheInt2048 **result);
      }
    */
   @Override
@@ -990,46 +1057,49 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_rotate_right(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 rotateRightScalar(I2048 other) {
+}  
+/**
+{@snippet lang = "c":
+int fhe_int2048_scalar_rotate_right(const struct FheInt2048 *lhs,
+                                    struct U2048 rhs,
+                                    struct FheInt2048 **result);
+}
+*/
+@Override
+public FheInt2048 rotateRightScalar(I2048 other){
     FheInt2048 result = new FheInt2048();
-    execute(() -> fhe_int2048_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      execute(() -> fhe_int2048_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /**
    {@snippet lang = "c":
-
+     int fhe_int2048_rotate_right_assign(struct FheInt2048 *lhs, const struct FheUint2048 *rhs);
      }
    */
   @Override
   public void rotateRightAssign(FheInt2048 other) {
     execute(() -> fhe_int2048_rotate_right_assign(getValue(), other.getValue()));
 
-  }
+}  
+/**
+{@snippet lang = "c":
+  int fhe_int2048_scalar_rotate_right_assign(struct FheInt2048 *lhs, struct U2048 rhs);
+}
+*/
+@Override
+public void rotateRightScalarAssign(I2048 other) {
+  execute(() -> fhe_int2048_scalar_rotate_right_assign(getValue(), other.getAddress()));
+
+}
 
   /**
    {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public void rotateRightScalarAssign(I2048 other) {
-    execute(() -> fhe_int2048_scalar_rotate_right_assign(getValue(), other.getAddress()));
-
-  }
-
-  /**
-   {@snippet lang = "c":
-
+    *
+    * Returns the number of leading ones in the binary representation of input.
+    *
+     int fhe_int2048_leading_ones(const struct FheInt2048 *input, struct FheUint32 **result);
      }
    */
   @Override
@@ -1038,63 +1108,74 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_leading_ones(getValue(), result.getAddress()));
     return result;
 
-  }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 leadingZeros() {
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the number of leading zeros in the binary representation of input.
+ *
+int fhe_int2048_leading_zeros(const struct FheInt2048 *input, struct FheUint32 **result);
+}
+*/
+@Override
+public FheInt2048 leadingZeros(){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_leading_zeros(getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the number of trailing ones in the binary representation of input.
+ *
+int fhe_int2048_trailing_ones(const struct FheInt2048 *input, struct FheUint32 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 trailingOnes() {
+ */
+@Override
+public FheInt2048 trailingOnes(){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_trailing_ones(getValue(), result.getAddress()));
     return result;
 
+}  
+/**
+{@snippet lang = "c":
+ *
+ * Returns the number of trailing zeros in the binary representation of input.
+ *
+int fhe_int2048_trailing_zeros(const struct FheInt2048 *input, struct FheUint32 **result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
-   */
-  @Override
-  public FheInt2048 trailingZeros() {
+ */
+@Override
+public FheInt2048 trailingZeros(){
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_int2048_trailing_zeros(getValue(), result.getAddress()));
     return result;
 
+}/**
+{@snippet lang = "c":
+int fhe_int2048_decrypt(const struct FheInt2048 *encrypted_value,
+  const struct ClientKey *client_key,
+  struct I2048 *result);
   }
-
-  /**
-   {@snippet lang = "c":
-
-     }
    */
   @Override
   public I2048 decrypt(ClientKey clientKey) {
     I2048 decrypted = new I2048();
     executeWithAddress(decrypted.getAddress(), address -> fhe_int2048_decrypt(getValue(), clientKey.getValue(), address));
-    return decrypted;
+      return decrypted;
 
   }
 
   /**
    {@snippet lang = "c":
-
+    *
+    * Returns the absolute value.
+    *
+    * (if x < 0 { -x } else { x })
+    *
+     int fhe_int2048_abs(const struct FheInt2048 *input, struct FheInt2048 **result);
      }
    */
   @Override
@@ -1103,51 +1184,50 @@ public class FheInt2048 extends NativePointer
     execute(() -> fhe_int2048_abs(getValue(), result.getAddress()));
     return result;
 
-  }
-
+}
   /**
-   {@snippet lang = "c":
-     int fhe_int2048_cast_into_fhe_int10(const struct FheInt2048 *sself, struct FheInt10 **result);
-     }
-   */
-  public FheInt10 castIntoFheInt10() {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int2048_cast_into_fhe_int10(getValue(), result.getAddress()));
-    return result;
-  }
+{@snippet lang = "c":
+int fhe_int2048_cast_into_fhe_int10(const struct FheInt2048 *sself, struct FheInt10 **result);
+}
+*/
+public FheInt10 castIntoFheInt10() {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int2048_cast_into_fhe_int10(getValue(), result.getAddress()));
+  return result;
+}
 
-  /**
-   {@snippet lang = "c":
-     int fhe_int2048_cast_into_fhe_int1024(const struct FheInt2048 *sself, struct FheInt1024 **result);
-     }
-   */
-  public FheInt1024 castIntoFheInt1024() {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int2048_cast_into_fhe_int1024(getValue(), result.getAddress()));
-    return result;
-  }
+/**
+{@snippet lang = "c":
+int fhe_int2048_cast_into_fhe_int1024(const struct FheInt2048 *sself, struct FheInt1024 **result);
+}
+*/
+public FheInt1024 castIntoFheInt1024() {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int2048_cast_into_fhe_int1024(getValue(), result.getAddress()));
+  return result;
+}
 
-  /**
-   {@snippet lang = "c":
-     int fhe_int2048_cast_into_fhe_int104(const struct FheInt2048 *sself, struct FheInt104 **result);
-     }
-   */
-  public FheInt104 castIntoFheInt104() {
-    FheInt104 result = new FheInt104();
-    execute(() -> fhe_int2048_cast_into_fhe_int104(getValue(), result.getAddress()));
-    return result;
-  }
+/**
+{@snippet lang = "c":
+int fhe_int2048_cast_into_fhe_int104(const struct FheInt2048 *sself, struct FheInt104 **result);
+}
+*/
+public FheInt104 castIntoFheInt104() {
+  FheInt104 result = new FheInt104();
+  execute(() -> fhe_int2048_cast_into_fhe_int104(getValue(), result.getAddress()));
+  return result;
+}
 
-  /**
-   {@snippet lang = "c":
-     int fhe_int2048_cast_into_fhe_int112(const struct FheInt2048 *sself, struct FheInt112 **result);
-     }
-   */
-  public FheInt112 castIntoFheInt112() {
-    FheInt112 result = new FheInt112();
-    execute(() -> fhe_int2048_cast_into_fhe_int112(getValue(), result.getAddress()));
-    return result;
+/**
+{@snippet lang = "c":
+  int fhe_int2048_cast_into_fhe_int112(const struct FheInt2048 *sself, struct FheInt112 **result);
   }
+ */
+public FheInt112 castIntoFheInt112() {
+  FheInt112 result = new FheInt112();
+  execute(() -> fhe_int2048_cast_into_fhe_int112(getValue(), result.getAddress()));
+  return result;
+}
 
   /**
    {@snippet lang = "c":

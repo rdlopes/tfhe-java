@@ -93,7 +93,7 @@
 
 {{#method this (stringFormat "public static %s" className) "ifThenElse" "if_then_else"
           "FheBool condition" (stringFormat "%s thenValue" className) (stringFormat "%s elseValue" className)
-          override=false}}
+          override=false annotation="@SuppressWarnings(\"unused\")"}}
   {{#if isInteger}}
     {{declare "result"}}
     {{execute "if_then_else" "condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()"}}

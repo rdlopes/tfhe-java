@@ -15,11 +15,11 @@ import java.util.Map;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+// @formatter:off
 public class {{className}} extends NativePointer
-implements FheUnsignedInteger
-
-<{{valueClassName}}, {{className}}, Compressed{{className}}> {
-  private static final Logger logger = LoggerFactory.getLogger({{className}}. class);
+implements FheUnsignedInteger<{{valueClassName}}, {{className}}, Compressed{{className}}> {
+  private static final Logger logger = LoggerFactory.getLogger({{className}}.class);
+// @formatter:on
 
   {{> traits/FheType}}
   {{> traits/FheArithmetics}}

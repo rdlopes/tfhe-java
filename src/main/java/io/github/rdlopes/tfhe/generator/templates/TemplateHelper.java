@@ -26,7 +26,7 @@ public class TemplateHelper {
     boolean override = options.hash("override", true);
     String annotation = options.hash("annotation", "");
 
-    return javadoc(context.nativePrefix() + functionSuffix, options) + "\n" +
+    return javadoc(functionSuffix, options) + "\n" +
       (override ? "@Override\n" : "") +
       (annotation.isBlank() ? "" : annotation + "\n") +
       methodPrefix + " " + methodName + "(" + parameters + "){" + "\n" +
