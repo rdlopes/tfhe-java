@@ -18,102 +18,95 @@ implements CompressedFheType<I256, FheInt248, CompressedFheInt248> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt248.class);
 // @formatter:on
 
-  /**
-   {@snippet lang = "c":
-    *
-    *ptr can be null (no-op in that case)
-    *
-     int compressed_fhe_int248_destroy(struct CompressedFheInt248 *ptr);
-     }
-   */
+  /// ```c
+  ////**
+  ///  *ptr can be null (no-op in that case)
+  ///  */
+  /// int compressed_fhe_int248_destroy(struct CompressedFheInt248 *ptr);
+  ///```
   CompressedFheInt248() {
     logger.trace("init");
     super(TfheHeader::compressed_fhe_int248_destroy);
   }
 
-  /**
-   {@snippet lang = "c":
-     int compressed_fhe_int248_decompress(const struct CompressedFheInt248 *sself,
-     struct FheInt248 **result);
-     }
-   */
+  /// ```c
+  /// int compressed_fhe_int248_decompress(const struct CompressedFheInt248 *sself,
+  ///                                      struct FheInt248 **result);
+  ///```
   @Override
   public FheInt248 decompress() {
     FheInt248 decompressed = new FheInt248();
     execute(() -> compressed_fhe_int248_decompress(getValue(), decompressed.getAddress()));
-      return decompressed;
+    return decompressed;
 
-}  
-/**
-{@snippet lang = "c":
- *
- * Serializes safely.
- *
- * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
- * versions of TFHE-rs.
- *
- * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
- *    (to avoid out of memory attacks)
- *
-int compressed_fhe_int248_safe_serialize(const struct CompressedFheInt248 *sself,
-  struct DynamicBuffer *result,
-  uint64_t serialized_size_limit);
   }
- */
-@Override
-public DynamicBuffer serialize() {
-  DynamicBuffer dynamicBuffer = new DynamicBuffer();
-  execute(() -> compressed_fhe_int248_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
-  return dynamicBuffer;
+  /// ```c
+  ////**
+  ///  * Serializes safely.
+  ///  *
+  ///  * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
+  ///  * versions of TFHE-rs.
+  ///  *
+  ///  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+  ///  *    (to avoid out of memory attacks)
+  ///  */
+  /// int compressed_fhe_int248_safe_serialize(const struct CompressedFheInt248 *sself,
+  ///                                          struct DynamicBuffer *result,
+  ///                                          uint64_t serialized_size_limit);
+  ///```
+  @Override
+  public DynamicBuffer serialize() {
+    DynamicBuffer dynamicBuffer = new DynamicBuffer();
+    execute(() -> compressed_fhe_int248_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
-}/**
-{@snippet lang = "c":
- *
- * Deserializes safely, and checks that the resulting ciphertext
- * is in compliance with the shape of ciphertext that the `server_key` expects.
- *
- * This function can only deserialize types which have been serialized
- * by a `safe_serialize` function.
- *
- * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
- *    (to avoid out of memory attacks)
- * - `server_key`: ServerKey used in the conformance check
- * - `result`: pointer where resulting deserialized object needs to be stored.
- *    * cannot be NULL
- *    * (*result) will point the deserialized object on success, else NULL
- *
-int compressed_fhe_int248_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
-  uint64_t serialized_size_limit,
-  const struct ServerKey *server_key,
-  struct CompressedFheInt248 **result);
+    return dynamicBuffer;
+
   }
-   */
+
+  /// ```c
+  ////**
+  ///  * Deserializes safely, and checks that the resulting ciphertext
+  ///  * is in compliance with the shape of ciphertext that the `server_key` expects.
+  ///  *
+  ///  * This function can only deserialize types which have been serialized
+  ///  * by a `safe_serialize` function.
+  ///  *
+  ///  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
+  ///  *    (to avoid out of memory attacks)
+  ///  * - `server_key`: ServerKey used in the conformance check
+  ///  * - `result`: pointer where resulting deserialized object needs to be stored.
+  ///  *    * cannot be NULL
+  ///  *    * (*result) will point the deserialized object on success, else NULL
+  ///  */
+  /// int compressed_fhe_int248_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
+  ///                                                       uint64_t serialized_size_limit,
+  ///                                                       const struct ServerKey *server_key,
+  ///                                                       struct CompressedFheInt248 **result);
+  ///```
   public static CompressedFheInt248 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     CompressedFheInt248 deserialized = new CompressedFheInt248();
     execute(() -> compressed_fhe_int248_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
 
-}/**
-{@snippet lang = "c":
-  int compressed_fhe_int248_try_encrypt_with_client_key_i256(struct I256 value,
-  const struct ClientKey *client_key,
-  struct CompressedFheInt248 **result);
   }
-   */
+
+  /// ```c
+  /// int compressed_fhe_int248_try_encrypt_with_client_key_i256(struct I256 value,
+  ///                                                            const struct ClientKey *client_key,
+  ///                                                            struct CompressedFheInt248 **result);
+  ///```
   public static CompressedFheInt248 encrypt(I256 clearValue, ClientKey clientKey) {
     CompressedFheInt248 encrypted = new CompressedFheInt248();
-      execute(() -> compressed_fhe_int248_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+    execute(() -> compressed_fhe_int248_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
   }
 
-  /**
-{@snippet lang = "c":
-  int compressed_fhe_int248_clone(const struct CompressedFheInt248 *sself,
-  struct CompressedFheInt248 **result);
-  }
-   */
+  /// ```c
+  /// int compressed_fhe_int248_clone(const struct CompressedFheInt248 *sself,
+  ///                                 struct CompressedFheInt248 **result);
+  ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public CompressedFheInt248 clone() {
@@ -121,4 +114,5 @@ int compressed_fhe_int248_safe_deserialize_conformant(struct DynamicBufferView b
     execute(() -> compressed_fhe_int248_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}}
+  }
+}

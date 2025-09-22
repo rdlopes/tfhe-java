@@ -31,7 +31,7 @@ public class TemplateHelper {
       (annotation.isBlank() ? "" : annotation + "\n") +
       methodPrefix + " " + methodName + "(" + parameters + "){" + "\n" +
       options.fn(context) + "\n" +
-      "}";
+      "}\n";
   }
 
   public static String symbol(String symbolPrefix, Options options) {
@@ -46,15 +46,13 @@ public class TemplateHelper {
 
     String definition = context.symbolsIndex()
                                .definitions()
-                               .getOrDefault(symbol, "")
-                               .replace("/**", " *")
-                               .replace("*/", "*");
-    return """
-      /**
-      {@snippet lang = "c":
-      %s
-      }
-      */""".formatted(definition);
+                               .get(symbol);
+
+    return definition == null
+      ? "/// Not implemented"
+      : definition.lines()
+                  .map(line -> "/// " + line)
+                  .collect(joining("\n", "/// ```c\n", "\n/// ```"));
   }
 
   public static String declare(String objectName, Options options) {
