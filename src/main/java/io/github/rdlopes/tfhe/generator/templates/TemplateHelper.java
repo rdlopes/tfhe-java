@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 public class TemplateHelper {
-  public static String implementation(TemplateContext context, Options options) throws IOException {
+  public static String implementation(TemplateContext context, Options ignoredOptions) throws IOException {
     if (context.isBoolean()) {
       return "FheBoolean<" + context.className() + ", Compressed" + context.className() + ">";
     } else if (context.isSigned()) {
