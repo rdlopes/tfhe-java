@@ -10,18 +10,14 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class FheUint8 extends NativePointer
-implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
+public class FheUint8 extends NativePointer implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
   private static final Logger logger = LoggerFactory.getLogger(FheUint8.class);
 // @formatter:on
-
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -84,7 +80,7 @@ implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
   /// int fhe_uint8_bitand_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheUint8 other){
+public void bitAndAssign(FheUint8 other){
     execute(() -> fhe_uint8_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -102,29 +98,29 @@ implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
   /// int fhe_uint8_bitor(const struct FheUint8 *lhs,
   ///                     const struct FheUint8 *rhs,
   ///                     struct FheUint8 **result);
-  ///```
-  @Override
+///```
+@Override
 public FheUint8 bitOr(FheUint8 other){
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint8_scalar_bitor(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
-  ///```
-@Override
-public FheUint8 bitOrScalar(Byte other) {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_scalar_bitor(getValue(), other, result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_uint8_bitor_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+  /// int fhe_uint8_scalar_bitor(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   ///```
+  @Override
+  public FheUint8 bitOrScalar(Byte other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_scalar_bitor(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_uint8_bitor_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+///```
 @Override
 public void bitOrAssign(FheUint8 other){
     execute(() -> fhe_uint8_bitor_assign(getValue(), other.getValue()));
@@ -143,8 +139,8 @@ public void bitOrAssign(FheUint8 other){
   /// ```c
   /// int fhe_uint8_bitxor(const struct FheUint8 *lhs,
   ///                      const struct FheUint8 *rhs,
-  ///                      struct FheUint8 **result);
-/// ```
+///                      struct FheUint8 **result);
+///```
 @Override
 public FheUint8 bitXor(FheUint8 other){
     FheUint8 result = new FheUint8();
@@ -155,21 +151,21 @@ public FheUint8 bitXor(FheUint8 other){
 
   /// ```c
   /// int fhe_uint8_scalar_bitxor(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
-  /// ```
-@Override
-public FheUint8 bitXorScalar(Byte other) {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_scalar_bitxor(getValue(), other, result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 bitXorScalar(Byte other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_scalar_bitxor(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_bitxor_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
-  /// ```
+///```
 @Override
-public void bitXorAssign(FheUint8 other){
-    execute(() -> fhe_uint8_bitxor_assign(getValue(), other.getValue()));
+public void bitXorAssign(FheUint8 other) {
+  execute(() -> fhe_uint8_bitxor_assign(getValue(), other.getValue()));
 
 }
 
@@ -183,12 +179,12 @@ public void bitXorAssign(FheUint8 other){
   }
 
   /// ```c
-  /// int fhe_uint8_not(const struct FheUint8 *input, struct FheUint8 **result);
-/// ```
+/// int fhe_uint8_not(const struct FheUint8 *input, struct FheUint8 **result);
+///```
 @Override
 public FheUint8 bitNot(){
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_not(getValue(), result.getAddress()));
+  execute(() -> fhe_uint8_not(getValue(), result.getAddress()));
   return result;
 
 }
@@ -209,40 +205,40 @@ public FheUint8 bitNot(){
 
   /// ```c
   /// int fhe_uint8_eq(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
-/// ```
+///```
 @Override
 public FheBool equalTo(FheUint8 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint8_eq(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_uint8_eq(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_uint8_scalar_eq(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool equalToScalar(Byte other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint8_scalar_eq(getValue(), other, result.getAddress()));
-  return result;
+/// int fhe_uint8_scalar_eq(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalToScalar(Byte other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint8_scalar_eq(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-  /// int fhe_uint8_ne(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
-/// ```
+/// int fhe_uint8_ne(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
+///```
 @Override
 public FheBool notEqualTo(FheUint8 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint8_ne(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_uint8_ne(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
-
-  /// ```c
-  /// int fhe_uint8_scalar_ne(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
-/// ```
+  
+/// ```c
+/// int fhe_uint8_scalar_ne(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
+///```
 @Override
 public FheBool notEqualToScalar(Byte other) {
   FheBool result = new FheBool();
@@ -270,96 +266,105 @@ public FheBool notEqualToScalar(Byte other) {
   ///                                           uint64_t serialized_size_limit,
   ///                                           const struct ServerKey *server_key,
   ///                                           struct FheUint8 **result);
-  ///```
-  public static FheUint8 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+///```
+public static FheUint8 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheUint8 deserialized = new FheUint8();
     execute(() -> fhe_uint8_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint8_try_encrypt_with_client_key_u8(uint8_t value,
   ///                                              const struct ClientKey *client_key,
   ///                                              struct FheUint8 **result);
-/// ```
-public static FheUint8 encrypt(Byte clearValue, ClientKey clientKey) {
-  FheUint8 encrypted = new FheUint8();
-  execute(() -> fhe_uint8_try_encrypt_with_client_key_u8(clearValue, clientKey.getValue(), encrypted.getAddress()));
-  return encrypted;
-
-}
-
-  /// ```c
-  /// int fhe_uint8_try_encrypt_with_public_key_u8(uint8_t value,
-  ///                                              const struct PublicKey *public_key,
-  ///                                              struct FheUint8 **result);
-/// ```
-public static FheUint8 encrypt(Byte clearValue, PublicKey publicKey) {
-  FheUint8 encrypted = new FheUint8();
-  execute(() -> fhe_uint8_try_encrypt_with_public_key_u8(clearValue, publicKey.getValue(), encrypted.getAddress()));
-  return encrypted;
-
-}
-
-  /// ```c
-  /// int fhe_uint8_try_encrypt_trivial_u8(uint8_t value, struct FheUint8 **result);
   ///```
-  public static FheUint8 encrypt(Byte clearValue) {
+  public static FheUint8 encrypt(Byte clearValue, ClientKey clientKey) {
     FheUint8 encrypted = new FheUint8();
-    execute(() -> fhe_uint8_try_encrypt_trivial_u8(clearValue, encrypted.getAddress()));
+    execute(() -> fhe_uint8_try_encrypt_with_client_key_u8(clearValue, clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
   }
 
   /// ```c
-  /// int fhe_uint8_clone(const struct FheUint8 *sself, struct FheUint8 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheUint8 clone(){
-    FheUint8 cloned = new FheUint8();
-  execute(() -> fhe_uint8_clone(getValue(), cloned.getAddress()));
-  return cloned;
+  /// int fhe_uint8_try_encrypt_with_public_key_u8(uint8_t value,
+///                                              const struct PublicKey *public_key,
+  ///                                              struct FheUint8 **result);
+  ///```
+  public static FheUint8 encrypt(Byte clearValue, PublicKey publicKey) {
+    FheUint8 encrypted = new FheUint8();
+    execute(() -> fhe_uint8_try_encrypt_with_public_key_u8(clearValue, publicKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
 }
+/// ```c
+/// int fhe_uint8_try_encrypt_trivial_u8(uint8_t value, struct FheUint8 **result);
+///```
+public static FheUint8 encrypt(Byte clearValue) {
+  FheUint8 encrypted = new FheUint8();
+  execute(() -> fhe_uint8_try_encrypt_trivial_u8(clearValue, encrypted.getAddress()));
+    return encrypted;
 
-  /// ```c
-  /// int fhe_uint8_compress(const struct FheUint8 *sself, struct CompressedFheUint8 **result);
-/// ```
+}
+/// ```c
+/// int fhe_uint8_clone(const struct FheUint8 *sself, struct FheUint8 **result);
+///```
 @Override
-public CompressedFheUint8 compress(){
-    CompressedFheUint8 compressed = new CompressedFheUint8();
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheUint8 clone() {
+  FheUint8 cloned = new FheUint8();
+  execute(() -> fhe_uint8_clone(getValue(), cloned.getAddress()));
+    return cloned;
+
+}
+  
+/// ```c
+/// int fhe_uint8_compress(const struct FheUint8 *sself, struct CompressedFheUint8 **result);
+///```
+@Override
+public CompressedFheUint8 compress() {
+  CompressedFheUint8 compressed = new CompressedFheUint8();
   execute(() -> fhe_uint8_compress(getValue(), compressed.getAddress()));
   return compressed;
 
 }
 
   /// ```c
-  /// int fhe_uint8_add(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 add(FheUint8 other){
-    FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_add(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  /// int fhe_uint8_decrypt(const struct FheUint8 *encrypted_value,
+  ///                       const struct ClientKey *client_key,
+  ///                       uint8_t *result);
+  ///```
+  @Override
+  public Byte decrypt(ClientKey clientKey) {
+    return executeAndReturn(Byte.class, address -> fhe_uint8_decrypt(getValue(), clientKey.getValue(), address));
 
-}
+  }
+
+  /// ```c
+  /// int fhe_uint8_add(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  ///```
+  @Override
+  public FheUint8 add(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint8_overflowing_add(const struct FheUint8 *lhs,
-  ///                               const struct FheUint8 *rhs,
+///                               const struct FheUint8 *rhs,
   ///                               struct FheUint8 **out_result,
   ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheUint8, FheBool> addWithOverflow(FheUint8 other){
+  ///```
+  @Override
+  public CheckedResult<Byte, FheUint8, CompressedFheUint8> addWithOverflow(FheUint8 other) {
     FheUint8 result = new FheUint8();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint8_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
+    return new CheckedResult<>(result, overflow);
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_add(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
@@ -367,54 +372,54 @@ public Map.Entry<FheUint8, FheBool> addWithOverflow(FheUint8 other){
   @Override
   public FheUint8 addScalar(Byte other) {
     FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_add(getValue(), other, result.getAddress()));
+        execute(() -> fhe_uint8_scalar_add(getValue(), other, result.getAddress()));
     return result;
 
   }
 
   /// ```c
   /// int fhe_uint8_add_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
-/// ```
-@Override
-public void addAssign(FheUint8 other) {
-  execute(() -> fhe_uint8_add_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void addAssign(FheUint8 other) {
+    execute(() -> fhe_uint8_add_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_add_assign(struct FheUint8 *lhs, uint8_t rhs);
   ///```
   @Override
-  public void addScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_add_assign(getValue(), other));
+  public void addScalarAssign(Byte other){
+        execute(() -> fhe_uint8_scalar_add_assign(getValue(), other));
 
   }
 
   /// ```c
   /// int fhe_uint8_sub(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 subtract(FheUint8 other){
+  ///```
+  @Override
+  public FheUint8 subtract(FheUint8 other) {
     FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_sub(getValue(), other.getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_uint8_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_overflowing_sub(const struct FheUint8 *lhs,
   ///                               const struct FheUint8 *rhs,
   ///                               struct FheUint8 **out_result,
   ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheUint8, FheBool> subtractWithOverflow(FheUint8 other){
+  ///```
+  @Override
+  public CheckedResult<Byte, FheUint8, CompressedFheUint8> subtractWithOverflow(FheUint8 other) {
     FheUint8 result = new FheUint8();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint8_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
+    return new CheckedResult<>(result, overflow);
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_sub(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
@@ -429,53 +434,53 @@ public Map.Entry<FheUint8, FheBool> subtractWithOverflow(FheUint8 other){
 
   /// ```c
   /// int fhe_uint8_sub_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
-/// ```
-@Override
-public void subtractAssign(FheUint8 other) {
-  execute(() -> fhe_uint8_sub_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void subtractAssign(FheUint8 other) {
+    execute(() -> fhe_uint8_sub_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_sub_assign(struct FheUint8 *lhs, uint8_t rhs);
   ///```
   @Override
-  public void subtractScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_sub_assign(getValue(), other));
+public void subtractScalarAssign(Byte other){
+        execute(() -> fhe_uint8_scalar_sub_assign(getValue(), other));
 
   }
 
   /// ```c
   /// int fhe_uint8_mul(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 multiply(FheUint8 other){
+  ///```
+  @Override
+  public FheUint8 multiply(FheUint8 other) {
     FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_mul(getValue(), other.getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_uint8_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_overflowing_mul(const struct FheUint8 *lhs,
   ///                               const struct FheUint8 *rhs,
   ///                               struct FheUint8 **out_result,
   ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheUint8, FheBool> multiplyWithOverflow(FheUint8 other){
+  ///```
+  @Override
+  public CheckedResult<Byte, FheUint8, CompressedFheUint8> multiplyWithOverflow(FheUint8 other){
     FheUint8 result = new FheUint8();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint8_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
+    return new CheckedResult<>(result, overflow);
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_mul(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   ///```
   @Override
-  public FheUint8 multiplyScalar(Byte other) {
+  public FheUint8 multiplyScalar(Byte other){
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_scalar_mul(getValue(), other, result.getAddress()));
     return result;
@@ -484,38 +489,38 @@ public Map.Entry<FheUint8, FheBool> multiplyWithOverflow(FheUint8 other){
 
   /// ```c
   /// int fhe_uint8_mul_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
-/// ```
-@Override
-public void multiplyAssign(FheUint8 other) {
-  execute(() -> fhe_uint8_mul_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_uint8_scalar_mul_assign(struct FheUint8 *lhs, uint8_t rhs);
   ///```
   @Override
-  public void multiplyScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_mul_assign(getValue(), other));
+  public void multiplyAssign(FheUint8 other) {
+    execute(() -> fhe_uint8_mul_assign(getValue(), other.getValue()));
 
   }
 
   /// ```c
-  /// int fhe_uint8_div(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
+  /// int fhe_uint8_scalar_mul_assign(struct FheUint8 *lhs, uint8_t rhs);
+///```
 @Override
-public FheUint8 divide(FheUint8 other){
-    FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_div(getValue(), other.getValue(), result.getAddress()));
-  return result;
+public void multiplyScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_mul_assign(getValue(), other));
 
 }
+
+  /// ```c
+  /// int fhe_uint8_div(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  ///```
+  @Override
+  public FheUint8 divide(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_div(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_div(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   ///```
   @Override
-  public FheUint8 divideScalar(Byte other){
+  public FheUint8 divideScalar(Byte other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_scalar_div(getValue(), other, result.getAddress()));
     return result;
@@ -524,38 +529,38 @@ public FheUint8 divide(FheUint8 other){
 
   /// ```c
   /// int fhe_uint8_div_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
-/// ```
-@Override
-public void divideAssign(FheUint8 other) {
-  execute(() -> fhe_uint8_div_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_uint8_scalar_div_assign(struct FheUint8 *lhs, uint8_t rhs);
   ///```
   @Override
-  public void divideScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_div_assign(getValue(), other));
+  public void divideAssign(FheUint8 other) {
+    execute(() -> fhe_uint8_div_assign(getValue(), other.getValue()));
 
   }
 
   /// ```c
-  /// int fhe_uint8_rem(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
+  /// int fhe_uint8_scalar_div_assign(struct FheUint8 *lhs, uint8_t rhs);
+///```
 @Override
-public FheUint8 remainder(FheUint8 other){
-    FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_rem(getValue(), other.getValue(), result.getAddress()));
-  return result;
+public void divideScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_div_assign(getValue(), other));
 
 }
+
+  /// ```c
+  /// int fhe_uint8_rem(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
+  ///```
+  @Override
+  public FheUint8 remainder(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_rem(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_rem(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   ///```
   @Override
-  public FheUint8 remainderScalar(Byte other){
+public FheUint8 remainderScalar(Byte other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_scalar_rem(getValue(), other, result.getAddress()));
     return result;
@@ -564,12 +569,12 @@ public FheUint8 remainder(FheUint8 other){
 
   /// ```c
   /// int fhe_uint8_rem_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
-/// ```
-@Override
-public void remainderAssign(FheUint8 other) {
-  execute(() -> fhe_uint8_rem_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void remainderAssign(FheUint8 other) {
+    execute(() -> fhe_uint8_rem_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_rem_assign(struct FheUint8 *lhs, uint8_t rhs);
@@ -585,41 +590,41 @@ public void remainderAssign(FheUint8 other) {
   ///                       const struct FheUint8 *rhs,
   ///                       struct FheUint8 **q_result,
   ///                       struct FheUint8 **r_result);
-/// ```
-@Override
-public Map.Entry<FheUint8,FheUint8> divideWithRemainder(FheUint8 other){
+  ///```
+  @Override
+  public DividerAndRemainder<Byte, FheUint8, CompressedFheUint8> divideWithRemainder(FheUint8 other) {
     FheUint8 divider = new FheUint8();
     FheUint8 remainder = new FheUint8();
     execute(() -> fhe_uint8_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
-  return Map.entry(divider, remainder);
+      return new DividerAndRemainder<>(divider, remainder);
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_div_rem(const struct FheUint8 *lhs,
   ///                              uint8_t rhs,
   ///                              struct FheUint8 **q_result,
   ///                              struct FheUint8 **r_result);
-/// ```
-@Override
-public Map.Entry<FheUint8, FheUint8> divideWithRemainderScalar(Byte other) {
-  FheUint8 divider = new FheUint8();
-  FheUint8 remainder = new FheUint8();
-      execute(() -> fhe_uint8_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
-  return Map.entry(divider, remainder);
+  ///```
+  @Override
+  public DividerAndRemainder<Byte, FheUint8, CompressedFheUint8> divideWithRemainderScalar(Byte other){
+      FheUint8 divider = new FheUint8();
+      FheUint8 remainder = new FheUint8();
+    execute(() -> fhe_uint8_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
+    return new DividerAndRemainder<>(divider, remainder);
 
-}
+  }
 
   /// ```c
-/// int fhe_uint8_neg(const struct FheUint8 *input, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 negate() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_neg(getValue(), result.getAddress()));
-  return result;
+  /// int fhe_uint8_neg(const struct FheUint8 *input, struct FheUint8 **result);
+  ///```
+  @Override
+  public FheUint8 negate() {
+    FheUint8 result = new FheUint8();
+      execute(() -> fhe_uint8_neg(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   ////**
@@ -628,15 +633,15 @@ public FheUint8 negate() {
   ///  * Result has no meaning if self encrypts a value that is <= 0.
   ///  * See `checked_ilog2`
   ///  */
-/// int fhe_uint8_ilog2(const struct FheUint8 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheUint8 ilog2() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_ilog2(getValue(), result.getAddress()));
-  return result;
+  /// int fhe_uint8_ilog2(const struct FheUint8 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheUint8 ilog2() {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_ilog2(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   ////**
@@ -649,24 +654,24 @@ public FheUint8 ilog2() {
   ///                             struct FheBool **result_2);
   ///```
   @Override
-  public Map.Entry<FheUint8, FheBool> ilog2WithCheck() {
+  public CheckedResult<Byte, FheUint8, CompressedFheUint8> ilog2WithCheck(){
     FheUint8 result = new FheUint8();
     FheBool check = new FheBool();
     execute(() -> fhe_uint8_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
-    return Map.entry(result, check);
+    return new CheckedResult<>(result, check);
 
   }
 
   /// ```c
   /// int fhe_uint8_lt(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool lessThan(FheUint8 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint8_lt(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheBool lessThan(FheUint8 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint8_lt(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_lt(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
@@ -681,14 +686,14 @@ public FheBool lessThan(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_le(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool lessThanOrEqualTo(FheUint8 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint8_le(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheBool lessThanOrEqualTo(FheUint8 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint8_le(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_le(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
@@ -703,14 +708,14 @@ public FheBool lessThanOrEqualTo(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_gt(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool greaterThan(FheUint8 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint8_gt(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheBool greaterThan(FheUint8 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint8_gt(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_gt(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
@@ -725,14 +730,14 @@ public FheBool greaterThan(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_ge(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool greaterThanOrEqualTo(FheUint8 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint8_ge(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheBool greaterThanOrEqualTo(FheUint8 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint8_ge(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_ge(const struct FheUint8 *lhs, uint8_t rhs, struct FheBool **result);
@@ -747,14 +752,14 @@ public FheBool greaterThanOrEqualTo(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_min(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 min(FheUint8 other) {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_min(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 min(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_min(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_min(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
@@ -769,14 +774,14 @@ public FheUint8 min(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_max(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 max(FheUint8 other) {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_max(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 max(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_max(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_max(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
@@ -791,28 +796,28 @@ public FheUint8 max(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_shl(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
+  ///```
+  @Override
+  public FheUint8 shiftLeft(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_shl(getValue(), other.getValue(), result.getAddress()));
+      return result;
+
+}
+    
+/// ```c
+/// int fhe_uint8_scalar_shl(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
+///```
 @Override
-public FheUint8 shiftLeft(FheUint8 other) {
+public FheUint8 shiftLeftScalar(Byte other) {
   FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_shl(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_uint8_scalar_shl(getValue(), other, result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_uint8_scalar_shl(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
-  ///```
-  @Override
-  public FheUint8 shiftLeftScalar(Byte other) {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_scalar_shl(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_uint8_shl_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+  /// int fhe_uint8_shl_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   ///```
   @Override
   public void shiftLeftAssign(FheUint8 other) {
@@ -831,14 +836,14 @@ public FheUint8 shiftLeft(FheUint8 other) {
 
   /// ```c
   /// int fhe_uint8_shr(const struct FheUint8 *lhs, const struct FheUint8 *rhs, struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 shiftRight(FheUint8 other) {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_shr(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 shiftRight(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_shr(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_shr(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
@@ -852,41 +857,41 @@ public FheUint8 shiftRight(FheUint8 other) {
   }
 
   /// ```c
-/// int fhe_uint8_shr_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
+  /// int fhe_uint8_shr_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   ///```
   @Override
-  public void shiftRightAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_shr_assign(getValue(), other.getValue()));
+  public void shiftRightAssign(FheUint8 other){
+      execute(() -> fhe_uint8_shr_assign(getValue(), other.getValue()));
 
-  }
+}
+    
+/// ```c
+/// int fhe_uint8_scalar_shr_assign(struct FheUint8 *lhs, uint8_t rhs);
+///```
+@Override
+public void shiftRightScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_shr_assign(getValue(), other));
 
-  /// ```c
-  /// int fhe_uint8_scalar_shr_assign(struct FheUint8 *lhs, uint8_t rhs);
-  ///```
-  @Override
-  public void shiftRightScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_shr_assign(getValue(), other));
-
-  }
+}
 
   /// ```c
   /// int fhe_uint8_rotate_left(const struct FheUint8 *lhs,
   ///                           const struct FheUint8 *rhs,
-///                           struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 rotateLeft(FheUint8 other){
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_rotate_left(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///                           struct FheUint8 **result);
+  ///```
+  @Override
+  public FheUint8 rotateLeft(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_rotate_left(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_rotate_left(const struct FheUint8 *lhs, uint8_t rhs, struct FheUint8 **result);
   ///```
   @Override
-  public FheUint8 rotateLeftScalar(Byte other){
+public FheUint8 rotateLeftScalar(Byte other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_scalar_rotate_left(getValue(), other, result.getAddress()));
     return result;
@@ -900,37 +905,37 @@ public FheUint8 rotateLeft(FheUint8 other){
   public void rotateLeftAssign(FheUint8 other) {
     execute(() -> fhe_uint8_rotate_left_assign(getValue(), other.getValue()));
 
-  }
+}
+    
+/// ```c
+/// int fhe_uint8_scalar_rotate_left_assign(struct FheUint8 *lhs, uint8_t rhs);
+///```
+@Override
+public void rotateLeftScalarAssign(Byte other) {
+  execute(() -> fhe_uint8_scalar_rotate_left_assign(getValue(), other));
 
-  /// ```c
-  /// int fhe_uint8_scalar_rotate_left_assign(struct FheUint8 *lhs, uint8_t rhs);
-  ///```
-  @Override
-  public void rotateLeftScalarAssign(Byte other) {
-    execute(() -> fhe_uint8_scalar_rotate_left_assign(getValue(), other));
-
-  }
+}
 
   /// ```c
   /// int fhe_uint8_rotate_right(const struct FheUint8 *lhs,
   ///                            const struct FheUint8 *rhs,
 ///                            struct FheUint8 **result);
-/// ```
-@Override
-public FheUint8 rotateRight(FheUint8 other){
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_rotate_right(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 rotateRight(FheUint8 other) {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_rotate_right(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint8_scalar_rotate_right(const struct FheUint8 *lhs,
   ///                                   uint8_t rhs,
-///                                   struct FheUint8 **result);
+  ///                                   struct FheUint8 **result);
   ///```
   @Override
-  public FheUint8 rotateRightScalar(Byte other){
+  public FheUint8 rotateRightScalar(Byte other) {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint8_scalar_rotate_right(getValue(), other, result.getAddress()));
     return result;
@@ -941,8 +946,8 @@ public FheUint8 rotateRight(FheUint8 other){
   /// int fhe_uint8_rotate_right_assign(struct FheUint8 *lhs, const struct FheUint8 *rhs);
   ///```
   @Override
-  public void rotateRightAssign(FheUint8 other) {
-    execute(() -> fhe_uint8_rotate_right_assign(getValue(), other.getValue()));
+  public void rotateRightAssign(FheUint8 other){
+      execute(() -> fhe_uint8_rotate_right_assign(getValue(), other.getValue()));
 
   }
 
@@ -956,69 +961,58 @@ public FheUint8 rotateRight(FheUint8 other){
   }
 
   /// ```c
-  ////**
-  ///  * Returns the number of leading ones in the binary representation of input.
+////**
+///  * Returns the number of leading ones in the binary representation of input.
 ///  */
 /// int fhe_uint8_leading_ones(const struct FheUint8 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheUint8 leadingOnes() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_leading_ones(getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 leadingOnes() {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_leading_ones(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-  ////**
-  ///  * Returns the number of leading zeros in the binary representation of input.
+////**
+///  * Returns the number of leading zeros in the binary representation of input.
 ///  */
 /// int fhe_uint8_leading_zeros(const struct FheUint8 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheUint8 leadingZeros() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_leading_zeros(getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint8 leadingZeros() {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_leading_zeros(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-  ////**
-  ///  * Returns the number of trailing ones in the binary representation of input.
+////**
+///  * Returns the number of trailing ones in the binary representation of input.
 ///  */
-/// int fhe_uint8_trailing_ones(const struct FheUint8 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheUint8 trailingOnes() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_trailing_ones(getValue(), result.getAddress()));
-  return result;
+  /// int fhe_uint8_trailing_ones(const struct FheUint8 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheUint8 trailingOnes() {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_trailing_ones(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   ////**
   ///  * Returns the number of trailing zeros in the binary representation of input.
   ///  */
-/// int fhe_uint8_trailing_zeros(const struct FheUint8 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheUint8 trailingZeros() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint8_trailing_zeros(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_uint8_decrypt(const struct FheUint8 *encrypted_value,
-  ///                       const struct ClientKey *client_key,
-  ///                       uint8_t *result);
+  /// int fhe_uint8_trailing_zeros(const struct FheUint8 *input, struct FheUint32 **result);
   ///```
   @Override
-  public Byte decrypt(ClientKey clientKey) {
-    return executeAndReturn(Byte.class, address -> fhe_uint8_decrypt(getValue(), clientKey.getValue(), address));
+  public FheUint8 trailingZeros() {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint8_trailing_zeros(getValue(), result.getAddress()));
+    return result;
 
   }
 
@@ -1728,36 +1722,38 @@ public FheUint8 trailingZeros() {
   /// int fhe_uint8_cast_into_fhe_uint8(const struct FheUint8 *sself, struct FheUint8 **result);
   ///```
   public FheUint8 castIntoFheUint8() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint8_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint8_cast_into_fhe_uint8(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint8_cast_into_fhe_uint80(const struct FheUint8 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_uint8_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint8_cast_into_fhe_uint80(const struct FheUint8 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_uint8_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint8_cast_into_fhe_uint88(const struct FheUint8 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_uint8_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint8_cast_into_fhe_uint88(const struct FheUint8 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_uint8_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint8_cast_into_fhe_uint96(const struct FheUint8 *sself, struct FheUint96 **result);
-/// ```
+/// ```c
+/// int fhe_uint8_cast_into_fhe_uint96(const struct FheUint8 *sself, struct FheUint96 **result);
+///```
 public FheUint96 castIntoFheUint96() {
   FheUint96 result = new FheUint96();
   execute(() -> fhe_uint8_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
 
+  // @formatter:off
 }
+// @formatter:on

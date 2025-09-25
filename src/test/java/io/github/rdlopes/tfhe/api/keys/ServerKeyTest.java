@@ -11,7 +11,8 @@ class ServerKeyTest {
 
   @BeforeEach
   void setUp() {
-    keySet = new FheKeySet();
+    keySet = FheKeySet.builder()
+                      .build();
   }
 
   @Test

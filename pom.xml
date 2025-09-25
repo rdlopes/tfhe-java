@@ -126,7 +126,6 @@
           <argLine combine.children="append">--enable-native-access=ALL-UNNAMED
             -Djava.library.path=${java.library.path}</argLine>
           <excludedGroups>intensive</excludedGroups>
-          <runOrder>alphabetical</runOrder>
         </configuration>
       </plugin>
       <plugin>

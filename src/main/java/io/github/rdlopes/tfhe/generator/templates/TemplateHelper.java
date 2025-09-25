@@ -14,6 +14,15 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 public class TemplateHelper {
+  public static String implementation(TemplateContext context, Options options) throws IOException {
+    if (context.isBoolean()) {
+      return "FheBoolean<" + context.className() + ", Compressed" + context.className() + ">";
+    } else if (context.isSigned()) {
+      return "FheInteger<" + context.valueClassName() + ", " + context.className() + ", Compressed" + context.className() + ">";
+    }
+    return "FheUnsignedInteger<" + context.valueClassName() + ", " + context.className() + ", Compressed" + context.className() + ">";
+  }
+
   public static String method(TemplateContext context, Options options) throws IOException {
     String methodPrefix = options.param(0);
     String methodName = options.param(1);

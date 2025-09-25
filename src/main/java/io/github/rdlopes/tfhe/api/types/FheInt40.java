@@ -10,18 +10,14 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class FheInt40 extends NativePointer
-implements FheInteger<Long, FheInt40, CompressedFheInt40> {
+public class FheInt40 extends NativePointer implements FheInteger<Long, FheInt40, CompressedFheInt40> {
   private static final Logger logger = LoggerFactory.getLogger(FheInt40.class);
 // @formatter:on
-
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -84,7 +80,7 @@ implements FheInteger<Long, FheInt40, CompressedFheInt40> {
   /// int fhe_int40_bitand_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheInt40 other){
+public void bitAndAssign(FheInt40 other){
     execute(() -> fhe_int40_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -102,29 +98,29 @@ implements FheInteger<Long, FheInt40, CompressedFheInt40> {
   /// int fhe_int40_bitor(const struct FheInt40 *lhs,
   ///                     const struct FheInt40 *rhs,
   ///                     struct FheInt40 **result);
-  ///```
-  @Override
+///```
+@Override
 public FheInt40 bitOr(FheInt40 other){
     FheInt40 result = new FheInt40();
     execute(() -> fhe_int40_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_scalar_bitor(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-@Override
-public FheInt40 bitOrScalar(Long other) {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_scalar_bitor(getValue(), other, result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_int40_bitor_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+  /// int fhe_int40_scalar_bitor(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
   ///```
+  @Override
+  public FheInt40 bitOrScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_bitor(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_bitor_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+///```
 @Override
 public void bitOrAssign(FheInt40 other){
     execute(() -> fhe_int40_bitor_assign(getValue(), other.getValue()));
@@ -143,8 +139,8 @@ public void bitOrAssign(FheInt40 other){
   /// ```c
   /// int fhe_int40_bitxor(const struct FheInt40 *lhs,
   ///                      const struct FheInt40 *rhs,
-  ///                      struct FheInt40 **result);
-/// ```
+///                      struct FheInt40 **result);
+///```
 @Override
 public FheInt40 bitXor(FheInt40 other){
     FheInt40 result = new FheInt40();
@@ -155,21 +151,21 @@ public FheInt40 bitXor(FheInt40 other){
 
   /// ```c
   /// int fhe_int40_scalar_bitxor(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  /// ```
-@Override
-public FheInt40 bitXorScalar(Long other) {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_scalar_bitxor(getValue(), other, result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheInt40 bitXorScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_bitxor(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int40_bitxor_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
-  /// ```
+///```
 @Override
-public void bitXorAssign(FheInt40 other){
-    execute(() -> fhe_int40_bitxor_assign(getValue(), other.getValue()));
+public void bitXorAssign(FheInt40 other) {
+  execute(() -> fhe_int40_bitxor_assign(getValue(), other.getValue()));
 
 }
 
@@ -183,12 +179,12 @@ public void bitXorAssign(FheInt40 other){
   }
 
   /// ```c
-  /// int fhe_int40_not(const struct FheInt40 *input, struct FheInt40 **result);
-/// ```
+/// int fhe_int40_not(const struct FheInt40 *input, struct FheInt40 **result);
+///```
 @Override
 public FheInt40 bitNot(){
     FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_not(getValue(), result.getAddress()));
+  execute(() -> fhe_int40_not(getValue(), result.getAddress()));
   return result;
 
 }
@@ -209,40 +205,40 @@ public FheInt40 bitNot(){
 
   /// ```c
   /// int fhe_int40_eq(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
-/// ```
+///```
 @Override
 public FheBool equalTo(FheInt40 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int40_eq(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_int40_eq(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_int40_scalar_eq(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool equalToScalar(Long other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int40_scalar_eq(getValue(), other, result.getAddress()));
-  return result;
+/// int fhe_int40_scalar_eq(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalToScalar(Long other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_scalar_eq(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-  /// int fhe_int40_ne(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
-/// ```
+/// int fhe_int40_ne(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
+///```
 @Override
 public FheBool notEqualTo(FheInt40 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int40_ne(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_int40_ne(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
-
-  /// ```c
-  /// int fhe_int40_scalar_ne(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
-/// ```
+  
+/// ```c
+/// int fhe_int40_scalar_ne(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
+///```
 @Override
 public FheBool notEqualToScalar(Long other) {
   FheBool result = new FheBool();
@@ -270,750 +266,66 @@ public FheBool notEqualToScalar(Long other) {
   ///                                           uint64_t serialized_size_limit,
   ///                                           const struct ServerKey *server_key,
   ///                                           struct FheInt40 **result);
-  ///```
-  public static FheInt40 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+///```
+public static FheInt40 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt40 deserialized = new FheInt40();
     execute(() -> fhe_int40_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_int40_try_encrypt_with_client_key_i64(int64_t value,
   ///                                               const struct ClientKey *client_key,
   ///                                               struct FheInt40 **result);
-/// ```
-public static FheInt40 encrypt(Long clearValue, ClientKey clientKey) {
-  FheInt40 encrypted = new FheInt40();
-  execute(() -> fhe_int40_try_encrypt_with_client_key_i64(clearValue, clientKey.getValue(), encrypted.getAddress()));
-  return encrypted;
-
-}
-
-  /// ```c
-  /// int fhe_int40_try_encrypt_with_public_key_i64(int64_t value,
-  ///                                               const struct PublicKey *public_key,
-  ///                                               struct FheInt40 **result);
-/// ```
-public static FheInt40 encrypt(Long clearValue, PublicKey publicKey) {
-  FheInt40 encrypted = new FheInt40();
-  execute(() -> fhe_int40_try_encrypt_with_public_key_i64(clearValue, publicKey.getValue(), encrypted.getAddress()));
-  return encrypted;
-
-}
-
-  /// ```c
-  /// int fhe_int40_try_encrypt_trivial_i64(int64_t value, struct FheInt40 **result);
   ///```
-  public static FheInt40 encrypt(Long clearValue) {
+  public static FheInt40 encrypt(Long clearValue, ClientKey clientKey) {
     FheInt40 encrypted = new FheInt40();
-    execute(() -> fhe_int40_try_encrypt_trivial_i64(clearValue, encrypted.getAddress()));
+    execute(() -> fhe_int40_try_encrypt_with_client_key_i64(clearValue, clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
   }
 
   /// ```c
-  /// int fhe_int40_clone(const struct FheInt40 *sself, struct FheInt40 **result);
-/// ```
+  /// int fhe_int40_try_encrypt_with_public_key_i64(int64_t value,
+///                                               const struct PublicKey *public_key,
+  ///                                               struct FheInt40 **result);
+  ///```
+  public static FheInt40 encrypt(Long clearValue, PublicKey publicKey) {
+    FheInt40 encrypted = new FheInt40();
+    execute(() -> fhe_int40_try_encrypt_with_public_key_i64(clearValue, publicKey.getValue(), encrypted.getAddress()));
+    return encrypted;
+
+}
+/// ```c
+/// int fhe_int40_try_encrypt_trivial_i64(int64_t value, struct FheInt40 **result);
+///```
+public static FheInt40 encrypt(Long clearValue) {
+  FheInt40 encrypted = new FheInt40();
+  execute(() -> fhe_int40_try_encrypt_trivial_i64(clearValue, encrypted.getAddress()));
+    return encrypted;
+
+}
+/// ```c
+/// int fhe_int40_clone(const struct FheInt40 *sself, struct FheInt40 **result);
+///```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheInt40 clone(){
-    FheInt40 cloned = new FheInt40();
+public FheInt40 clone() {
+  FheInt40 cloned = new FheInt40();
   execute(() -> fhe_int40_clone(getValue(), cloned.getAddress()));
-  return cloned;
+    return cloned;
 
 }
-
-  /// ```c
-  /// int fhe_int40_compress(const struct FheInt40 *sself, struct CompressedFheInt40 **result);
-/// ```
+  
+/// ```c
+/// int fhe_int40_compress(const struct FheInt40 *sself, struct CompressedFheInt40 **result);
+///```
 @Override
-public CompressedFheInt40 compress(){
-    CompressedFheInt40 compressed = new CompressedFheInt40();
+public CompressedFheInt40 compress() {
+  CompressedFheInt40 compressed = new CompressedFheInt40();
   execute(() -> fhe_int40_compress(getValue(), compressed.getAddress()));
   return compressed;
-
-}
-
-  /// ```c
-  /// int fhe_int40_add(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 add(FheInt40 other){
-    FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_add(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_overflowing_add(const struct FheInt40 *lhs,
-  ///                               const struct FheInt40 *rhs,
-  ///                               struct FheInt40 **out_result,
-  ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheInt40, FheBool> addWithOverflow(FheInt40 other){
-    FheInt40 result = new FheInt40();
-    FheBool overflow = new FheBool();
-    execute(() -> fhe_int40_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_add(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 addScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_add(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_add_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
-/// ```
-@Override
-public void addAssign(FheInt40 other) {
-  execute(() -> fhe_int40_add_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_add_assign(struct FheInt40 *lhs, int64_t rhs);
-  ///```
-  @Override
-  public void addScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_add_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_sub(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 subtract(FheInt40 other){
-    FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_sub(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_overflowing_sub(const struct FheInt40 *lhs,
-  ///                               const struct FheInt40 *rhs,
-  ///                               struct FheInt40 **out_result,
-  ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheInt40, FheBool> subtractWithOverflow(FheInt40 other){
-    FheInt40 result = new FheInt40();
-    FheBool overflow = new FheBool();
-    execute(() -> fhe_int40_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_sub(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 subtractScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_sub(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_sub_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
-/// ```
-@Override
-public void subtractAssign(FheInt40 other) {
-  execute(() -> fhe_int40_sub_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_sub_assign(struct FheInt40 *lhs, int64_t rhs);
-  ///```
-  @Override
-  public void subtractScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_sub_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_mul(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 multiply(FheInt40 other){
-    FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_mul(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_overflowing_mul(const struct FheInt40 *lhs,
-  ///                               const struct FheInt40 *rhs,
-  ///                               struct FheInt40 **out_result,
-  ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheInt40, FheBool> multiplyWithOverflow(FheInt40 other){
-    FheInt40 result = new FheInt40();
-    FheBool overflow = new FheBool();
-    execute(() -> fhe_int40_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_mul(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 multiplyScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_mul(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_mul_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
-/// ```
-@Override
-public void multiplyAssign(FheInt40 other) {
-  execute(() -> fhe_int40_mul_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_mul_assign(struct FheInt40 *lhs, int64_t rhs);
-  ///```
-  @Override
-  public void multiplyScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_mul_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_div(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 divide(FheInt40 other){
-    FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_div(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_div(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 divideScalar(Long other){
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_div(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_div_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
-/// ```
-@Override
-public void divideAssign(FheInt40 other) {
-  execute(() -> fhe_int40_div_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_div_assign(struct FheInt40 *lhs, int64_t rhs);
-  ///```
-  @Override
-  public void divideScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_div_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_rem(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 remainder(FheInt40 other){
-    FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_rem(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_rem(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 remainderScalar(Long other){
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_rem(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_rem_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
-/// ```
-@Override
-public void remainderAssign(FheInt40 other) {
-  execute(() -> fhe_int40_rem_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_rem_assign(struct FheInt40 *lhs, int64_t rhs);
-  ///```
-  @Override
-  public void remainderScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_rem_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_div_rem(const struct FheInt40 *lhs,
-  ///                       const struct FheInt40 *rhs,
-  ///                       struct FheInt40 **q_result,
-  ///                       struct FheInt40 **r_result);
-/// ```
-@Override
-public Map.Entry<FheInt40,FheInt40> divideWithRemainder(FheInt40 other){
-    FheInt40 divider = new FheInt40();
-    FheInt40 remainder = new FheInt40();
-    execute(() -> fhe_int40_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
-  return Map.entry(divider, remainder);
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_div_rem(const struct FheInt40 *lhs,
-  ///                              int64_t rhs,
-  ///                              struct FheInt40 **q_result,
-  ///                              struct FheInt40 **r_result);
-/// ```
-@Override
-public Map.Entry<FheInt40, FheInt40> divideWithRemainderScalar(Long other) {
-  FheInt40 divider = new FheInt40();
-  FheInt40 remainder = new FheInt40();
-      execute(() -> fhe_int40_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
-  return Map.entry(divider, remainder);
-
-}
-
-  /// ```c
-/// int fhe_int40_neg(const struct FheInt40 *input, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 negate() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_neg(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the base 2 logarithm of the number, rounded down.
-  ///  *
-  ///  * Result has no meaning if self encrypts a value that is <= 0.
-  ///  * See `checked_ilog2`
-  ///  */
-/// int fhe_int40_ilog2(const struct FheInt40 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt40 ilog2() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_ilog2(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the base 2 logarithm of the number, rounded down.
-  ///  *
-  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
-  ///  */
-  /// int fhe_int40_checked_ilog2(const struct FheInt40 *input,
-  ///                             struct FheUint32 **result_1,
-  ///                             struct FheBool **result_2);
-  ///```
-  @Override
-  public Map.Entry<FheInt40, FheBool> ilog2WithCheck() {
-    FheInt40 result = new FheInt40();
-    FheBool check = new FheBool();
-    execute(() -> fhe_int40_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
-    return Map.entry(result, check);
-
-  }
-
-  /// ```c
-  /// int fhe_int40_lt(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool lessThan(FheInt40 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int40_lt(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_lt(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThanScalar(Long other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int40_scalar_lt(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_le(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool lessThanOrEqualTo(FheInt40 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int40_le(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_le(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThanOrEqualToScalar(Long other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int40_scalar_le(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_gt(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool greaterThan(FheInt40 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int40_gt(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_gt(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanScalar(Long other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int40_scalar_gt(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_ge(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool greaterThanOrEqualTo(FheInt40 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int40_ge(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_ge(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualToScalar(Long other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int40_scalar_ge(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_min(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 min(FheInt40 other) {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_min(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_min(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 minScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_min(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_max(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 max(FheInt40 other) {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_max(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_max(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 maxScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_max(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_shl(const struct FheInt40 *lhs,
-  ///                   const struct FheUint40 *rhs,
-///                   struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 shiftLeft(FheInt40 other) {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_shl(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_shl(const struct FheInt40 *lhs, uint64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 shiftLeftScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_shl(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_int40_shl_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
-  ///```
-  @Override
-  public void shiftLeftAssign(FheInt40 other) {
-    execute(() -> fhe_int40_shl_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_scalar_shl_assign(struct FheInt40 *lhs, uint64_t rhs);
-  ///```
-  @Override
-  public void shiftLeftScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_shl_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_shr(const struct FheInt40 *lhs,
-  ///                   const struct FheUint40 *rhs,
-///                   struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 shiftRight(FheInt40 other) {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_shr(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_shr(const struct FheInt40 *lhs, uint64_t rhs, struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 shiftRightScalar(Long other) {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_shr(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_int40_shr_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
-  ///```
-  @Override
-  public void shiftRightAssign(FheInt40 other) {
-    execute(() -> fhe_int40_shr_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_scalar_shr_assign(struct FheInt40 *lhs, uint64_t rhs);
-  ///```
-  @Override
-  public void shiftRightScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_shr_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_rotate_left(const struct FheInt40 *lhs,
-  ///                           const struct FheUint40 *rhs,
-///                           struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 rotateLeft(FheInt40 other){
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_rotate_left(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_rotate_left(const struct FheInt40 *lhs,
-  ///                                  uint64_t rhs,
-///                                  struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 rotateLeftScalar(Long other){
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_rotate_left(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_rotate_left_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
-  ///```
-  @Override
-  public void rotateLeftAssign(FheInt40 other) {
-    execute(() -> fhe_int40_rotate_left_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_scalar_rotate_left_assign(struct FheInt40 *lhs, uint64_t rhs);
-  ///```
-  @Override
-  public void rotateLeftScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_rotate_left_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_rotate_right(const struct FheInt40 *lhs,
-  ///                            const struct FheUint40 *rhs,
-///                            struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 rotateRight(FheInt40 other){
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_rotate_right(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int40_scalar_rotate_right(const struct FheInt40 *lhs,
-  ///                                   uint64_t rhs,
-///                                   struct FheInt40 **result);
-  ///```
-  @Override
-  public FheInt40 rotateRightScalar(Long other){
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_int40_scalar_rotate_right(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int40_rotate_right_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
-  ///```
-  @Override
-  public void rotateRightAssign(FheInt40 other) {
-    execute(() -> fhe_int40_rotate_right_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int40_scalar_rotate_right_assign(struct FheInt40 *lhs, uint64_t rhs);
-  ///```
-  @Override
-  public void rotateRightScalarAssign(Long other) {
-    execute(() -> fhe_int40_scalar_rotate_right_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  ////**
-  ///  * Returns the number of leading ones in the binary representation of input.
-///  */
-/// int fhe_int40_leading_ones(const struct FheInt40 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt40 leadingOnes() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_leading_ones(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the number of leading zeros in the binary representation of input.
-///  */
-/// int fhe_int40_leading_zeros(const struct FheInt40 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt40 leadingZeros() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_leading_zeros(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the number of trailing ones in the binary representation of input.
-///  */
-/// int fhe_int40_trailing_ones(const struct FheInt40 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt40 trailingOnes() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_trailing_ones(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the number of trailing zeros in the binary representation of input.
-  ///  */
-/// int fhe_int40_trailing_zeros(const struct FheInt40 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt40 trailingZeros() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_trailing_zeros(getValue(), result.getAddress()));
-  return result;
 
 }
 
@@ -1029,20 +341,702 @@ public FheInt40 trailingZeros() {
   }
 
   /// ```c
+  /// int fhe_int40_add(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 add(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_overflowing_add(const struct FheInt40 *lhs,
+///                               const struct FheInt40 *rhs,
+  ///                               struct FheInt40 **out_result,
+  ///                               struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<Long, FheInt40, CompressedFheInt40> addWithOverflow(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int40_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_add(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 addScalar(Long other) {
+    FheInt40 result = new FheInt40();
+        execute(() -> fhe_int40_scalar_add(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_add_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+  ///```
+  @Override
+  public void addAssign(FheInt40 other) {
+    execute(() -> fhe_int40_add_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_add_assign(struct FheInt40 *lhs, int64_t rhs);
+  ///```
+  @Override
+  public void addScalarAssign(Long other){
+        execute(() -> fhe_int40_scalar_add_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_sub(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 subtract(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_overflowing_sub(const struct FheInt40 *lhs,
+  ///                               const struct FheInt40 *rhs,
+  ///                               struct FheInt40 **out_result,
+  ///                               struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<Long, FheInt40, CompressedFheInt40> subtractWithOverflow(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int40_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_sub(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 subtractScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_sub(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_sub_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+  ///```
+  @Override
+  public void subtractAssign(FheInt40 other) {
+    execute(() -> fhe_int40_sub_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_sub_assign(struct FheInt40 *lhs, int64_t rhs);
+  ///```
+  @Override
+public void subtractScalarAssign(Long other){
+        execute(() -> fhe_int40_scalar_sub_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_mul(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 multiply(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_overflowing_mul(const struct FheInt40 *lhs,
+  ///                               const struct FheInt40 *rhs,
+  ///                               struct FheInt40 **out_result,
+  ///                               struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<Long, FheInt40, CompressedFheInt40> multiplyWithOverflow(FheInt40 other){
+    FheInt40 result = new FheInt40();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int40_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_mul(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 multiplyScalar(Long other){
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_mul(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_mul_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+  ///```
+  @Override
+  public void multiplyAssign(FheInt40 other) {
+    execute(() -> fhe_int40_mul_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_mul_assign(struct FheInt40 *lhs, int64_t rhs);
+///```
+@Override
+public void multiplyScalarAssign(Long other) {
+  execute(() -> fhe_int40_scalar_mul_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int40_div(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 divide(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_div(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_div(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 divideScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_div(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_div_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+  ///```
+  @Override
+  public void divideAssign(FheInt40 other) {
+    execute(() -> fhe_int40_div_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_div_assign(struct FheInt40 *lhs, int64_t rhs);
+///```
+@Override
+public void divideScalarAssign(Long other) {
+  execute(() -> fhe_int40_scalar_div_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int40_rem(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 remainder(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_rem(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_rem(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+public FheInt40 remainderScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_rem(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_rem_assign(struct FheInt40 *lhs, const struct FheInt40 *rhs);
+  ///```
+  @Override
+  public void remainderAssign(FheInt40 other) {
+    execute(() -> fhe_int40_rem_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_rem_assign(struct FheInt40 *lhs, int64_t rhs);
+  ///```
+  @Override
+  public void remainderScalarAssign(Long other) {
+    execute(() -> fhe_int40_scalar_rem_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_div_rem(const struct FheInt40 *lhs,
+  ///                       const struct FheInt40 *rhs,
+  ///                       struct FheInt40 **q_result,
+  ///                       struct FheInt40 **r_result);
+  ///```
+  @Override
+  public DividerAndRemainder<Long, FheInt40, CompressedFheInt40> divideWithRemainder(FheInt40 other) {
+    FheInt40 divider = new FheInt40();
+    FheInt40 remainder = new FheInt40();
+    execute(() -> fhe_int40_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
+      return new DividerAndRemainder<>(divider, remainder);
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_div_rem(const struct FheInt40 *lhs,
+  ///                              int64_t rhs,
+  ///                              struct FheInt40 **q_result,
+  ///                              struct FheInt40 **r_result);
+  ///```
+  @Override
+  public DividerAndRemainder<Long, FheInt40, CompressedFheInt40> divideWithRemainderScalar(Long other){
+      FheInt40 divider = new FheInt40();
+      FheInt40 remainder = new FheInt40();
+    execute(() -> fhe_int40_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
+    return new DividerAndRemainder<>(divider, remainder);
+
+  }
+
+  /// ```c
+  /// int fhe_int40_neg(const struct FheInt40 *input, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 negate() {
+    FheInt40 result = new FheInt40();
+      execute(() -> fhe_int40_neg(getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  ////**
+  ///  * Returns the base 2 logarithm of the number, rounded down.
+  ///  *
+  ///  * Result has no meaning if self encrypts a value that is <= 0.
+  ///  * See `checked_ilog2`
+  ///  */
+  /// int fhe_int40_ilog2(const struct FheInt40 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheInt40 ilog2() {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_ilog2(getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  ////**
+  ///  * Returns the base 2 logarithm of the number, rounded down.
+  ///  *
+  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
+  ///  */
+  /// int fhe_int40_checked_ilog2(const struct FheInt40 *input,
+  ///                             struct FheUint32 **result_1,
+  ///                             struct FheBool **result_2);
+  ///```
+  @Override
+  public CheckedResult<Long, FheInt40, CompressedFheInt40> ilog2WithCheck(){
+    FheInt40 result = new FheInt40();
+    FheBool check = new FheBool();
+    execute(() -> fhe_int40_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
+    return new CheckedResult<>(result, check);
+
+  }
+
+  /// ```c
+  /// int fhe_int40_lt(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThan(FheInt40 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_lt(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_lt(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThanScalar(Long other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_scalar_lt(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_le(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThanOrEqualTo(FheInt40 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_le(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_le(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThanOrEqualToScalar(Long other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_scalar_le(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_gt(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThan(FheInt40 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_gt(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_gt(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThanScalar(Long other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_scalar_gt(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_ge(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThanOrEqualTo(FheInt40 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_ge(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_ge(const struct FheInt40 *lhs, int64_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThanOrEqualToScalar(Long other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int40_scalar_ge(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_min(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 min(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_min(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_min(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 minScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_min(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_max(const struct FheInt40 *lhs, const struct FheInt40 *rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 max(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_max(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_max(const struct FheInt40 *lhs, int64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 maxScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_max(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_shl(const struct FheInt40 *lhs,
+  ///                   const struct FheUint40 *rhs,
+  ///                   struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 shiftLeft(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_shl(getValue(), other.getValue(), result.getAddress()));
+      return result;
+
+}
+
+  /// ```c
+  /// int fhe_int40_scalar_shl(const struct FheInt40 *lhs, uint64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 shiftLeftScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_shl(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_shl_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
+  ///```
+  @Override
+  public void shiftLeftAssign(FheInt40 other){
+      execute(() -> fhe_int40_shl_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_shl_assign(struct FheInt40 *lhs, uint64_t rhs);
+  ///```
+  @Override
+  public void shiftLeftScalarAssign(Long other) {
+    execute(() -> fhe_int40_scalar_shl_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_shr(const struct FheInt40 *lhs,
+  ///                   const struct FheUint40 *rhs,
+  ///                   struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 shiftRight(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_shr(getValue(), other.getValue(), result.getAddress()));
+      return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_shr(const struct FheInt40 *lhs, uint64_t rhs, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 shiftRightScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_shr(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_shr_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
+  ///```
+  @Override
+  public void shiftRightAssign(FheInt40 other){
+      execute(() -> fhe_int40_shr_assign(getValue(), other.getValue()));
+
+}
+    
+/// ```c
+/// int fhe_int40_scalar_shr_assign(struct FheInt40 *lhs, uint64_t rhs);
+///```
+@Override
+public void shiftRightScalarAssign(Long other) {
+  execute(() -> fhe_int40_scalar_shr_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int40_rotate_left(const struct FheInt40 *lhs,
+  ///                           const struct FheUint40 *rhs,
+///                           struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 rotateLeft(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_rotate_left(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_rotate_left(const struct FheInt40 *lhs,
+  ///                                  uint64_t rhs,
+  ///                                  struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 rotateLeftScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_rotate_left(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_rotate_left_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
+  ///```
+  @Override
+  public void rotateLeftAssign(FheInt40 other){
+      execute(() -> fhe_int40_rotate_left_assign(getValue(), other.getValue()));
+
+}
+    
+/// ```c
+/// int fhe_int40_scalar_rotate_left_assign(struct FheInt40 *lhs, uint64_t rhs);
+///```
+@Override
+public void rotateLeftScalarAssign(Long other) {
+  execute(() -> fhe_int40_scalar_rotate_left_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int40_rotate_right(const struct FheInt40 *lhs,
+  ///                            const struct FheUint40 *rhs,
+///                            struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 rotateRight(FheInt40 other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_rotate_right(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_rotate_right(const struct FheInt40 *lhs,
+  ///                                   uint64_t rhs,
+  ///                                   struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 rotateRightScalar(Long other) {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_scalar_rotate_right(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int40_rotate_right_assign(struct FheInt40 *lhs, const struct FheUint40 *rhs);
+  ///```
+  @Override
+public void rotateRightAssign(FheInt40 other){
+      execute(() -> fhe_int40_rotate_right_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int40_scalar_rotate_right_assign(struct FheInt40 *lhs, uint64_t rhs);
+  ///```
+  @Override
+  public void rotateRightScalarAssign(Long other) {
+    execute(() -> fhe_int40_scalar_rotate_right_assign(getValue(), other));
+
+  }
+
+  /// ```c
+////**
+///  * Returns the number of leading ones in the binary representation of input.
+///  */
+  /// int fhe_int40_leading_ones(const struct FheInt40 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheInt40 leadingOnes() {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_leading_ones(getValue(), result.getAddress()));
+    return result;
+
+}
+    
+/// ```c
+////**
+///  * Returns the number of leading zeros in the binary representation of input.
+///  */
+/// int fhe_int40_leading_zeros(const struct FheInt40 *input, struct FheUint32 **result);
+///```
+@Override
+public FheInt40 leadingZeros() {
+  FheInt40 result = new FheInt40();
+  execute(() -> fhe_int40_leading_zeros(getValue(), result.getAddress()));
+  return result;
+
+}
+    
+/// ```c
+////**
+///  * Returns the number of trailing ones in the binary representation of input.
+///  */
+/// int fhe_int40_trailing_ones(const struct FheInt40 *input, struct FheUint32 **result);
+///```
+@Override
+public FheInt40 trailingOnes() {
+  FheInt40 result = new FheInt40();
+  execute(() -> fhe_int40_trailing_ones(getValue(), result.getAddress()));
+      return result;
+
+}
+    
+/// ```c
+////**
+///  * Returns the number of trailing zeros in the binary representation of input.
+///  */
+/// int fhe_int40_trailing_zeros(const struct FheInt40 *input, struct FheUint32 **result);
+///```
+@Override
+public FheInt40 trailingZeros() {
+  FheInt40 result = new FheInt40();
+  execute(() -> fhe_int40_trailing_zeros(getValue(), result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *
   ///  * (if x < 0 { -x } else { x })
-///  */
-/// int fhe_int40_abs(const struct FheInt40 *input, struct FheInt40 **result);
-/// ```
-@Override
-public FheInt40 abs() {
-  FheInt40 result = new FheInt40();
-  execute(() -> fhe_int40_abs(getValue(), result.getAddress()));
-  return result;
+  ///  */
+  /// int fhe_int40_abs(const struct FheInt40 *input, struct FheInt40 **result);
+  ///```
+  @Override
+  public FheInt40 abs() {
+    FheInt40 result = new FheInt40();
+    execute(() -> fhe_int40_abs(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int40_cast_into_fhe_int10(const struct FheInt40 *sself, struct FheInt10 **result);
@@ -1750,36 +1744,38 @@ public FheInt40 abs() {
   /// int fhe_int40_cast_into_fhe_uint8(const struct FheInt40 *sself, struct FheUint8 **result);
   ///```
   public FheUint8 castIntoFheUint8() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_int40_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_int40_cast_into_fhe_uint8(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int40_cast_into_fhe_uint80(const struct FheInt40 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_int40_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int40_cast_into_fhe_uint80(const struct FheInt40 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_int40_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int40_cast_into_fhe_uint88(const struct FheInt40 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_int40_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int40_cast_into_fhe_uint88(const struct FheInt40 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_int40_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int40_cast_into_fhe_uint96(const struct FheInt40 *sself, struct FheUint96 **result);
-/// ```
+/// ```c
+/// int fhe_int40_cast_into_fhe_uint96(const struct FheInt40 *sself, struct FheUint96 **result);
+///```
 public FheUint96 castIntoFheUint96() {
   FheUint96 result = new FheUint96();
   execute(() -> fhe_int40_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
 
+  // @formatter:off
 }
+// @formatter:on

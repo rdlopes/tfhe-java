@@ -32,6 +32,10 @@ public record TemplateContext(String packageName, String className, SymbolsIndex
     return className().startsWith("FheInt") || className().startsWith("FheUint");
   }
 
+  public boolean isSigned() {
+    return !className().contains("Uint");
+  }
+
   @SuppressWarnings("unused")
   public boolean isHighBitSize() {
     return bitSize() > 64;
@@ -61,10 +65,6 @@ public record TemplateContext(String packageName, String className, SymbolsIndex
     String[] parts = splitByCharacterTypeCamelCase(className());
     String bitSizeString = parts[parts.length - 1];
     return isNumeric(bitSizeString) ? parseInt(bitSizeString) : 1;
-  }
-
-  public boolean isSigned() {
-    return !className().contains("Uint");
   }
 
   public String nativePrefix() {

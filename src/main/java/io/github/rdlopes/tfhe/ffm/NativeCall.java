@@ -8,8 +8,7 @@ import java.lang.foreign.ValueLayout;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.tfhe_error_get_last;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public final class NativeCall {
   private static final Logger logger = LoggerFactory.getLogger(NativeCall.class);

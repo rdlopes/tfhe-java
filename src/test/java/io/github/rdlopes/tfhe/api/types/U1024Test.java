@@ -1,27 +1,28 @@
-package io.github.rdlopes.tfhe.api.integers;
+package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.api.types.I256;
+import io.github.rdlopes.tfhe.test.assertions.TfheAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static io.github.rdlopes.tfhe.api.types.I256.*;
-import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
+import static io.github.rdlopes.tfhe.api.types.U1024.*;
 import static java.math.BigInteger.ONE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class I256Test {
+class U1024Test {
 
   @Test
   public void initializesFromMinimumValue() {
-    I256 value = valueOf(MIN_VALUE);
-    assertThat(value).hasValue(MIN_VALUE);
+    U1024 value = valueOf(MIN_VALUE);
+    TfheAssertions.assertThat(value)
+                  .hasValue(MIN_VALUE);
   }
 
   @Test
   public void initializesFromMaximumValue() {
-    I256 value = valueOf(MAX_VALUE);
-    assertThat(value).hasValue(MAX_VALUE);
+    U1024 value = valueOf(MAX_VALUE);
+    TfheAssertions.assertThat(value)
+                  .hasValue(MAX_VALUE);
   }
 
   @Test
@@ -37,5 +38,4 @@ class I256Test {
     assertThatThrownBy(() -> valueOf(aboveMax))
       .isInstanceOf(IllegalArgumentException.class);
   }
-
 }

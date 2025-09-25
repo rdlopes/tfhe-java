@@ -106,9 +106,9 @@ implements CompressedFheType<I1024, FheInt1024, CompressedFheInt1024> {
   /// ```c
   /// int compressed_fhe_int1024_clone(const struct CompressedFheInt1024 *sself,
   ///                                  struct CompressedFheInt1024 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheInt1024 clone(){
     CompressedFheInt1024 cloned = new CompressedFheInt1024();
     execute(() -> compressed_fhe_int1024_clone(getValue(), cloned.getAddress()));

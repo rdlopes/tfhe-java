@@ -1,42 +1,39 @@
-package io.github.rdlopes.tfhe.api.integers;
+package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.api.types.U1024;
-import io.github.rdlopes.tfhe.test.assertions.TfheAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static io.github.rdlopes.tfhe.api.types.U1024.*;
-import static java.math.BigInteger.ONE;
+import static io.github.rdlopes.tfhe.api.types.I128.*;
+import static io.github.rdlopes.tfhe.test.assertions.TfheAssertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class U1024Test {
+class I128Test {
 
   @Test
   public void initializesFromMinimumValue() {
-    U1024 value = valueOf(MIN_VALUE);
-    TfheAssertions.assertThat(value)
-                  .hasValue(MIN_VALUE);
+    I128 value = valueOf(MIN_VALUE);
+    assertThat(value).hasValue(MIN_VALUE);
   }
 
   @Test
   public void initializesFromMaximumValue() {
-    U1024 value = valueOf(MAX_VALUE);
-    TfheAssertions.assertThat(value)
-                  .hasValue(MAX_VALUE);
+    I128 value = valueOf(MAX_VALUE);
+    assertThat(value).hasValue(MAX_VALUE);
   }
 
   @Test
   void throwsIllegalArgumentExceptionBelowMinimumValue() {
-    BigInteger belowMin = MIN_VALUE.subtract(ONE);
+    BigInteger belowMin = MIN_VALUE.subtract(BigInteger.ONE);
     assertThatThrownBy(() -> valueOf(belowMin))
       .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void throwsIllegalArgumentExceptionAboveMaximumValue() {
-    BigInteger aboveMax = MAX_VALUE.add(ONE);
+    BigInteger aboveMax = MAX_VALUE.add(BigInteger.ONE);
     assertThatThrownBy(() -> valueOf(aboveMax))
       .isInstanceOf(IllegalArgumentException.class);
   }
+
 }

@@ -106,9 +106,9 @@ implements CompressedFheType<U2048, FheUint2048, CompressedFheUint2048> {
   /// ```c
   /// int compressed_fhe_uint2048_clone(const struct CompressedFheUint2048 *sself,
   ///                                   struct CompressedFheUint2048 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheUint2048 clone(){
     CompressedFheUint2048 cloned = new CompressedFheUint2048();
     execute(() -> compressed_fhe_uint2048_clone(getValue(), cloned.getAddress()));

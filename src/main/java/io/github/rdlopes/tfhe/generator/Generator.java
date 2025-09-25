@@ -46,21 +46,21 @@ public class Generator implements Callable<Integer> {
 
     TemplateWriter templateWriter = new TemplateWriter(templatesPrefix, outputPath, outputPackage);
 
-    writeFheTypes(templateWriter, symbolsIndex, "FheBoolean", "FheBool");
-    writeFheTypes(templateWriter, symbolsIndex, "FheInteger", "FheInt");
-    writeFheTypes(templateWriter, symbolsIndex, "FheUnsignedInteger", "FheUint");
+    writeFheTypes(templateWriter, symbolsIndex, "FheBool");
+    writeFheTypes(templateWriter, symbolsIndex, "FheInt");
+    writeFheTypes(templateWriter, symbolsIndex, "FheUint");
 
     return 0;
   }
 
-  private void writeFheTypes(TemplateWriter templateWriter, SymbolsIndex symbolsIndex, String templateName, String typePrefix) throws IOException {
+  private void writeFheTypes(TemplateWriter templateWriter, SymbolsIndex symbolsIndex, String typePrefix) throws IOException {
     logger.trace("writeFheTypes - templateWriter: {}, symbolsIndex: {}, typePrefix: {}", templateWriter, symbolsIndex, typePrefix);
 
     Collection<String> types = symbolsIndex.lookupSymbols(struct, s -> s.startsWith(typePrefix));
 
     for (String fheType : types) {
       TemplateContext templateContext = TemplateContext.fromType(outputPackage, fheType, symbolsIndex);
-      templateWriter.write(templateName, fheType, templateContext);
+      templateWriter.write("FheType", fheType, templateContext);
 
       TemplateContext compressedTemplateContext = TemplateContext.fromType(outputPackage, "Compressed" + fheType, symbolsIndex);
       templateWriter.write("CompressedFheType", "Compressed" + fheType, compressedTemplateContext);

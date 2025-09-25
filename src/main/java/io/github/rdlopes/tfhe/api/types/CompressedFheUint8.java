@@ -106,9 +106,9 @@ implements CompressedFheType<Byte, FheUint8, CompressedFheUint8> {
   /// ```c
   /// int compressed_fhe_uint8_clone(const struct CompressedFheUint8 *sself,
   ///                                struct CompressedFheUint8 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheUint8 clone(){
     CompressedFheUint8 cloned = new CompressedFheUint8();
     execute(() -> compressed_fhe_uint8_clone(getValue(), cloned.getAddress()));

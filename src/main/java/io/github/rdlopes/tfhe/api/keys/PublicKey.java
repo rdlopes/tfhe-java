@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.api.keys;
 
+import io.github.rdlopes.tfhe.api.FheKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;

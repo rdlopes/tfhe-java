@@ -10,18 +10,14 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class FheInt10 extends NativePointer
-implements FheInteger<Short, FheInt10, CompressedFheInt10> {
+public class FheInt10 extends NativePointer implements FheInteger<Short, FheInt10, CompressedFheInt10> {
   private static final Logger logger = LoggerFactory.getLogger(FheInt10.class);
 // @formatter:on
-
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -84,7 +80,7 @@ implements FheInteger<Short, FheInt10, CompressedFheInt10> {
   /// int fhe_int10_bitand_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheInt10 other){
+public void bitAndAssign(FheInt10 other){
     execute(() -> fhe_int10_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -102,29 +98,29 @@ implements FheInteger<Short, FheInt10, CompressedFheInt10> {
   /// int fhe_int10_bitor(const struct FheInt10 *lhs,
   ///                     const struct FheInt10 *rhs,
   ///                     struct FheInt10 **result);
-  ///```
-  @Override
+///```
+@Override
 public FheInt10 bitOr(FheInt10 other){
     FheInt10 result = new FheInt10();
     execute(() -> fhe_int10_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_scalar_bitor(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-@Override
-public FheInt10 bitOrScalar(Short other) {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_scalar_bitor(getValue(), other, result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_int10_bitor_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+  /// int fhe_int10_scalar_bitor(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
   ///```
+  @Override
+  public FheInt10 bitOrScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_bitor(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_bitor_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+///```
 @Override
 public void bitOrAssign(FheInt10 other){
     execute(() -> fhe_int10_bitor_assign(getValue(), other.getValue()));
@@ -143,8 +139,8 @@ public void bitOrAssign(FheInt10 other){
   /// ```c
   /// int fhe_int10_bitxor(const struct FheInt10 *lhs,
   ///                      const struct FheInt10 *rhs,
-  ///                      struct FheInt10 **result);
-/// ```
+///                      struct FheInt10 **result);
+///```
 @Override
 public FheInt10 bitXor(FheInt10 other){
     FheInt10 result = new FheInt10();
@@ -155,21 +151,21 @@ public FheInt10 bitXor(FheInt10 other){
 
   /// ```c
   /// int fhe_int10_scalar_bitxor(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  /// ```
-@Override
-public FheInt10 bitXorScalar(Short other) {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_scalar_bitxor(getValue(), other, result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheInt10 bitXorScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_bitxor(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int10_bitxor_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
-  /// ```
+///```
 @Override
-public void bitXorAssign(FheInt10 other){
-    execute(() -> fhe_int10_bitxor_assign(getValue(), other.getValue()));
+public void bitXorAssign(FheInt10 other) {
+  execute(() -> fhe_int10_bitxor_assign(getValue(), other.getValue()));
 
 }
 
@@ -183,12 +179,12 @@ public void bitXorAssign(FheInt10 other){
   }
 
   /// ```c
-  /// int fhe_int10_not(const struct FheInt10 *input, struct FheInt10 **result);
-/// ```
+/// int fhe_int10_not(const struct FheInt10 *input, struct FheInt10 **result);
+///```
 @Override
 public FheInt10 bitNot(){
     FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_not(getValue(), result.getAddress()));
+  execute(() -> fhe_int10_not(getValue(), result.getAddress()));
   return result;
 
 }
@@ -209,40 +205,40 @@ public FheInt10 bitNot(){
 
   /// ```c
   /// int fhe_int10_eq(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
-/// ```
+///```
 @Override
 public FheBool equalTo(FheInt10 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int10_eq(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_int10_eq(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_int10_scalar_eq(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool equalToScalar(Short other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int10_scalar_eq(getValue(), other, result.getAddress()));
-  return result;
+/// int fhe_int10_scalar_eq(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalToScalar(Short other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_scalar_eq(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-  /// int fhe_int10_ne(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
-/// ```
+/// int fhe_int10_ne(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
+///```
 @Override
 public FheBool notEqualTo(FheInt10 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int10_ne(getValue(), other.getValue(), result.getAddress()));
+  execute(() -> fhe_int10_ne(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
-
-  /// ```c
-  /// int fhe_int10_scalar_ne(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
-/// ```
+  
+/// ```c
+/// int fhe_int10_scalar_ne(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
+///```
 @Override
 public FheBool notEqualToScalar(Short other) {
   FheBool result = new FheBool();
@@ -270,750 +266,66 @@ public FheBool notEqualToScalar(Short other) {
   ///                                           uint64_t serialized_size_limit,
   ///                                           const struct ServerKey *server_key,
   ///                                           struct FheInt10 **result);
-  ///```
-  public static FheInt10 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+///```
+public static FheInt10 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt10 deserialized = new FheInt10();
     execute(() -> fhe_int10_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_int10_try_encrypt_with_client_key_i16(int16_t value,
   ///                                               const struct ClientKey *client_key,
   ///                                               struct FheInt10 **result);
-/// ```
-public static FheInt10 encrypt(Short clearValue, ClientKey clientKey) {
-  FheInt10 encrypted = new FheInt10();
-  execute(() -> fhe_int10_try_encrypt_with_client_key_i16(clearValue, clientKey.getValue(), encrypted.getAddress()));
-  return encrypted;
-
-}
-
-  /// ```c
-  /// int fhe_int10_try_encrypt_with_public_key_i16(int16_t value,
-  ///                                               const struct PublicKey *public_key,
-  ///                                               struct FheInt10 **result);
-/// ```
-public static FheInt10 encrypt(Short clearValue, PublicKey publicKey) {
-  FheInt10 encrypted = new FheInt10();
-  execute(() -> fhe_int10_try_encrypt_with_public_key_i16(clearValue, publicKey.getValue(), encrypted.getAddress()));
-  return encrypted;
-
-}
-
-  /// ```c
-  /// int fhe_int10_try_encrypt_trivial_i16(int16_t value, struct FheInt10 **result);
   ///```
-  public static FheInt10 encrypt(Short clearValue) {
+  public static FheInt10 encrypt(Short clearValue, ClientKey clientKey) {
     FheInt10 encrypted = new FheInt10();
-    execute(() -> fhe_int10_try_encrypt_trivial_i16(clearValue, encrypted.getAddress()));
+    execute(() -> fhe_int10_try_encrypt_with_client_key_i16(clearValue, clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
   }
 
   /// ```c
-  /// int fhe_int10_clone(const struct FheInt10 *sself, struct FheInt10 **result);
-/// ```
+  /// int fhe_int10_try_encrypt_with_public_key_i16(int16_t value,
+///                                               const struct PublicKey *public_key,
+  ///                                               struct FheInt10 **result);
+  ///```
+  public static FheInt10 encrypt(Short clearValue, PublicKey publicKey) {
+    FheInt10 encrypted = new FheInt10();
+    execute(() -> fhe_int10_try_encrypt_with_public_key_i16(clearValue, publicKey.getValue(), encrypted.getAddress()));
+    return encrypted;
+
+}
+/// ```c
+/// int fhe_int10_try_encrypt_trivial_i16(int16_t value, struct FheInt10 **result);
+///```
+public static FheInt10 encrypt(Short clearValue) {
+  FheInt10 encrypted = new FheInt10();
+  execute(() -> fhe_int10_try_encrypt_trivial_i16(clearValue, encrypted.getAddress()));
+    return encrypted;
+
+}
+/// ```c
+/// int fhe_int10_clone(const struct FheInt10 *sself, struct FheInt10 **result);
+///```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheInt10 clone(){
-    FheInt10 cloned = new FheInt10();
+public FheInt10 clone() {
+  FheInt10 cloned = new FheInt10();
   execute(() -> fhe_int10_clone(getValue(), cloned.getAddress()));
-  return cloned;
+    return cloned;
 
 }
-
-  /// ```c
-  /// int fhe_int10_compress(const struct FheInt10 *sself, struct CompressedFheInt10 **result);
-/// ```
+  
+/// ```c
+/// int fhe_int10_compress(const struct FheInt10 *sself, struct CompressedFheInt10 **result);
+///```
 @Override
-public CompressedFheInt10 compress(){
-    CompressedFheInt10 compressed = new CompressedFheInt10();
+public CompressedFheInt10 compress() {
+  CompressedFheInt10 compressed = new CompressedFheInt10();
   execute(() -> fhe_int10_compress(getValue(), compressed.getAddress()));
   return compressed;
-
-}
-
-  /// ```c
-  /// int fhe_int10_add(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 add(FheInt10 other){
-    FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_add(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_overflowing_add(const struct FheInt10 *lhs,
-  ///                               const struct FheInt10 *rhs,
-  ///                               struct FheInt10 **out_result,
-  ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheInt10, FheBool> addWithOverflow(FheInt10 other){
-    FheInt10 result = new FheInt10();
-    FheBool overflow = new FheBool();
-    execute(() -> fhe_int10_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_add(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 addScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_add(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_add_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
-/// ```
-@Override
-public void addAssign(FheInt10 other) {
-  execute(() -> fhe_int10_add_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_add_assign(struct FheInt10 *lhs, int16_t rhs);
-  ///```
-  @Override
-  public void addScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_add_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_sub(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 subtract(FheInt10 other){
-    FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_sub(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_overflowing_sub(const struct FheInt10 *lhs,
-  ///                               const struct FheInt10 *rhs,
-  ///                               struct FheInt10 **out_result,
-  ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheInt10, FheBool> subtractWithOverflow(FheInt10 other){
-    FheInt10 result = new FheInt10();
-    FheBool overflow = new FheBool();
-    execute(() -> fhe_int10_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_sub(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 subtractScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_sub(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_sub_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
-/// ```
-@Override
-public void subtractAssign(FheInt10 other) {
-  execute(() -> fhe_int10_sub_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_sub_assign(struct FheInt10 *lhs, int16_t rhs);
-  ///```
-  @Override
-  public void subtractScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_sub_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_mul(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 multiply(FheInt10 other){
-    FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_mul(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_overflowing_mul(const struct FheInt10 *lhs,
-  ///                               const struct FheInt10 *rhs,
-  ///                               struct FheInt10 **out_result,
-  ///                               struct FheBool **out_overflowed);
-/// ```
-@Override
-public Map.Entry<FheInt10, FheBool> multiplyWithOverflow(FheInt10 other){
-    FheInt10 result = new FheInt10();
-    FheBool overflow = new FheBool();
-    execute(() -> fhe_int10_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return Map.entry(result, overflow);
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_mul(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 multiplyScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_mul(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_mul_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
-/// ```
-@Override
-public void multiplyAssign(FheInt10 other) {
-  execute(() -> fhe_int10_mul_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_mul_assign(struct FheInt10 *lhs, int16_t rhs);
-  ///```
-  @Override
-  public void multiplyScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_mul_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_div(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 divide(FheInt10 other){
-    FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_div(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_div(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 divideScalar(Short other){
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_div(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_div_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
-/// ```
-@Override
-public void divideAssign(FheInt10 other) {
-  execute(() -> fhe_int10_div_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_div_assign(struct FheInt10 *lhs, int16_t rhs);
-  ///```
-  @Override
-  public void divideScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_div_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_rem(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 remainder(FheInt10 other){
-    FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_rem(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_rem(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 remainderScalar(Short other){
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_rem(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_rem_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
-/// ```
-@Override
-public void remainderAssign(FheInt10 other) {
-  execute(() -> fhe_int10_rem_assign(getValue(), other.getValue()));
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_rem_assign(struct FheInt10 *lhs, int16_t rhs);
-  ///```
-  @Override
-  public void remainderScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_rem_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_div_rem(const struct FheInt10 *lhs,
-  ///                       const struct FheInt10 *rhs,
-  ///                       struct FheInt10 **q_result,
-  ///                       struct FheInt10 **r_result);
-/// ```
-@Override
-public Map.Entry<FheInt10,FheInt10> divideWithRemainder(FheInt10 other){
-    FheInt10 divider = new FheInt10();
-    FheInt10 remainder = new FheInt10();
-    execute(() -> fhe_int10_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
-  return Map.entry(divider, remainder);
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_div_rem(const struct FheInt10 *lhs,
-  ///                              int16_t rhs,
-  ///                              struct FheInt10 **q_result,
-  ///                              struct FheInt10 **r_result);
-/// ```
-@Override
-public Map.Entry<FheInt10, FheInt10> divideWithRemainderScalar(Short other) {
-  FheInt10 divider = new FheInt10();
-  FheInt10 remainder = new FheInt10();
-      execute(() -> fhe_int10_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
-  return Map.entry(divider, remainder);
-
-}
-
-  /// ```c
-/// int fhe_int10_neg(const struct FheInt10 *input, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 negate() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_neg(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the base 2 logarithm of the number, rounded down.
-  ///  *
-  ///  * Result has no meaning if self encrypts a value that is <= 0.
-  ///  * See `checked_ilog2`
-  ///  */
-/// int fhe_int10_ilog2(const struct FheInt10 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt10 ilog2() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_ilog2(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the base 2 logarithm of the number, rounded down.
-  ///  *
-  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
-  ///  */
-  /// int fhe_int10_checked_ilog2(const struct FheInt10 *input,
-  ///                             struct FheUint32 **result_1,
-  ///                             struct FheBool **result_2);
-  ///```
-  @Override
-  public Map.Entry<FheInt10, FheBool> ilog2WithCheck() {
-    FheInt10 result = new FheInt10();
-    FheBool check = new FheBool();
-    execute(() -> fhe_int10_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
-    return Map.entry(result, check);
-
-  }
-
-  /// ```c
-  /// int fhe_int10_lt(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool lessThan(FheInt10 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int10_lt(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_lt(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThanScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int10_scalar_lt(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_le(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool lessThanOrEqualTo(FheInt10 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int10_le(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_le(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool lessThanOrEqualToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int10_scalar_le(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_gt(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool greaterThan(FheInt10 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int10_gt(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_gt(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int10_scalar_gt(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_ge(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
-/// ```
-@Override
-public FheBool greaterThanOrEqualTo(FheInt10 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_int10_ge(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_ge(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualToScalar(Short other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int10_scalar_ge(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_min(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 min(FheInt10 other) {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_min(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_min(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 minScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_min(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_max(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 max(FheInt10 other) {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_max(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_max(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 maxScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_max(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_shl(const struct FheInt10 *lhs,
-  ///                   const struct FheUint10 *rhs,
-///                   struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 shiftLeft(FheInt10 other) {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_shl(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_shl(const struct FheInt10 *lhs, uint16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 shiftLeftScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_shl(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_int10_shl_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
-  ///```
-  @Override
-  public void shiftLeftAssign(FheInt10 other) {
-    execute(() -> fhe_int10_shl_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_scalar_shl_assign(struct FheInt10 *lhs, uint16_t rhs);
-  ///```
-  @Override
-  public void shiftLeftScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_shl_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_shr(const struct FheInt10 *lhs,
-  ///                   const struct FheUint10 *rhs,
-///                   struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 shiftRight(FheInt10 other) {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_shr(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_shr(const struct FheInt10 *lhs, uint16_t rhs, struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 shiftRightScalar(Short other) {
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_shr(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_int10_shr_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
-  ///```
-  @Override
-  public void shiftRightAssign(FheInt10 other) {
-    execute(() -> fhe_int10_shr_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_scalar_shr_assign(struct FheInt10 *lhs, uint16_t rhs);
-  ///```
-  @Override
-  public void shiftRightScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_shr_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_rotate_left(const struct FheInt10 *lhs,
-  ///                           const struct FheUint10 *rhs,
-///                           struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 rotateLeft(FheInt10 other){
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_rotate_left(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_rotate_left(const struct FheInt10 *lhs,
-  ///                                  uint16_t rhs,
-///                                  struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 rotateLeftScalar(Short other){
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_rotate_left(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_rotate_left_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
-  ///```
-  @Override
-  public void rotateLeftAssign(FheInt10 other) {
-    execute(() -> fhe_int10_rotate_left_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_scalar_rotate_left_assign(struct FheInt10 *lhs, uint16_t rhs);
-  ///```
-  @Override
-  public void rotateLeftScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_rotate_left_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_rotate_right(const struct FheInt10 *lhs,
-  ///                            const struct FheUint10 *rhs,
-///                            struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 rotateRight(FheInt10 other){
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_rotate_right(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  /// int fhe_int10_scalar_rotate_right(const struct FheInt10 *lhs,
-  ///                                   uint16_t rhs,
-///                                   struct FheInt10 **result);
-  ///```
-  @Override
-  public FheInt10 rotateRightScalar(Short other){
-    FheInt10 result = new FheInt10();
-    execute(() -> fhe_int10_scalar_rotate_right(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int10_rotate_right_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
-  ///```
-  @Override
-  public void rotateRightAssign(FheInt10 other) {
-    execute(() -> fhe_int10_rotate_right_assign(getValue(), other.getValue()));
-
-  }
-
-  /// ```c
-  /// int fhe_int10_scalar_rotate_right_assign(struct FheInt10 *lhs, uint16_t rhs);
-  ///```
-  @Override
-  public void rotateRightScalarAssign(Short other) {
-    execute(() -> fhe_int10_scalar_rotate_right_assign(getValue(), other));
-
-  }
-
-  /// ```c
-  ////**
-  ///  * Returns the number of leading ones in the binary representation of input.
-///  */
-/// int fhe_int10_leading_ones(const struct FheInt10 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt10 leadingOnes() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_leading_ones(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the number of leading zeros in the binary representation of input.
-///  */
-/// int fhe_int10_leading_zeros(const struct FheInt10 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt10 leadingZeros() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_leading_zeros(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the number of trailing ones in the binary representation of input.
-///  */
-/// int fhe_int10_trailing_ones(const struct FheInt10 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt10 trailingOnes() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_trailing_ones(getValue(), result.getAddress()));
-  return result;
-
-}
-
-  /// ```c
-  ////**
-  ///  * Returns the number of trailing zeros in the binary representation of input.
-  ///  */
-/// int fhe_int10_trailing_zeros(const struct FheInt10 *input, struct FheUint32 **result);
-/// ```
-@Override
-public FheInt10 trailingZeros() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_trailing_zeros(getValue(), result.getAddress()));
-  return result;
 
 }
 
@@ -1029,20 +341,702 @@ public FheInt10 trailingZeros() {
   }
 
   /// ```c
+  /// int fhe_int10_add(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 add(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_overflowing_add(const struct FheInt10 *lhs,
+///                               const struct FheInt10 *rhs,
+  ///                               struct FheInt10 **out_result,
+  ///                               struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<Short, FheInt10, CompressedFheInt10> addWithOverflow(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int10_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_add(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 addScalar(Short other) {
+    FheInt10 result = new FheInt10();
+        execute(() -> fhe_int10_scalar_add(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_add_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+  ///```
+  @Override
+  public void addAssign(FheInt10 other) {
+    execute(() -> fhe_int10_add_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_add_assign(struct FheInt10 *lhs, int16_t rhs);
+  ///```
+  @Override
+  public void addScalarAssign(Short other){
+        execute(() -> fhe_int10_scalar_add_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_sub(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 subtract(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_sub(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_overflowing_sub(const struct FheInt10 *lhs,
+  ///                               const struct FheInt10 *rhs,
+  ///                               struct FheInt10 **out_result,
+  ///                               struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<Short, FheInt10, CompressedFheInt10> subtractWithOverflow(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int10_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_sub(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 subtractScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_sub(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_sub_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+  ///```
+  @Override
+  public void subtractAssign(FheInt10 other) {
+    execute(() -> fhe_int10_sub_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_sub_assign(struct FheInt10 *lhs, int16_t rhs);
+  ///```
+  @Override
+public void subtractScalarAssign(Short other){
+        execute(() -> fhe_int10_scalar_sub_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_mul(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 multiply(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_overflowing_mul(const struct FheInt10 *lhs,
+  ///                               const struct FheInt10 *rhs,
+  ///                               struct FheInt10 **out_result,
+  ///                               struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<Short, FheInt10, CompressedFheInt10> multiplyWithOverflow(FheInt10 other){
+    FheInt10 result = new FheInt10();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int10_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_mul(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 multiplyScalar(Short other){
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_mul(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_mul_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+  ///```
+  @Override
+  public void multiplyAssign(FheInt10 other) {
+    execute(() -> fhe_int10_mul_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_mul_assign(struct FheInt10 *lhs, int16_t rhs);
+///```
+@Override
+public void multiplyScalarAssign(Short other) {
+  execute(() -> fhe_int10_scalar_mul_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int10_div(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 divide(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_div(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_div(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 divideScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_div(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_div_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+  ///```
+  @Override
+  public void divideAssign(FheInt10 other) {
+    execute(() -> fhe_int10_div_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_div_assign(struct FheInt10 *lhs, int16_t rhs);
+///```
+@Override
+public void divideScalarAssign(Short other) {
+  execute(() -> fhe_int10_scalar_div_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int10_rem(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 remainder(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_rem(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_rem(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+public FheInt10 remainderScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_rem(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_rem_assign(struct FheInt10 *lhs, const struct FheInt10 *rhs);
+  ///```
+  @Override
+  public void remainderAssign(FheInt10 other) {
+    execute(() -> fhe_int10_rem_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_rem_assign(struct FheInt10 *lhs, int16_t rhs);
+  ///```
+  @Override
+  public void remainderScalarAssign(Short other) {
+    execute(() -> fhe_int10_scalar_rem_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_div_rem(const struct FheInt10 *lhs,
+  ///                       const struct FheInt10 *rhs,
+  ///                       struct FheInt10 **q_result,
+  ///                       struct FheInt10 **r_result);
+  ///```
+  @Override
+  public DividerAndRemainder<Short, FheInt10, CompressedFheInt10> divideWithRemainder(FheInt10 other) {
+    FheInt10 divider = new FheInt10();
+    FheInt10 remainder = new FheInt10();
+    execute(() -> fhe_int10_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
+      return new DividerAndRemainder<>(divider, remainder);
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_div_rem(const struct FheInt10 *lhs,
+  ///                              int16_t rhs,
+  ///                              struct FheInt10 **q_result,
+  ///                              struct FheInt10 **r_result);
+  ///```
+  @Override
+  public DividerAndRemainder<Short, FheInt10, CompressedFheInt10> divideWithRemainderScalar(Short other){
+      FheInt10 divider = new FheInt10();
+      FheInt10 remainder = new FheInt10();
+    execute(() -> fhe_int10_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
+    return new DividerAndRemainder<>(divider, remainder);
+
+  }
+
+  /// ```c
+  /// int fhe_int10_neg(const struct FheInt10 *input, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 negate() {
+    FheInt10 result = new FheInt10();
+      execute(() -> fhe_int10_neg(getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  ////**
+  ///  * Returns the base 2 logarithm of the number, rounded down.
+  ///  *
+  ///  * Result has no meaning if self encrypts a value that is <= 0.
+  ///  * See `checked_ilog2`
+  ///  */
+  /// int fhe_int10_ilog2(const struct FheInt10 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheInt10 ilog2() {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_ilog2(getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  ////**
+  ///  * Returns the base 2 logarithm of the number, rounded down.
+  ///  *
+  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
+  ///  */
+  /// int fhe_int10_checked_ilog2(const struct FheInt10 *input,
+  ///                             struct FheUint32 **result_1,
+  ///                             struct FheBool **result_2);
+  ///```
+  @Override
+  public CheckedResult<Short, FheInt10, CompressedFheInt10> ilog2WithCheck(){
+    FheInt10 result = new FheInt10();
+    FheBool check = new FheBool();
+    execute(() -> fhe_int10_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
+    return new CheckedResult<>(result, check);
+
+  }
+
+  /// ```c
+  /// int fhe_int10_lt(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThan(FheInt10 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_lt(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_lt(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThanScalar(Short other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_scalar_lt(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_le(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThanOrEqualTo(FheInt10 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_le(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_le(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool lessThanOrEqualToScalar(Short other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_scalar_le(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_gt(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThan(FheInt10 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_gt(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_gt(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThanScalar(Short other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_scalar_gt(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_ge(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThanOrEqualTo(FheInt10 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_ge(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_ge(const struct FheInt10 *lhs, int16_t rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool greaterThanOrEqualToScalar(Short other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int10_scalar_ge(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_min(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 min(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_min(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_min(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 minScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_min(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_max(const struct FheInt10 *lhs, const struct FheInt10 *rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 max(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_max(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_max(const struct FheInt10 *lhs, int16_t rhs, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 maxScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_max(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_shl(const struct FheInt10 *lhs,
+  ///                   const struct FheUint10 *rhs,
+  ///                   struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 shiftLeft(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_shl(getValue(), other.getValue(), result.getAddress()));
+      return result;
+
+}
+    
+/// ```c
+/// int fhe_int10_scalar_shl(const struct FheInt10 *lhs, uint16_t rhs, struct FheInt10 **result);
+///```
+@Override
+public FheInt10 shiftLeftScalar(Short other) {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int10_scalar_shl(getValue(), other, result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
+  /// int fhe_int10_shl_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
+  ///```
+  @Override
+  public void shiftLeftAssign(FheInt10 other){
+      execute(() -> fhe_int10_shl_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_shl_assign(struct FheInt10 *lhs, uint16_t rhs);
+  ///```
+  @Override
+  public void shiftLeftScalarAssign(Short other) {
+    execute(() -> fhe_int10_scalar_shl_assign(getValue(), other));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_shr(const struct FheInt10 *lhs,
+  ///                   const struct FheUint10 *rhs,
+  ///                   struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 shiftRight(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_shr(getValue(), other.getValue(), result.getAddress()));
+      return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_shr(const struct FheInt10 *lhs, uint16_t rhs, struct FheInt10 **result);
+  ///```
+@Override
+public FheInt10 shiftRightScalar(Short other) {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int10_scalar_shr(getValue(), other, result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
+  /// int fhe_int10_shr_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
+  ///```
+  @Override
+  public void shiftRightAssign(FheInt10 other){
+      execute(() -> fhe_int10_shr_assign(getValue(), other.getValue()));
+
+}
+    
+/// ```c
+/// int fhe_int10_scalar_shr_assign(struct FheInt10 *lhs, uint16_t rhs);
+///```
+@Override
+public void shiftRightScalarAssign(Short other) {
+  execute(() -> fhe_int10_scalar_shr_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int10_rotate_left(const struct FheInt10 *lhs,
+  ///                           const struct FheUint10 *rhs,
+///                           struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 rotateLeft(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_rotate_left(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_rotate_left(const struct FheInt10 *lhs,
+  ///                                  uint16_t rhs,
+  ///                                  struct FheInt10 **result);
+  ///```
+@Override
+public FheInt10 rotateLeftScalar(Short other) {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int10_scalar_rotate_left(getValue(), other, result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
+  /// int fhe_int10_rotate_left_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
+  ///```
+  @Override
+  public void rotateLeftAssign(FheInt10 other){
+      execute(() -> fhe_int10_rotate_left_assign(getValue(), other.getValue()));
+
+}
+    
+/// ```c
+/// int fhe_int10_scalar_rotate_left_assign(struct FheInt10 *lhs, uint16_t rhs);
+///```
+@Override
+public void rotateLeftScalarAssign(Short other) {
+  execute(() -> fhe_int10_scalar_rotate_left_assign(getValue(), other));
+
+}
+
+  /// ```c
+  /// int fhe_int10_rotate_right(const struct FheInt10 *lhs,
+  ///                            const struct FheUint10 *rhs,
+///                            struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 rotateRight(FheInt10 other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_rotate_right(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_rotate_right(const struct FheInt10 *lhs,
+  ///                                   uint16_t rhs,
+  ///                                   struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 rotateRightScalar(Short other) {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_scalar_rotate_right(getValue(), other, result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
+  /// int fhe_int10_rotate_right_assign(struct FheInt10 *lhs, const struct FheUint10 *rhs);
+  ///```
+  @Override
+public void rotateRightAssign(FheInt10 other){
+      execute(() -> fhe_int10_rotate_right_assign(getValue(), other.getValue()));
+
+  }
+
+  /// ```c
+  /// int fhe_int10_scalar_rotate_right_assign(struct FheInt10 *lhs, uint16_t rhs);
+  ///```
+  @Override
+  public void rotateRightScalarAssign(Short other) {
+    execute(() -> fhe_int10_scalar_rotate_right_assign(getValue(), other));
+
+  }
+
+  /// ```c
+////**
+///  * Returns the number of leading ones in the binary representation of input.
+///  */
+  /// int fhe_int10_leading_ones(const struct FheInt10 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheInt10 leadingOnes() {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_leading_ones(getValue(), result.getAddress()));
+    return result;
+
+}
+    
+/// ```c
+////**
+///  * Returns the number of leading zeros in the binary representation of input.
+///  */
+/// int fhe_int10_leading_zeros(const struct FheInt10 *input, struct FheUint32 **result);
+///```
+@Override
+public FheInt10 leadingZeros() {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int10_leading_zeros(getValue(), result.getAddress()));
+  return result;
+
+}
+    
+/// ```c
+////**
+///  * Returns the number of trailing ones in the binary representation of input.
+///  */
+/// int fhe_int10_trailing_ones(const struct FheInt10 *input, struct FheUint32 **result);
+///```
+@Override
+public FheInt10 trailingOnes() {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int10_trailing_ones(getValue(), result.getAddress()));
+      return result;
+
+}
+    
+/// ```c
+////**
+///  * Returns the number of trailing zeros in the binary representation of input.
+///  */
+/// int fhe_int10_trailing_zeros(const struct FheInt10 *input, struct FheUint32 **result);
+///```
+@Override
+public FheInt10 trailingZeros() {
+  FheInt10 result = new FheInt10();
+  execute(() -> fhe_int10_trailing_zeros(getValue(), result.getAddress()));
+  return result;
+
+}
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *
   ///  * (if x < 0 { -x } else { x })
-///  */
-/// int fhe_int10_abs(const struct FheInt10 *input, struct FheInt10 **result);
-/// ```
-@Override
-public FheInt10 abs() {
-  FheInt10 result = new FheInt10();
-  execute(() -> fhe_int10_abs(getValue(), result.getAddress()));
-  return result;
+  ///  */
+  /// int fhe_int10_abs(const struct FheInt10 *input, struct FheInt10 **result);
+  ///```
+  @Override
+  public FheInt10 abs() {
+    FheInt10 result = new FheInt10();
+    execute(() -> fhe_int10_abs(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int10_cast_into_fhe_int10(const struct FheInt10 *sself, struct FheInt10 **result);
@@ -1750,36 +1744,38 @@ public FheInt10 abs() {
   /// int fhe_int10_cast_into_fhe_uint8(const struct FheInt10 *sself, struct FheUint8 **result);
   ///```
   public FheUint8 castIntoFheUint8() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_int10_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_int10_cast_into_fhe_uint8(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int10_cast_into_fhe_uint80(const struct FheInt10 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_int10_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int10_cast_into_fhe_uint80(const struct FheInt10 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_int10_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int10_cast_into_fhe_uint88(const struct FheInt10 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_int10_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int10_cast_into_fhe_uint88(const struct FheInt10 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_int10_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int10_cast_into_fhe_uint96(const struct FheInt10 *sself, struct FheUint96 **result);
-/// ```
+/// ```c
+/// int fhe_int10_cast_into_fhe_uint96(const struct FheInt10 *sself, struct FheUint96 **result);
+///```
 public FheUint96 castIntoFheUint96() {
   FheUint96 result = new FheUint96();
   execute(() -> fhe_int10_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
 
+  // @formatter:off
 }
+// @formatter:on

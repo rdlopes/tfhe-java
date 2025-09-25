@@ -4,12 +4,14 @@
   return result;
 {{/method}}
 
-{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "addWithOverflow" "overflowing_add"
+{{#method this
+          (stringFormat "public CheckedResult<%s, %s, %s>" valueClassName className (stringFormat "Compressed%s" className))
+          "addWithOverflow" "overflowing_add"
           (stringFormat "%s other" className)}}
   {{declare "result"}}
   {{declare "overflow" class="FheBool"}}
   {{execute "overflowing_add" "getValue(), other.getValue(), result.getAddress(), overflow.getAddress()"}}
-  return Map.entry(result, overflow);
+  return new CheckedResult<>(result,overflow);
 {{/method}}
 
 {{#method this (stringFormat "public %s" className) "addScalar" "scalar_add" (stringFormat "%s other" valueClassName)}}
@@ -40,12 +42,14 @@
   return result;
 {{/method}}
 
-{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "subtractWithOverflow" "overflowing_sub"
+{{#method this
+          (stringFormat "public CheckedResult<%s, %s, %s>" valueClassName className (stringFormat "Compressed%s" className))
+          "subtractWithOverflow" "overflowing_sub"
           (stringFormat "%s other" className)}}
   {{declare "result"}}
   {{declare "overflow" class="FheBool"}}
   {{execute "overflowing_sub" "getValue(), other.getValue(), result.getAddress(), overflow.getAddress()"}}
-  return Map.entry(result, overflow);
+  return new CheckedResult<>(result,overflow);
 {{/method}}
 
 {{#method this (stringFormat "public %s" className) "subtractScalar" "scalar_sub"
@@ -77,12 +81,14 @@
   return result;
 {{/method}}
 
-{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "multiplyWithOverflow" "overflowing_mul"
+{{#method this
+          (stringFormat "public CheckedResult<%s, %s, %s>" valueClassName className (stringFormat "Compressed%s" className))
+          "multiplyWithOverflow" "overflowing_mul"
           (stringFormat "%s other" className)}}
   {{declare "result"}}
   {{declare "overflow" class="FheBool"}}
   {{execute "overflowing_mul" "getValue(), other.getValue(), result.getAddress(), overflow.getAddress()"}}
-  return Map.entry(result, overflow);
+  return new CheckedResult<>(result,overflow);
 {{/method}}
 
 {{#method this (stringFormat "public %s" className) "multiplyScalar" "scalar_mul"
@@ -166,15 +172,19 @@
   {{/if}}
 {{/method}}
 
-{{#method this (stringFormat "public Map.Entry<%s,%s>" className className) "divideWithRemainder" "div_rem"
+{{#method this
+          (stringFormat "public DividerAndRemainder<%s, %s, %s>" valueClassName className (stringFormat "Compressed%s" className))
+          "divideWithRemainder" "div_rem"
           (stringFormat "%s other" className)}}
   {{declare "divider"}}
   {{declare "remainder"}}
   {{execute "div_rem" "getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()"}}
-  return Map.entry(divider, remainder);
+  return new DividerAndRemainder<>(divider,remainder);
 {{/method}}
 
-{{#method this (stringFormat "public Map.Entry<%s,%s>" className className) "divideWithRemainderScalar" "scalar_div_rem"
+{{#method this
+          (stringFormat "public DividerAndRemainder<%s, %s, %s>" valueClassName className (stringFormat "Compressed%s" className))
+          "divideWithRemainderScalar" "scalar_div_rem"
           (stringFormat "%s other" valueClassName)}}
   {{declare "divider"}}
   {{declare "remainder"}}
@@ -183,7 +193,7 @@
   {{else}}
     {{execute "scalar_div_rem" "getValue(), other, divider.getAddress(), remainder.getAddress()"}}
   {{/if}}
-  return Map.entry(divider, remainder);
+    return new DividerAndRemainder<>(divider,remainder);
 {{/method}}
 
 {{#method this (stringFormat "public %s" className) "negate" "neg"}}
@@ -198,9 +208,11 @@
   return result;
 {{/method}}
 
-{{#method this (stringFormat "public Map.Entry<%s, FheBool>" className) "ilog2WithCheck" "checked_ilog2"}}
+{{#method this
+          (stringFormat "public CheckedResult<%s, %s, %s>" valueClassName className (stringFormat "Compressed%s" className))
+          "ilog2WithCheck" "checked_ilog2"}}
   {{declare "result"}}
   {{declare "check" class="FheBool"}}
   {{execute "checked_ilog2" "getValue(), result.getAddress(), check.getAddress()"}}
-  return Map.entry(result, check);
+  return new CheckedResult<>(result,check);
 {{/method}}

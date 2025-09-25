@@ -1,27 +1,26 @@
-package io.github.rdlopes.tfhe.api.integers;
+package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.api.types.U128;
 import io.github.rdlopes.tfhe.test.assertions.TfheAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static io.github.rdlopes.tfhe.api.types.U128.*;
+import static io.github.rdlopes.tfhe.api.types.I2048.*;
 import static java.math.BigInteger.ONE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class U128Test {
+class I2048Test {
 
   @Test
   public void initializesFromMinimumValue() {
-    U128 value = valueOf(MIN_VALUE);
+    I2048 value = valueOf(MIN_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MIN_VALUE);
   }
 
   @Test
   public void initializesFromMaximumValue() {
-    U128 value = valueOf(MAX_VALUE);
+    I2048 value = valueOf(MAX_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MAX_VALUE);
   }

@@ -2,12 +2,10 @@ package io.github.rdlopes.tfhe.api;
 
 import io.github.rdlopes.tfhe.api.types.FheBool;
 
-import java.util.Map;
-
 public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
   T add(T other);
 
-  Map.Entry<T, FheBool> addWithOverflow(T other);
+  CheckedResult<V, T, C> addWithOverflow(T other);
 
   T addScalar(V other);
 
@@ -17,7 +15,7 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   T subtract(T other);
 
-  Map.Entry<T, FheBool> subtractWithOverflow(T other);
+  CheckedResult<V, T, C> subtractWithOverflow(T other);
 
   T subtractScalar(V other);
 
@@ -27,7 +25,7 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   T multiply(T other);
 
-  Map.Entry<T, FheBool> multiplyWithOverflow(T other);
+  CheckedResult<V, T, C> multiplyWithOverflow(T other);
 
   T multiplyScalar(V other);
 
@@ -35,9 +33,9 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   void multiplyScalarAssign(V other);
 
-  Map.Entry<T, T> divideWithRemainder(T other);
+  DividerAndRemainder<V, T, C> divideWithRemainder(T other);
 
-  Map.Entry<T, T> divideWithRemainderScalar(V other);
+  DividerAndRemainder<V, T, C> divideWithRemainderScalar(V other);
 
   T divide(T other);
 
@@ -59,5 +57,11 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   T ilog2();
 
-  Map.Entry<T, FheBool> ilog2WithCheck();
+  CheckedResult<V, T, C> ilog2WithCheck();
+
+  record CheckedResult<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>>(T result, FheBool check) {
+  }
+
+  record DividerAndRemainder<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>>(T divider, T remainder) {
+  }
 }
