@@ -7,8 +7,7 @@ import io.github.rdlopes.tfhe.ffm.NativeArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Collection;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
@@ -18,37 +17,33 @@ public class FheUint64Array extends NativeArray implements FheArray<Long, FheUin
   private static final Logger logger = LoggerFactory.getLogger(FheUint64Array.class);
 // @formatter:on
 
-  public FheUint64Array(List<Long> values, ClientKey clientKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint64 element = new FheUint64();
-               execute(() -> fhe_uint64_try_encrypt_with_client_key_u64(values.get(index), clientKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public FheUint64Array(Collection<FheUint64> elements) {
+    logger.trace("init - elements: {}", elements);
+    super(elements);
   }
 
-  public FheUint64Array(List<Long> values, PublicKey publicKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint64 element = new FheUint64();
-               execute(() -> fhe_uint64_try_encrypt_with_public_key_u64(values.get(index), publicKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint64Array encrypt(Collection<Long> values, ClientKey clientKey) {
+    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
+    Collection<FheUint64> elements = values.stream()
+                                           .map(value -> FheUint64.encrypt(value, clientKey))
+                                           .toList();
+    return new FheUint64Array(elements);
   }
 
-  public FheUint64Array(List<Long> values) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint64 element = new FheUint64();
-               execute(() -> fhe_uint64_try_encrypt_trivial_u64(values.get(index), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint64Array encrypt(Collection<Long> values, PublicKey publicKey) {
+    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
+    Collection<FheUint64> elements = values.stream()
+                                           .map(value -> FheUint64.encrypt(value, publicKey))
+                                           .toList();
+    return new FheUint64Array(elements);
+  }
+
+  public static FheUint64Array encrypt(Collection<Long> values) {
+    logger.trace("encrypt - values: {}", values);
+    Collection<FheUint64> elements = values.stream()
+                                           .map(FheUint64::encrypt)
+                                           .toList();
+    return new FheUint64Array(elements);
   }
 
   /// ```c
@@ -81,6 +76,17 @@ public class FheUint64Array extends NativeArray implements FheArray<Long, FheUin
 
   }
 
-// @formatter:off
+  /// ```c
+  /// int fhe_uint64_sum(const struct FheUint64 *const *lhs, size_t len, struct FheUint64 **out_result);
+  ///```
+  @Override
+  public FheUint64 sum() {
+    FheUint64 result = new FheUint64();
+    execute(() -> fhe_uint64_sum(getAddress(), getSize(), result.getAddress()));
+    return result;
+
+  }
+
+  // @formatter:off
 }
 // @formatter:on

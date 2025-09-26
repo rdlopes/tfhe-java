@@ -10,26 +10,26 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.*;
 
-public class CompressedFheCompactPublicKey extends NativePointer implements CompressedFheKey<CompactPublicKey> {
-  private static final Logger logger = LoggerFactory.getLogger(CompressedFheCompactPublicKey.class);
+public class CompressedCompactPublicKey extends NativePointer implements CompressedFheKey<CompactPublicKey> {
+  private static final Logger logger = LoggerFactory.getLogger(CompressedCompactPublicKey.class);
 
-  CompressedFheCompactPublicKey() {
+  CompressedCompactPublicKey() {
     logger.trace("init");
 
     super(TfheHeader::compressed_compact_public_key_destroy);
   }
 
-  public CompressedFheCompactPublicKey(ClientKey clientKey) {
+  public CompressedCompactPublicKey(ClientKey clientKey) {
     logger.trace("init");
 
     this();
     execute(() -> compressed_compact_public_key_new(clientKey.getValue(), getAddress()));
   }
 
-  public static CompressedFheCompactPublicKey deserialize(DynamicBuffer dynamicBuffer) {
+  public static CompressedCompactPublicKey deserialize(DynamicBuffer dynamicBuffer) {
     logger.trace("deserialize - dynamicBuffer: {}", dynamicBuffer);
 
-    CompressedFheCompactPublicKey deserialized = new CompressedFheCompactPublicKey();
+    CompressedCompactPublicKey deserialized = new CompressedCompactPublicKey();
     execute(() -> compressed_compact_public_key_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
     return deserialized;
   }

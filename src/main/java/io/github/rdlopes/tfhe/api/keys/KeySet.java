@@ -7,8 +7,8 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 @SuppressWarnings("ClassCanBeRecord")
-public final class FheKeySet {
-  private static final Logger logger = LoggerFactory.getLogger(FheKeySet.class);
+public final class KeySet {
+  private static final Logger logger = LoggerFactory.getLogger(KeySet.class);
   private final ClientKey clientKey;
   private final ServerKey serverKey;
 
@@ -16,7 +16,7 @@ public final class FheKeySet {
     return new FheKeySetBuilder();
   }
 
-  FheKeySet(ClientKey clientKey, ServerKey serverKey) {
+  KeySet(ClientKey clientKey, ServerKey serverKey) {
     this.clientKey = clientKey;
     this.serverKey = serverKey;
   }
@@ -50,13 +50,13 @@ public final class FheKeySet {
       return this;
     }
 
-    public FheKeySet build() {
+    public KeySet build() {
       logger.trace("build");
       Config config = builder.build();
       ClientKey clientKey = new ClientKey();
       ServerKey serverKey = new ServerKey();
       config.initialize(clientKey, serverKey);
-      return new FheKeySet(clientKey, serverKey);
+      return new KeySet(clientKey, serverKey);
     }
   }
 }

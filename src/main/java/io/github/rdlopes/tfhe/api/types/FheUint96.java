@@ -5,6 +5,7 @@ import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.values.U128;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class FheUint96 extends NativePointer implements FheUnsignedInteger<U128,
   ///                       struct FheUint96 **result);
   ///```
   @Override
-  public FheUint96 bitAnd(FheUint96 other){
+  public FheUint96 bitAnd(FheUint96 other) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -81,12 +82,12 @@ public class FheUint96 extends NativePointer implements FheUnsignedInteger<U128,
 
   /// ```c
   /// int fhe_uint96_bitand_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void bitAndAssign(FheUint96 other){
+  ///```
+  @Override
+  public void bitAndAssign(FheUint96 other) {
     execute(() -> fhe_uint96_bitand_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_bitand_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -101,36 +102,36 @@ public void bitAndAssign(FheUint96 other){
   /// int fhe_uint96_bitor(const struct FheUint96 *lhs,
   ///                      const struct FheUint96 *rhs,
   ///                      struct FheUint96 **result);
-///```
-@Override
-public FheUint96 bitOr(FheUint96 other){
+  ///```
+  @Override
+  public FheUint96 bitOr(FheUint96 other) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_bitor(getValue(), other.getValue(), result.getAddress()));
-  return result;
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_bitor(const struct FheUint96 *lhs,
   ///                             struct U128 rhs,
   ///                             struct FheUint96 **result);
-///```
-@Override
-public FheUint96 bitOrScalar(U128 other) {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint96 bitOrScalar(U128 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_bitor_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void bitOrAssign(FheUint96 other){
+  ///```
+  @Override
+  public void bitOrAssign(FheUint96 other) {
     execute(() -> fhe_uint96_bitor_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_bitor_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -143,50 +144,50 @@ public void bitOrAssign(FheUint96 other){
 
   /// ```c
   /// int fhe_uint96_bitxor(const struct FheUint96 *lhs,
-///                       const struct FheUint96 *rhs,
-///                       struct FheUint96 **result);
-///```
-@Override
-public FheUint96 bitXor(FheUint96 other){
+  ///                       const struct FheUint96 *rhs,
+  ///                       struct FheUint96 **result);
+  ///```
+  @Override
+  public FheUint96 bitXor(FheUint96 other) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_bitxor(getValue(), other.getValue(), result.getAddress()));
-  return result;
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_bitxor(const struct FheUint96 *lhs,
   ///                              struct U128 rhs,
   ///                              struct FheUint96 **result);
-///```
-@Override
-public FheUint96 bitXorScalar(U128 other) {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  ///```
+  @Override
+  public FheUint96 bitXorScalar(U128 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-}
-  
-/// ```c
-/// int fhe_uint96_bitxor_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void bitXorAssign(FheUint96 other) {
-  execute(() -> fhe_uint96_bitxor_assign(getValue(), other.getValue()));
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_bitxor_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
+  ///```
+  @Override
+  public void bitXorAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_bitxor_assign(getValue(), other.getValue()));
+
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_bitxor_assign(struct FheUint96 *lhs, struct U128 rhs);
   ///```
   @Override
-  public void bitXorScalarAssign(U128 other){
-      execute(() -> fhe_uint96_scalar_bitxor_assign(getValue(), other.getAddress()));
+  public void bitXorScalarAssign(U128 other) {
+    execute(() -> fhe_uint96_scalar_bitxor_assign(getValue(), other.getAddress()));
 
   }
 
   /// ```c
-/// int fhe_uint96_not(const struct FheUint96 *input, struct FheUint96 **result);
+  /// int fhe_uint96_not(const struct FheUint96 *input, struct FheUint96 **result);
   ///```
   @Override
   public FheUint96 bitNot() {
@@ -206,22 +207,22 @@ public void bitXorAssign(FheUint96 other) {
   public static FheUint96 ifThenElse(FheBool condition, FheUint96 thenValue, FheUint96 elseValue) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-      return result;
+    return result;
 
-}
-  
-/// ```c
-/// int fhe_uint96_eq(const struct FheUint96 *lhs,
-///                   const struct FheUint96 *rhs,
-///                   struct FheBool **result);
-///```
-@Override
-public FheBool equalTo(FheUint96 other) {
-  FheBool result = new FheBool();
+  }
+
+  /// ```c
+  /// int fhe_uint96_eq(const struct FheUint96 *lhs,
+  ///                   const struct FheUint96 *rhs,
+  ///                   struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalTo(FheUint96 other) {
+    FheBool result = new FheBool();
     execute(() -> fhe_uint96_eq(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_eq(const struct FheUint96 *lhs, struct U128 rhs, struct FheBool **result);
@@ -232,26 +233,26 @@ public FheBool equalTo(FheUint96 other) {
     execute(() -> fhe_uint96_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-}
-  
-/// ```c
-/// int fhe_uint96_ne(const struct FheUint96 *lhs,
-///                   const struct FheUint96 *rhs,
-///                   struct FheBool **result);
-///```
-@Override
-public FheBool notEqualTo(FheUint96 other) {
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint96_ne(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_ne(const struct FheUint96 *lhs,
+  ///                   const struct FheUint96 *rhs,
+  ///                   struct FheBool **result);
+  ///```
+  @Override
+  public FheBool notEqualTo(FheUint96 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint96_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_ne(const struct FheUint96 *lhs, struct U128 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(U128 other){
+  public FheBool notEqualToScalar(U128 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_uint96_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -274,46 +275,47 @@ public FheBool notEqualTo(FheUint96 other) {
   ///  *    * (*result) will point the deserialized object on success, else NULL
   ///  */
   /// int fhe_uint96_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
-///                                            uint64_t serialized_size_limit,
-///                                            const struct ServerKey *server_key,
-///                                            struct FheUint96 **result);
-///```
-public static FheUint96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+  ///                                            uint64_t serialized_size_limit,
+  ///                                            const struct ServerKey *server_key,
+  ///                                            struct FheUint96 **result);
+  ///```
+  public static FheUint96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     FheUint96 deserialized = new FheUint96();
-  execute(() -> fhe_uint96_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-  return deserialized;
+    execute(() -> fhe_uint96_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
 
-}
-/// ```c
-/// int fhe_uint96_try_encrypt_with_client_key_u128(struct U128 value,
-///                                                 const struct ClientKey *client_key,
-///                                                 struct FheUint96 **result);
-///```
-public static FheUint96 encrypt(U128 clearValue, ClientKey clientKey){
+  }
+
+  /// ```c
+  /// int fhe_uint96_try_encrypt_with_client_key_u128(struct U128 value,
+  ///                                                 const struct ClientKey *client_key,
+  ///                                                 struct FheUint96 **result);
+  ///```
+  public static FheUint96 encrypt(U128 clearValue, ClientKey clientKey) {
     FheUint96 encrypted = new FheUint96();
-  execute(() -> fhe_uint96_try_encrypt_with_client_key_u128(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
-  return encrypted;
+    execute(() -> fhe_uint96_try_encrypt_with_client_key_u128(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
-}
-  
-/// ```c
-/// int fhe_uint96_try_encrypt_with_public_key_u128(struct U128 value,
-///                                                 const struct PublicKey *public_key,
-///                                                 struct FheUint96 **result);
-///```
-public static FheUint96 encrypt(U128 clearValue, PublicKey publicKey){
+  }
+
+  /// ```c
+  /// int fhe_uint96_try_encrypt_with_public_key_u128(struct U128 value,
+  ///                                                 const struct PublicKey *public_key,
+  ///                                                 struct FheUint96 **result);
+  ///```
+  public static FheUint96 encrypt(U128 clearValue, PublicKey publicKey) {
     FheUint96 encrypted = new FheUint96();
-      execute(() -> fhe_uint96_try_encrypt_with_public_key_u128(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
-  return encrypted;
+    execute(() -> fhe_uint96_try_encrypt_with_public_key_u128(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+    return encrypted;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_try_encrypt_trivial_u128(struct U128 value, struct FheUint96 **result);
   ///```
-  public static FheUint96 encrypt(U128 clearValue){
+  public static FheUint96 encrypt(U128 clearValue) {
     FheUint96 encrypted = new FheUint96();
-      execute(() -> fhe_uint96_try_encrypt_trivial_u128(clearValue.getAddress(), encrypted.getAddress()));
+    execute(() -> fhe_uint96_try_encrypt_trivial_u128(clearValue.getAddress(), encrypted.getAddress()));
     return encrypted;
 
   }
@@ -321,14 +323,14 @@ public static FheUint96 encrypt(U128 clearValue, PublicKey publicKey){
   /// ```c
   /// int fhe_uint96_clone(const struct FheUint96 *sself, struct FheUint96 **result);
   ///```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheUint96 clone(){
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheUint96 clone() {
     FheUint96 cloned = new FheUint96();
-  execute(() -> fhe_uint96_clone(getValue(), cloned.getAddress()));
-  return cloned;
+    execute(() -> fhe_uint96_clone(getValue(), cloned.getAddress()));
+    return cloned;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_compress(const struct FheUint96 *sself, struct CompressedFheUint96 **result);
@@ -347,9 +349,9 @@ public FheUint96 clone(){
   ///                        struct U128 *result);
   ///```
   @Override
-public U128 decrypt(ClientKey clientKey){
-      U128 decrypted = new U128();
-      executeWithAddress(decrypted.getAddress(), address -> fhe_uint96_decrypt(getValue(), clientKey.getValue(), address));
+  public U128 decrypt(ClientKey clientKey) {
+    U128 decrypted = new U128();
+    executeWithAddress(decrypted.getAddress(), address -> fhe_uint96_decrypt(getValue(), clientKey.getValue(), address));
     return decrypted;
 
   }
@@ -397,10 +399,10 @@ public U128 decrypt(ClientKey clientKey){
   /// int fhe_uint96_add_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
   ///```
   @Override
-  public void addAssign(FheUint96 other){
-      execute(() -> fhe_uint96_add_assign(getValue(), other.getValue()));
+  public void addAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_add_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_add_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -431,11 +433,11 @@ public U128 decrypt(ClientKey clientKey){
   ///                                struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U128, FheUint96, CompressedFheUint96> subtractWithOverflow(FheUint96 other){
+  public CheckedResult<U128, FheUint96, CompressedFheUint96> subtractWithOverflow(FheUint96 other) {
     FheUint96 result = new FheUint96();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint96_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-      return new CheckedResult<>(result, overflow);
+    return new CheckedResult<>(result, overflow);
 
   }
 
@@ -452,12 +454,12 @@ public U128 decrypt(ClientKey clientKey){
 
   /// ```c
   /// int fhe_uint96_sub_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void subtractAssign(FheUint96 other){
-      execute(() -> fhe_uint96_sub_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void subtractAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_sub_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_sub_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -471,18 +473,18 @@ public void subtractAssign(FheUint96 other){
   /// ```c
   /// int fhe_uint96_mul(const struct FheUint96 *lhs,
   ///                    const struct FheUint96 *rhs,
-///                    struct FheUint96 **result);
-///```
-@Override
-public FheUint96 multiply(FheUint96 other){
-      FheUint96 result = new FheUint96();
-      execute(() -> fhe_uint96_mul(getValue(), other.getValue(), result.getAddress()));
-      return result;
+  ///                    struct FheUint96 **result);
+  ///```
+  @Override
+  public FheUint96 multiply(FheUint96 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_mul(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-/// int fhe_uint96_overflowing_mul(const struct FheUint96 *lhs,
+  /// int fhe_uint96_overflowing_mul(const struct FheUint96 *lhs,
   ///                                const struct FheUint96 *rhs,
   ///                                struct FheUint96 **out_result,
   ///                                struct FheBool **out_overflowed);
@@ -509,12 +511,12 @@ public FheUint96 multiply(FheUint96 other){
 
   /// ```c
   /// int fhe_uint96_mul_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void multiplyAssign(FheUint96 other){
-      execute(() -> fhe_uint96_mul_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void multiplyAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_mul_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_mul_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -633,8 +635,8 @@ public void multiplyAssign(FheUint96 other){
   @Override
   public DividerAndRemainder<U128, FheUint96, CompressedFheUint96> divideWithRemainderScalar(U128 other) {
     FheUint96 divider = new FheUint96();
-      FheUint96 remainder = new FheUint96();
-        execute(() -> fhe_uint96_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
+    FheUint96 remainder = new FheUint96();
+    execute(() -> fhe_uint96_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
     return new DividerAndRemainder<>(divider, remainder);
 
   }
@@ -671,7 +673,7 @@ public void multiplyAssign(FheUint96 other){
   ////**
   ///  * Returns the base 2 logarithm of the number, rounded down.
   ///  *
-///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
+  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
   ///  */
   /// int fhe_uint96_checked_ilog2(const struct FheUint96 *input,
   ///                              struct FheUint32 **result_1,
@@ -778,22 +780,22 @@ public void multiplyAssign(FheUint96 other){
   public FheBool greaterThanOrEqualToScalar(U128 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_uint96_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
-      return result;
+    return result;
 
-}
-    
-/// ```c
-/// int fhe_uint96_min(const struct FheUint96 *lhs,
-///                    const struct FheUint96 *rhs,
-///                    struct FheUint96 **result);
-///```
-@Override
-public FheUint96 min(FheUint96 other) {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_min(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_min(const struct FheUint96 *lhs,
+  ///                    const struct FheUint96 *rhs,
+  ///                    struct FheUint96 **result);
+  ///```
+  @Override
+  public FheUint96 min(FheUint96 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_min(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_min(const struct FheUint96 *lhs, struct U128 rhs, struct FheUint96 **result);
@@ -802,30 +804,30 @@ public FheUint96 min(FheUint96 other) {
   public FheUint96 minScalar(U128 other) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_scalar_min(getValue(), other.getAddress(), result.getAddress()));
-      return result;
+    return result;
 
-}
-    
-/// ```c
-/// int fhe_uint96_max(const struct FheUint96 *lhs,
-///                    const struct FheUint96 *rhs,
-///                    struct FheUint96 **result);
-///```
-@Override
-public FheUint96 max(FheUint96 other) {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_max(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_max(const struct FheUint96 *lhs,
+  ///                    const struct FheUint96 *rhs,
+  ///                    struct FheUint96 **result);
+  ///```
+  @Override
+  public FheUint96 max(FheUint96 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_max(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_max(const struct FheUint96 *lhs, struct U128 rhs, struct FheUint96 **result);
   ///```
   @Override
-  public FheUint96 maxScalar(U128 other){
-      FheUint96 result = new FheUint96();
-        execute(() -> fhe_uint96_scalar_max(getValue(), other.getAddress(), result.getAddress()));
+  public FheUint96 maxScalar(U128 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_scalar_max(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
   }
@@ -841,18 +843,18 @@ public FheUint96 max(FheUint96 other) {
     execute(() -> fhe_uint96_shl(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-}
-    
-/// ```c
-/// int fhe_uint96_scalar_shl(const struct FheUint96 *lhs, struct U128 rhs, struct FheUint96 **result);
-///```
-@Override
-public FheUint96 shiftLeftScalar(U128 other) {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_scalar_shl(const struct FheUint96 *lhs, struct U128 rhs, struct FheUint96 **result);
+  ///```
+  @Override
+  public FheUint96 shiftLeftScalar(U128 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint96_shl_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
@@ -865,12 +867,12 @@ public FheUint96 shiftLeftScalar(U128 other) {
 
   /// ```c
   /// int fhe_uint96_scalar_shl_assign(struct FheUint96 *lhs, struct U128 rhs);
-///```
-@Override
-public void shiftLeftScalarAssign(U128 other) {
-  execute(() -> fhe_uint96_scalar_shl_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void shiftLeftScalarAssign(U128 other) {
+    execute(() -> fhe_uint96_scalar_shl_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_shr(const struct FheUint96 *lhs,
@@ -881,29 +883,29 @@ public void shiftLeftScalarAssign(U128 other) {
   public FheUint96 shiftRight(FheUint96 other) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_shr(getValue(), other.getValue(), result.getAddress()));
-      return result;
+    return result;
 
-}
-    
-/// ```c
-/// int fhe_uint96_scalar_shr(const struct FheUint96 *lhs, struct U128 rhs, struct FheUint96 **result);
-///```
-@Override
-public FheUint96 shiftRightScalar(U128 other) {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_scalar_shr(const struct FheUint96 *lhs, struct U128 rhs, struct FheUint96 **result);
+  ///```
+  @Override
+  public FheUint96 shiftRightScalar(U128 other) {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint96_shr_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void shiftRightAssign(FheUint96 other) {
-  execute(() -> fhe_uint96_shr_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void shiftRightAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_shr_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_shr_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -929,8 +931,8 @@ public void shiftRightAssign(FheUint96 other) {
 
   /// ```c
   /// int fhe_uint96_scalar_rotate_left(const struct FheUint96 *lhs,
-///                                   struct U128 rhs,
-///                                   struct FheUint96 **result);
+  ///                                   struct U128 rhs,
+  ///                                   struct FheUint96 **result);
   ///```
   @Override
   public FheUint96 rotateLeftScalar(U128 other) {
@@ -942,12 +944,12 @@ public void shiftRightAssign(FheUint96 other) {
 
   /// ```c
   /// int fhe_uint96_rotate_left_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void rotateLeftAssign(FheUint96 other) {
-  execute(() -> fhe_uint96_rotate_left_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void rotateLeftAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_rotate_left_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_rotate_left_assign(struct FheUint96 *lhs, struct U128 rhs);
@@ -973,62 +975,62 @@ public void rotateLeftAssign(FheUint96 other) {
 
   /// ```c
   /// int fhe_uint96_scalar_rotate_right(const struct FheUint96 *lhs,
-///                                    struct U128 rhs,
-///                                    struct FheUint96 **result);
+  ///                                    struct U128 rhs,
+  ///                                    struct FheUint96 **result);
   ///```
   @Override
   public FheUint96 rotateRightScalar(U128 other) {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
-      return result;
+    return result;
 
-}
-    
-/// ```c
-/// int fhe_uint96_rotate_right_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
-///```
-@Override
-public void rotateRightAssign(FheUint96 other){
-  execute(() -> fhe_uint96_rotate_right_assign(getValue(), other.getValue()));
+  }
 
-}
+  /// ```c
+  /// int fhe_uint96_rotate_right_assign(struct FheUint96 *lhs, const struct FheUint96 *rhs);
+  ///```
+  @Override
+  public void rotateRightAssign(FheUint96 other) {
+    execute(() -> fhe_uint96_rotate_right_assign(getValue(), other.getValue()));
+
+  }
 
   /// ```c
   /// int fhe_uint96_scalar_rotate_right_assign(struct FheUint96 *lhs, struct U128 rhs);
-///```
-@Override
-public void rotateRightScalarAssign(U128 other){
-        execute(() -> fhe_uint96_scalar_rotate_right_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void rotateRightScalarAssign(U128 other) {
+    execute(() -> fhe_uint96_scalar_rotate_right_assign(getValue(), other.getAddress()));
 
-}
-    
-/// ```c
-////**
-///  * Returns the number of leading ones in the binary representation of input.
-///  */
-/// int fhe_uint96_leading_ones(const struct FheUint96 *input, struct FheUint32 **result);
-///```
-@Override
-public FheUint96 leadingOnes() {
-      FheUint96 result = new FheUint96();
-      execute(() -> fhe_uint96_leading_ones(getValue(), result.getAddress()));
-      return result;
+  }
 
-}
-    
-/// ```c
-////**
-///  * Returns the number of leading zeros in the binary representation of input.
-///  */
-/// int fhe_uint96_leading_zeros(const struct FheUint96 *input, struct FheUint32 **result);
-///```
-@Override
-public FheUint96 leadingZeros() {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_leading_zeros(getValue(), result.getAddress()));
-  return result;
+  /// ```c
+  ////**
+  ///  * Returns the number of leading ones in the binary representation of input.
+  ///  */
+  /// int fhe_uint96_leading_ones(const struct FheUint96 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheUint96 leadingOnes() {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_leading_ones(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
+
+  /// ```c
+  ////**
+  ///  * Returns the number of leading zeros in the binary representation of input.
+  ///  */
+  /// int fhe_uint96_leading_zeros(const struct FheUint96 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheUint96 leadingZeros() {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_leading_zeros(getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   ////**
@@ -1037,7 +1039,7 @@ public FheUint96 leadingZeros() {
   /// int fhe_uint96_trailing_ones(const struct FheUint96 *input, struct FheUint32 **result);
   ///```
   @Override
-public FheUint96 trailingOnes() {
+  public FheUint96 trailingOnes() {
     FheUint96 result = new FheUint96();
     execute(() -> fhe_uint96_trailing_ones(getValue(), result.getAddress()));
     return result;
@@ -1713,7 +1715,7 @@ public FheUint96 trailingOnes() {
     FheUint48 result = new FheUint48();
     execute(() -> fhe_uint96_cast_into_fhe_uint48(getValue(), result.getAddress()));
     return result;
-}
+  }
 
   /// ```c
   /// int fhe_uint96_cast_into_fhe_uint512(const struct FheUint96 *sself, struct FheUint512 **result);
@@ -1735,67 +1737,66 @@ public FheUint96 trailingOnes() {
 
   /// ```c
   /// int fhe_uint96_cast_into_fhe_uint6(const struct FheUint96 *sself, struct FheUint6 **result);
-///```
-public FheUint6 castIntoFheUint6() {
-  FheUint6 result = new FheUint6();
-  execute(() -> fhe_uint96_cast_into_fhe_uint6(getValue(), result.getAddress()));
-  return result;
-}
+  ///```
+  public FheUint6 castIntoFheUint6() {
+    FheUint6 result = new FheUint6();
+    execute(() -> fhe_uint96_cast_into_fhe_uint6(getValue(), result.getAddress()));
+    return result;
+  }
 
   /// ```c
   /// int fhe_uint96_cast_into_fhe_uint64(const struct FheUint96 *sself, struct FheUint64 **result);
-///```
-public FheUint64 castIntoFheUint64() {
-  FheUint64 result = new FheUint64();
-  execute(() -> fhe_uint96_cast_into_fhe_uint64(getValue(), result.getAddress()));
-  return result;
-}
+  ///```
+  public FheUint64 castIntoFheUint64() {
+    FheUint64 result = new FheUint64();
+    execute(() -> fhe_uint96_cast_into_fhe_uint64(getValue(), result.getAddress()));
+    return result;
+  }
 
-/// ```c
-/// int fhe_uint96_cast_into_fhe_uint72(const struct FheUint96 *sself, struct FheUint72 **result);
-///```
-public FheUint72 castIntoFheUint72() {
-  FheUint72 result = new FheUint72();
-  execute(() -> fhe_uint96_cast_into_fhe_uint72(getValue(), result.getAddress()));
-  return result;
-}
+  /// ```c
+  /// int fhe_uint96_cast_into_fhe_uint72(const struct FheUint96 *sself, struct FheUint72 **result);
+  ///```
+  public FheUint72 castIntoFheUint72() {
+    FheUint72 result = new FheUint72();
+    execute(() -> fhe_uint96_cast_into_fhe_uint72(getValue(), result.getAddress()));
+    return result;
+  }
 
-/// ```c
-/// int fhe_uint96_cast_into_fhe_uint8(const struct FheUint96 *sself, struct FheUint8 **result);
-///```
-public FheUint8 castIntoFheUint8() {
-  FheUint8 result = new FheUint8();
-  execute(() -> fhe_uint96_cast_into_fhe_uint8(getValue(), result.getAddress()));
-  return result;
-}
+  /// ```c
+  /// int fhe_uint96_cast_into_fhe_uint8(const struct FheUint96 *sself, struct FheUint8 **result);
+  ///```
+  public FheUint8 castIntoFheUint8() {
+    FheUint8 result = new FheUint8();
+    execute(() -> fhe_uint96_cast_into_fhe_uint8(getValue(), result.getAddress()));
+    return result;
+  }
 
-/// ```c
-/// int fhe_uint96_cast_into_fhe_uint80(const struct FheUint96 *sself, struct FheUint80 **result);
-///```
-public FheUint80 castIntoFheUint80() {
-  FheUint80 result = new FheUint80();
-  execute(() -> fhe_uint96_cast_into_fhe_uint80(getValue(), result.getAddress()));
-  return result;
-}
+  /// ```c
+  /// int fhe_uint96_cast_into_fhe_uint80(const struct FheUint96 *sself, struct FheUint80 **result);
+  ///```
+  public FheUint80 castIntoFheUint80() {
+    FheUint80 result = new FheUint80();
+    execute(() -> fhe_uint96_cast_into_fhe_uint80(getValue(), result.getAddress()));
+    return result;
+  }
 
-/// ```c
-/// int fhe_uint96_cast_into_fhe_uint88(const struct FheUint96 *sself, struct FheUint88 **result);
-///```
-public FheUint88 castIntoFheUint88() {
-  FheUint88 result = new FheUint88();
-  execute(() -> fhe_uint96_cast_into_fhe_uint88(getValue(), result.getAddress()));
-  return result;
-}
+  /// ```c
+  /// int fhe_uint96_cast_into_fhe_uint88(const struct FheUint96 *sself, struct FheUint88 **result);
+  ///```
+  public FheUint88 castIntoFheUint88() {
+    FheUint88 result = new FheUint88();
+    execute(() -> fhe_uint96_cast_into_fhe_uint88(getValue(), result.getAddress()));
+    return result;
+  }
 
-/// ```c
-/// int fhe_uint96_cast_into_fhe_uint96(const struct FheUint96 *sself, struct FheUint96 **result);
-///```
-public FheUint96 castIntoFheUint96() {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint96_cast_into_fhe_uint96(getValue(), result.getAddress()));
-  return result;
-}
-
+  /// ```c
+  /// int fhe_uint96_cast_into_fhe_uint96(const struct FheUint96 *sself, struct FheUint96 **result);
+  ///```
+  public FheUint96 castIntoFheUint96() {
+    FheUint96 result = new FheUint96();
+    execute(() -> fhe_uint96_cast_into_fhe_uint96(getValue(), result.getAddress()));
+    return result;
+  }
 
   // @formatter:off
 }

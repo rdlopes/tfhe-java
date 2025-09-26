@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.api.serde;
 
-import io.github.rdlopes.tfhe.api.keys.FheKeySet;
+import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
 class DynamicBufferTest {
-  private FheKeySet keySet;
+  private KeySet keySet;
 
   @BeforeEach
   void setUp() {
-    keySet = FheKeySet.builder()
-                      .build();
+    keySet = KeySet.builder()
+                   .build();
   }
 
   @Test

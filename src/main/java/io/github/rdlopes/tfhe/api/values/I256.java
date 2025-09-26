@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.api.types;
+package io.github.rdlopes.tfhe.api.values;
 
 import org.jspecify.annotations.NonNull;
 

@@ -10,26 +10,26 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader_15.*;
 
-public class CompressedFheServerKey extends NativePointer implements CompressedFheKey<ServerKey> {
-  private static final Logger logger = LoggerFactory.getLogger(CompressedFheServerKey.class);
+public class CompressedServerKey extends NativePointer implements CompressedFheKey<ServerKey> {
+  private static final Logger logger = LoggerFactory.getLogger(CompressedServerKey.class);
 
-  CompressedFheServerKey() {
+  CompressedServerKey() {
     logger.trace("init");
 
     super(TfheHeader::compressed_compact_public_key_destroy);
   }
 
-  public CompressedFheServerKey(ClientKey clientKey) {
+  public CompressedServerKey(ClientKey clientKey) {
     logger.trace("init");
 
     this();
     execute(() -> compressed_server_key_new(clientKey.getValue(), getAddress()));
   }
 
-  public static CompressedFheServerKey deserialize(DynamicBuffer dynamicBuffer) {
+  public static CompressedServerKey deserialize(DynamicBuffer dynamicBuffer) {
     logger.trace("deserialize - dynamicBuffer: {}", dynamicBuffer);
 
-    CompressedFheServerKey deserialized = new CompressedFheServerKey();
+    CompressedServerKey deserialized = new CompressedServerKey();
     execute(() -> compressed_server_key_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
     return deserialized;
   }

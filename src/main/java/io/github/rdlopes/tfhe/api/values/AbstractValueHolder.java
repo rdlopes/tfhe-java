@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.api.types;
+package io.github.rdlopes.tfhe.api.values;
 
 import io.github.rdlopes.tfhe.api.FheValueHolder;
 import io.github.rdlopes.tfhe.ffm.NativeAddress;

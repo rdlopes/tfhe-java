@@ -4,6 +4,7 @@ import io.github.rdlopes.tfhe.api.CompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.values.U128;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ implements CompressedFheType<U128, FheUint96, CompressedFheUint96> {
   ///                                          uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize(){
+  public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint96_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +85,7 @@ implements CompressedFheType<U128, FheUint96, CompressedFheUint96> {
   ///                                                       const struct ServerKey *server_key,
   ///                                                       struct CompressedFheUint96 **result);
   ///```
-  public static CompressedFheUint96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+  public static CompressedFheUint96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     CompressedFheUint96 deserialized = new CompressedFheUint96();
     execute(() -> compressed_fhe_uint96_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -105,14 +106,14 @@ implements CompressedFheType<U128, FheUint96, CompressedFheUint96> {
 
   /// ```c
   /// int compressed_fhe_uint96_clone(const struct CompressedFheUint96 *sself,
-///                                 struct CompressedFheUint96 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public CompressedFheUint96 clone(){
+  ///                                 struct CompressedFheUint96 **result);
+  ///```
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public CompressedFheUint96 clone() {
     CompressedFheUint96 cloned = new CompressedFheUint96();
     execute(() -> compressed_fhe_uint96_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}
+  }
 }

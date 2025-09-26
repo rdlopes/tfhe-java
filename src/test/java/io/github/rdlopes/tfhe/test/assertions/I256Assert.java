@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.test.assertions;
 
-import io.github.rdlopes.tfhe.api.types.I256;
+import io.github.rdlopes.tfhe.api.values.I256;
 import org.assertj.core.api.AbstractAssert;
 
 import java.math.BigInteger;

@@ -10,6 +10,8 @@ import picocli.CommandLine;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludes.SymbolType.struct;
@@ -71,6 +73,19 @@ public class Generator implements Callable<Integer> {
       if (arrayTemplateContext.hasArray()) {
         templateWriter.write("FheTypeArray", fheType + "Array", arrayTemplateContext);
       }
+
+      Set<String> unusedSymbols = new HashSet<>();
+      unusedSymbols.addAll(templateContext.symbols());
+      unusedSymbols.addAll(compressedTemplateContext.symbols());
+      unusedSymbols.addAll(arrayTemplateContext.symbols());
+      unusedSymbols.removeAll(templateContext.symbolsIndex()
+                                             .used());
+      unusedSymbols.removeAll(compressedTemplateContext.symbolsIndex()
+                                                       .used());
+      unusedSymbols.removeAll(arrayTemplateContext.symbolsIndex()
+                                                  .used());
+
+      logger.info("Unused symbols for {}: {}", fheType, unusedSymbols);
     }
   }
 

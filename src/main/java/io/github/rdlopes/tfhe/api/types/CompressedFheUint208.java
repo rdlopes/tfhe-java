@@ -4,6 +4,7 @@ import io.github.rdlopes.tfhe.api.CompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.values.U256;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ implements CompressedFheType<U256, FheUint208, CompressedFheUint208> {
   ///                                           uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize(){
+  public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint208_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +85,7 @@ implements CompressedFheType<U256, FheUint208, CompressedFheUint208> {
   ///                                                        const struct ServerKey *server_key,
   ///                                                        struct CompressedFheUint208 **result);
   ///```
-  public static CompressedFheUint208 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+  public static CompressedFheUint208 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     CompressedFheUint208 deserialized = new CompressedFheUint208();
     execute(() -> compressed_fhe_uint208_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -105,14 +106,14 @@ implements CompressedFheType<U256, FheUint208, CompressedFheUint208> {
 
   /// ```c
   /// int compressed_fhe_uint208_clone(const struct CompressedFheUint208 *sself,
-///                                  struct CompressedFheUint208 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public CompressedFheUint208 clone(){
+  ///                                  struct CompressedFheUint208 **result);
+  ///```
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public CompressedFheUint208 clone() {
     CompressedFheUint208 cloned = new CompressedFheUint208();
     execute(() -> compressed_fhe_uint208_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}
+  }
 }

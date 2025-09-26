@@ -7,8 +7,7 @@ import io.github.rdlopes.tfhe.ffm.NativeArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Collection;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
@@ -18,37 +17,33 @@ public class FheUint2Array extends NativeArray implements FheArray<Byte, FheUint
   private static final Logger logger = LoggerFactory.getLogger(FheUint2Array.class);
 // @formatter:on
 
-  public FheUint2Array(List<Byte> values, ClientKey clientKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint2 element = new FheUint2();
-               execute(() -> fhe_uint2_try_encrypt_with_client_key_u8(values.get(index), clientKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public FheUint2Array(Collection<FheUint2> elements) {
+    logger.trace("init - elements: {}", elements);
+    super(elements);
   }
 
-  public FheUint2Array(List<Byte> values, PublicKey publicKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint2 element = new FheUint2();
-               execute(() -> fhe_uint2_try_encrypt_with_public_key_u8(values.get(index), publicKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint2Array encrypt(Collection<Byte> values, ClientKey clientKey) {
+    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
+    Collection<FheUint2> elements = values.stream()
+                                          .map(value -> FheUint2.encrypt(value, clientKey))
+                                          .toList();
+    return new FheUint2Array(elements);
   }
 
-  public FheUint2Array(List<Byte> values) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint2 element = new FheUint2();
-               execute(() -> fhe_uint2_try_encrypt_trivial_u8(values.get(index), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint2Array encrypt(Collection<Byte> values, PublicKey publicKey) {
+    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
+    Collection<FheUint2> elements = values.stream()
+                                          .map(value -> FheUint2.encrypt(value, publicKey))
+                                          .toList();
+    return new FheUint2Array(elements);
+  }
+
+  public static FheUint2Array encrypt(Collection<Byte> values) {
+    logger.trace("encrypt - values: {}", values);
+    Collection<FheUint2> elements = values.stream()
+                                          .map(FheUint2::encrypt)
+                                          .toList();
+    return new FheUint2Array(elements);
   }
 
   /// ```c
@@ -81,6 +76,17 @@ public class FheUint2Array extends NativeArray implements FheArray<Byte, FheUint
 
   }
 
-// @formatter:off
+  /// ```c
+  /// int fhe_uint2_sum(const struct FheUint2 *const *lhs, size_t len, struct FheUint2 **out_result);
+  ///```
+  @Override
+  public FheUint2 sum() {
+    FheUint2 result = new FheUint2();
+    execute(() -> fhe_uint2_sum(getAddress(), getSize(), result.getAddress()));
+    return result;
+
+  }
+
+  // @formatter:off
 }
 // @formatter:on

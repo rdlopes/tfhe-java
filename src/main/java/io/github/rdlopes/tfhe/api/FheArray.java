@@ -7,4 +7,6 @@ public interface FheArray<V, T extends FheType<V, T, C>, C extends CompressedFhe
   FheBool containsArray(A other);
 
   FheBool equalsArray(A other);
+
+  T sum();
 }

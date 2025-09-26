@@ -10,6 +10,7 @@ import java.util.function.Function;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
 
 public class NativePointer extends NativeAddress {
+
   protected NativePointer(@Nullable Function<MemorySegment, Integer> destroyer) {
     super(allocator -> allocator.allocate(C_POINTER), valueDestroyerOf(destroyer));
   }

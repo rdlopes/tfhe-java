@@ -1,12 +1,15 @@
 package io.github.rdlopes.tfhe.generator.templates;
 
-import io.github.rdlopes.tfhe.api.types.*;
+import io.github.rdlopes.tfhe.api.values.*;
 import io.github.rdlopes.tfhe.generator.parsers.SymbolsIndex;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public record TemplateContext(String packageName, String className, String typeName, SymbolsIndex symbolsIndex) {
@@ -85,4 +88,11 @@ public record TemplateContext(String packageName, String className, String typeN
     return nativePrefix(className());
   }
 
+  public Set<String> symbols() {
+    return symbolsIndex().symbolsByType()
+                         .values()
+                         .stream()
+                         .flatMap(List::stream)
+                         .collect(toSet());
+  }
 }

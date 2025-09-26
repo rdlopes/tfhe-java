@@ -91,15 +91,13 @@ public class TemplateHelper {
 
   public static String trace(String functionName, Options options) {
     String parametersString = Arrays.stream(options.params)
-                                    .skip(1)
                                     .map(Object::toString)
                                     .map(s -> s + ": {}")
                                     .collect(joining(", ", "- ", ""));
     String parametersList = Arrays.stream(options.params)
-                                  .skip(1)
                                   .map(Object::toString)
                                   .collect(joining(", "));
-    return options.params.length < 2
+    return options.params.length == 0
       ? "logger.trace(\"%s\");".formatted(functionName)
       : "logger.trace(\"%s %s\", %s);".formatted(functionName, parametersString, parametersList);
   }

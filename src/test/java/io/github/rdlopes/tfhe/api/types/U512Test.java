@@ -1,11 +1,12 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.values.U512;
 import io.github.rdlopes.tfhe.test.assertions.TfheAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static io.github.rdlopes.tfhe.api.types.U512.*;
+import static io.github.rdlopes.tfhe.api.values.U512.*;
 import static java.math.BigInteger.ONE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

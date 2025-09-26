@@ -1,4 +1,4 @@
-package io.github.rdlopes.tfhe.api.types;
+package io.github.rdlopes.tfhe.api.values;
 
 import org.jspecify.annotations.NonNull;
 
@@ -6,8 +6,8 @@ import java.math.BigInteger;
 
 import static java.math.BigInteger.ONE;
 
-public final class I1024 extends AbstractValueHolder {
-  public static final int BIT_SIZE = 1024;
+public final class I2048 extends AbstractValueHolder {
+  public static final int BIT_SIZE = 2048;
   public static final BigInteger MIN_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)
                                                        .negate();
@@ -15,24 +15,24 @@ public final class I1024 extends AbstractValueHolder {
                                                        .pow(BIT_SIZE - 1)
                                                        .subtract(ONE);
 
-  public I1024() {
-    super(io.github.rdlopes.tfhe.ffm.I1024::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
+  public I2048() {
+    super(io.github.rdlopes.tfhe.ffm.I2048::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
   }
 
   @NonNull
-  public static I1024 valueOf(@NonNull BigInteger value) {
-    I1024 i1024 = new I1024();
-    i1024.setValue(value);
-    return i1024;
+  public static I2048 valueOf(@NonNull BigInteger value) {
+    I2048 i2048 = new I2048();
+    i2048.setValue(value);
+    return i2048;
   }
 
   @Override
   protected void setWord(int index, long word) {
-    io.github.rdlopes.tfhe.ffm.I1024.words(getAddress(), index, word);
+    io.github.rdlopes.tfhe.ffm.I2048.words(getAddress(), index, word);
   }
 
   @Override
   protected long getWord(int index) {
-    return io.github.rdlopes.tfhe.ffm.I1024.words(getAddress(), index);
+    return io.github.rdlopes.tfhe.ffm.I2048.words(getAddress(), index);
   }
 }

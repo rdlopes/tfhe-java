@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 class ServerKeyTest {
-  private FheKeySet keySet;
+  private KeySet keySet;
 
   @BeforeEach
   void setUp() {
-    keySet = FheKeySet.builder()
-                      .build();
+    keySet = KeySet.builder()
+                   .build();
   }
 
   @Test

@@ -4,6 +4,7 @@ import io.github.rdlopes.tfhe.api.CompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.values.I128;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ implements CompressedFheType<I128, FheInt80, CompressedFheInt80> {
   ///                                         uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize(){
+  public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int80_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +85,7 @@ implements CompressedFheType<I128, FheInt80, CompressedFheInt80> {
   ///                                                      const struct ServerKey *server_key,
   ///                                                      struct CompressedFheInt80 **result);
   ///```
-  public static CompressedFheInt80 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+  public static CompressedFheInt80 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     CompressedFheInt80 deserialized = new CompressedFheInt80();
     execute(() -> compressed_fhe_int80_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -105,14 +106,14 @@ implements CompressedFheType<I128, FheInt80, CompressedFheInt80> {
 
   /// ```c
   /// int compressed_fhe_int80_clone(const struct CompressedFheInt80 *sself,
-///                                struct CompressedFheInt80 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public CompressedFheInt80 clone(){
+  ///                                struct CompressedFheInt80 **result);
+  ///```
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public CompressedFheInt80 clone() {
     CompressedFheInt80 cloned = new CompressedFheInt80();
     execute(() -> compressed_fhe_int80_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}
+  }
 }

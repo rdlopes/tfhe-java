@@ -56,7 +56,7 @@ implements CompressedFheType<Byte, FheUint4, CompressedFheUint4> {
   ///                                         uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize(){
+  public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint4_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +84,7 @@ implements CompressedFheType<Byte, FheUint4, CompressedFheUint4> {
   ///                                                      const struct ServerKey *server_key,
   ///                                                      struct CompressedFheUint4 **result);
   ///```
-  public static CompressedFheUint4 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
+  public static CompressedFheUint4 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     CompressedFheUint4 deserialized = new CompressedFheUint4();
     execute(() -> compressed_fhe_uint4_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -105,14 +105,14 @@ implements CompressedFheType<Byte, FheUint4, CompressedFheUint4> {
 
   /// ```c
   /// int compressed_fhe_uint4_clone(const struct CompressedFheUint4 *sself,
-///                                struct CompressedFheUint4 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public CompressedFheUint4 clone(){
+  ///                                struct CompressedFheUint4 **result);
+  ///```
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public CompressedFheUint4 clone() {
     CompressedFheUint4 cloned = new CompressedFheUint4();
     execute(() -> compressed_fhe_uint4_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}
+  }
 }

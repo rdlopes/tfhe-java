@@ -7,8 +7,7 @@ import io.github.rdlopes.tfhe.ffm.NativeArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Collection;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
@@ -18,37 +17,33 @@ public class FheUint16Array extends NativeArray implements FheArray<Short, FheUi
   private static final Logger logger = LoggerFactory.getLogger(FheUint16Array.class);
 // @formatter:on
 
-  public FheUint16Array(List<Short> values, ClientKey clientKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint16 element = new FheUint16();
-               execute(() -> fhe_uint16_try_encrypt_with_client_key_u16(values.get(index), clientKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public FheUint16Array(Collection<FheUint16> elements) {
+    logger.trace("init - elements: {}", elements);
+    super(elements);
   }
 
-  public FheUint16Array(List<Short> values, PublicKey publicKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint16 element = new FheUint16();
-               execute(() -> fhe_uint16_try_encrypt_with_public_key_u16(values.get(index), publicKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint16Array encrypt(Collection<Short> values, ClientKey clientKey) {
+    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
+    Collection<FheUint16> elements = values.stream()
+                                           .map(value -> FheUint16.encrypt(value, clientKey))
+                                           .toList();
+    return new FheUint16Array(elements);
   }
 
-  public FheUint16Array(List<Short> values) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint16 element = new FheUint16();
-               execute(() -> fhe_uint16_try_encrypt_trivial_u16(values.get(index), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint16Array encrypt(Collection<Short> values, PublicKey publicKey) {
+    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
+    Collection<FheUint16> elements = values.stream()
+                                           .map(value -> FheUint16.encrypt(value, publicKey))
+                                           .toList();
+    return new FheUint16Array(elements);
+  }
+
+  public static FheUint16Array encrypt(Collection<Short> values) {
+    logger.trace("encrypt - values: {}", values);
+    Collection<FheUint16> elements = values.stream()
+                                           .map(FheUint16::encrypt)
+                                           .toList();
+    return new FheUint16Array(elements);
   }
 
   /// ```c
@@ -81,6 +76,17 @@ public class FheUint16Array extends NativeArray implements FheArray<Short, FheUi
 
   }
 
-// @formatter:off
+  /// ```c
+  /// int fhe_uint16_sum(const struct FheUint16 *const *lhs, size_t len, struct FheUint16 **out_result);
+  ///```
+  @Override
+  public FheUint16 sum() {
+    FheUint16 result = new FheUint16();
+    execute(() -> fhe_uint16_sum(getAddress(), getSize(), result.getAddress()));
+    return result;
+
+  }
+
+  // @formatter:off
 }
 // @formatter:on

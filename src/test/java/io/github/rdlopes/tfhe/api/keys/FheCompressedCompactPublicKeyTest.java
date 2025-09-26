@@ -8,27 +8,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 class FheCompressedCompactPublicKeyTest {
-  private FheKeySet keySet;
+  private KeySet keySet;
 
   @BeforeEach
   void setUp() {
-    keySet = FheKeySet.builder()
-                      .build();
+    keySet = KeySet.builder()
+                   .build();
   }
 
   @Test
   void serializesAndDeserializes() {
-    CompressedFheCompactPublicKey publicKey = new CompressedFheCompactPublicKey(keySet.getClientKey());
+    CompressedCompactPublicKey publicKey = new CompressedCompactPublicKey(keySet.getClientKey());
 
     try (DynamicBuffer buffer = publicKey.serialize()) {
-      assertThatCode(() -> CompressedFheCompactPublicKey.deserialize(buffer))
+      assertThatCode(() -> CompressedCompactPublicKey.deserialize(buffer))
         .doesNotThrowAnyException();
     }
   }
 
   @Test
   void decompresses() {
-    CompressedFheCompactPublicKey publicKey = new CompressedFheCompactPublicKey(keySet.getClientKey());
+    CompressedCompactPublicKey publicKey = new CompressedCompactPublicKey(keySet.getClientKey());
 
     CompactPublicKey decompressed = publicKey.decompress();
 

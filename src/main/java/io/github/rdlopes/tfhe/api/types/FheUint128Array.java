@@ -3,12 +3,12 @@ package io.github.rdlopes.tfhe.api.types;
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
+import io.github.rdlopes.tfhe.api.values.U128;
 import io.github.rdlopes.tfhe.ffm.NativeArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Collection;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
@@ -18,40 +18,33 @@ public class FheUint128Array extends NativeArray implements FheArray<U128, FheUi
   private static final Logger logger = LoggerFactory.getLogger(FheUint128Array.class);
 // @formatter:on
 
-  public FheUint128Array(List<U128> values, ClientKey clientKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint128 element = new FheUint128();
-               execute(() -> fhe_uint128_try_encrypt_with_client_key_u128(values.get(index)
-                                                                                .getAddress(), clientKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public FheUint128Array(Collection<FheUint128> elements) {
+    logger.trace("init - elements: {}", elements);
+    super(elements);
   }
 
-  public FheUint128Array(List<U128> values, PublicKey publicKey) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint128 element = new FheUint128();
-               execute(() -> fhe_uint128_try_encrypt_with_public_key_u128(values.get(index)
-                                                                                .getAddress(), publicKey.getValue(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint128Array encrypt(Collection<U128> values, ClientKey clientKey) {
+    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
+    Collection<FheUint128> elements = values.stream()
+                                            .map(value -> FheUint128.encrypt(value, clientKey))
+                                            .toList();
+    return new FheUint128Array(elements);
   }
 
-  public FheUint128Array(List<U128> values) {
-    logger.trace("init");
-    super(values.size());
-    IntStream.range(0, values.size())
-             .forEach(index -> {
-               FheUint128 element = new FheUint128();
-               execute(() -> fhe_uint128_try_encrypt_trivial_u128(values.get(index)
-                                                                        .getAddress(), element.getAddress()));
-               getAddress().set(C_POINTER, index * C_POINTER.byteSize(), element.getValue());
-             });
+  public static FheUint128Array encrypt(Collection<U128> values, PublicKey publicKey) {
+    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
+    Collection<FheUint128> elements = values.stream()
+                                            .map(value -> FheUint128.encrypt(value, publicKey))
+                                            .toList();
+    return new FheUint128Array(elements);
+  }
+
+  public static FheUint128Array encrypt(Collection<U128> values) {
+    logger.trace("encrypt - values: {}", values);
+    Collection<FheUint128> elements = values.stream()
+                                            .map(FheUint128::encrypt)
+                                            .toList();
+    return new FheUint128Array(elements);
   }
 
   /// ```c
@@ -84,6 +77,19 @@ public class FheUint128Array extends NativeArray implements FheArray<U128, FheUi
 
   }
 
-// @formatter:off
+  /// ```c
+  /// int fhe_uint128_sum(const struct FheUint128 *const *lhs,
+  ///                     size_t len,
+  ///                     struct FheUint128 **out_result);
+  ///```
+  @Override
+  public FheUint128 sum() {
+    FheUint128 result = new FheUint128();
+    execute(() -> fhe_uint128_sum(getAddress(), getSize(), result.getAddress()));
+    return result;
+
+  }
+
+  // @formatter:off
 }
 // @formatter:on

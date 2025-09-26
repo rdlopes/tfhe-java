@@ -100,18 +100,8 @@ public record SymbolsIndex(
                         .stream()
                         .flatMap(Collection::stream)
                         .filter(s -> s.startsWith(symbolName))
+                        .peek(symbol -> used().add(symbol))
                         .findFirst()
                         .orElse(null);
-  }
-
-  public SortedSet<String> unused() {
-    List<String> symbolNames = symbolsByType.values()
-                                            .stream()
-                                            .flatMap(List::stream)
-                                            .toList();
-    List<String> unusedSymbols = new ArrayList<>(symbolNames);
-    unusedSymbols.removeAll(used());
-
-    return new TreeSet<>(unusedSymbols);
   }
 }

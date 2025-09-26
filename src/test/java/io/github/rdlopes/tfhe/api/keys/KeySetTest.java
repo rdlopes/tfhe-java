@@ -8,13 +8,13 @@ import static io.github.rdlopes.tfhe.api.keys.CompressionParameters.SHORTINT_COM
 import static io.github.rdlopes.tfhe.api.keys.CustomParameters.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FheKeySetTest {
-  private FheKeySet keySet;
+class KeySetTest {
+  private KeySet keySet;
 
   @BeforeEach
   void setUp() {
-    keySet = FheKeySet.builder()
-                      .build();
+    keySet = KeySet.builder()
+                   .build();
   }
 
   @Test
@@ -25,10 +25,10 @@ class FheKeySetTest {
 
   @Test
   void enablesCompression() {
-    FheKeySet compressionKeySet = FheKeySet.builder()
-                                           .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                                           .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                                           .build();
+    KeySet compressionKeySet = KeySet.builder()
+                                     .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                                     .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                                     .build();
 
     assertThat(compressionKeySet.getClientKey()).isNotNull();
     assertThat(compressionKeySet.getServerKey()).isNotNull();
@@ -36,10 +36,10 @@ class FheKeySetTest {
 
   @Test
   void enablesCompactLists() {
-    FheKeySet compressionKeySet = FheKeySet.builder()
-                                           .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                                           .useCompactKeyEncryptionParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                                           .build();
+    KeySet compressionKeySet = KeySet.builder()
+                                     .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                                     .useCompactKeyEncryptionParameters(SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                                     .build();
 
     assertThat(compressionKeySet.getClientKey()).isNotNull();
     assertThat(compressionKeySet.getServerKey()).isNotNull();
