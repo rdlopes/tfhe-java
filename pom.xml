@@ -35,7 +35,7 @@
     <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Library dependencies -->
     <commons-io.version>2.20.0</commons-io.version>
-    <commons-lang3.version>3.18.0</commons-lang3.version>
+    <commons-lang3.version>3.19.0</commons-lang3.version>
     <jspecify.version>1.0.0</jspecify.version>
     <picocli.version>4.7.7</picocli.version>
     <handlebars.version>4.5.0</handlebars.version>
