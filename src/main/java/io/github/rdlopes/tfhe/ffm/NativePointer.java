@@ -7,7 +7,7 @@ import java.lang.foreign.MemorySegment;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.C_POINTER;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
 
 public class NativePointer extends NativeAddress {
   protected NativePointer(@Nullable Function<MemorySegment, Integer> destroyer) {
@@ -15,12 +15,16 @@ public class NativePointer extends NativeAddress {
   }
 
   public MemorySegment getValue() {
-    return getAddress().get(C_POINTER, 0);
+    return valueOf(getAddress());
+  }
+
+  public static MemorySegment valueOf(MemorySegment address) {
+    return address.get(C_POINTER, 0);
   }
 
   protected static @NonNull Function<MemorySegment, Integer> valueDestroyerOf(@Nullable Function<MemorySegment, Integer> destroyer) {
     return address -> Optional.ofNullable(destroyer)
-                              .map(d -> d.apply(address.get(C_POINTER, 0)))
+                              .map(d -> d.apply(valueOf(address)))
                               .orElse(0);
   }
 

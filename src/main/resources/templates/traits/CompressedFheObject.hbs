@@ -4,8 +4,8 @@
   super(TfheHeader::{{symbol "destroy"}});
   }
 
-{{#method this (stringFormat "public %s" (decompressed className)) "decompress" "decompress"}}
-  {{declare "decompressed" class=(decompressed className) }}
+{{#method this (stringFormat "public %s" typeName) "decompress" "decompress"}}
+  {{declare "decompressed" class=typeName}}
   {{execute "decompress" "getValue(), decompressed.getAddress()"}}
     return decompressed;
 {{/method}}

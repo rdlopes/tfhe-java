@@ -19,6 +19,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class FheBool extends NativePointer implements FheBoolean<FheBool, CompressedFheBool> {
   private static final Logger logger = LoggerFactory.getLogger(FheBool.class);
 // @formatter:on
+
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -146,14 +147,14 @@ public FheBool bitXor(FheBool other){
 
   /// ```c
   /// int fhe_bool_scalar_bitxor(const struct FheBool *lhs, bool rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool bitXorScalar(Boolean other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_bool_scalar_bitxor(getValue(), other, result.getAddress()));
-    return result;
+///```
+@Override
+public FheBool bitXorScalar(Boolean other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_bool_scalar_bitxor(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_bool_bitxor_assign(struct FheBool *lhs, const struct FheBool *rhs);
@@ -176,27 +177,25 @@ public void bitXorAssign(FheBool other){
   /// ```c
   /// int fhe_bool_not(const struct FheBool *input, struct FheBool **result);
 ///```
-@Override
-public FheBool bitNot(){
+  @Override
+  public FheBool bitNot() {
     FheBool result = new FheBool();
-  execute(() -> fhe_bool_not(getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_bool_not(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
-  /// Not implemented
   @SuppressWarnings("unused")
   public static FheBool ifThenElse(FheBool condition, FheBool thenValue, FheBool elseValue) {
     throw new NotImplementedException("Unavailable for FheBool");
-
   }
 
   /// ```c
   /// int fhe_bool_eq(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
 ///```
 @Override
-public FheBool equalTo(FheBool other){
-    FheBool result = new FheBool();
+public FheBool equalTo(FheBool other) {
+  FheBool result = new FheBool();
   execute(() -> fhe_bool_eq(getValue(), other.getValue(), result.getAddress()));
   return result;
 
@@ -204,33 +203,33 @@ public FheBool equalTo(FheBool other){
 
   /// ```c
   /// int fhe_bool_scalar_eq(const struct FheBool *lhs, bool rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalToScalar(Boolean other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_bool_scalar_eq(getValue(), other, result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_bool_ne(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
 ///```
 @Override
-public FheBool notEqualTo(FheBool other){
-    FheBool result = new FheBool();
-  execute(() -> fhe_bool_ne(getValue(), other.getValue(), result.getAddress()));
+public FheBool equalToScalar(Boolean other) {
+  FheBool result = new FheBool();
+      execute(() -> fhe_bool_scalar_eq(getValue(), other, result.getAddress()));
   return result;
 
 }
 
   /// ```c
+  /// int fhe_bool_ne(const struct FheBool *lhs, const struct FheBool *rhs, struct FheBool **result);
+///```
+  @Override
+  public FheBool notEqualTo(FheBool other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_bool_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
+
+  }
+
+  /// ```c
   /// int fhe_bool_scalar_ne(const struct FheBool *lhs, bool rhs, struct FheBool **result);
-  ///```
+///```
   @Override
   public FheBool notEqualToScalar(Boolean other) {
     FheBool result = new FheBool();
-    execute(() -> fhe_bool_scalar_ne(getValue(), other, result.getAddress()));
+      execute(() -> fhe_bool_scalar_ne(getValue(), other, result.getAddress()));
     return result;
 
   }
@@ -253,7 +252,7 @@ public FheBool notEqualTo(FheBool other){
   /// int fhe_bool_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
   ///                                          uint64_t serialized_size_limit,
   ///                                          const struct ServerKey *server_key,
-  ///                                          struct FheBool **result);
+///                                          struct FheBool **result);
 ///```
 public static FheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheBool deserialized = new FheBool();
@@ -281,16 +280,17 @@ public static FheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverK
   ///```
   public static FheBool encrypt(Boolean clearValue, PublicKey publicKey) {
     FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), encrypted.getAddress()));
+      execute(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
-/// ```c
-/// int fhe_bool_try_encrypt_trivial_bool(bool value, struct FheBool **result);
-///```
-public static FheBool encrypt(Boolean clearValue){
-  FheBool encrypted = new FheBool();
-  execute(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, encrypted.getAddress()));
+}
+
+  /// ```c
+  /// int fhe_bool_try_encrypt_trivial_bool(bool value, struct FheBool **result);
+  ///```
+  public static FheBool encrypt(Boolean clearValue){
+    FheBool encrypted = new FheBool();
+      execute(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, encrypted.getAddress()));
     return encrypted;
 
 }
@@ -299,23 +299,23 @@ public static FheBool encrypt(Boolean clearValue){
 ///```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheBool clone() {
-  FheBool cloned = new FheBool();
-  execute(() -> fhe_bool_clone(getValue(), cloned.getAddress()));
+public FheBool clone(){
+    FheBool cloned = new FheBool();
+    execute(() -> fhe_bool_clone(getValue(), cloned.getAddress()));
     return cloned;
 
 }
-  
-/// ```c
-/// int fhe_bool_compress(const struct FheBool *sself, struct CompressedFheBool **result);
-///```
-@Override
-public CompressedFheBool compress(){
-  CompressedFheBool compressed = new CompressedFheBool();
-  execute(() -> fhe_bool_compress(getValue(), compressed.getAddress()));
-  return compressed;
 
-}
+  /// ```c
+  /// int fhe_bool_compress(const struct FheBool *sself, struct CompressedFheBool **result);
+  ///```
+  @Override
+  public CompressedFheBool compress(){
+    CompressedFheBool compressed = new CompressedFheBool();
+    execute(() -> fhe_bool_compress(getValue(), compressed.getAddress()));
+    return compressed;
+
+  }
 
   /// ```c
   /// int fhe_bool_decrypt(const struct FheBool *encrypted_value,
@@ -326,7 +326,9 @@ public CompressedFheBool compress(){
 public Boolean decrypt(ClientKey clientKey) {
     return executeAndReturn(Boolean.class, address -> fhe_bool_decrypt(getValue(), clientKey.getValue(), address));
 
-  }
+}
+  
+
 
   /// ```c
   /// int fhe_bool_cast_into_fhe_int10(const struct FheBool *sself, struct FheInt10 **result);
@@ -1032,19 +1034,19 @@ public FheInt10 castIntoFheInt10() {
 
   /// ```c
   /// int fhe_bool_cast_into_fhe_uint8(const struct FheBool *sself, struct FheUint8 **result);
-  ///```
-  public FheUint8 castIntoFheUint8() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_bool_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+///```
+public FheUint8 castIntoFheUint8() {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_bool_cast_into_fhe_uint8(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_bool_cast_into_fhe_uint80(const struct FheBool *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_bool_cast_into_fhe_uint80(getValue(), result.getAddress()));
+/// ```c
+/// int fhe_bool_cast_into_fhe_uint80(const struct FheBool *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_bool_cast_into_fhe_uint80(getValue(), result.getAddress()));
   return result;
 }
 
@@ -1065,6 +1067,7 @@ public FheUint96 castIntoFheUint96() {
   execute(() -> fhe_bool_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
+
 
   // @formatter:off
 }

@@ -15,7 +15,6 @@ import static com.github.jknack.handlebars.EscapingStrategy.NOOP;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import static java.util.stream.Collectors.joining;
 
 public record TemplateWriter(Handlebars handlebars, Path outputPath, String outputPackage) {
 
@@ -46,19 +45,7 @@ public record TemplateWriter(Handlebars handlebars, Path outputPath, String outp
 
     try (Writer writer = Files.newBufferedWriter(filePath, UTF_8, CREATE, TRUNCATE_EXISTING)) {
       template.apply(templateContext, writer);
-      printUnusedSymbols(templateContext);
     }
-  }
-
-  private void printUnusedSymbols(TemplateContext context) {
-    System.out.println("Unused symbols for " + context.className());
-    String unusedList = context.symbolsIndex()
-                               .unused()
-                               .stream()
-                               .map(s -> "- " + s)
-                               .collect(joining("\n"))
-                               .indent(2);
-    System.out.println(unusedList);
   }
 
 }

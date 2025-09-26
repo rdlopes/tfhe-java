@@ -19,6 +19,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class {{className}} extends NativePointer implements {{implementation this}} {
   private static final Logger logger = LoggerFactory.getLogger({{className}}.class);
 // @formatter:on
+
   {{> traits/FheType}}
   {{> traits/FheDecryption}}
 
@@ -39,6 +40,7 @@ public class {{className}} extends NativePointer implements {{implementation thi
   {{/unless}}
 
   {{casts this}}
+
   // @formatter:off
 }
 // @formatter:on

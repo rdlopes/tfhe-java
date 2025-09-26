@@ -105,7 +105,7 @@ implements CompressedFheType<U256, FheUint232, CompressedFheUint232> {
 
   /// ```c
   /// int compressed_fhe_uint232_clone(const struct CompressedFheUint232 *sself,
-  ///                                  struct CompressedFheUint232 **result);
+///                                  struct CompressedFheUint232 **result);
 /// ```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")

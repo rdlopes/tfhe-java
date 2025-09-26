@@ -105,7 +105,7 @@ implements CompressedFheType<U128, FheUint128, CompressedFheUint128> {
 
   /// ```c
   /// int compressed_fhe_uint128_clone(const struct CompressedFheUint128 *sself,
-  ///                                  struct CompressedFheUint128 **result);
+///                                  struct CompressedFheUint128 **result);
 /// ```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")

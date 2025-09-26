@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+@SuppressWarnings("ClassCanBeRecord")
 public final class FheKeySet {
   private static final Logger logger = LoggerFactory.getLogger(FheKeySet.class);
   private final ClientKey clientKey;

@@ -96,14 +96,12 @@ public record SymbolsIndex(
   }
 
   public String lookupSymbol(String symbolName) {
-    Optional<String> foundSymbol = symbolsByType.values()
-                                                .stream()
-                                                .flatMap(Collection::stream)
-                                                .filter(s -> s.startsWith(symbolName))
-                                                .findFirst();
-    foundSymbol.ifPresent(s -> used().add(s));
-
-    return foundSymbol.orElse(symbolName);
+    return symbolsByType.values()
+                        .stream()
+                        .flatMap(Collection::stream)
+                        .filter(s -> s.startsWith(symbolName))
+                        .findFirst()
+                        .orElse(null);
   }
 
   public SortedSet<String> unused() {

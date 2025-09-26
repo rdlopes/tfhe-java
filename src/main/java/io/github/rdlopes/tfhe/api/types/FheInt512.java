@@ -18,6 +18,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class FheInt512 extends NativePointer implements FheInteger<I512, FheInt512, CompressedFheInt512> {
   private static final Logger logger = LoggerFactory.getLogger(FheInt512.class);
 // @formatter:on
+
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -80,12 +81,12 @@ public class FheInt512 extends NativePointer implements FheInteger<I512, FheInt5
 
   /// ```c
   /// int fhe_int512_bitand_assign(struct FheInt512 *lhs, const struct FheInt512 *rhs);
-  ///```
-  @Override
+///```
+@Override
 public void bitAndAssign(FheInt512 other){
     execute(() -> fhe_int512_bitand_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_scalar_bitand_assign(struct FheInt512 *lhs, struct I512 rhs);
@@ -113,14 +114,14 @@ public FheInt512 bitOr(FheInt512 other){
   /// int fhe_int512_scalar_bitor(const struct FheInt512 *lhs,
   ///                             struct I512 rhs,
   ///                             struct FheInt512 **result);
-  ///```
-  @Override
-  public FheInt512 bitOrScalar(I512 other) {
-    FheInt512 result = new FheInt512();
-    execute(() -> fhe_int512_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheInt512 bitOrScalar(I512 other) {
+  FheInt512 result = new FheInt512();
+  execute(() -> fhe_int512_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_bitor_assign(struct FheInt512 *lhs, const struct FheInt512 *rhs);
@@ -142,7 +143,7 @@ public void bitOrAssign(FheInt512 other){
 
   /// ```c
   /// int fhe_int512_bitxor(const struct FheInt512 *lhs,
-  ///                       const struct FheInt512 *rhs,
+///                       const struct FheInt512 *rhs,
 ///                       struct FheInt512 **result);
 ///```
 @Override
@@ -157,16 +158,16 @@ public FheInt512 bitXor(FheInt512 other){
   /// int fhe_int512_scalar_bitxor(const struct FheInt512 *lhs,
   ///                              struct I512 rhs,
   ///                              struct FheInt512 **result);
-  ///```
-  @Override
-  public FheInt512 bitXorScalar(I512 other) {
-    FheInt512 result = new FheInt512();
-    execute(() -> fhe_int512_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+///```
+@Override
+public FheInt512 bitXorScalar(I512 other) {
+  FheInt512 result = new FheInt512();
+  execute(() -> fhe_int512_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
+}
+  
+/// ```c
 /// int fhe_int512_bitxor_assign(struct FheInt512 *lhs, const struct FheInt512 *rhs);
 ///```
 @Override
@@ -179,21 +180,21 @@ public void bitXorAssign(FheInt512 other) {
   /// int fhe_int512_scalar_bitxor_assign(struct FheInt512 *lhs, struct I512 rhs);
   ///```
   @Override
-  public void bitXorScalarAssign(I512 other) {
-    execute(() -> fhe_int512_scalar_bitxor_assign(getValue(), other.getAddress()));
+  public void bitXorScalarAssign(I512 other){
+      execute(() -> fhe_int512_scalar_bitxor_assign(getValue(), other.getAddress()));
 
-}
-  
-/// ```c
+  }
+
+  /// ```c
 /// int fhe_int512_not(const struct FheInt512 *input, struct FheInt512 **result);
-///```
-@Override
-public FheInt512 bitNot(){
+  ///```
+  @Override
+  public FheInt512 bitNot() {
     FheInt512 result = new FheInt512();
-  execute(() -> fhe_int512_not(getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_int512_not(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int512_if_then_else(const struct FheBool *condition_ct,
@@ -205,36 +206,36 @@ public FheInt512 bitNot(){
   public static FheInt512 ifThenElse(FheBool condition, FheInt512 thenValue, FheInt512 elseValue) {
     FheInt512 result = new FheInt512();
     execute(() -> fhe_int512_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int512_eq(const struct FheInt512 *lhs,
-///                   const struct FheInt512 *rhs,
-///                   struct FheBool **result);
-///```
-@Override
-public FheBool equalTo(FheInt512 other){
-  FheBool result = new FheBool();
-  execute(() -> fhe_int512_eq(getValue(), other.getValue(), result.getAddress()));
-  return result;
+      return result;
 
 }
   
 /// ```c
-/// int fhe_int512_scalar_eq(const struct FheInt512 *lhs, struct I512 rhs, struct FheBool **result);
+/// int fhe_int512_eq(const struct FheInt512 *lhs,
+///                   const struct FheInt512 *rhs,
+///                   struct FheBool **result);
 ///```
 @Override
-public FheBool equalToScalar(I512 other) {
+public FheBool equalTo(FheInt512 other) {
   FheBool result = new FheBool();
-  execute(() -> fhe_int512_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+    execute(() -> fhe_int512_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
 }
 
   /// ```c
-  /// int fhe_int512_ne(const struct FheInt512 *lhs,
+  /// int fhe_int512_scalar_eq(const struct FheInt512 *lhs, struct I512 rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalToScalar(I512 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int512_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+}
+  
+/// ```c
+/// int fhe_int512_ne(const struct FheInt512 *lhs,
 ///                   const struct FheInt512 *rhs,
 ///                   struct FheBool **result);
 ///```
@@ -250,7 +251,7 @@ public FheBool notEqualTo(FheInt512 other) {
   /// int fhe_int512_scalar_ne(const struct FheInt512 *lhs, struct I512 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(I512 other) {
+  public FheBool notEqualToScalar(I512 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int512_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -273,71 +274,72 @@ public FheBool notEqualTo(FheInt512 other) {
   ///  *    * (*result) will point the deserialized object on success, else NULL
   ///  */
   /// int fhe_int512_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
-  ///                                            uint64_t serialized_size_limit,
-  ///                                            const struct ServerKey *server_key,
+///                                            uint64_t serialized_size_limit,
+///                                            const struct ServerKey *server_key,
 ///                                            struct FheInt512 **result);
 ///```
 public static FheInt512 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt512 deserialized = new FheInt512();
-    execute(() -> fhe_int512_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+  execute(() -> fhe_int512_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
   return deserialized;
+
+}
+/// ```c
+/// int fhe_int512_try_encrypt_with_client_key_i512(struct I512 value,
+///                                                 const struct ClientKey *client_key,
+///                                                 struct FheInt512 **result);
+///```
+public static FheInt512 encrypt(I512 clearValue, ClientKey clientKey){
+    FheInt512 encrypted = new FheInt512();
+  execute(() -> fhe_int512_try_encrypt_with_client_key_i512(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+  return encrypted;
+
+}
+  
+/// ```c
+/// int fhe_int512_try_encrypt_with_public_key_i512(struct I512 value,
+///                                                 const struct PublicKey *public_key,
+///                                                 struct FheInt512 **result);
+///```
+public static FheInt512 encrypt(I512 clearValue, PublicKey publicKey){
+    FheInt512 encrypted = new FheInt512();
+      execute(() -> fhe_int512_try_encrypt_with_public_key_i512(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+  return encrypted;
 
 }
 
   /// ```c
-  /// int fhe_int512_try_encrypt_with_client_key_i512(struct I512 value,
-  ///                                                 const struct ClientKey *client_key,
-///                                                 struct FheInt512 **result);
+  /// int fhe_int512_try_encrypt_trivial_i512(struct I512 value, struct FheInt512 **result);
   ///```
-  public static FheInt512 encrypt(I512 clearValue, ClientKey clientKey){
+  public static FheInt512 encrypt(I512 clearValue){
     FheInt512 encrypted = new FheInt512();
-    execute(() -> fhe_int512_try_encrypt_with_client_key_i512(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
+      execute(() -> fhe_int512_try_encrypt_trivial_i512(clearValue.getAddress(), encrypted.getAddress()));
     return encrypted;
 
   }
 
   /// ```c
-  /// int fhe_int512_try_encrypt_with_public_key_i512(struct I512 value,
-  ///                                                 const struct PublicKey *public_key,
-///                                                 struct FheInt512 **result);
+  /// int fhe_int512_clone(const struct FheInt512 *sself, struct FheInt512 **result);
   ///```
-  public static FheInt512 encrypt(I512 clearValue, PublicKey publicKey){
-    FheInt512 encrypted = new FheInt512();
-    execute(() -> fhe_int512_try_encrypt_with_public_key_i512(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
-}
-/// ```c
-/// int fhe_int512_try_encrypt_trivial_i512(struct I512 value, struct FheInt512 **result);
-///```
-public static FheInt512 encrypt(I512 clearValue) {
-  FheInt512 encrypted = new FheInt512();
-  execute(() -> fhe_int512_try_encrypt_trivial_i512(clearValue.getAddress(), encrypted.getAddress()));
-    return encrypted;
-
-}
-/// ```c
-/// int fhe_int512_clone(const struct FheInt512 *sself, struct FheInt512 **result);
-///```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheInt512 clone() {
-  FheInt512 cloned = new FheInt512();
+public FheInt512 clone(){
+    FheInt512 cloned = new FheInt512();
   execute(() -> fhe_int512_clone(getValue(), cloned.getAddress()));
-    return cloned;
+  return cloned;
 
 }
-  
-/// ```c
-/// int fhe_int512_compress(const struct FheInt512 *sself, struct CompressedFheInt512 **result);
-///```
-@Override
-public CompressedFheInt512 compress() {
-  CompressedFheInt512 compressed = new CompressedFheInt512();
-  execute(() -> fhe_int512_compress(getValue(), compressed.getAddress()));
-  return compressed;
 
-}
+  /// ```c
+  /// int fhe_int512_compress(const struct FheInt512 *sself, struct CompressedFheInt512 **result);
+  ///```
+  @Override
+  public CompressedFheInt512 compress() {
+    CompressedFheInt512 compressed = new CompressedFheInt512();
+    execute(() -> fhe_int512_compress(getValue(), compressed.getAddress()));
+    return compressed;
+
+  }
 
   /// ```c
   /// int fhe_int512_decrypt(const struct FheInt512 *encrypted_value,
@@ -345,27 +347,25 @@ public CompressedFheInt512 compress() {
   ///                        struct I512 *result);
   ///```
   @Override
-  public I512 decrypt(ClientKey clientKey) {
-    I512 decrypted = new I512();
-    executeWithAddress(decrypted.getAddress(), address -> fhe_int512_decrypt(getValue(), clientKey.getValue(), address));
-      return decrypted;
+public I512 decrypt(ClientKey clientKey){
+      I512 decrypted = new I512();
+      executeWithAddress(decrypted.getAddress(), address -> fhe_int512_decrypt(getValue(), clientKey.getValue(), address));
+    return decrypted;
 
-}
-  
+  }
 
+  /// ```c
+  /// int fhe_int512_add(const struct FheInt512 *lhs,
+  ///                    const struct FheInt512 *rhs,
+  ///                    struct FheInt512 **result);
+  ///```
+  @Override
+  public FheInt512 add(FheInt512 other) {
+    FheInt512 result = new FheInt512();
+    execute(() -> fhe_int512_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-/// ```c
-/// int fhe_int512_add(const struct FheInt512 *lhs,
-///                    const struct FheInt512 *rhs,
-///                    struct FheInt512 **result);
-///```
-@Override
-public FheInt512 add(FheInt512 other) {
-  FheInt512 result = new FheInt512();
-  execute(() -> fhe_int512_add(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
+  }
 
   /// ```c
   /// int fhe_int512_overflowing_add(const struct FheInt512 *lhs,
@@ -391,23 +391,23 @@ public FheInt512 add(FheInt512 other) {
     execute(() -> fhe_int512_scalar_add(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int512_add_assign(struct FheInt512 *lhs, const struct FheInt512 *rhs);
   ///```
   @Override
-  public void addAssign(FheInt512 other) {
-    execute(() -> fhe_int512_add_assign(getValue(), other.getValue()));
+  public void addAssign(FheInt512 other){
+      execute(() -> fhe_int512_add_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_scalar_add_assign(struct FheInt512 *lhs, struct I512 rhs);
   ///```
   @Override
-  public void addScalarAssign(I512 other){
-        execute(() -> fhe_int512_scalar_add_assign(getValue(), other.getAddress()));
+  public void addScalarAssign(I512 other) {
+    execute(() -> fhe_int512_scalar_add_assign(getValue(), other.getAddress()));
 
   }
 
@@ -435,7 +435,7 @@ public FheInt512 add(FheInt512 other) {
     FheInt512 result = new FheInt512();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int512_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return new CheckedResult<>(result, overflow);
+      return new CheckedResult<>(result, overflow);
 
   }
 
@@ -444,7 +444,7 @@ public FheInt512 add(FheInt512 other) {
   ///```
   @Override
   public FheInt512 subtractScalar(I512 other) {
-      FheInt512 result = new FheInt512();
+    FheInt512 result = new FheInt512();
     execute(() -> fhe_int512_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
@@ -452,49 +452,49 @@ public FheInt512 add(FheInt512 other) {
 
   /// ```c
   /// int fhe_int512_sub_assign(struct FheInt512 *lhs, const struct FheInt512 *rhs);
-  ///```
-  @Override
-  public void subtractAssign(FheInt512 other) {
-    execute(() -> fhe_int512_sub_assign(getValue(), other.getValue()));
+///```
+@Override
+public void subtractAssign(FheInt512 other){
+      execute(() -> fhe_int512_sub_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_scalar_sub_assign(struct FheInt512 *lhs, struct I512 rhs);
   ///```
-@Override
-public void subtractScalarAssign(I512 other){
-        execute(() -> fhe_int512_scalar_sub_assign(getValue(), other.getAddress()));
+  @Override
+  public void subtractScalarAssign(I512 other) {
+    execute(() -> fhe_int512_scalar_sub_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_int512_mul(const struct FheInt512 *lhs,
   ///                    const struct FheInt512 *rhs,
-  ///                    struct FheInt512 **result);
-  ///```
-  @Override
-  public FheInt512 multiply(FheInt512 other) {
-    FheInt512 result = new FheInt512();
-    execute(() -> fhe_int512_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-    
-/// ```c
-/// int fhe_int512_overflowing_mul(const struct FheInt512 *lhs,
-///                                const struct FheInt512 *rhs,
-///                                struct FheInt512 **out_result,
-///                                struct FheBool **out_overflowed);
+///                    struct FheInt512 **result);
 ///```
 @Override
-public CheckedResult<I512, FheInt512, CompressedFheInt512> multiplyWithOverflow(FheInt512 other) {
-  FheInt512 result = new FheInt512();
-  FheBool overflow = new FheBool();
-  execute(() -> fhe_int512_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return new CheckedResult<>(result, overflow);
+public FheInt512 multiply(FheInt512 other){
+      FheInt512 result = new FheInt512();
+      execute(() -> fhe_int512_mul(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
 }
+
+  /// ```c
+/// int fhe_int512_overflowing_mul(const struct FheInt512 *lhs,
+  ///                                const struct FheInt512 *rhs,
+  ///                                struct FheInt512 **out_result,
+  ///                                struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<I512, FheInt512, CompressedFheInt512> multiplyWithOverflow(FheInt512 other) {
+    FheInt512 result = new FheInt512();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int512_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
 
   /// ```c
   /// int fhe_int512_scalar_mul(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
@@ -509,21 +509,21 @@ public CheckedResult<I512, FheInt512, CompressedFheInt512> multiplyWithOverflow(
 
   /// ```c
   /// int fhe_int512_mul_assign(struct FheInt512 *lhs, const struct FheInt512 *rhs);
-  ///```
-  @Override
-  public void multiplyAssign(FheInt512 other) {
-    execute(() -> fhe_int512_mul_assign(getValue(), other.getValue()));
+///```
+@Override
+public void multiplyAssign(FheInt512 other){
+      execute(() -> fhe_int512_mul_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_scalar_mul_assign(struct FheInt512 *lhs, struct I512 rhs);
-///```
-@Override
-public void multiplyScalarAssign(I512 other){
-        execute(() -> fhe_int512_scalar_mul_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void multiplyScalarAssign(I512 other) {
+    execute(() -> fhe_int512_scalar_mul_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_int512_div(const struct FheInt512 *lhs,
@@ -542,7 +542,7 @@ public void multiplyScalarAssign(I512 other){
   /// int fhe_int512_scalar_div(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
   ///```
   @Override
-public FheInt512 divideScalar(I512 other) {
+  public FheInt512 divideScalar(I512 other) {
     FheInt512 result = new FheInt512();
     execute(() -> fhe_int512_scalar_div(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -560,12 +560,12 @@ public FheInt512 divideScalar(I512 other) {
 
   /// ```c
   /// int fhe_int512_scalar_div_assign(struct FheInt512 *lhs, struct I512 rhs);
-///```
-@Override
-public void divideScalarAssign(I512 other){
-  execute(() -> fhe_int512_scalar_div_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void divideScalarAssign(I512 other) {
+    execute(() -> fhe_int512_scalar_div_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_int512_rem(const struct FheInt512 *lhs,
@@ -582,7 +582,7 @@ public void divideScalarAssign(I512 other){
 
   /// ```c
   /// int fhe_int512_scalar_rem(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
-///```
+  ///```
   @Override
   public FheInt512 remainderScalar(I512 other) {
     FheInt512 result = new FheInt512();
@@ -604,7 +604,7 @@ public void divideScalarAssign(I512 other){
   /// int fhe_int512_scalar_rem_assign(struct FheInt512 *lhs, struct I512 rhs);
   ///```
   @Override
-  public void remainderScalarAssign(I512 other){
+  public void remainderScalarAssign(I512 other) {
     execute(() -> fhe_int512_scalar_rem_assign(getValue(), other.getAddress()));
 
   }
@@ -631,10 +631,10 @@ public void divideScalarAssign(I512 other){
   ///                               struct FheInt512 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<I512, FheInt512, CompressedFheInt512> divideWithRemainderScalar(I512 other){
-      FheInt512 divider = new FheInt512();
-    FheInt512 remainder = new FheInt512();
-    execute(() -> fhe_int512_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
+  public DividerAndRemainder<I512, FheInt512, CompressedFheInt512> divideWithRemainderScalar(I512 other) {
+    FheInt512 divider = new FheInt512();
+      FheInt512 remainder = new FheInt512();
+        execute(() -> fhe_int512_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
     return new DividerAndRemainder<>(divider, remainder);
 
   }
@@ -643,9 +643,9 @@ public void divideScalarAssign(I512 other){
   /// int fhe_int512_neg(const struct FheInt512 *input, struct FheInt512 **result);
   ///```
   @Override
-public FheInt512 negate(){
-      FheInt512 result = new FheInt512();
-      execute(() -> fhe_int512_neg(getValue(), result.getAddress()));
+  public FheInt512 negate() {
+    FheInt512 result = new FheInt512();
+    execute(() -> fhe_int512_neg(getValue(), result.getAddress()));
     return result;
 
   }
@@ -671,15 +671,15 @@ public FheInt512 negate(){
   ////**
   ///  * Returns the base 2 logarithm of the number, rounded down.
   ///  *
-  ///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
+///  * Also returns a boolean flag that is true if the result is valid (i.e input was > 0)
   ///  */
   /// int fhe_int512_checked_ilog2(const struct FheInt512 *input,
   ///                              struct FheUint32 **result_1,
   ///                              struct FheBool **result_2);
   ///```
   @Override
-  public CheckedResult<I512, FheInt512, CompressedFheInt512> ilog2WithCheck(){
-      FheInt512 result = new FheInt512();
+  public CheckedResult<I512, FheInt512, CompressedFheInt512> ilog2WithCheck() {
+    FheInt512 result = new FheInt512();
     FheBool check = new FheBool();
     execute(() -> fhe_int512_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
     return new CheckedResult<>(result, check);
@@ -778,57 +778,57 @@ public FheInt512 negate(){
   public FheBool greaterThanOrEqualToScalar(I512 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_int512_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_int512_min(const struct FheInt512 *lhs,
+///                    const struct FheInt512 *rhs,
+///                    struct FheInt512 **result);
+///```
+@Override
+public FheInt512 min(FheInt512 other) {
+  FheInt512 result = new FheInt512();
+  execute(() -> fhe_int512_min(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /// ```c
-  /// int fhe_int512_min(const struct FheInt512 *lhs,
-  ///                    const struct FheInt512 *rhs,
-  ///                    struct FheInt512 **result);
-  ///```
-  @Override
-  public FheInt512 min(FheInt512 other) {
-    FheInt512 result = new FheInt512();
-    execute(() -> fhe_int512_min(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_int512_scalar_min(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
+  /// int fhe_int512_scalar_min(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
   ///```
   @Override
   public FheInt512 minScalar(I512 other) {
     FheInt512 result = new FheInt512();
     execute(() -> fhe_int512_scalar_min(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int512_max(const struct FheInt512 *lhs,
-  ///                    const struct FheInt512 *rhs,
-  ///                    struct FheInt512 **result);
-  ///```
-  @Override
-  public FheInt512 max(FheInt512 other) {
-    FheInt512 result = new FheInt512();
-    execute(() -> fhe_int512_max(getValue(), other.getValue(), result.getAddress()));
-    return result;
+      return result;
 
 }
     
 /// ```c
-/// int fhe_int512_scalar_max(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
+/// int fhe_int512_max(const struct FheInt512 *lhs,
+///                    const struct FheInt512 *rhs,
+///                    struct FheInt512 **result);
 ///```
 @Override
-public FheInt512 maxScalar(I512 other) {
+public FheInt512 max(FheInt512 other) {
   FheInt512 result = new FheInt512();
-  execute(() -> fhe_int512_scalar_max(getValue(), other.getAddress(), result.getAddress()));
+  execute(() -> fhe_int512_max(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
+
+  /// ```c
+  /// int fhe_int512_scalar_max(const struct FheInt512 *lhs, struct I512 rhs, struct FheInt512 **result);
+  ///```
+  @Override
+  public FheInt512 maxScalar(I512 other){
+      FheInt512 result = new FheInt512();
+        execute(() -> fhe_int512_scalar_max(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_int512_shl(const struct FheInt512 *lhs,
@@ -838,7 +838,7 @@ public FheInt512 maxScalar(I512 other) {
   @Override
   public FheInt512 shiftLeft(FheInt512 other) {
     FheInt512 result = new FheInt512();
-      execute(() -> fhe_int512_shl(getValue(), other.getValue(), result.getAddress()));
+    execute(() -> fhe_int512_shl(getValue(), other.getValue(), result.getAddress()));
     return result;
 
   }
@@ -858,19 +858,19 @@ public FheInt512 maxScalar(I512 other) {
   /// int fhe_int512_shl_assign(struct FheInt512 *lhs, const struct FheUint512 *rhs);
   ///```
   @Override
-  public void shiftLeftAssign(FheInt512 other){
-      execute(() -> fhe_int512_shl_assign(getValue(), other.getValue()));
+  public void shiftLeftAssign(FheInt512 other) {
+    execute(() -> fhe_int512_shl_assign(getValue(), other.getValue()));
 
   }
 
   /// ```c
   /// int fhe_int512_scalar_shl_assign(struct FheInt512 *lhs, struct U512 rhs);
-  ///```
-  @Override
-  public void shiftLeftScalarAssign(I512 other) {
-    execute(() -> fhe_int512_scalar_shl_assign(getValue(), other.getAddress()));
+///```
+@Override
+public void shiftLeftScalarAssign(I512 other) {
+  execute(() -> fhe_int512_scalar_shl_assign(getValue(), other.getAddress()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_shr(const struct FheInt512 *lhs,
@@ -880,30 +880,30 @@ public FheInt512 maxScalar(I512 other) {
   @Override
   public FheInt512 shiftRight(FheInt512 other) {
     FheInt512 result = new FheInt512();
-      execute(() -> fhe_int512_shr(getValue(), other.getValue(), result.getAddress()));
-    return result;
+    execute(() -> fhe_int512_shr(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_int512_scalar_shr(const struct FheInt512 *lhs, struct U512 rhs, struct FheInt512 **result);
+///```
+@Override
+public FheInt512 shiftRightScalar(I512 other) {
+  FheInt512 result = new FheInt512();
+  execute(() -> fhe_int512_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  /// ```c
-  /// int fhe_int512_scalar_shr(const struct FheInt512 *lhs, struct U512 rhs, struct FheInt512 **result);
-  ///```
-  @Override
-  public FheInt512 shiftRightScalar(I512 other) {
-    FheInt512 result = new FheInt512();
-    execute(() -> fhe_int512_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
+}
 
   /// ```c
   /// int fhe_int512_shr_assign(struct FheInt512 *lhs, const struct FheUint512 *rhs);
-  ///```
-  @Override
-public void shiftRightAssign(FheInt512 other){
-      execute(() -> fhe_int512_shr_assign(getValue(), other.getValue()));
+///```
+@Override
+public void shiftRightAssign(FheInt512 other) {
+  execute(() -> fhe_int512_shr_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_scalar_shr_assign(struct FheInt512 *lhs, struct U512 rhs);
@@ -916,7 +916,7 @@ public void shiftRightAssign(FheInt512 other){
 
   /// ```c
   /// int fhe_int512_rotate_left(const struct FheInt512 *lhs,
-///                            const struct FheUint512 *rhs,
+  ///                            const struct FheUint512 *rhs,
   ///                            struct FheInt512 **result);
   ///```
   @Override
@@ -930,7 +930,7 @@ public void shiftRightAssign(FheInt512 other){
   /// ```c
   /// int fhe_int512_scalar_rotate_left(const struct FheInt512 *lhs,
   ///                                   struct U512 rhs,
-  ///                                   struct FheInt512 **result);
+///                                   struct FheInt512 **result);
   ///```
   @Override
   public FheInt512 rotateLeftScalar(I512 other) {
@@ -942,12 +942,12 @@ public void shiftRightAssign(FheInt512 other){
 
   /// ```c
   /// int fhe_int512_rotate_left_assign(struct FheInt512 *lhs, const struct FheUint512 *rhs);
-  ///```
-  @Override
-  public void rotateLeftAssign(FheInt512 other){
-      execute(() -> fhe_int512_rotate_left_assign(getValue(), other.getValue()));
+///```
+@Override
+public void rotateLeftAssign(FheInt512 other) {
+  execute(() -> fhe_int512_rotate_left_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int512_scalar_rotate_left_assign(struct FheInt512 *lhs, struct U512 rhs);
@@ -960,7 +960,7 @@ public void shiftRightAssign(FheInt512 other){
 
   /// ```c
   /// int fhe_int512_rotate_right(const struct FheInt512 *lhs,
-///                             const struct FheUint512 *rhs,
+  ///                             const struct FheUint512 *rhs,
   ///                             struct FheInt512 **result);
   ///```
   @Override
@@ -973,32 +973,32 @@ public void shiftRightAssign(FheInt512 other){
 
   /// ```c
   /// int fhe_int512_scalar_rotate_right(const struct FheInt512 *lhs,
-  ///                                    struct U512 rhs,
-  ///                                    struct FheInt512 **result);
+///                                    struct U512 rhs,
+///                                    struct FheInt512 **result);
   ///```
   @Override
   public FheInt512 rotateRightScalar(I512 other) {
     FheInt512 result = new FheInt512();
     execute(() -> fhe_int512_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
-
-  /// ```c
-  /// int fhe_int512_rotate_right_assign(struct FheInt512 *lhs, const struct FheUint512 *rhs);
+}
+    
+/// ```c
+/// int fhe_int512_rotate_right_assign(struct FheInt512 *lhs, const struct FheUint512 *rhs);
 ///```
 @Override
 public void rotateRightAssign(FheInt512 other){
-      execute(() -> fhe_int512_rotate_right_assign(getValue(), other.getValue()));
+  execute(() -> fhe_int512_rotate_right_assign(getValue(), other.getValue()));
 
 }
 
   /// ```c
   /// int fhe_int512_scalar_rotate_right_assign(struct FheInt512 *lhs, struct U512 rhs);
-  ///```
-  @Override
-  public void rotateRightScalarAssign(I512 other) {
-    execute(() -> fhe_int512_scalar_rotate_right_assign(getValue(), other.getAddress()));
+///```
+@Override
+public void rotateRightScalarAssign(I512 other){
+        execute(() -> fhe_int512_scalar_rotate_right_assign(getValue(), other.getAddress()));
 
 }
     
@@ -1010,8 +1010,8 @@ public void rotateRightAssign(FheInt512 other){
 ///```
 @Override
 public FheInt512 leadingOnes() {
-  FheInt512 result = new FheInt512();
-  execute(() -> fhe_int512_leading_ones(getValue(), result.getAddress()));
+      FheInt512 result = new FheInt512();
+      execute(() -> fhe_int512_leading_ones(getValue(), result.getAddress()));
       return result;
 
 }
@@ -1023,9 +1023,9 @@ public FheInt512 leadingOnes() {
 /// int fhe_int512_leading_zeros(const struct FheInt512 *input, struct FheUint32 **result);
 ///```
 @Override
-public FheInt512 leadingZeros() {
-  FheInt512 result = new FheInt512();
-  execute(() -> fhe_int512_leading_zeros(getValue(), result.getAddress()));
+public FheInt512 leadingZeros(){
+      FheInt512 result = new FheInt512();
+      execute(() -> fhe_int512_leading_zeros(getValue(), result.getAddress()));
       return result;
 
 }
@@ -1040,23 +1040,23 @@ public FheInt512 leadingZeros() {
 public FheInt512 trailingOnes() {
   FheInt512 result = new FheInt512();
   execute(() -> fhe_int512_trailing_ones(getValue(), result.getAddress()));
-      return result;
-
-}
-    
-/// ```c
-////**
-///  * Returns the number of trailing zeros in the binary representation of input.
-///  */
-/// int fhe_int512_trailing_zeros(const struct FheInt512 *input, struct FheUint32 **result);
-///```
-@Override
-public FheInt512 trailingZeros() {
-  FheInt512 result = new FheInt512();
-  execute(() -> fhe_int512_trailing_zeros(getValue(), result.getAddress()));
   return result;
 
 }
+
+  /// ```c
+  ////**
+  ///  * Returns the number of trailing zeros in the binary representation of input.
+  ///  */
+  /// int fhe_int512_trailing_zeros(const struct FheInt512 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheInt512 trailingZeros() {
+    FheInt512 result = new FheInt512();
+    execute(() -> fhe_int512_trailing_zeros(getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   ////**
@@ -1751,33 +1751,33 @@ public FheInt512 trailingZeros() {
 
   /// ```c
   /// int fhe_int512_cast_into_fhe_uint6(const struct FheInt512 *sself, struct FheUint6 **result);
-  ///```
-  public FheUint6 castIntoFheUint6() {
-    FheUint6 result = new FheUint6();
-    execute(() -> fhe_int512_cast_into_fhe_uint6(getValue(), result.getAddress()));
-    return result;
-  }
+///```
+public FheUint6 castIntoFheUint6() {
+  FheUint6 result = new FheUint6();
+  execute(() -> fhe_int512_cast_into_fhe_uint6(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int512_cast_into_fhe_uint64(const struct FheInt512 *sself, struct FheUint64 **result);
-  ///```
-  public FheUint64 castIntoFheUint64() {
-    FheUint64 result = new FheUint64();
-    execute(() -> fhe_int512_cast_into_fhe_uint64(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int512_cast_into_fhe_uint64(const struct FheInt512 *sself, struct FheUint64 **result);
+///```
+public FheUint64 castIntoFheUint64() {
+  FheUint64 result = new FheUint64();
+  execute(() -> fhe_int512_cast_into_fhe_uint64(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int512_cast_into_fhe_uint72(const struct FheInt512 *sself, struct FheUint72 **result);
-  ///```
-  public FheUint72 castIntoFheUint72() {
-    FheUint72 result = new FheUint72();
-    execute(() -> fhe_int512_cast_into_fhe_uint72(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int512_cast_into_fhe_uint72(const struct FheInt512 *sself, struct FheUint72 **result);
+///```
+public FheUint72 castIntoFheUint72() {
+  FheUint72 result = new FheUint72();
+  execute(() -> fhe_int512_cast_into_fhe_uint72(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int512_cast_into_fhe_uint8(const struct FheInt512 *sself, struct FheUint8 **result);
+/// ```c
+/// int fhe_int512_cast_into_fhe_uint8(const struct FheInt512 *sself, struct FheUint8 **result);
 ///```
 public FheUint8 castIntoFheUint8() {
   FheUint8 result = new FheUint8();
@@ -1811,6 +1811,7 @@ public FheUint96 castIntoFheUint96() {
   execute(() -> fhe_int512_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
+
 
   // @formatter:off
 }

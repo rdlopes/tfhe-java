@@ -9,10 +9,10 @@ import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.*;
 
-public record TemplateContext(String packageName, String className, SymbolsIndex symbolsIndex) {
+public record TemplateContext(String packageName, String className, String typeName, SymbolsIndex symbolsIndex) {
 
-  public static TemplateContext fromType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
-    return new TemplateContext(packageName, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativePrefix(fheType))));
+  public static TemplateContext forType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
+    return new TemplateContext(packageName, fheType, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativePrefix(fheType))));
   }
 
   public static String nativePrefix(String type) {
@@ -22,6 +22,16 @@ public record TemplateContext(String packageName, String className, SymbolsIndex
                               .collect(joining());
 
     return substringAfter(nativeType, "_") + "_";
+  }
+
+  public static TemplateContext forCompressedType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
+    String className = "Compressed" + fheType;
+    return new TemplateContext(packageName, className, fheType, symbolsIndex.withFilter(s -> s.equals(className) || s.startsWith(nativePrefix(className))));
+  }
+
+  public static TemplateContext forArrayType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
+    String className = fheType + "Array";
+    return new TemplateContext(packageName, className, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativePrefix(fheType))));
   }
 
   public boolean isBoolean() {
@@ -34,6 +44,10 @@ public record TemplateContext(String packageName, String className, SymbolsIndex
 
   public boolean isSigned() {
     return !className().contains("Uint");
+  }
+
+  public boolean hasArray() {
+    return symbolsIndex().lookupSymbol(nativePrefix(className())) != null;
   }
 
   @SuppressWarnings("unused")
@@ -57,22 +71,18 @@ public record TemplateContext(String packageName, String className, SymbolsIndex
       case int bitSize when (bitSize <= 512) -> isSigned() ? I512.class : U512.class;
       case int bitSize when (bitSize <= 1024) -> isSigned() ? I1024.class : U1024.class;
       case int bitSize when (bitSize <= 2048) -> isSigned() ? I2048.class : U2048.class;
-      default -> throw new IllegalArgumentException("Unknown type: " + className());
+      default -> throw new IllegalArgumentException("Unknown type: " + typeName());
     };
   }
 
   public int bitSize() {
-    String[] parts = splitByCharacterTypeCamelCase(className());
+    String[] parts = splitByCharacterTypeCamelCase(typeName());
     String bitSizeString = parts[parts.length - 1];
     return isNumeric(bitSizeString) ? parseInt(bitSizeString) : 1;
   }
 
   public String nativePrefix() {
-    String nativeType = Arrays.stream(splitByCharacterTypeCamelCase(className()))
-                              .map(String::toLowerCase)
-                              .map(s -> isAlpha(s) ? "_" + s : s)
-                              .collect(joining());
-
-    return substringAfter(nativeType, "_") + "_";
+    return nativePrefix(className());
   }
+
 }

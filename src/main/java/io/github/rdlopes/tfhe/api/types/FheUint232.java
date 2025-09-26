@@ -18,6 +18,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class FheUint232 extends NativePointer implements FheUnsignedInteger<U256, FheUint232, CompressedFheUint232> {
   private static final Logger logger = LoggerFactory.getLogger(FheUint232.class);
 // @formatter:on
+
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -80,12 +81,12 @@ public class FheUint232 extends NativePointer implements FheUnsignedInteger<U256
 
   /// ```c
   /// int fhe_uint232_bitand_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
-  ///```
-  @Override
+///```
+@Override
 public void bitAndAssign(FheUint232 other){
     execute(() -> fhe_uint232_bitand_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint232_scalar_bitand_assign(struct FheUint232 *lhs, struct U256 rhs);
@@ -113,14 +114,14 @@ public FheUint232 bitOr(FheUint232 other){
   /// int fhe_uint232_scalar_bitor(const struct FheUint232 *lhs,
   ///                              struct U256 rhs,
   ///                              struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 bitOrScalar(U256 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheUint232 bitOrScalar(U256 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint232_bitor_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
@@ -142,7 +143,7 @@ public void bitOrAssign(FheUint232 other){
 
   /// ```c
   /// int fhe_uint232_bitxor(const struct FheUint232 *lhs,
-  ///                        const struct FheUint232 *rhs,
+///                        const struct FheUint232 *rhs,
 ///                        struct FheUint232 **result);
 ///```
 @Override
@@ -157,16 +158,16 @@ public FheUint232 bitXor(FheUint232 other){
   /// int fhe_uint232_scalar_bitxor(const struct FheUint232 *lhs,
   ///                               struct U256 rhs,
   ///                               struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 bitXorScalar(U256 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+///```
+@Override
+public FheUint232 bitXorScalar(U256 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
+}
+  
+/// ```c
 /// int fhe_uint232_bitxor_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
 ///```
 @Override
@@ -179,21 +180,21 @@ public void bitXorAssign(FheUint232 other) {
   /// int fhe_uint232_scalar_bitxor_assign(struct FheUint232 *lhs, struct U256 rhs);
   ///```
   @Override
-  public void bitXorScalarAssign(U256 other) {
-    execute(() -> fhe_uint232_scalar_bitxor_assign(getValue(), other.getAddress()));
-
-  }
-  
-/// ```c
-/// int fhe_uint232_not(const struct FheUint232 *input, struct FheUint232 **result);
-///```
-@Override
-public FheUint232 bitNot(){
-    FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_not(getValue(), result.getAddress()));
-  return result;
+  public void bitXorScalarAssign(U256 other){
+      execute(() -> fhe_uint232_scalar_bitxor_assign(getValue(), other.getAddress()));
 
 }
+
+  /// ```c
+/// int fhe_uint232_not(const struct FheUint232 *input, struct FheUint232 **result);
+  ///```
+  @Override
+  public FheUint232 bitNot() {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_not(getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_uint232_if_then_else(const struct FheBool *condition_ct,
@@ -205,36 +206,36 @@ public FheUint232 bitNot(){
   public static FheUint232 ifThenElse(FheBool condition, FheUint232 thenValue, FheUint232 elseValue) {
     FheUint232 result = new FheUint232();
     execute(() -> fhe_uint232_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint232_eq(const struct FheUint232 *lhs,
-///                    const struct FheUint232 *rhs,
-///                    struct FheBool **result);
-///```
-@Override
-public FheBool equalTo(FheUint232 other){
-  FheBool result = new FheBool();
-  execute(() -> fhe_uint232_eq(getValue(), other.getValue(), result.getAddress()));
-  return result;
+      return result;
 
 }
   
 /// ```c
-/// int fhe_uint232_scalar_eq(const struct FheUint232 *lhs, struct U256 rhs, struct FheBool **result);
+/// int fhe_uint232_eq(const struct FheUint232 *lhs,
+///                    const struct FheUint232 *rhs,
+///                    struct FheBool **result);
 ///```
 @Override
-public FheBool equalToScalar(U256 other) {
+public FheBool equalTo(FheUint232 other) {
   FheBool result = new FheBool();
-  execute(() -> fhe_uint232_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+    execute(() -> fhe_uint232_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
 }
 
   /// ```c
-  /// int fhe_uint232_ne(const struct FheUint232 *lhs,
+  /// int fhe_uint232_scalar_eq(const struct FheUint232 *lhs, struct U256 rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalToScalar(U256 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_uint232_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+}
+  
+/// ```c
+/// int fhe_uint232_ne(const struct FheUint232 *lhs,
 ///                    const struct FheUint232 *rhs,
 ///                    struct FheBool **result);
 ///```
@@ -250,7 +251,7 @@ public FheBool notEqualTo(FheUint232 other) {
   /// int fhe_uint232_scalar_ne(const struct FheUint232 *lhs, struct U256 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(U256 other) {
+  public FheBool notEqualToScalar(U256 other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint232_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -275,19 +276,19 @@ public FheBool notEqualTo(FheUint232 other) {
   /// int fhe_uint232_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
   ///                                             uint64_t serialized_size_limit,
   ///                                             const struct ServerKey *server_key,
-  ///                                             struct FheUint232 **result);
+///                                             struct FheUint232 **result);
 ///```
 public static FheUint232 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheUint232 deserialized = new FheUint232();
-    execute(() -> fhe_uint232_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-  return deserialized;
+  execute(() -> fhe_uint232_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
 
 }
 
   /// ```c
   /// int fhe_uint232_try_encrypt_with_client_key_u256(struct U256 value,
-///                                                  const struct ClientKey *client_key,
-  ///                                                  struct FheUint232 **result);
+  ///                                                  const struct ClientKey *client_key,
+///                                                  struct FheUint232 **result);
   ///```
   public static FheUint232 encrypt(U256 clearValue, ClientKey clientKey) {
     FheUint232 encrypted = new FheUint232();
@@ -299,45 +300,47 @@ public static FheUint232 deserialize(DynamicBuffer dynamicBuffer, ServerKey serv
   /// ```c
   /// int fhe_uint232_try_encrypt_with_public_key_u256(struct U256 value,
   ///                                                  const struct PublicKey *public_key,
-  ///                                                  struct FheUint232 **result);
+///                                                  struct FheUint232 **result);
   ///```
-  public static FheUint232 encrypt(U256 clearValue, PublicKey publicKey) {
+  public static FheUint232 encrypt(U256 clearValue, PublicKey publicKey){
     FheUint232 encrypted = new FheUint232();
-    execute(() -> fhe_uint232_try_encrypt_with_public_key_u256(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+      execute(() -> fhe_uint232_try_encrypt_with_public_key_u256(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-}
-/// ```c
-/// int fhe_uint232_try_encrypt_trivial_u256(struct U256 value, struct FheUint232 **result);
-///```
-public static FheUint232 encrypt(U256 clearValue) {
-  FheUint232 encrypted = new FheUint232();
-  execute(() -> fhe_uint232_try_encrypt_trivial_u256(clearValue.getAddress(), encrypted.getAddress()));
+  }
+
+  /// ```c
+  /// int fhe_uint232_try_encrypt_trivial_u256(struct U256 value, struct FheUint232 **result);
+  ///```
+  public static FheUint232 encrypt(U256 clearValue){
+    FheUint232 encrypted = new FheUint232();
+      execute(() -> fhe_uint232_try_encrypt_trivial_u256(clearValue.getAddress(), encrypted.getAddress()));
     return encrypted;
 
-}
-/// ```c
-/// int fhe_uint232_clone(const struct FheUint232 *sself, struct FheUint232 **result);
-///```
-@Override
+  }
+
+  /// ```c
+  /// int fhe_uint232_clone(const struct FheUint232 *sself, struct FheUint232 **result);
+  ///```
+  @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheUint232 clone() {
-  FheUint232 cloned = new FheUint232();
-  execute(() -> fhe_uint232_clone(getValue(), cloned.getAddress()));
+public FheUint232 clone(){
+    FheUint232 cloned = new FheUint232();
+    execute(() -> fhe_uint232_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}
-  
-/// ```c
-/// int fhe_uint232_compress(const struct FheUint232 *sself, struct CompressedFheUint232 **result);
-///```
-@Override
-public CompressedFheUint232 compress() {
-  CompressedFheUint232 compressed = new CompressedFheUint232();
-  execute(() -> fhe_uint232_compress(getValue(), compressed.getAddress()));
-  return compressed;
+  }
 
-}
+  /// ```c
+  /// int fhe_uint232_compress(const struct FheUint232 *sself, struct CompressedFheUint232 **result);
+  ///```
+  @Override
+  public CompressedFheUint232 compress() {
+    CompressedFheUint232 compressed = new CompressedFheUint232();
+    execute(() -> fhe_uint232_compress(getValue(), compressed.getAddress()));
+    return compressed;
+
+  }
 
   /// ```c
   /// int fhe_uint232_decrypt(const struct FheUint232 *encrypted_value,
@@ -345,27 +348,25 @@ public CompressedFheUint232 compress() {
   ///                         struct U256 *result);
   ///```
   @Override
-  public U256 decrypt(ClientKey clientKey) {
-    U256 decrypted = new U256();
-    executeWithAddress(decrypted.getAddress(), address -> fhe_uint232_decrypt(getValue(), clientKey.getValue(), address));
+public U256 decrypt(ClientKey clientKey){
+      U256 decrypted = new U256();
+      executeWithAddress(decrypted.getAddress(), address -> fhe_uint232_decrypt(getValue(), clientKey.getValue(), address));
       return decrypted;
 
-}
-  
+  }
 
+  /// ```c
+  /// int fhe_uint232_add(const struct FheUint232 *lhs,
+  ///                     const struct FheUint232 *rhs,
+  ///                     struct FheUint232 **result);
+  ///```
+  @Override
+  public FheUint232 add(FheUint232 other) {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-/// ```c
-/// int fhe_uint232_add(const struct FheUint232 *lhs,
-///                     const struct FheUint232 *rhs,
-///                     struct FheUint232 **result);
-///```
-@Override
-public FheUint232 add(FheUint232 other) {
-  FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_add(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
+  }
 
   /// ```c
   /// int fhe_uint232_overflowing_add(const struct FheUint232 *lhs,
@@ -399,17 +400,17 @@ public FheUint232 add(FheUint232 other) {
   /// int fhe_uint232_add_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
   ///```
   @Override
-  public void addAssign(FheUint232 other) {
-    execute(() -> fhe_uint232_add_assign(getValue(), other.getValue()));
+  public void addAssign(FheUint232 other){
+      execute(() -> fhe_uint232_add_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint232_scalar_add_assign(struct FheUint232 *lhs, struct U256 rhs);
   ///```
   @Override
-  public void addScalarAssign(U256 other){
-        execute(() -> fhe_uint232_scalar_add_assign(getValue(), other.getAddress()));
+  public void addScalarAssign(U256 other) {
+    execute(() -> fhe_uint232_scalar_add_assign(getValue(), other.getAddress()));
 
   }
 
@@ -433,72 +434,72 @@ public FheUint232 add(FheUint232 other) {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U256, FheUint232, CompressedFheUint232> subtractWithOverflow(FheUint232 other){
+  public CheckedResult<U256, FheUint232, CompressedFheUint232> subtractWithOverflow(FheUint232 other) {
     FheUint232 result = new FheUint232();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint232_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return new CheckedResult<>(result, overflow);
+    return new CheckedResult<>(result,overflow);
 
-  }
+}
+    
+/// ```c
+/// int fhe_uint232_scalar_sub(const struct FheUint232 *lhs,
+///                            struct U256 rhs,
+///                            struct FheUint232 **result);
+///```
+@Override
+public FheUint232 subtractScalar(U256 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  /// ```c
-  /// int fhe_uint232_scalar_sub(const struct FheUint232 *lhs,
-  ///                            struct U256 rhs,
-  ///                            struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 subtractScalar(U256 other){
-      FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
+}
 
   /// ```c
   /// int fhe_uint232_sub_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
-  ///```
-  @Override
-  public void subtractAssign(FheUint232 other) {
-    execute(() -> fhe_uint232_sub_assign(getValue(), other.getValue()));
+///```
+@Override
+public void subtractAssign(FheUint232 other){
+      execute(() -> fhe_uint232_sub_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint232_scalar_sub_assign(struct FheUint232 *lhs, struct U256 rhs);
-///```
-@Override
-public void subtractScalarAssign(U256 other){
-        execute(() -> fhe_uint232_scalar_sub_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void subtractScalarAssign(U256 other) {
+    execute(() -> fhe_uint232_scalar_sub_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint232_mul(const struct FheUint232 *lhs,
   ///                     const struct FheUint232 *rhs,
-  ///                     struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 multiply(FheUint232 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-    
-/// ```c
-/// int fhe_uint232_overflowing_mul(const struct FheUint232 *lhs,
-///                                 const struct FheUint232 *rhs,
-///                                 struct FheUint232 **out_result,
-///                                 struct FheBool **out_overflowed);
+///                     struct FheUint232 **result);
 ///```
 @Override
-public CheckedResult<U256, FheUint232, CompressedFheUint232> multiplyWithOverflow(FheUint232 other) {
-  FheUint232 result = new FheUint232();
-  FheBool overflow = new FheBool();
-  execute(() -> fhe_uint232_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return new CheckedResult<>(result, overflow);
+public FheUint232 multiply(FheUint232 other){
+      FheUint232 result = new FheUint232();
+      execute(() -> fhe_uint232_mul(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
 }
+
+  /// ```c
+  /// int fhe_uint232_overflowing_mul(const struct FheUint232 *lhs,
+  ///                                 const struct FheUint232 *rhs,
+  ///                                 struct FheUint232 **out_result,
+  ///                                 struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<U256, FheUint232, CompressedFheUint232> multiplyWithOverflow(FheUint232 other) {
+    FheUint232 result = new FheUint232();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_uint232_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
 
   /// ```c
   /// int fhe_uint232_scalar_mul(const struct FheUint232 *lhs,
@@ -515,21 +516,21 @@ public CheckedResult<U256, FheUint232, CompressedFheUint232> multiplyWithOverflo
 
   /// ```c
   /// int fhe_uint232_mul_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
-  ///```
-  @Override
-  public void multiplyAssign(FheUint232 other) {
-    execute(() -> fhe_uint232_mul_assign(getValue(), other.getValue()));
+///```
+@Override
+public void multiplyAssign(FheUint232 other){
+      execute(() -> fhe_uint232_mul_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint232_scalar_mul_assign(struct FheUint232 *lhs, struct U256 rhs);
-///```
-@Override
-public void multiplyScalarAssign(U256 other){
-        execute(() -> fhe_uint232_scalar_mul_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void multiplyScalarAssign(U256 other) {
+    execute(() -> fhe_uint232_scalar_mul_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint232_div(const struct FheUint232 *lhs,
@@ -537,8 +538,8 @@ public void multiplyScalarAssign(U256 other){
   ///                     struct FheUint232 **result);
   ///```
   @Override
-  public FheUint232 divide(FheUint232 other){
-      FheUint232 result = new FheUint232();
+  public FheUint232 divide(FheUint232 other) {
+    FheUint232 result = new FheUint232();
     execute(() -> fhe_uint232_div(getValue(), other.getValue(), result.getAddress()));
     return result;
 
@@ -549,16 +550,16 @@ public void multiplyScalarAssign(U256 other){
   ///                            struct U256 rhs,
   ///                            struct FheUint232 **result);
   ///```
-@Override
-public FheUint232 divideScalar(U256 other) {
-  FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_scalar_div(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+  @Override
+  public FheUint232 divideScalar(U256 other) {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_scalar_div(getValue(), other.getAddress(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
-  /// int fhe_uint232_div_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
+/// int fhe_uint232_div_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
   ///```
   @Override
   public void divideAssign(FheUint232 other) {
@@ -569,24 +570,24 @@ public FheUint232 divideScalar(U256 other) {
   /// ```c
   /// int fhe_uint232_scalar_div_assign(struct FheUint232 *lhs, struct U256 rhs);
 ///```
-@Override
-public void divideScalarAssign(U256 other) {
-  execute(() -> fhe_uint232_scalar_div_assign(getValue(), other.getAddress()));
+  @Override
+  public void divideScalarAssign(U256 other) {
+    execute(() -> fhe_uint232_scalar_div_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint232_rem(const struct FheUint232 *lhs,
   ///                     const struct FheUint232 *rhs,
   ///                     struct FheUint232 **result);
   ///```
-@Override
-public FheUint232 remainder(FheUint232 other) {
-  FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_rem(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  @Override
+  public FheUint232 remainder(FheUint232 other) {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_rem(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint232_scalar_rem(const struct FheUint232 *lhs,
@@ -641,24 +642,24 @@ public FheUint232 remainder(FheUint232 other) {
   ///                                struct FheUint232 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<U256, FheUint232, CompressedFheUint232> divideWithRemainderScalar(U256 other){
-      FheUint232 divider = new FheUint232();
-    FheUint232 remainder = new FheUint232();
-    execute(() -> fhe_uint232_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
+  public DividerAndRemainder<U256, FheUint232, CompressedFheUint232> divideWithRemainderScalar(U256 other) {
+    FheUint232 divider = new FheUint232();
+      FheUint232 remainder = new FheUint232();
+        execute(() -> fhe_uint232_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
     return new DividerAndRemainder<>(divider, remainder);
 
   }
 
   /// ```c
   /// int fhe_uint232_neg(const struct FheUint232 *input, struct FheUint232 **result);
-///```
-@Override
-public FheUint232 negate(){
-      FheUint232 result = new FheUint232();
-      execute(() -> fhe_uint232_neg(getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint232 negate() {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_neg(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   ////**
@@ -740,74 +741,74 @@ public FheUint232 negate(){
   public FheBool lessThanOrEqualToScalar(U256 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_uint232_scalar_le(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_uint232_gt(const struct FheUint232 *lhs,
+///                    const struct FheUint232 *rhs,
+///                    struct FheBool **result);
+///```
+@Override
+public FheBool greaterThan(FheUint232 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint232_gt(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /// ```c
-  /// int fhe_uint232_gt(const struct FheUint232 *lhs,
-  ///                    const struct FheUint232 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThan(FheUint232 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint232_gt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_uint232_scalar_gt(const struct FheUint232 *lhs, struct U256 rhs, struct FheBool **result);
+  /// int fhe_uint232_scalar_gt(const struct FheUint232 *lhs, struct U256 rhs, struct FheBool **result);
   ///```
   @Override
   public FheBool greaterThanScalar(U256 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_uint232_scalar_gt(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_uint232_ge(const struct FheUint232 *lhs,
+///                    const struct FheUint232 *rhs,
+///                    struct FheBool **result);
+///```
+@Override
+public FheBool greaterThanOrEqualTo(FheUint232 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint232_ge(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
-  /// ```c
-  /// int fhe_uint232_ge(const struct FheUint232 *lhs,
-  ///                    const struct FheUint232 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualTo(FheUint232 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint232_ge(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
+}
+    
+/// ```c
 /// int fhe_uint232_scalar_ge(const struct FheUint232 *lhs, struct U256 rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualToScalar(U256 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint232_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheBool greaterThanOrEqualToScalar(U256 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_uint232_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
-
-  /// ```c
-  /// int fhe_uint232_min(const struct FheUint232 *lhs,
+}
+    
+/// ```c
+/// int fhe_uint232_min(const struct FheUint232 *lhs,
 ///                     const struct FheUint232 *rhs,
-  ///                     struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 min(FheUint232 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_min(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                     struct FheUint232 **result);
+///```
+@Override
+public FheUint232 min(FheUint232 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_min(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
-  /// int fhe_uint232_scalar_min(const struct FheUint232 *lhs,
-///                            struct U256 rhs,
+/// int fhe_uint232_scalar_min(const struct FheUint232 *lhs,
+  ///                            struct U256 rhs,
   ///                            struct FheUint232 **result);
   ///```
   @Override
@@ -816,62 +817,61 @@ public FheUint232 negate(){
     execute(() -> fhe_uint232_scalar_min(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
-  /// int fhe_uint232_max(const struct FheUint232 *lhs,
+}
+    
+/// ```c
+/// int fhe_uint232_max(const struct FheUint232 *lhs,
 ///                     const struct FheUint232 *rhs,
-  ///                     struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 max(FheUint232 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_max(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint232_scalar_max(const struct FheUint232 *lhs,
-///                            struct U256 rhs,
-  ///                            struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 maxScalar(U256 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_scalar_max(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint232_shl(const struct FheUint232 *lhs,
-///                     const struct FheUint232 *rhs,
-  ///                     struct FheUint232 **result);
-  ///```
-  @Override
-  public FheUint232 shiftLeft(FheUint232 other) {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_shl(getValue(), other.getValue(), result.getAddress()));
-      return result;
+///                     struct FheUint232 **result);
+///```
+@Override
+public FheUint232 max(FheUint232 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_max(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
 }
     
 /// ```c
-/// int fhe_uint232_scalar_shl(const struct FheUint232 *lhs,
+/// int fhe_uint232_scalar_max(const struct FheUint232 *lhs,
 ///                            struct U256 rhs,
 ///                            struct FheUint232 **result);
 ///```
 @Override
-public FheUint232 shiftLeftScalar(U256 other) {
+public FheUint232 maxScalar(U256 other) {
   FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
+        execute(() -> fhe_uint232_scalar_max(getValue(), other.getAddress(), result.getAddress()));
+      return result;
+
+}
+/// ```c
+/// int fhe_uint232_shl(const struct FheUint232 *lhs,
+///                     const struct FheUint232 *rhs,
+///                     struct FheUint232 **result);
+///```
+@Override
+public FheUint232 shiftLeft(FheUint232 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_shl(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_uint232_shl_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
+  /// int fhe_uint232_scalar_shl(const struct FheUint232 *lhs,
+  ///                            struct U256 rhs,
+  ///                            struct FheUint232 **result);
+  ///```
+  @Override
+  public FheUint232 shiftLeftScalar(U256 other) {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+}
+    
+/// ```c
+/// int fhe_uint232_shl_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
 ///```
 @Override
 public void shiftLeftAssign(FheUint232 other){
@@ -882,46 +882,46 @@ public void shiftLeftAssign(FheUint232 other){
   /// ```c
   /// int fhe_uint232_scalar_shl_assign(struct FheUint232 *lhs, struct U256 rhs);
   ///```
-  @Override
-  public void shiftLeftScalarAssign(U256 other) {
-    execute(() -> fhe_uint232_scalar_shl_assign(getValue(), other.getAddress()));
-
-  }
-    
-/// ```c
-/// int fhe_uint232_shr(const struct FheUint232 *lhs,
-///                     const struct FheUint232 *rhs,
-///                     struct FheUint232 **result);
-///```
 @Override
-public FheUint232 shiftRight(FheUint232 other) {
-  FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_shr(getValue(), other.getValue(), result.getAddress()));
-      return result;
+public void shiftLeftScalarAssign(U256 other) {
+  execute(() -> fhe_uint232_scalar_shl_assign(getValue(), other.getAddress()));
 
 }
 
   /// ```c
-  /// int fhe_uint232_scalar_shr(const struct FheUint232 *lhs,
-  ///                            struct U256 rhs,
-  ///                            struct FheUint232 **result);
+  /// int fhe_uint232_shr(const struct FheUint232 *lhs,
+  ///                     const struct FheUint232 *rhs,
+  ///                     struct FheUint232 **result);
   ///```
   @Override
-  public FheUint232 shiftRightScalar(U256 other) {
+  public FheUint232 shiftRight(FheUint232 other) {
     FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint232_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
+    execute(() -> fhe_uint232_shr(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_uint232_scalar_shr(const struct FheUint232 *lhs,
+///                            struct U256 rhs,
+///                            struct FheUint232 **result);
+///```
+@Override
+public FheUint232 shiftRightScalar(U256 other) {
+  FheUint232 result = new FheUint232();
+  execute(() -> fhe_uint232_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
+  return result;
+
+}
 
   /// ```c
   /// int fhe_uint232_shr_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
-///```
-@Override
-public void shiftRightAssign(FheUint232 other){
-      execute(() -> fhe_uint232_shr_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void shiftRightAssign(FheUint232 other) {
+    execute(() -> fhe_uint232_shr_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint232_scalar_shr_assign(struct FheUint232 *lhs, struct U256 rhs);
@@ -934,7 +934,7 @@ public void shiftRightAssign(FheUint232 other){
 
   /// ```c
   /// int fhe_uint232_rotate_left(const struct FheUint232 *lhs,
-///                             const struct FheUint232 *rhs,
+  ///                             const struct FheUint232 *rhs,
   ///                             struct FheUint232 **result);
   ///```
   @Override
@@ -946,9 +946,9 @@ public void shiftRightAssign(FheUint232 other){
   }
 
   /// ```c
-  /// int fhe_uint232_scalar_rotate_left(const struct FheUint232 *lhs,
-  ///                                    struct U256 rhs,
-  ///                                    struct FheUint232 **result);
+/// int fhe_uint232_scalar_rotate_left(const struct FheUint232 *lhs,
+///                                    struct U256 rhs,
+///                                    struct FheUint232 **result);
   ///```
   @Override
   public FheUint232 rotateLeftScalar(U256 other) {
@@ -956,14 +956,14 @@ public void shiftRightAssign(FheUint232 other){
     execute(() -> fhe_uint232_scalar_rotate_left(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
-  /// int fhe_uint232_rotate_left_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
+}
+    
+/// ```c
+/// int fhe_uint232_rotate_left_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
 ///```
 @Override
-public void rotateLeftAssign(FheUint232 other){
-      execute(() -> fhe_uint232_rotate_left_assign(getValue(), other.getValue()));
+public void rotateLeftAssign(FheUint232 other) {
+  execute(() -> fhe_uint232_rotate_left_assign(getValue(), other.getValue()));
 
 }
 
@@ -977,7 +977,7 @@ public void rotateLeftAssign(FheUint232 other){
   }
 
   /// ```c
-/// int fhe_uint232_rotate_right(const struct FheUint232 *lhs,
+  /// int fhe_uint232_rotate_right(const struct FheUint232 *lhs,
   ///                              const struct FheUint232 *rhs,
   ///                              struct FheUint232 **result);
   ///```
@@ -987,7 +987,7 @@ public void rotateLeftAssign(FheUint232 other){
     execute(() -> fhe_uint232_rotate_right(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint232_scalar_rotate_right(const struct FheUint232 *lhs,
@@ -998,12 +998,12 @@ public void rotateLeftAssign(FheUint232 other){
   public FheUint232 rotateRightScalar(U256 other) {
     FheUint232 result = new FheUint232();
     execute(() -> fhe_uint232_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
-
-  /// ```c
-  /// int fhe_uint232_rotate_right_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
+}
+    
+/// ```c
+/// int fhe_uint232_rotate_right_assign(struct FheUint232 *lhs, const struct FheUint232 *rhs);
 ///```
 @Override
 public void rotateRightAssign(FheUint232 other) {
@@ -1013,10 +1013,10 @@ public void rotateRightAssign(FheUint232 other) {
 
   /// ```c
   /// int fhe_uint232_scalar_rotate_right_assign(struct FheUint232 *lhs, struct U256 rhs);
-  ///```
-  @Override
-  public void rotateRightScalarAssign(U256 other) {
-    execute(() -> fhe_uint232_scalar_rotate_right_assign(getValue(), other.getAddress()));
+///```
+@Override
+public void rotateRightScalarAssign(U256 other){
+        execute(() -> fhe_uint232_scalar_rotate_right_assign(getValue(), other.getAddress()));
 
 }
     
@@ -1027,9 +1027,9 @@ public void rotateRightAssign(FheUint232 other) {
 /// int fhe_uint232_leading_ones(const struct FheUint232 *input, struct FheUint32 **result);
 ///```
 @Override
-public FheUint232 leadingOnes() {
-  FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_leading_ones(getValue(), result.getAddress()));
+public FheUint232 leadingOnes(){
+      FheUint232 result = new FheUint232();
+      execute(() -> fhe_uint232_leading_ones(getValue(), result.getAddress()));
       return result;
 
 }
@@ -1044,23 +1044,23 @@ public FheUint232 leadingOnes() {
 public FheUint232 leadingZeros() {
   FheUint232 result = new FheUint232();
   execute(() -> fhe_uint232_leading_zeros(getValue(), result.getAddress()));
-      return result;
-
-}
-    
-/// ```c
-////**
-///  * Returns the number of trailing ones in the binary representation of input.
-///  */
-/// int fhe_uint232_trailing_ones(const struct FheUint232 *input, struct FheUint32 **result);
-///```
-@Override
-public FheUint232 trailingOnes() {
-  FheUint232 result = new FheUint232();
-  execute(() -> fhe_uint232_trailing_ones(getValue(), result.getAddress()));
   return result;
 
 }
+
+  /// ```c
+  ////**
+  ///  * Returns the number of trailing ones in the binary representation of input.
+  ///  */
+  /// int fhe_uint232_trailing_ones(const struct FheUint232 *input, struct FheUint32 **result);
+///```
+  @Override
+  public FheUint232 trailingOnes() {
+    FheUint232 result = new FheUint232();
+    execute(() -> fhe_uint232_trailing_ones(getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   ////**
@@ -1316,17 +1316,17 @@ public FheUint232 trailingOnes() {
   public FheInt248 castIntoFheInt248() {
     FheInt248 result = new FheInt248();
     execute(() -> fhe_uint232_cast_into_fhe_int248(getValue(), result.getAddress()));
-    return result;
-  }
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint232_cast_into_fhe_int256(const struct FheUint232 *sself, struct FheInt256 **result);
-  ///```
-  public FheInt256 castIntoFheInt256() {
-    FheInt256 result = new FheInt256();
-    execute(() -> fhe_uint232_cast_into_fhe_int256(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint232_cast_into_fhe_int256(const struct FheUint232 *sself, struct FheInt256 **result);
+///```
+public FheInt256 castIntoFheInt256() {
+  FheInt256 result = new FheInt256();
+  execute(() -> fhe_uint232_cast_into_fhe_int256(getValue(), result.getAddress()));
+  return result;
+}
 
   /// ```c
   /// int fhe_uint232_cast_into_fhe_int32(const struct FheUint232 *sself, struct FheInt32 **result);
@@ -1753,33 +1753,33 @@ public FheInt4 castIntoFheInt4() {
 
   /// ```c
   /// int fhe_uint232_cast_into_fhe_uint6(const struct FheUint232 *sself, struct FheUint6 **result);
-  ///```
-  public FheUint6 castIntoFheUint6() {
-    FheUint6 result = new FheUint6();
-    execute(() -> fhe_uint232_cast_into_fhe_uint6(getValue(), result.getAddress()));
-    return result;
-  }
+///```
+public FheUint6 castIntoFheUint6() {
+  FheUint6 result = new FheUint6();
+  execute(() -> fhe_uint232_cast_into_fhe_uint6(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint232_cast_into_fhe_uint64(const struct FheUint232 *sself, struct FheUint64 **result);
-  ///```
-  public FheUint64 castIntoFheUint64() {
-    FheUint64 result = new FheUint64();
-    execute(() -> fhe_uint232_cast_into_fhe_uint64(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint232_cast_into_fhe_uint64(const struct FheUint232 *sself, struct FheUint64 **result);
+///```
+public FheUint64 castIntoFheUint64() {
+  FheUint64 result = new FheUint64();
+  execute(() -> fhe_uint232_cast_into_fhe_uint64(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint232_cast_into_fhe_uint72(const struct FheUint232 *sself, struct FheUint72 **result);
-  ///```
-  public FheUint72 castIntoFheUint72() {
-    FheUint72 result = new FheUint72();
-    execute(() -> fhe_uint232_cast_into_fhe_uint72(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint232_cast_into_fhe_uint72(const struct FheUint232 *sself, struct FheUint72 **result);
+///```
+public FheUint72 castIntoFheUint72() {
+  FheUint72 result = new FheUint72();
+  execute(() -> fhe_uint232_cast_into_fhe_uint72(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint232_cast_into_fhe_uint8(const struct FheUint232 *sself, struct FheUint8 **result);
+/// ```c
+/// int fhe_uint232_cast_into_fhe_uint8(const struct FheUint232 *sself, struct FheUint8 **result);
 ///```
 public FheUint8 castIntoFheUint8() {
   FheUint8 result = new FheUint8();
@@ -1813,6 +1813,7 @@ public FheUint96 castIntoFheUint96() {
   execute(() -> fhe_uint232_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
+
 
   // @formatter:off
 }

@@ -104,7 +104,7 @@ implements CompressedFheType<Boolean, FheBool, CompressedFheBool> {
 
   /// ```c
   /// int compressed_fhe_bool_clone(const struct CompressedFheBool *sself,
-  ///                               struct CompressedFheBool **result);
+///                               struct CompressedFheBool **result);
 /// ```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")

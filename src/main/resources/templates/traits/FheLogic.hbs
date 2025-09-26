@@ -91,15 +91,19 @@
   return result;
 {{/method}}
 
-{{#method this (stringFormat "public static %s" className) "ifThenElse" "if_then_else"
-          "FheBool condition" (stringFormat "%s thenValue" className) (stringFormat "%s elseValue" className)
-          override=false annotation="@SuppressWarnings(\"unused\")"}}
-  {{#if isInteger}}
+{{#if isInteger}}
+  {{#method this (stringFormat "public static %s" className) "ifThenElse" "if_then_else"
+            "FheBool condition" (stringFormat "%s thenValue" className) (stringFormat "%s elseValue" className)
+            override=false annotation="@SuppressWarnings(\"unused\")"}}
     {{declare "result"}}
     {{execute "if_then_else" "condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()"}}
     return result;
-  {{else}}
+  {{/method}}
+{{else}}
+  @SuppressWarnings("unused")
+  public static {{className}} ifThenElse(FheBool condition, {{stringFormat "%s thenValue" className}}, {{stringFormat
+    "%s elseValue" className}}) {
     throw new NotImplementedException("Unavailable for {{className}}");
-  {{/if}}
-{{/method}}
+  }
+{{/if}}
 

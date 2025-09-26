@@ -105,7 +105,7 @@ implements CompressedFheType<I2048, FheInt2048, CompressedFheInt2048> {
 
   /// ```c
   /// int compressed_fhe_int2048_clone(const struct CompressedFheInt2048 *sself,
-  ///                                  struct CompressedFheInt2048 **result);
+///                                  struct CompressedFheInt2048 **result);
 /// ```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")

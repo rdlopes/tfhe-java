@@ -45,8 +45,12 @@ public class TemplateHelper {
 
   public static String symbol(String symbolPrefix, Options options) {
     TemplateContext context = (TemplateContext) options.context.model();
+    boolean lookupType = options.hash("lookupType", false);
+    String prefix = lookupType
+      ? TemplateContext.nativePrefix(context.typeName())
+      : context.nativePrefix();
     return context.symbolsIndex()
-                  .lookupSymbol(context.nativePrefix() + symbolPrefix);
+                  .lookupSymbol(prefix + symbolPrefix);
   }
 
   public static String javadoc(String symbolSuffix, Options options) {
@@ -98,10 +102,6 @@ public class TemplateHelper {
     return options.params.length < 2
       ? "logger.trace(\"%s\");".formatted(functionName)
       : "logger.trace(\"%s %s\", %s);".formatted(functionName, parametersString, parametersList);
-  }
-
-  public static String decompressed(String className, Options ignoredOptions) {
-    return substringAfter(className, "Compressed");
   }
 
   @SuppressWarnings("unused")

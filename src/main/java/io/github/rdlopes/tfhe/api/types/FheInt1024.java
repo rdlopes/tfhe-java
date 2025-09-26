@@ -18,6 +18,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class FheInt1024 extends NativePointer implements FheInteger<I1024, FheInt1024, CompressedFheInt1024> {
   private static final Logger logger = LoggerFactory.getLogger(FheInt1024.class);
 // @formatter:on
+
   /// ```c
   ////**
   ///  *ptr can be null (no-op in that case)
@@ -80,12 +81,12 @@ public class FheInt1024 extends NativePointer implements FheInteger<I1024, FheIn
 
   /// ```c
   /// int fhe_int1024_bitand_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
-  ///```
-  @Override
+///```
+@Override
 public void bitAndAssign(FheInt1024 other){
     execute(() -> fhe_int1024_bitand_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int1024_scalar_bitand_assign(struct FheInt1024 *lhs, struct I1024 rhs);
@@ -113,14 +114,14 @@ public FheInt1024 bitOr(FheInt1024 other){
   /// int fhe_int1024_scalar_bitor(const struct FheInt1024 *lhs,
   ///                              struct I1024 rhs,
   ///                              struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 bitOrScalar(I1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheInt1024 bitOrScalar(I1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int1024_bitor_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
@@ -142,7 +143,7 @@ public void bitOrAssign(FheInt1024 other){
 
   /// ```c
   /// int fhe_int1024_bitxor(const struct FheInt1024 *lhs,
-  ///                        const struct FheInt1024 *rhs,
+///                        const struct FheInt1024 *rhs,
 ///                        struct FheInt1024 **result);
 ///```
 @Override
@@ -157,16 +158,16 @@ public FheInt1024 bitXor(FheInt1024 other){
   /// int fhe_int1024_scalar_bitxor(const struct FheInt1024 *lhs,
   ///                               struct I1024 rhs,
   ///                               struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 bitXorScalar(I1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+///```
+@Override
+public FheInt1024 bitXorScalar(I1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
+}
+  
+/// ```c
 /// int fhe_int1024_bitxor_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
 ///```
 @Override
@@ -179,21 +180,21 @@ public void bitXorAssign(FheInt1024 other) {
   /// int fhe_int1024_scalar_bitxor_assign(struct FheInt1024 *lhs, struct I1024 rhs);
   ///```
   @Override
-  public void bitXorScalarAssign(I1024 other) {
-    execute(() -> fhe_int1024_scalar_bitxor_assign(getValue(), other.getAddress()));
-
-  }
-  
-/// ```c
-/// int fhe_int1024_not(const struct FheInt1024 *input, struct FheInt1024 **result);
-///```
-@Override
-public FheInt1024 bitNot(){
-    FheInt1024 result = new FheInt1024();
-  execute(() -> fhe_int1024_not(getValue(), result.getAddress()));
-  return result;
+  public void bitXorScalarAssign(I1024 other){
+      execute(() -> fhe_int1024_scalar_bitxor_assign(getValue(), other.getAddress()));
 
 }
+
+  /// ```c
+/// int fhe_int1024_not(const struct FheInt1024 *input, struct FheInt1024 **result);
+  ///```
+  @Override
+  public FheInt1024 bitNot() {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_not(getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   /// int fhe_int1024_if_then_else(const struct FheBool *condition_ct,
@@ -205,36 +206,36 @@ public FheInt1024 bitNot(){
   public static FheInt1024 ifThenElse(FheBool condition, FheInt1024 thenValue, FheInt1024 elseValue) {
     FheInt1024 result = new FheInt1024();
     execute(() -> fhe_int1024_if_then_else(condition.getValue(), thenValue.getValue(), elseValue.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int1024_eq(const struct FheInt1024 *lhs,
-///                    const struct FheInt1024 *rhs,
-///                    struct FheBool **result);
-///```
-@Override
-public FheBool equalTo(FheInt1024 other){
-  FheBool result = new FheBool();
-  execute(() -> fhe_int1024_eq(getValue(), other.getValue(), result.getAddress()));
-  return result;
+      return result;
 
 }
   
 /// ```c
-/// int fhe_int1024_scalar_eq(const struct FheInt1024 *lhs, struct I1024 rhs, struct FheBool **result);
+/// int fhe_int1024_eq(const struct FheInt1024 *lhs,
+///                    const struct FheInt1024 *rhs,
+///                    struct FheBool **result);
 ///```
 @Override
-public FheBool equalToScalar(I1024 other) {
+public FheBool equalTo(FheInt1024 other) {
   FheBool result = new FheBool();
-  execute(() -> fhe_int1024_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+    execute(() -> fhe_int1024_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
 }
 
   /// ```c
-  /// int fhe_int1024_ne(const struct FheInt1024 *lhs,
+  /// int fhe_int1024_scalar_eq(const struct FheInt1024 *lhs, struct I1024 rhs, struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalToScalar(I1024 other) {
+    FheBool result = new FheBool();
+    execute(() -> fhe_int1024_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+}
+  
+/// ```c
+/// int fhe_int1024_ne(const struct FheInt1024 *lhs,
 ///                    const struct FheInt1024 *rhs,
 ///                    struct FheBool **result);
 ///```
@@ -250,7 +251,7 @@ public FheBool notEqualTo(FheInt1024 other) {
   /// int fhe_int1024_scalar_ne(const struct FheInt1024 *lhs, struct I1024 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(I1024 other) {
+  public FheBool notEqualToScalar(I1024 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int1024_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -275,19 +276,19 @@ public FheBool notEqualTo(FheInt1024 other) {
   /// int fhe_int1024_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
   ///                                             uint64_t serialized_size_limit,
   ///                                             const struct ServerKey *server_key,
-  ///                                             struct FheInt1024 **result);
+///                                             struct FheInt1024 **result);
 ///```
 public static FheInt1024 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt1024 deserialized = new FheInt1024();
-    execute(() -> fhe_int1024_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-  return deserialized;
+  execute(() -> fhe_int1024_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    return deserialized;
 
 }
 
   /// ```c
   /// int fhe_int1024_try_encrypt_with_client_key_i1024(struct I1024 value,
-///                                                   const struct ClientKey *client_key,
-  ///                                                   struct FheInt1024 **result);
+  ///                                                   const struct ClientKey *client_key,
+///                                                   struct FheInt1024 **result);
   ///```
   public static FheInt1024 encrypt(I1024 clearValue, ClientKey clientKey) {
     FheInt1024 encrypted = new FheInt1024();
@@ -299,45 +300,47 @@ public static FheInt1024 deserialize(DynamicBuffer dynamicBuffer, ServerKey serv
   /// ```c
   /// int fhe_int1024_try_encrypt_with_public_key_i1024(struct I1024 value,
   ///                                                   const struct PublicKey *public_key,
-  ///                                                   struct FheInt1024 **result);
+///                                                   struct FheInt1024 **result);
   ///```
-  public static FheInt1024 encrypt(I1024 clearValue, PublicKey publicKey) {
+  public static FheInt1024 encrypt(I1024 clearValue, PublicKey publicKey){
     FheInt1024 encrypted = new FheInt1024();
-    execute(() -> fhe_int1024_try_encrypt_with_public_key_i1024(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
+      execute(() -> fhe_int1024_try_encrypt_with_public_key_i1024(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-}
-/// ```c
-/// int fhe_int1024_try_encrypt_trivial_i1024(struct I1024 value, struct FheInt1024 **result);
-///```
-public static FheInt1024 encrypt(I1024 clearValue) {
-  FheInt1024 encrypted = new FheInt1024();
-  execute(() -> fhe_int1024_try_encrypt_trivial_i1024(clearValue.getAddress(), encrypted.getAddress()));
+  }
+
+  /// ```c
+  /// int fhe_int1024_try_encrypt_trivial_i1024(struct I1024 value, struct FheInt1024 **result);
+  ///```
+  public static FheInt1024 encrypt(I1024 clearValue){
+    FheInt1024 encrypted = new FheInt1024();
+      execute(() -> fhe_int1024_try_encrypt_trivial_i1024(clearValue.getAddress(), encrypted.getAddress()));
     return encrypted;
 
-}
-/// ```c
-/// int fhe_int1024_clone(const struct FheInt1024 *sself, struct FheInt1024 **result);
-///```
-@Override
+  }
+
+  /// ```c
+  /// int fhe_int1024_clone(const struct FheInt1024 *sself, struct FheInt1024 **result);
+  ///```
+  @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheInt1024 clone() {
-  FheInt1024 cloned = new FheInt1024();
-  execute(() -> fhe_int1024_clone(getValue(), cloned.getAddress()));
+public FheInt1024 clone(){
+    FheInt1024 cloned = new FheInt1024();
+    execute(() -> fhe_int1024_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-}
-  
-/// ```c
-/// int fhe_int1024_compress(const struct FheInt1024 *sself, struct CompressedFheInt1024 **result);
-///```
-@Override
-public CompressedFheInt1024 compress() {
-  CompressedFheInt1024 compressed = new CompressedFheInt1024();
-  execute(() -> fhe_int1024_compress(getValue(), compressed.getAddress()));
-  return compressed;
+  }
 
-}
+  /// ```c
+  /// int fhe_int1024_compress(const struct FheInt1024 *sself, struct CompressedFheInt1024 **result);
+  ///```
+  @Override
+  public CompressedFheInt1024 compress() {
+    CompressedFheInt1024 compressed = new CompressedFheInt1024();
+    execute(() -> fhe_int1024_compress(getValue(), compressed.getAddress()));
+    return compressed;
+
+  }
 
   /// ```c
   /// int fhe_int1024_decrypt(const struct FheInt1024 *encrypted_value,
@@ -345,27 +348,25 @@ public CompressedFheInt1024 compress() {
   ///                         struct I1024 *result);
   ///```
   @Override
-  public I1024 decrypt(ClientKey clientKey) {
-    I1024 decrypted = new I1024();
-    executeWithAddress(decrypted.getAddress(), address -> fhe_int1024_decrypt(getValue(), clientKey.getValue(), address));
+public I1024 decrypt(ClientKey clientKey){
+      I1024 decrypted = new I1024();
+      executeWithAddress(decrypted.getAddress(), address -> fhe_int1024_decrypt(getValue(), clientKey.getValue(), address));
       return decrypted;
 
-}
-  
+  }
 
+  /// ```c
+  /// int fhe_int1024_add(const struct FheInt1024 *lhs,
+  ///                     const struct FheInt1024 *rhs,
+  ///                     struct FheInt1024 **result);
+  ///```
+  @Override
+  public FheInt1024 add(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_add(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-/// ```c
-/// int fhe_int1024_add(const struct FheInt1024 *lhs,
-///                     const struct FheInt1024 *rhs,
-///                     struct FheInt1024 **result);
-///```
-@Override
-public FheInt1024 add(FheInt1024 other) {
-  FheInt1024 result = new FheInt1024();
-  execute(() -> fhe_int1024_add(getValue(), other.getValue(), result.getAddress()));
-  return result;
-
-}
+  }
 
   /// ```c
   /// int fhe_int1024_overflowing_add(const struct FheInt1024 *lhs,
@@ -399,17 +400,17 @@ public FheInt1024 add(FheInt1024 other) {
   /// int fhe_int1024_add_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
   ///```
   @Override
-  public void addAssign(FheInt1024 other) {
-    execute(() -> fhe_int1024_add_assign(getValue(), other.getValue()));
+  public void addAssign(FheInt1024 other){
+      execute(() -> fhe_int1024_add_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int1024_scalar_add_assign(struct FheInt1024 *lhs, struct I1024 rhs);
   ///```
   @Override
-  public void addScalarAssign(I1024 other){
-        execute(() -> fhe_int1024_scalar_add_assign(getValue(), other.getAddress()));
+  public void addScalarAssign(I1024 other) {
+    execute(() -> fhe_int1024_scalar_add_assign(getValue(), other.getAddress()));
 
   }
 
@@ -433,72 +434,72 @@ public FheInt1024 add(FheInt1024 other) {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> subtractWithOverflow(FheInt1024 other){
+  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> subtractWithOverflow(FheInt1024 other) {
     FheInt1024 result = new FheInt1024();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int1024_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-    return new CheckedResult<>(result, overflow);
+    return new CheckedResult<>(result,overflow);
 
-  }
+}
+    
+/// ```c
+/// int fhe_int1024_scalar_sub(const struct FheInt1024 *lhs,
+///                            struct I1024 rhs,
+///                            struct FheInt1024 **result);
+///```
+@Override
+public FheInt1024 subtractScalar(I1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  /// ```c
-  /// int fhe_int1024_scalar_sub(const struct FheInt1024 *lhs,
-  ///                            struct I1024 rhs,
-  ///                            struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 subtractScalar(I1024 other){
-      FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_sub(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
+}
 
   /// ```c
   /// int fhe_int1024_sub_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
-  ///```
-  @Override
-  public void subtractAssign(FheInt1024 other) {
-    execute(() -> fhe_int1024_sub_assign(getValue(), other.getValue()));
+///```
+@Override
+public void subtractAssign(FheInt1024 other){
+      execute(() -> fhe_int1024_sub_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int1024_scalar_sub_assign(struct FheInt1024 *lhs, struct I1024 rhs);
-///```
-@Override
-public void subtractScalarAssign(I1024 other){
-        execute(() -> fhe_int1024_scalar_sub_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void subtractScalarAssign(I1024 other) {
+    execute(() -> fhe_int1024_scalar_sub_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_int1024_mul(const struct FheInt1024 *lhs,
   ///                     const struct FheInt1024 *rhs,
-  ///                     struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 multiply(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_mul(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-    
-/// ```c
-/// int fhe_int1024_overflowing_mul(const struct FheInt1024 *lhs,
-///                                 const struct FheInt1024 *rhs,
-///                                 struct FheInt1024 **out_result,
-///                                 struct FheBool **out_overflowed);
+///                     struct FheInt1024 **result);
 ///```
 @Override
-public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> multiplyWithOverflow(FheInt1024 other) {
-  FheInt1024 result = new FheInt1024();
-  FheBool overflow = new FheBool();
-  execute(() -> fhe_int1024_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
-  return new CheckedResult<>(result, overflow);
+public FheInt1024 multiply(FheInt1024 other){
+      FheInt1024 result = new FheInt1024();
+      execute(() -> fhe_int1024_mul(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
 }
+
+  /// ```c
+  /// int fhe_int1024_overflowing_mul(const struct FheInt1024 *lhs,
+  ///                                 const struct FheInt1024 *rhs,
+  ///                                 struct FheInt1024 **out_result,
+  ///                                 struct FheBool **out_overflowed);
+  ///```
+  @Override
+  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> multiplyWithOverflow(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
+    FheBool overflow = new FheBool();
+    execute(() -> fhe_int1024_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
+    return new CheckedResult<>(result, overflow);
+
+  }
 
   /// ```c
   /// int fhe_int1024_scalar_mul(const struct FheInt1024 *lhs,
@@ -515,21 +516,21 @@ public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> multiplyWithOverfl
 
   /// ```c
   /// int fhe_int1024_mul_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
-  ///```
-  @Override
-  public void multiplyAssign(FheInt1024 other) {
-    execute(() -> fhe_int1024_mul_assign(getValue(), other.getValue()));
+///```
+@Override
+public void multiplyAssign(FheInt1024 other){
+      execute(() -> fhe_int1024_mul_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int1024_scalar_mul_assign(struct FheInt1024 *lhs, struct I1024 rhs);
-///```
-@Override
-public void multiplyScalarAssign(I1024 other){
-        execute(() -> fhe_int1024_scalar_mul_assign(getValue(), other.getAddress()));
+  ///```
+  @Override
+  public void multiplyScalarAssign(I1024 other) {
+    execute(() -> fhe_int1024_scalar_mul_assign(getValue(), other.getAddress()));
 
-}
+  }
 
   /// ```c
   /// int fhe_int1024_div(const struct FheInt1024 *lhs,
@@ -537,8 +538,8 @@ public void multiplyScalarAssign(I1024 other){
   ///                     struct FheInt1024 **result);
   ///```
   @Override
-  public FheInt1024 divide(FheInt1024 other){
-      FheInt1024 result = new FheInt1024();
+  public FheInt1024 divide(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
     execute(() -> fhe_int1024_div(getValue(), other.getValue(), result.getAddress()));
     return result;
 
@@ -549,13 +550,13 @@ public void multiplyScalarAssign(I1024 other){
   ///                            struct I1024 rhs,
   ///                            struct FheInt1024 **result);
   ///```
-@Override
-public FheInt1024 divideScalar(I1024 other) {
-  FheInt1024 result = new FheInt1024();
-  execute(() -> fhe_int1024_scalar_div(getValue(), other.getAddress(), result.getAddress()));
-  return result;
+  @Override
+  public FheInt1024 divideScalar(I1024 other) {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_scalar_div(getValue(), other.getAddress(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int1024_div_assign(struct FheInt1024 *lhs, const struct FheInt1024 *rhs);
@@ -568,7 +569,7 @@ public FheInt1024 divideScalar(I1024 other) {
 
   /// ```c
   /// int fhe_int1024_scalar_div_assign(struct FheInt1024 *lhs, struct I1024 rhs);
-///```
+  ///```
 @Override
 public void divideScalarAssign(I1024 other) {
   execute(() -> fhe_int1024_scalar_div_assign(getValue(), other.getAddress()));
@@ -580,13 +581,13 @@ public void divideScalarAssign(I1024 other) {
   ///                     const struct FheInt1024 *rhs,
   ///                     struct FheInt1024 **result);
   ///```
-@Override
-public FheInt1024 remainder(FheInt1024 other) {
-  FheInt1024 result = new FheInt1024();
-  execute(() -> fhe_int1024_rem(getValue(), other.getValue(), result.getAddress()));
-  return result;
+  @Override
+  public FheInt1024 remainder(FheInt1024 other) {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_rem(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_int1024_scalar_rem(const struct FheInt1024 *lhs,
@@ -641,24 +642,24 @@ public FheInt1024 remainder(FheInt1024 other) {
   ///                                struct FheInt1024 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<I1024, FheInt1024, CompressedFheInt1024> divideWithRemainderScalar(I1024 other){
-      FheInt1024 divider = new FheInt1024();
-    FheInt1024 remainder = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
+  public DividerAndRemainder<I1024, FheInt1024, CompressedFheInt1024> divideWithRemainderScalar(I1024 other) {
+    FheInt1024 divider = new FheInt1024();
+      FheInt1024 remainder = new FheInt1024();
+        execute(() -> fhe_int1024_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
     return new DividerAndRemainder<>(divider, remainder);
 
   }
 
   /// ```c
   /// int fhe_int1024_neg(const struct FheInt1024 *input, struct FheInt1024 **result);
-///```
-@Override
-public FheInt1024 negate(){
-      FheInt1024 result = new FheInt1024();
-      execute(() -> fhe_int1024_neg(getValue(), result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheInt1024 negate() {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_neg(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   ////**
@@ -740,75 +741,75 @@ public FheInt1024 negate(){
   public FheBool lessThanOrEqualToScalar(I1024 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_int1024_scalar_le(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_int1024_gt(const struct FheInt1024 *lhs,
+///                    const struct FheInt1024 *rhs,
+///                    struct FheBool **result);
+///```
+@Override
+public FheBool greaterThan(FheInt1024 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int1024_gt(getValue(), other.getValue(), result.getAddress()));
+  return result;
+
+}
 
   /// ```c
-  /// int fhe_int1024_gt(const struct FheInt1024 *lhs,
-  ///                    const struct FheInt1024 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThan(FheInt1024 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int1024_gt(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-/// int fhe_int1024_scalar_gt(const struct FheInt1024 *lhs, struct I1024 rhs, struct FheBool **result);
+  /// int fhe_int1024_scalar_gt(const struct FheInt1024 *lhs, struct I1024 rhs, struct FheBool **result);
   ///```
   @Override
   public FheBool greaterThanScalar(I1024 other) {
     FheBool result = new FheBool();
     execute(() -> fhe_int1024_scalar_gt(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+      return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_int1024_ge(const struct FheInt1024 *lhs,
+///                    const struct FheInt1024 *rhs,
+///                    struct FheBool **result);
+///```
+@Override
+public FheBool greaterThanOrEqualTo(FheInt1024 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int1024_ge(getValue(), other.getValue(), result.getAddress()));
+      return result;
 
-  /// ```c
-  /// int fhe_int1024_ge(const struct FheInt1024 *lhs,
-  ///                    const struct FheInt1024 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualTo(FheInt1024 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int1024_ge(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
+}
+    
+/// ```c
 /// int fhe_int1024_scalar_ge(const struct FheInt1024 *lhs, struct I1024 rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool greaterThanOrEqualToScalar(I1024 other) {
-    FheBool result = new FheBool();
-    execute(() -> fhe_int1024_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheBool greaterThanOrEqualToScalar(I1024 other) {
+  FheBool result = new FheBool();
+  execute(() -> fhe_int1024_scalar_ge(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
-
-  /// ```c
-  /// int fhe_int1024_min(const struct FheInt1024 *lhs,
+}
+    
+/// ```c
+/// int fhe_int1024_min(const struct FheInt1024 *lhs,
 ///                     const struct FheInt1024 *rhs,
-  ///                     struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 min(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_min(getValue(), other.getValue(), result.getAddress()));
-    return result;
+///                     struct FheInt1024 **result);
+///```
+@Override
+public FheInt1024 min(FheInt1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_min(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
-  /// int fhe_int1024_scalar_min(const struct FheInt1024 *lhs,
-///                            struct I1024 rhs,
-///                            struct FheInt1024 **result);
+/// int fhe_int1024_scalar_min(const struct FheInt1024 *lhs,
+  ///                            struct I1024 rhs,
+  ///                            struct FheInt1024 **result);
   ///```
   @Override
   public FheInt1024 minScalar(I1024 other) {
@@ -816,65 +817,64 @@ public FheInt1024 negate(){
     execute(() -> fhe_int1024_scalar_min(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
-  /// int fhe_int1024_max(const struct FheInt1024 *lhs,
+}
+    
+/// ```c
+/// int fhe_int1024_max(const struct FheInt1024 *lhs,
 ///                     const struct FheInt1024 *rhs,
-  ///                     struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 max(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_max(getValue(), other.getValue(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int1024_scalar_max(const struct FheInt1024 *lhs,
-///                            struct I1024 rhs,
-  ///                            struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 maxScalar(I1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_max(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int1024_shl(const struct FheInt1024 *lhs,
-///                     const struct FheUint1024 *rhs,
-  ///                     struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 shiftLeft(FheInt1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_shl(getValue(), other.getValue(), result.getAddress()));
-      return result;
+///                     struct FheInt1024 **result);
+///```
+@Override
+public FheInt1024 max(FheInt1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_max(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
 }
     
 /// ```c
-/// int fhe_int1024_scalar_shl(const struct FheInt1024 *lhs,
-///                            struct U1024 rhs,
+/// int fhe_int1024_scalar_max(const struct FheInt1024 *lhs,
+///                            struct I1024 rhs,
 ///                            struct FheInt1024 **result);
 ///```
 @Override
-public FheInt1024 shiftLeftScalar(I1024 other) {
+public FheInt1024 maxScalar(I1024 other) {
   FheInt1024 result = new FheInt1024();
-  execute(() -> fhe_int1024_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
+        execute(() -> fhe_int1024_scalar_max(getValue(), other.getAddress(), result.getAddress()));
+      return result;
+
+}
+/// ```c
+/// int fhe_int1024_shl(const struct FheInt1024 *lhs,
+///                     const struct FheUint1024 *rhs,
+///                     struct FheInt1024 **result);
+///```
+@Override
+public FheInt1024 shiftLeft(FheInt1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_shl(getValue(), other.getValue(), result.getAddress()));
   return result;
 
 }
 
   /// ```c
-  /// int fhe_int1024_shl_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
+  /// int fhe_int1024_scalar_shl(const struct FheInt1024 *lhs,
+  ///                            struct U1024 rhs,
+  ///                            struct FheInt1024 **result);
+  ///```
+  @Override
+  public FheInt1024 shiftLeftScalar(I1024 other) {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_scalar_shl(getValue(), other.getAddress(), result.getAddress()));
+    return result;
+
+}
+    
+/// ```c
+/// int fhe_int1024_shl_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
 ///```
 @Override
-public void shiftLeftAssign(FheInt1024 other){
+public void shiftLeftAssign(FheInt1024 other) {
   execute(() -> fhe_int1024_shl_assign(getValue(), other.getValue()));
 
 }
@@ -889,7 +889,7 @@ public void shiftLeftAssign(FheInt1024 other){
   }
 
   /// ```c
-/// int fhe_int1024_shr(const struct FheInt1024 *lhs,
+  /// int fhe_int1024_shr(const struct FheInt1024 *lhs,
   ///                     const struct FheUint1024 *rhs,
   ///                     struct FheInt1024 **result);
   ///```
@@ -900,28 +900,28 @@ public void shiftLeftAssign(FheInt1024 other){
     return result;
 
   }
+    
+/// ```c
+/// int fhe_int1024_scalar_shr(const struct FheInt1024 *lhs,
+///                            struct U1024 rhs,
+///                            struct FheInt1024 **result);
+///```
+@Override
+public FheInt1024 shiftRightScalar(I1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  /// ```c
-  /// int fhe_int1024_scalar_shr(const struct FheInt1024 *lhs,
-  ///                            struct U1024 rhs,
-  ///                            struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 shiftRightScalar(I1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_shr(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
+}
 
   /// ```c
   /// int fhe_int1024_shr_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
-///```
-@Override
-public void shiftRightAssign(FheInt1024 other){
-      execute(() -> fhe_int1024_shr_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void shiftRightAssign(FheInt1024 other) {
+    execute(() -> fhe_int1024_shr_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_int1024_scalar_shr_assign(struct FheInt1024 *lhs, struct U1024 rhs);
@@ -934,7 +934,7 @@ public void shiftRightAssign(FheInt1024 other){
 
   /// ```c
   /// int fhe_int1024_rotate_left(const struct FheInt1024 *lhs,
-///                             const struct FheUint1024 *rhs,
+  ///                             const struct FheUint1024 *rhs,
   ///                             struct FheInt1024 **result);
   ///```
   @Override
@@ -946,9 +946,9 @@ public void shiftRightAssign(FheInt1024 other){
   }
 
   /// ```c
-  /// int fhe_int1024_scalar_rotate_left(const struct FheInt1024 *lhs,
-  ///                                    struct U1024 rhs,
-  ///                                    struct FheInt1024 **result);
+/// int fhe_int1024_scalar_rotate_left(const struct FheInt1024 *lhs,
+///                                    struct U1024 rhs,
+///                                    struct FheInt1024 **result);
   ///```
   @Override
   public FheInt1024 rotateLeftScalar(I1024 other) {
@@ -956,14 +956,14 @@ public void shiftRightAssign(FheInt1024 other){
     execute(() -> fhe_int1024_scalar_rotate_left(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
-  }
-
-  /// ```c
-  /// int fhe_int1024_rotate_left_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
+}
+    
+/// ```c
+/// int fhe_int1024_rotate_left_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
 ///```
 @Override
-public void rotateLeftAssign(FheInt1024 other){
-      execute(() -> fhe_int1024_rotate_left_assign(getValue(), other.getValue()));
+public void rotateLeftAssign(FheInt1024 other) {
+  execute(() -> fhe_int1024_rotate_left_assign(getValue(), other.getValue()));
 
 }
 
@@ -977,7 +977,7 @@ public void rotateLeftAssign(FheInt1024 other){
   }
 
   /// ```c
-/// int fhe_int1024_rotate_right(const struct FheInt1024 *lhs,
+  /// int fhe_int1024_rotate_right(const struct FheInt1024 *lhs,
   ///                              const struct FheUint1024 *rhs,
   ///                              struct FheInt1024 **result);
   ///```
@@ -987,23 +987,23 @@ public void rotateLeftAssign(FheInt1024 other){
     execute(() -> fhe_int1024_rotate_right(getValue(), other.getValue(), result.getAddress()));
     return result;
 
-  }
+}
+    
+/// ```c
+/// int fhe_int1024_scalar_rotate_right(const struct FheInt1024 *lhs,
+///                                     struct U1024 rhs,
+///                                     struct FheInt1024 **result);
+///```
+@Override
+public FheInt1024 rotateRightScalar(I1024 other) {
+  FheInt1024 result = new FheInt1024();
+  execute(() -> fhe_int1024_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
+      return result;
 
-  /// ```c
-  /// int fhe_int1024_scalar_rotate_right(const struct FheInt1024 *lhs,
-  ///                                     struct U1024 rhs,
-  ///                                     struct FheInt1024 **result);
-  ///```
-  @Override
-  public FheInt1024 rotateRightScalar(I1024 other) {
-    FheInt1024 result = new FheInt1024();
-    execute(() -> fhe_int1024_scalar_rotate_right(getValue(), other.getAddress(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_int1024_rotate_right_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
+}
+    
+/// ```c
+/// int fhe_int1024_rotate_right_assign(struct FheInt1024 *lhs, const struct FheUint1024 *rhs);
 ///```
 @Override
 public void rotateRightAssign(FheInt1024 other) {
@@ -1013,10 +1013,10 @@ public void rotateRightAssign(FheInt1024 other) {
 
   /// ```c
   /// int fhe_int1024_scalar_rotate_right_assign(struct FheInt1024 *lhs, struct U1024 rhs);
-  ///```
-  @Override
-  public void rotateRightScalarAssign(I1024 other) {
-    execute(() -> fhe_int1024_scalar_rotate_right_assign(getValue(), other.getAddress()));
+///```
+@Override
+public void rotateRightScalarAssign(I1024 other){
+        execute(() -> fhe_int1024_scalar_rotate_right_assign(getValue(), other.getAddress()));
 
 }
     
@@ -1027,9 +1027,9 @@ public void rotateRightAssign(FheInt1024 other) {
 /// int fhe_int1024_leading_ones(const struct FheInt1024 *input, struct FheUint32 **result);
 ///```
 @Override
-public FheInt1024 leadingOnes() {
-  FheInt1024 result = new FheInt1024();
-  execute(() -> fhe_int1024_leading_ones(getValue(), result.getAddress()));
+public FheInt1024 leadingOnes(){
+      FheInt1024 result = new FheInt1024();
+      execute(() -> fhe_int1024_leading_ones(getValue(), result.getAddress()));
       return result;
 
 }
@@ -1044,23 +1044,23 @@ public FheInt1024 leadingOnes() {
 public FheInt1024 leadingZeros() {
   FheInt1024 result = new FheInt1024();
   execute(() -> fhe_int1024_leading_zeros(getValue(), result.getAddress()));
-      return result;
+  return result;
 
 }
-    
-/// ```c
-////**
-///  * Returns the number of trailing ones in the binary representation of input.
-///  */
-/// int fhe_int1024_trailing_ones(const struct FheInt1024 *input, struct FheUint32 **result);
-///```
-@Override
-public FheInt1024 trailingOnes() {
-  FheInt1024 result = new FheInt1024();
-      execute(() -> fhe_int1024_trailing_ones(getValue(), result.getAddress()));
-      return result;
 
-}
+  /// ```c
+  ////**
+  ///  * Returns the number of trailing ones in the binary representation of input.
+  ///  */
+  /// int fhe_int1024_trailing_ones(const struct FheInt1024 *input, struct FheUint32 **result);
+  ///```
+  @Override
+  public FheInt1024 trailingOnes() {
+    FheInt1024 result = new FheInt1024();
+    execute(() -> fhe_int1024_trailing_ones(getValue(), result.getAddress()));
+    return result;
+
+  }
 
   /// ```c
   ////**
@@ -1769,33 +1769,33 @@ public FheInt1024 trailingOnes() {
 
   /// ```c
   /// int fhe_int1024_cast_into_fhe_uint6(const struct FheInt1024 *sself, struct FheUint6 **result);
-  ///```
-  public FheUint6 castIntoFheUint6() {
-    FheUint6 result = new FheUint6();
-    execute(() -> fhe_int1024_cast_into_fhe_uint6(getValue(), result.getAddress()));
-    return result;
-  }
+///```
+public FheUint6 castIntoFheUint6() {
+  FheUint6 result = new FheUint6();
+  execute(() -> fhe_int1024_cast_into_fhe_uint6(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int1024_cast_into_fhe_uint64(const struct FheInt1024 *sself, struct FheUint64 **result);
-  ///```
-  public FheUint64 castIntoFheUint64() {
-    FheUint64 result = new FheUint64();
-    execute(() -> fhe_int1024_cast_into_fhe_uint64(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int1024_cast_into_fhe_uint64(const struct FheInt1024 *sself, struct FheUint64 **result);
+///```
+public FheUint64 castIntoFheUint64() {
+  FheUint64 result = new FheUint64();
+  execute(() -> fhe_int1024_cast_into_fhe_uint64(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int1024_cast_into_fhe_uint72(const struct FheInt1024 *sself, struct FheUint72 **result);
-  ///```
-  public FheUint72 castIntoFheUint72() {
-    FheUint72 result = new FheUint72();
-    execute(() -> fhe_int1024_cast_into_fhe_uint72(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int1024_cast_into_fhe_uint72(const struct FheInt1024 *sself, struct FheUint72 **result);
+///```
+public FheUint72 castIntoFheUint72() {
+  FheUint72 result = new FheUint72();
+  execute(() -> fhe_int1024_cast_into_fhe_uint72(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int1024_cast_into_fhe_uint8(const struct FheInt1024 *sself, struct FheUint8 **result);
+/// ```c
+/// int fhe_int1024_cast_into_fhe_uint8(const struct FheInt1024 *sself, struct FheUint8 **result);
 ///```
 public FheUint8 castIntoFheUint8() {
   FheUint8 result = new FheUint8();
@@ -1829,6 +1829,7 @@ public FheUint96 castIntoFheUint96() {
   execute(() -> fhe_int1024_cast_into_fhe_uint96(getValue(), result.getAddress()));
   return result;
 }
+
 
   // @formatter:off
 }

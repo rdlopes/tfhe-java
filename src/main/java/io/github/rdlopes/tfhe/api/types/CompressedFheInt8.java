@@ -104,7 +104,7 @@ implements CompressedFheType<Byte, FheInt8, CompressedFheInt8> {
 
   /// ```c
   /// int compressed_fhe_int8_clone(const struct CompressedFheInt8 *sself,
-  ///                               struct CompressedFheInt8 **result);
+///                               struct CompressedFheInt8 **result);
 /// ```
 @Override
 @SuppressWarnings("MethodDoesntCallSuperMethod")

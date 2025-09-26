@@ -42,7 +42,9 @@ public class Generator implements Callable<Integer> {
     logger.trace("call");
 
     SymbolsIndex symbolsIndex = SymbolsIndex.parse(nativeHeaderPath, jextractIncludesPath);
-    logger.info("Symbols parsed: {}", symbolsIndex);
+    logger.info("{} symbols parsed", symbolsIndex.symbolsByType()
+                                                 .size());
+    logger.debug("Symbols parsed: {}", symbolsIndex);
 
     TemplateWriter templateWriter = new TemplateWriter(templatesPrefix, outputPath, outputPackage);
 
@@ -59,11 +61,16 @@ public class Generator implements Callable<Integer> {
     Collection<String> types = symbolsIndex.lookupSymbols(struct, s -> s.startsWith(typePrefix));
 
     for (String fheType : types) {
-      TemplateContext templateContext = TemplateContext.fromType(outputPackage, fheType, symbolsIndex);
+      TemplateContext templateContext = TemplateContext.forType(outputPackage, fheType, symbolsIndex);
       templateWriter.write("FheType", fheType, templateContext);
 
-      TemplateContext compressedTemplateContext = TemplateContext.fromType(outputPackage, "Compressed" + fheType, symbolsIndex);
+      TemplateContext compressedTemplateContext = TemplateContext.forCompressedType(outputPackage, fheType, symbolsIndex);
       templateWriter.write("CompressedFheType", "Compressed" + fheType, compressedTemplateContext);
+
+      TemplateContext arrayTemplateContext = TemplateContext.forArrayType(outputPackage, fheType, symbolsIndex);
+      if (arrayTemplateContext.hasArray()) {
+        templateWriter.write("FheTypeArray", fheType + "Array", arrayTemplateContext);
+      }
     }
   }
 
