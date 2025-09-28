@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.generator.templates;
 
 import com.github.jknack.handlebars.Options;
+import io.github.rdlopes.tfhe.generator.parsers.SymbolsIndex;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class TemplateHelper {
   public static String method(TemplateContext context, Options options) throws IOException {
     String methodPrefix = options.param(0);
     String methodName = options.param(1);
-    String functionSuffix = options.param(2);
+    String methodSearch = options.param(2);
     String parameters = Arrays.stream(options.params)
                               .skip(3)
                               .map(Object::toString)
@@ -35,7 +36,7 @@ public class TemplateHelper {
     boolean override = options.hash("override", true);
     String annotation = options.hash("annotation", "");
 
-    return javadoc(functionSuffix, options) + "\n" +
+    return javadoc(methodSearch, options) + "\n" +
       (override ? "@Override\n" : "") +
       (annotation.isBlank() ? "" : annotation + "\n") +
       methodPrefix + " " + methodName + "(" + parameters + "){" + "\n" +
@@ -43,24 +44,40 @@ public class TemplateHelper {
       "}\n";
   }
 
-  public static String symbol(String symbolPrefix, Options options) {
+  public static String symbol(String symbolSearch, Options options) {
     TemplateContext context = (TemplateContext) options.context.model();
     boolean lookupType = options.hash("lookupType", false);
-    String prefix = lookupType
-      ? TemplateContext.nativePrefix(context.typeName())
-      : context.nativePrefix();
+    boolean prefixed = options.hash("prefixed", true);
+    String prefix = "";
+    if (prefixed) {
+      prefix = lookupType
+        ? TemplateContext.nativeType(context.typeName())
+        : context.nativeType();
+      prefix += "_";
+    }
     return context.symbolsIndex()
-                  .lookupSymbol(prefix + symbolPrefix);
+                  .lookupSymbol(prefix + symbolSearch);
   }
 
-  public static String javadoc(String symbolSuffix, Options options) {
+  @SuppressWarnings("unused")
+  public static String lookupDoc(SymbolsIndex symbolsIndex, String symbol, Options ignored) {
+    String definition = symbolsIndex.definitions()
+                                    .get(symbol);
+    return javadocText(definition);
+  }
+
+  public static String javadoc(String symbolSearch, Options options) {
     TemplateContext context = (TemplateContext) options.context.model();
-    String symbol = symbol(symbolSuffix, options);
+    String symbol = symbol(symbolSearch, options);
 
     String definition = context.symbolsIndex()
                                .definitions()
                                .get(symbol);
 
+    return javadocText(definition);
+  }
+
+  private static String javadocText(String definition) {
     return definition == null
       ? "/// Not implemented"
       : definition.lines()
@@ -105,7 +122,7 @@ public class TemplateHelper {
   @SuppressWarnings("unused")
   public static String casts(TemplateContext context, Options options) {
     Collection<String> castMethods = context.symbolsIndex()
-                                            .lookupSymbols(function, s -> s.startsWith(context.nativePrefix() + "cast_into"));
+                                            .lookupSymbols(function, s -> s.startsWith(context.nativeType() + "_cast_into"));
 
     List<String> casts = castMethods.stream()
                                     .map(s ->
@@ -120,7 +137,7 @@ public class TemplateHelper {
                                           return result;
                                         }
                                         """.formatted(
-                                        javadoc(substringAfter(entry.getKey(), context.nativePrefix()), options),
+                                      javadoc(substringAfter(entry.getKey(), context.nativeType() + "_"), options),
                                         entry.getValue(),
                                         entry.getValue(),
                                         entry.getValue(),

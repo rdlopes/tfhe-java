@@ -34,14 +34,10 @@ public record TemplateWriter(Handlebars handlebars, Path outputPath, String outp
                    .resolve(className + ".java");
   }
 
-  public void write(String templateName, String className, TemplateContext templateContext) throws IOException {
+  public void write(String templateName, String className, Object templateContext) throws IOException {
     Path filePath = resolvePath(outputPath, className);
     Template template = handlebars().compile(templateName);
     Files.createDirectories(filePath.getParent());
-
-    templateContext.symbolsIndex()
-                   .used()
-                   .add(className);
 
     try (Writer writer = Files.newBufferedWriter(filePath, UTF_8, CREATE, TRUNCATE_EXISTING)) {
       template.apply(templateContext, writer);

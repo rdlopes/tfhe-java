@@ -1012,6 +1012,33 @@ public class FheInt8 extends NativePointer implements FheInteger<Byte, FheInt8, 
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_int8(struct FheInt8 **out_result,
+  ///                                               uint64_t seed_low_bytes,
+  ///                                               uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheInt8 random(long seedLow, long seedHigh) {
+    FheInt8 result = new FheInt8();
+    execute(() -> generate_oblivious_pseudo_random_fhe_int8(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_int8(struct FheInt8 **out_result,
+  ///                                                       uint64_t seed_low_bytes,
+  ///                                                       uint64_t seed_high_bytes,
+  ///                                                       uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheInt8 random(long seedLow, long seedHigh, long bitsCount) {
+    FheInt8 result = new FheInt8();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int8(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *

@@ -1079,6 +1079,33 @@ public class FheUint208 extends NativePointer implements FheUnsignedInteger<U256
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_uint208(struct FheUint208 **out_result,
+  ///                                                  uint64_t seed_low_bytes,
+  ///                                                  uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheUint208 random(long seedLow, long seedHigh) {
+    FheUint208 result = new FheUint208();
+    execute(() -> generate_oblivious_pseudo_random_fhe_uint208(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_uint208(struct FheUint208 **out_result,
+  ///                                                          uint64_t seed_low_bytes,
+  ///                                                          uint64_t seed_high_bytes,
+  ///                                                          uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheUint208 random(long seedLow, long seedHigh, long bitsCount) {
+    FheUint208 result = new FheUint208();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint208(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   /// int fhe_uint208_cast_into_fhe_int10(const struct FheUint208 *sself, struct FheInt10 **result);
   ///```
   public FheInt10 castIntoFheInt10() {

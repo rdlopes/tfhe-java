@@ -1052,6 +1052,33 @@ public class FheUint64 extends NativePointer implements FheUnsignedInteger<Long,
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_uint64(struct FheUint64 **out_result,
+  ///                                                 uint64_t seed_low_bytes,
+  ///                                                 uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheUint64 random(long seedLow, long seedHigh) {
+    FheUint64 result = new FheUint64();
+    execute(() -> generate_oblivious_pseudo_random_fhe_uint64(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_uint64(struct FheUint64 **out_result,
+  ///                                                         uint64_t seed_low_bytes,
+  ///                                                         uint64_t seed_high_bytes,
+  ///                                                         uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheUint64 random(long seedLow, long seedHigh, long bitsCount) {
+    FheUint64 result = new FheUint64();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint64(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   /// int fhe_uint64_cast_into_fhe_int10(const struct FheUint64 *sself, struct FheInt10 **result);
   ///```
   public FheInt10 castIntoFheInt10() {

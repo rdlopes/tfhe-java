@@ -1,0 +1,31 @@
+package {{packageName}};
+
+import java.util.EnumSet;
+
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+
+public enum FheTypes {
+  {{#each symbolsIndex.symbols}}
+    {{lookupDoc symbolsIndex this}}
+    {{replace this "Type_" ""}}({{this}}()){{#if @last}};{{else}},{{/if}}
+  {{/each}}
+
+  private final int ordinal;
+
+  FheTypes(int ordinal) {
+    this.ordinal = ordinal;
+  }
+
+  public int getValue() {
+    return ordinal;
+  }
+
+  @SuppressWarnings("unused")
+  public static FheTypes valueOrdered(int ordinal) {
+    return EnumSet.allOf(FheTypes.class)
+                  .stream()
+                  .filter(e -> e.ordinal == ordinal)
+                  .findFirst()
+                  .orElseThrow(() -> new IllegalArgumentException("unknown type ordinal"));
+  }
+}

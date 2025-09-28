@@ -4,6 +4,7 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.SegmentAllocator;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -13,6 +14,10 @@ public class NativePointer extends NativeAddress {
 
   protected NativePointer(@Nullable Function<MemorySegment, Integer> destroyer) {
     super(allocator -> allocator.allocate(C_POINTER), valueDestroyerOf(destroyer));
+  }
+
+  protected NativePointer(@NonNull Function<SegmentAllocator, MemorySegment> allocator, @Nullable Function<MemorySegment, Integer> destroyer) {
+    super(allocator, valueDestroyerOf(destroyer));
   }
 
   public MemorySegment getValue() {

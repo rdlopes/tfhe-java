@@ -1,0 +1,16 @@
+{{#method this (stringFormat "public %s" className) "random"
+          (stringFormat "generate_oblivious_pseudo_random_%s" nativeType) "long seedLow" "long seedHigh"
+          prefixed=false}}
+  {{declare "result"}}
+  {{execute (stringFormat "generate_oblivious_pseudo_random_%s" nativeType) "result.getAddress(), seedLow, seedHigh"
+            prefixed=false}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" className) "random" "generate_oblivious_pseudo_random_bounded" "long seedLow"
+          "long seedHigh" "long bitsCount" prefixed=false}}
+  {{declare "result"}}
+  {{execute "generate_oblivious_pseudo_random_bounded" "result.getAddress(), seedLow, seedHigh, bitsCount"
+            prefixed=false}}
+  return result;
+{{/method}}

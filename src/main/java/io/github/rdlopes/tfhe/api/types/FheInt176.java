@@ -1061,6 +1061,33 @@ public class FheInt176 extends NativePointer implements FheInteger<I256, FheInt1
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_int176(struct FheInt176 **out_result,
+  ///                                                 uint64_t seed_low_bytes,
+  ///                                                 uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheInt176 random(long seedLow, long seedHigh) {
+    FheInt176 result = new FheInt176();
+    execute(() -> generate_oblivious_pseudo_random_fhe_int176(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_int176(struct FheInt176 **out_result,
+  ///                                                         uint64_t seed_low_bytes,
+  ///                                                         uint64_t seed_high_bytes,
+  ///                                                         uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheInt176 random(long seedLow, long seedHigh, long bitsCount) {
+    FheInt176 result = new FheInt176();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int176(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *

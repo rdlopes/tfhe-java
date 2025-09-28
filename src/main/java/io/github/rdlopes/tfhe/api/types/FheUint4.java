@@ -1020,6 +1020,33 @@ public class FheUint4 extends NativePointer implements FheUnsignedInteger<Byte, 
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_uint4(struct FheUint4 **out_result,
+  ///                                                uint64_t seed_low_bytes,
+  ///                                                uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheUint4 random(long seedLow, long seedHigh) {
+    FheUint4 result = new FheUint4();
+    execute(() -> generate_oblivious_pseudo_random_fhe_uint4(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_uint4(struct FheUint4 **out_result,
+  ///                                                        uint64_t seed_low_bytes,
+  ///                                                        uint64_t seed_high_bytes,
+  ///                                                        uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheUint4 random(long seedLow, long seedHigh, long bitsCount) {
+    FheUint4 result = new FheUint4();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint4(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   /// int fhe_uint4_cast_into_fhe_int10(const struct FheUint4 *sself, struct FheInt10 **result);
   ///```
   public FheInt10 castIntoFheInt10() {

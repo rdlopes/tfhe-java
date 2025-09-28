@@ -1061,6 +1061,33 @@ public class FheInt120 extends NativePointer implements FheInteger<I128, FheInt1
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_int120(struct FheInt120 **out_result,
+  ///                                                 uint64_t seed_low_bytes,
+  ///                                                 uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheInt120 random(long seedLow, long seedHigh) {
+    FheInt120 result = new FheInt120();
+    execute(() -> generate_oblivious_pseudo_random_fhe_int120(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_int120(struct FheInt120 **out_result,
+  ///                                                         uint64_t seed_low_bytes,
+  ///                                                         uint64_t seed_high_bytes,
+  ///                                                         uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheInt120 random(long seedLow, long seedHigh, long bitsCount) {
+    FheInt120 result = new FheInt120();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int120(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *

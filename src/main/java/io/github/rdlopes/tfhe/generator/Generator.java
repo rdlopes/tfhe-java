@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.generator;
 
 import io.github.rdlopes.tfhe.generator.parsers.SymbolsIndex;
+import io.github.rdlopes.tfhe.generator.templates.FheTypesContext;
 import io.github.rdlopes.tfhe.generator.templates.TemplateContext;
 import io.github.rdlopes.tfhe.generator.templates.TemplateWriter;
 import org.slf4j.Logger;
@@ -12,9 +13,11 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 
-import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludes.SymbolType.struct;
+import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludes.SymbolType.constant;
+import static org.apache.commons.lang3.StringUtils.substringAfter;
 import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Option;
 
@@ -30,8 +33,8 @@ public class Generator implements Callable<Integer> {
   String templatesPrefix;
   @Option(names = {"--output-path"}, description = "directory where to generate Java sources (optional)", defaultValue = "src/main/java")
   Path outputPath;
-  @Option(names = {"--output-package"}, description = "package for the generated classes (optional)", defaultValue = "io.github.rdlopes.tfhe.api.types")
-  String outputPackage;
+  @Option(names = {"--base-package"}, description = "package for the generated classes (optional)", defaultValue = "io.github.rdlopes.tfhe.api.types")
+  String basePackage;
 
   @SuppressWarnings("UnnecessaryModifier")
   public static void main(String[] args) {
@@ -43,50 +46,82 @@ public class Generator implements Callable<Integer> {
   public Integer call() throws Exception {
     logger.trace("call");
 
-    SymbolsIndex symbolsIndex = SymbolsIndex.parse(nativeHeaderPath, jextractIncludesPath);
-    logger.info("{} symbols parsed", symbolsIndex.symbolsByType()
-                                                 .size());
-    logger.debug("Symbols parsed: {}", symbolsIndex);
+    SymbolsIndex globalIndex = SymbolsIndex.parse(nativeHeaderPath, jextractIncludesPath)
+                                           .withFilter(symbol ->
+                                             !symbol.startsWith("core_crypto")
+                                               && !symbol.toLowerCase()
+                                                         .startsWith("boolean")
+                                               && !symbol.toLowerCase()
+                                                         .startsWith("shortint")
+                                           );
+    logger.info("{} symbols parsed", globalIndex.symbols()
+                                                .size());
+    logger.debug("Symbols parsed: {}", globalIndex);
 
-    TemplateWriter templateWriter = new TemplateWriter(templatesPrefix, outputPath, outputPackage);
+    TemplateWriter templateWriter = new TemplateWriter(templatesPrefix, outputPath, basePackage);
 
-    writeFheTypes(templateWriter, symbolsIndex, "FheBool");
-    writeFheTypes(templateWriter, symbolsIndex, "FheInt");
-    writeFheTypes(templateWriter, symbolsIndex, "FheUint");
+    Set<String> symbolsUsed = new HashSet<>();
+    symbolsUsed.addAll(writeFheTypesEnum(templateWriter, globalIndex));
+    symbolsUsed.addAll(writeFheTypes(templateWriter, globalIndex));
+
+    symbolsUsed.addAll(globalIndex.used());
+
+    TreeSet<String> symbolsUnused = new TreeSet<>(globalIndex.symbols());
+    symbolsUnused.removeAll(symbolsUsed);
+    logger.info("{}/{} symbols used", symbolsUsed.size(), globalIndex.symbols()
+                                                                     .size());
+    logger.info("{} Unused symbols", symbolsUnused.size());
+    logger.info("Unused symbols: {}", symbolsUnused);
 
     return 0;
   }
 
-  private void writeFheTypes(TemplateWriter templateWriter, SymbolsIndex symbolsIndex, String typePrefix) throws IOException {
-    logger.trace("writeFheTypes - templateWriter: {}, symbolsIndex: {}, typePrefix: {}", templateWriter, symbolsIndex, typePrefix);
+  private Set<String> writeFheTypes(TemplateWriter templateWriter, SymbolsIndex globalIndex) throws IOException {
+    logger.trace("writeFheTypes - templateWriter: {}, globalIndex: {}", templateWriter, globalIndex);
 
-    Collection<String> types = symbolsIndex.lookupSymbols(struct, s -> s.startsWith(typePrefix));
+    Set<String> symbolsUsed = new HashSet<>();
+    Collection<String> types = globalIndex.lookupSymbols(constant, s -> s.startsWith("Type_"))
+                                          .stream()
+                                          .map(s -> substringAfter(s, "Type_"))
+                                          .toList();
 
-    for (String fheType : types) {
-      TemplateContext templateContext = TemplateContext.forType(outputPackage, fheType, symbolsIndex);
-      templateWriter.write("FheType", fheType, templateContext);
+    for (String type : types) {
 
-      TemplateContext compressedTemplateContext = TemplateContext.forCompressedType(outputPackage, fheType, symbolsIndex);
-      templateWriter.write("CompressedFheType", "Compressed" + fheType, compressedTemplateContext);
+      String fheType = globalIndex.lookupSymbol(type);
+      if (fheType == null) continue;
+      TemplateContext typeContext = TemplateContext.forType(basePackage, fheType, globalIndex);
+      templateWriter.write("FheType", fheType, typeContext);
+      symbolsUsed.addAll(typeContext.symbolsIndex()
+                                    .used());
 
-      TemplateContext arrayTemplateContext = TemplateContext.forArrayType(outputPackage, fheType, symbolsIndex);
-      if (arrayTemplateContext.hasArray()) {
-        templateWriter.write("FheTypeArray", fheType + "Array", arrayTemplateContext);
+      String compressedFheType = globalIndex.lookupSymbol("Compressed" + type);
+      if (compressedFheType == null) continue;
+      TemplateContext compressedContext = TemplateContext.forCompressedType(basePackage, fheType, globalIndex);
+      templateWriter.write("CompressedFheType", compressedFheType, compressedContext);
+      symbolsUsed.addAll(compressedContext.symbolsIndex()
+                                          .used());
+
+      String arraySymbol = globalIndex.lookupSymbol(TemplateContext.nativeType(fheType + "Array"));
+      if (arraySymbol == null) continue;
+      TemplateContext arrayContext = TemplateContext.forArrayType(basePackage, fheType, globalIndex);
+      if (arrayContext.hasArray()) {
+        templateWriter.write("FheTypeArray", fheType + "Array", arrayContext);
+        symbolsUsed.addAll(arrayContext.symbolsIndex()
+                                       .used());
       }
-
-      Set<String> unusedSymbols = new HashSet<>();
-      unusedSymbols.addAll(templateContext.symbols());
-      unusedSymbols.addAll(compressedTemplateContext.symbols());
-      unusedSymbols.addAll(arrayTemplateContext.symbols());
-      unusedSymbols.removeAll(templateContext.symbolsIndex()
-                                             .used());
-      unusedSymbols.removeAll(compressedTemplateContext.symbolsIndex()
-                                                       .used());
-      unusedSymbols.removeAll(arrayTemplateContext.symbolsIndex()
-                                                  .used());
-
-      logger.info("Unused symbols for {}: {}", fheType, unusedSymbols);
     }
+
+    return symbolsUsed;
+  }
+
+  private Set<String> writeFheTypesEnum(TemplateWriter templateWriter, SymbolsIndex globalIndex) throws IOException {
+    logger.trace("writeFheTypesEnum - templateWriter: {}, globalIndex: {}", templateWriter, globalIndex);
+
+    SymbolsIndex typesIndex = globalIndex.withFilter(s -> s.startsWith("Type_"));
+    FheTypesContext fheTypesContext = new FheTypesContext(basePackage, typesIndex);
+    templateWriter.write("FheTypes", "FheTypes", fheTypesContext);
+
+    return typesIndex.used();
   }
 
 }

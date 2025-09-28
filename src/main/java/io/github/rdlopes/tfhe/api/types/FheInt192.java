@@ -1061,6 +1061,33 @@ public class FheInt192 extends NativePointer implements FheInteger<I256, FheInt1
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_int192(struct FheInt192 **out_result,
+  ///                                                 uint64_t seed_low_bytes,
+  ///                                                 uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheInt192 random(long seedLow, long seedHigh) {
+    FheInt192 result = new FheInt192();
+    execute(() -> generate_oblivious_pseudo_random_fhe_int192(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_int192(struct FheInt192 **out_result,
+  ///                                                         uint64_t seed_low_bytes,
+  ///                                                         uint64_t seed_high_bytes,
+  ///                                                         uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheInt192 random(long seedLow, long seedHigh, long bitsCount) {
+    FheInt192 result = new FheInt192();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int192(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *

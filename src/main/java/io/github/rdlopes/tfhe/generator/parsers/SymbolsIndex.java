@@ -12,13 +12,9 @@ import java.util.regex.Pattern;
 import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludes.SymbolType;
 import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludes.from;
 import static java.util.regex.Pattern.*;
-import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
-public record SymbolsIndex(
-  SortedMap<SymbolType, List<String>> symbolsByType,
-  SortedMap<String, String> definitions,
-  SortedSet<String> used) {
+public record SymbolsIndex(SortedMap<SymbolType, List<String>> symbolsByType, SortedMap<String, String> definitions, SortedSet<String> used) {
 
   public static SymbolsIndex parse(Path nativeHeaderPath, Path jextractIncludesPath) throws IOException {
     NativeHeaderFile nativeHeader = NativeHeaderFile.from(nativeHeaderPath);
@@ -28,10 +24,7 @@ public record SymbolsIndex(
                                                       .values()
                                                       .stream()
                                                       .flatMap(Collection::stream)
-                                                      .collect(toMap(
-                                                        symbol -> symbol,
-                                                        symbol -> transformDefinitionOf(symbol, nativeHeader.lookup(symbol))
-                                                      ));
+                                                      .collect(toMap(symbol -> symbol, symbol -> transformDefinitionOf(symbol, nativeHeader.lookup(symbol))));
 
     return new SymbolsIndex(jextractIncludes.symbolsByType(), new TreeMap<>(definitions), new TreeSet<>());
   }
@@ -57,22 +50,17 @@ public record SymbolsIndex(
   }
 
   public SymbolsIndex withFilter(Predicate<String> predicate) {
-    Map<SymbolType, List<String>> symbolsByType = symbolsByType()
-      .entrySet()
-      .stream()
-      .collect(toMap(
-        Map.Entry::getKey,
-        entry -> entry.getValue()
-                      .stream()
-                      .filter(predicate)
-                      .toList()
-      ));
+    Map<SymbolType, List<String>> symbolsByType = symbolsByType().entrySet()
+                                                                 .stream()
+                                                                 .collect(toMap(Map.Entry::getKey, entry -> entry.getValue()
+                                                                                                                 .stream()
+                                                                                                                 .filter(predicate)
+                                                                                                                 .toList()));
 
-    Map<String, String> definitions = definitions()
-      .entrySet()
-      .stream()
-      .filter(e -> predicate.test(e.getKey()))
-      .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+    Map<String, String> definitions = definitions().entrySet()
+                                                   .stream()
+                                                   .filter(e -> predicate.test(e.getKey()))
+                                                   .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     return new SymbolsIndex(new TreeMap<>(symbolsByType), new TreeMap<>(definitions), new TreeSet<>());
   }
@@ -103,5 +91,12 @@ public record SymbolsIndex(
                         .peek(symbol -> used().add(symbol))
                         .findFirst()
                         .orElse(null);
+  }
+
+  public Set<String> symbols() {
+    return symbolsByType().values()
+                          .stream()
+                          .flatMap(List::stream)
+                          .collect(toSet());
   }
 }

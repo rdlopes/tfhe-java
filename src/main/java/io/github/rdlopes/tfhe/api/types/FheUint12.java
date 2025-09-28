@@ -1052,6 +1052,33 @@ public class FheUint12 extends NativePointer implements FheUnsignedInteger<Short
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_uint12(struct FheUint12 **out_result,
+  ///                                                 uint64_t seed_low_bytes,
+  ///                                                 uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheUint12 random(long seedLow, long seedHigh) {
+    FheUint12 result = new FheUint12();
+    execute(() -> generate_oblivious_pseudo_random_fhe_uint12(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_uint12(struct FheUint12 **out_result,
+  ///                                                         uint64_t seed_low_bytes,
+  ///                                                         uint64_t seed_high_bytes,
+  ///                                                         uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheUint12 random(long seedLow, long seedHigh, long bitsCount) {
+    FheUint12 result = new FheUint12();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint12(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   /// int fhe_uint12_cast_into_fhe_int10(const struct FheUint12 *sself, struct FheInt10 **result);
   ///```
   public FheInt10 castIntoFheInt10() {

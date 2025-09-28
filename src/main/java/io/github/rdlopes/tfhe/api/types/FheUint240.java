@@ -1079,6 +1079,33 @@ public class FheUint240 extends NativePointer implements FheUnsignedInteger<U256
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_uint240(struct FheUint240 **out_result,
+  ///                                                  uint64_t seed_low_bytes,
+  ///                                                  uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheUint240 random(long seedLow, long seedHigh) {
+    FheUint240 result = new FheUint240();
+    execute(() -> generate_oblivious_pseudo_random_fhe_uint240(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_uint240(struct FheUint240 **out_result,
+  ///                                                          uint64_t seed_low_bytes,
+  ///                                                          uint64_t seed_high_bytes,
+  ///                                                          uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheUint240 random(long seedLow, long seedHigh, long bitsCount) {
+    FheUint240 result = new FheUint240();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint240(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   /// int fhe_uint240_cast_into_fhe_int10(const struct FheUint240 *sself, struct FheInt10 **result);
   ///```
   public FheInt10 castIntoFheInt10() {

@@ -4,37 +4,37 @@ import io.github.rdlopes.tfhe.api.values.*;
 import io.github.rdlopes.tfhe.generator.parsers.SymbolsIndex;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.StringUtils.*;
 
 public record TemplateContext(String packageName, String className, String typeName, SymbolsIndex symbolsIndex) {
 
   public static TemplateContext forType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
-    return new TemplateContext(packageName, fheType, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativePrefix(fheType))));
+    return new TemplateContext(packageName, fheType, fheType, symbolsIndex.withFilter(s ->
+      s.equals(fheType)
+        || s.startsWith(nativeType(fheType) + "_")
+        || (s.startsWith("generate_oblivious") && s.endsWith(nativeType(fheType)))
+    ));
   }
 
-  public static String nativePrefix(String type) {
-    String nativeType = Arrays.stream(splitByCharacterTypeCamelCase(type))
+  public static String nativeType(String type) {
+    String prefixed = Arrays.stream(splitByCharacterTypeCamelCase(type))
                               .map(String::toLowerCase)
                               .map(s -> isAlpha(s) ? "_" + s : s)
                               .collect(joining());
-
-    return substringAfter(nativeType, "_") + "_";
+    return substringAfter(prefixed, "_");
   }
 
   public static TemplateContext forCompressedType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
     String className = "Compressed" + fheType;
-    return new TemplateContext(packageName, className, fheType, symbolsIndex.withFilter(s -> s.equals(className) || s.startsWith(nativePrefix(className))));
+    return new TemplateContext(packageName, className, fheType, symbolsIndex.withFilter(s -> s.equals(className) || s.startsWith(nativeType(className))));
   }
 
   public static TemplateContext forArrayType(String packageName, String fheType, SymbolsIndex symbolsIndex) {
     String className = fheType + "Array";
-    return new TemplateContext(packageName, className, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativePrefix(fheType))));
+    return new TemplateContext(packageName, className, fheType, symbolsIndex.withFilter(s -> s.equals(fheType) || s.startsWith(nativeType(fheType))));
   }
 
   public boolean isBoolean() {
@@ -50,7 +50,7 @@ public record TemplateContext(String packageName, String className, String typeN
   }
 
   public boolean hasArray() {
-    return symbolsIndex().lookupSymbol(nativePrefix(className())) != null;
+    return symbolsIndex().lookupSymbol(nativeType(typeName() + "_array")) != null;
   }
 
   @SuppressWarnings("unused")
@@ -84,15 +84,8 @@ public record TemplateContext(String packageName, String className, String typeN
     return isNumeric(bitSizeString) ? parseInt(bitSizeString) : 1;
   }
 
-  public String nativePrefix() {
-    return nativePrefix(className());
+  public String nativeType() {
+    return nativeType(className());
   }
 
-  public Set<String> symbols() {
-    return symbolsIndex().symbolsByType()
-                         .values()
-                         .stream()
-                         .flatMap(List::stream)
-                         .collect(toSet());
-  }
 }

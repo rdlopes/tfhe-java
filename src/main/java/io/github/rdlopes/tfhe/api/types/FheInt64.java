@@ -1026,6 +1026,33 @@ public class FheInt64 extends NativePointer implements FheInteger<Long, FheInt64
   }
 
   /// ```c
+  /// int generate_oblivious_pseudo_random_fhe_int64(struct FheInt64 **out_result,
+  ///                                                uint64_t seed_low_bytes,
+  ///                                                uint64_t seed_high_bytes);
+  ///```
+  @Override
+  public FheInt64 random(long seedLow, long seedHigh) {
+    FheInt64 result = new FheInt64();
+    execute(() -> generate_oblivious_pseudo_random_fhe_int64(result.getAddress(), seedLow, seedHigh));
+    return result;
+
+  }
+
+  /// ```c
+  /// int generate_oblivious_pseudo_random_bounded_fhe_int64(struct FheInt64 **out_result,
+  ///                                                        uint64_t seed_low_bytes,
+  ///                                                        uint64_t seed_high_bytes,
+  ///                                                        uint64_t random_bits_count);
+  ///```
+  @Override
+  public FheInt64 random(long seedLow, long seedHigh, long bitsCount) {
+    FheInt64 result = new FheInt64();
+    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int64(result.getAddress(), seedLow, seedHigh, bitsCount));
+    return result;
+
+  }
+
+  /// ```c
   ////**
   ///  * Returns the absolute value.
   ///  *
