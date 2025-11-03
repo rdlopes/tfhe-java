@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import static java.math.BigInteger.ONE;
 
-public final class I512 extends AbstractValueHolder {
+public final class I512 extends AbstractValue {
   public static final int BIT_SIZE = 512;
   public static final BigInteger MIN_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)

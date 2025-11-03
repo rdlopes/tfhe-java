@@ -1,6 +1,5 @@
 package io.github.rdlopes.tfhe.api.values;
 
-import io.github.rdlopes.tfhe.api.FheValueHolder;
 import io.github.rdlopes.tfhe.ffm.NativeAddress;
 import org.jspecify.annotations.NonNull;
 
@@ -11,7 +10,7 @@ import java.util.function.Function;
 
 import static java.math.BigInteger.ONE;
 
-public abstract class AbstractValueHolder extends NativeAddress implements FheValueHolder {
+public abstract class AbstractValue extends NativeAddress implements FheValue {
 
   public static final BigInteger LONG_MASK = ONE.shiftLeft(Long.SIZE)
                                                 .subtract(ONE);
@@ -21,7 +20,7 @@ public abstract class AbstractValueHolder extends NativeAddress implements FheVa
   private final BigInteger minValue;
   private final BigInteger maxValue;
 
-  AbstractValueHolder(
+  AbstractValue(
     Function<SegmentAllocator, MemorySegment> allocator,
     int bitSize,
     boolean signed,

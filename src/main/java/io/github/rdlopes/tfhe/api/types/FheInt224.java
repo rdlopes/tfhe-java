@@ -60,7 +60,7 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   ///                       struct FheInt224 **result);
   ///```
   @Override
-  public FheInt224 bitAnd(FheInt224 other) {
+  public FheInt224 bitAnd(FheInt224 other){
     FheInt224 result = new FheInt224();
     execute(() -> fhe_int224_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -84,7 +84,7 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   /// int fhe_int224_bitand_assign(struct FheInt224 *lhs, const struct FheInt224 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheInt224 other) {
+public void bitAndAssign(FheInt224 other){
     execute(() -> fhe_int224_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -103,35 +103,35 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   ///                      const struct FheInt224 *rhs,
   ///                      struct FheInt224 **result);
   ///```
-  @Override
-  public FheInt224 bitOr(FheInt224 other) {
+@Override
+public FheInt224 bitOr(FheInt224 other){
     FheInt224 result = new FheInt224();
     execute(() -> fhe_int224_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_scalar_bitor(const struct FheInt224 *lhs,
   ///                             struct I256 rhs,
   ///                             struct FheInt224 **result);
-  ///```
-  @Override
-  public FheInt224 bitOrScalar(I256 other) {
-    FheInt224 result = new FheInt224();
-    execute(() -> fhe_int224_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheInt224 bitOrScalar(I256 other) {
+  FheInt224 result = new FheInt224();
+  execute(() -> fhe_int224_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_bitor_assign(struct FheInt224 *lhs, const struct FheInt224 *rhs);
-  ///```
-  @Override
-  public void bitOrAssign(FheInt224 other) {
+///```
+@Override
+public void bitOrAssign(FheInt224 other){
     execute(() -> fhe_int224_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_scalar_bitor_assign(struct FheInt224 *lhs, struct I256 rhs);
@@ -146,36 +146,36 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   /// int fhe_int224_bitxor(const struct FheInt224 *lhs,
   ///                       const struct FheInt224 *rhs,
   ///                       struct FheInt224 **result);
-  ///```
-  @Override
-  public FheInt224 bitXor(FheInt224 other) {
+///```
+@Override
+public FheInt224 bitXor(FheInt224 other){
     FheInt224 result = new FheInt224();
     execute(() -> fhe_int224_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_scalar_bitxor(const struct FheInt224 *lhs,
   ///                              struct I256 rhs,
   ///                              struct FheInt224 **result);
-  ///```
-  @Override
-  public FheInt224 bitXorScalar(I256 other) {
-    FheInt224 result = new FheInt224();
-    execute(() -> fhe_int224_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheInt224 bitXorScalar(I256 other) {
+  FheInt224 result = new FheInt224();
+  execute(() -> fhe_int224_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_bitxor_assign(struct FheInt224 *lhs, const struct FheInt224 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheInt224 other) {
-    execute(() -> fhe_int224_bitxor_assign(getValue(), other.getValue()));
+///```
+@Override
+public void bitXorAssign(FheInt224 other) {
+  execute(() -> fhe_int224_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_scalar_bitxor_assign(struct FheInt224 *lhs, struct I256 rhs);
@@ -188,14 +188,14 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
 
   /// ```c
   /// int fhe_int224_not(const struct FheInt224 *input, struct FheInt224 **result);
-  ///```
-  @Override
-  public FheInt224 bitNot() {
+///```
+@Override
+public FheInt224 bitNot(){
     FheInt224 result = new FheInt224();
-    execute(() -> fhe_int224_not(getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int224_not(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_if_then_else(const struct FheBool *condition_ct,
@@ -214,15 +214,15 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   /// ```c
   /// int fhe_int224_eq(const struct FheInt224 *lhs,
   ///                   const struct FheInt224 *rhs,
-  ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheInt224 other) {
+///                   struct FheBool **result);
+///```
+@Override
+public FheBool equalTo(FheInt224 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int224_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int224_eq(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_scalar_eq(const struct FheInt224 *lhs, struct I256 rhs, struct FheBool **result);
@@ -238,21 +238,21 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   /// ```c
   /// int fhe_int224_ne(const struct FheInt224 *lhs,
   ///                   const struct FheInt224 *rhs,
-  ///                   struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheInt224 other) {
+///                   struct FheBool **result);
+///```
+@Override
+public FheBool notEqualTo(FheInt224 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int224_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int224_ne(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_scalar_ne(const struct FheInt224 *lhs, struct I256 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(I256 other) {
+  public FheBool notEqualToScalar(I256 other){
     FheBool result = new FheBool();
     execute(() -> fhe_int224_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -277,21 +277,21 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   /// int fhe_int224_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
   ///                                            uint64_t serialized_size_limit,
   ///                                            const struct ServerKey *server_key,
-  ///                                            struct FheInt224 **result);
-  ///```
-  public static FheInt224 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+///                                            struct FheInt224 **result);
+///```
+public static FheInt224 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt224 deserialized = new FheInt224();
     execute(() -> fhe_int224_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_int224_try_encrypt_with_client_key_i256(struct I256 value,
   ///                                                 const struct ClientKey *client_key,
-  ///                                                 struct FheInt224 **result);
+///                                                 struct FheInt224 **result);
   ///```
-  public static FheInt224 encrypt(I256 clearValue, ClientKey clientKey) {
+  public static FheInt224 encrypt(I256 clearValue, ClientKey clientKey){
     FheInt224 encrypted = new FheInt224();
     execute(() -> fhe_int224_try_encrypt_with_client_key_i256(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
@@ -301,47 +301,34 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   /// ```c
   /// int fhe_int224_try_encrypt_with_public_key_i256(struct I256 value,
   ///                                                 const struct PublicKey *public_key,
-  ///                                                 struct FheInt224 **result);
+///                                                 struct FheInt224 **result);
   ///```
-  public static FheInt224 encrypt(I256 clearValue, PublicKey publicKey) {
+  public static FheInt224 encrypt(I256 clearValue, PublicKey publicKey){
     FheInt224 encrypted = new FheInt224();
     execute(() -> fhe_int224_try_encrypt_with_public_key_i256(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
+}
+/// ```c
+/// int fhe_int224_try_encrypt_trivial_i256(struct I256 value, struct FheInt224 **result);
+///```
+public static FheInt224 encrypt(I256 clearValue) {
+  FheInt224 encrypted = new FheInt224();
+  execute(() -> fhe_int224_try_encrypt_trivial_i256(clearValue.getAddress(), encrypted.getAddress()));
+  return encrypted;
 
-  /// ```c
-  /// int fhe_int224_try_encrypt_trivial_i256(struct I256 value, struct FheInt224 **result);
-  ///```
-  public static FheInt224 encrypt(I256 clearValue) {
-    FheInt224 encrypted = new FheInt224();
-    execute(() -> fhe_int224_try_encrypt_trivial_i256(clearValue.getAddress(), encrypted.getAddress()));
-    return encrypted;
+}
+/// ```c
+/// int fhe_int224_clone(const struct FheInt224 *sself, struct FheInt224 **result);
+///```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheInt224 clone() {
+  FheInt224 cloned = new FheInt224();
+  execute(() -> fhe_int224_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
-
-  /// ```c
-  /// int fhe_int224_clone(const struct FheInt224 *sself, struct FheInt224 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt224 clone() {
-    FheInt224 cloned = new FheInt224();
-    execute(() -> fhe_int224_clone(getValue(), cloned.getAddress()));
-    return cloned;
-
-  }
-
-  /// ```c
-  /// int fhe_int224_compress(const struct FheInt224 *sself, struct CompressedFheInt224 **result);
-  ///```
-  @Override
-  public CompressedFheInt224 compress() {
-    CompressedFheInt224 compressed = new CompressedFheInt224();
-    execute(() -> fhe_int224_compress(getValue(), compressed.getAddress()));
-    return compressed;
-
-  }
+}
 
   /// ```c
   /// int fhe_int224_decrypt(const struct FheInt224 *encrypted_value,
@@ -353,6 +340,17 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
     I256 decrypted = new I256();
     executeWithAddress(decrypted.getAddress(), address -> fhe_int224_decrypt(getValue(), clientKey.getValue(), address));
     return decrypted;
+
+  }
+
+  /// ```c
+  /// int fhe_int224_compress(const struct FheInt224 *sself, struct CompressedFheInt224 **result);
+  ///```
+  @Override
+  public CompressedFheInt224 compress() {
+    CompressedFheInt224 compressed = new CompressedFheInt224();
+    execute(() -> fhe_int224_compress(getValue(), compressed.getAddress()));
+    return compressed;
 
   }
 
@@ -433,7 +431,7 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   ///                                struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I256, FheInt224, CompressedFheInt224> subtractWithOverflow(FheInt224 other) {
+  public CheckedResult<I256, FheInt224, CompressedFheInt224> subtractWithOverflow(FheInt224 other){
     FheInt224 result = new FheInt224();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int224_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -1811,35 +1809,35 @@ public class FheInt224 extends NativePointer implements FheInteger<I256, FheInt2
   public FheUint8 castIntoFheUint8() {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_int224_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int224_cast_into_fhe_uint80(const struct FheInt224 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_int224_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int224_cast_into_fhe_uint80(const struct FheInt224 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_int224_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int224_cast_into_fhe_uint88(const struct FheInt224 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_int224_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int224_cast_into_fhe_uint88(const struct FheInt224 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_int224_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int224_cast_into_fhe_uint96(const struct FheInt224 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_int224_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int224_cast_into_fhe_uint96(const struct FheInt224 *sself, struct FheUint96 **result);
+///```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_int224_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
 
   // @formatter:off
 }

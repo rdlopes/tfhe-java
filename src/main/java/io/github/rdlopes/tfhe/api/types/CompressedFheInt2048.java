@@ -14,8 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheInt2048 extends NativePointer
-implements CompressedFheType<I2048, FheInt2048, CompressedFheInt2048> {
+public class CompressedFheInt2048 extends NativePointer implements CompressedFheType<I2048, FheInt2048, CompressedFheInt2048> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt2048.class);
 // @formatter:on
 
@@ -57,7 +56,7 @@ implements CompressedFheType<I2048, FheInt2048, CompressedFheInt2048> {
   ///                                           uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int2048_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -85,7 +84,7 @@ implements CompressedFheType<I2048, FheInt2048, CompressedFheInt2048> {
   ///                                                        const struct ServerKey *server_key,
   ///                                                        struct CompressedFheInt2048 **result);
   ///```
-  public static CompressedFheInt2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt2048 deserialized = new CompressedFheInt2048();
     execute(() -> compressed_fhe_int2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -110,10 +109,10 @@ implements CompressedFheType<I2048, FheInt2048, CompressedFheInt2048> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt2048 clone() {
+public CompressedFheInt2048 clone(){
     CompressedFheInt2048 cloned = new CompressedFheInt2048();
     execute(() -> compressed_fhe_int2048_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

@@ -14,8 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheUint168 extends NativePointer
-implements CompressedFheType<U256, FheUint168, CompressedFheUint168> {
+public class CompressedFheUint168 extends NativePointer implements CompressedFheType<U256, FheUint168, CompressedFheUint168> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheUint168.class);
 // @formatter:on
 
@@ -57,7 +56,7 @@ implements CompressedFheType<U256, FheUint168, CompressedFheUint168> {
   ///                                           uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint168_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -85,7 +84,7 @@ implements CompressedFheType<U256, FheUint168, CompressedFheUint168> {
   ///                                                        const struct ServerKey *server_key,
   ///                                                        struct CompressedFheUint168 **result);
   ///```
-  public static CompressedFheUint168 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheUint168 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheUint168 deserialized = new CompressedFheUint168();
     execute(() -> compressed_fhe_uint168_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -110,10 +109,10 @@ implements CompressedFheType<U256, FheUint168, CompressedFheUint168> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheUint168 clone() {
+public CompressedFheUint168 clone(){
     CompressedFheUint168 cloned = new CompressedFheUint168();
     execute(() -> compressed_fhe_uint168_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

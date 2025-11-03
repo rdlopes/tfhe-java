@@ -14,8 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheInt96 extends NativePointer
-implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
+public class CompressedFheInt96 extends NativePointer implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt96.class);
 // @formatter:on
 
@@ -57,7 +56,7 @@ implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
   ///                                         uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int96_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -85,7 +84,7 @@ implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
   ///                                                      const struct ServerKey *server_key,
   ///                                                      struct CompressedFheInt96 **result);
   ///```
-  public static CompressedFheInt96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt96 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt96 deserialized = new CompressedFheInt96();
     execute(() -> compressed_fhe_int96_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -110,10 +109,10 @@ implements CompressedFheType<I128, FheInt96, CompressedFheInt96> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt96 clone() {
+public CompressedFheInt96 clone(){
     CompressedFheInt96 cloned = new CompressedFheInt96();
     execute(() -> compressed_fhe_int96_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

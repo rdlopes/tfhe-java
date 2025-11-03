@@ -59,7 +59,7 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   ///                      struct FheInt48 **result);
   ///```
   @Override
-  public FheInt48 bitAnd(FheInt48 other) {
+  public FheInt48 bitAnd(FheInt48 other){
     FheInt48 result = new FheInt48();
     execute(() -> fhe_int48_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -70,7 +70,7 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   /// int fhe_int48_scalar_bitand(const struct FheInt48 *lhs, int64_t rhs, struct FheInt48 **result);
   ///```
   @Override
-  public FheInt48 bitAndScalar(Long other) {
+  public FheInt48 bitAndScalar(Long other){
     FheInt48 result = new FheInt48();
     execute(() -> fhe_int48_scalar_bitand(getValue(), other, result.getAddress()));
     return result;
@@ -81,7 +81,7 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   /// int fhe_int48_bitand_assign(struct FheInt48 *lhs, const struct FheInt48 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheInt48 other) {
+public void bitAndAssign(FheInt48 other){
     execute(() -> fhe_int48_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -100,33 +100,33 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   ///                     const struct FheInt48 *rhs,
   ///                     struct FheInt48 **result);
   ///```
-  @Override
-  public FheInt48 bitOr(FheInt48 other) {
+@Override
+public FheInt48 bitOr(FheInt48 other){
     FheInt48 result = new FheInt48();
     execute(() -> fhe_int48_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_scalar_bitor(const struct FheInt48 *lhs, int64_t rhs, struct FheInt48 **result);
   ///```
-  @Override
-  public FheInt48 bitOrScalar(Long other) {
-    FheInt48 result = new FheInt48();
-    execute(() -> fhe_int48_scalar_bitor(getValue(), other, result.getAddress()));
-    return result;
+@Override
+public FheInt48 bitOrScalar(Long other) {
+  FheInt48 result = new FheInt48();
+  execute(() -> fhe_int48_scalar_bitor(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_bitor_assign(struct FheInt48 *lhs, const struct FheInt48 *rhs);
-  ///```
-  @Override
-  public void bitOrAssign(FheInt48 other) {
+///```
+@Override
+public void bitOrAssign(FheInt48 other){
     execute(() -> fhe_int48_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_scalar_bitor_assign(struct FheInt48 *lhs, int64_t rhs);
@@ -141,34 +141,34 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   /// int fhe_int48_bitxor(const struct FheInt48 *lhs,
   ///                      const struct FheInt48 *rhs,
   ///                      struct FheInt48 **result);
-  ///```
-  @Override
-  public FheInt48 bitXor(FheInt48 other) {
+///```
+@Override
+public FheInt48 bitXor(FheInt48 other){
     FheInt48 result = new FheInt48();
     execute(() -> fhe_int48_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_scalar_bitxor(const struct FheInt48 *lhs, int64_t rhs, struct FheInt48 **result);
-  ///```
-  @Override
-  public FheInt48 bitXorScalar(Long other) {
-    FheInt48 result = new FheInt48();
-    execute(() -> fhe_int48_scalar_bitxor(getValue(), other, result.getAddress()));
-    return result;
+///```
+@Override
+public FheInt48 bitXorScalar(Long other) {
+  FheInt48 result = new FheInt48();
+  execute(() -> fhe_int48_scalar_bitxor(getValue(), other, result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_bitxor_assign(struct FheInt48 *lhs, const struct FheInt48 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheInt48 other) {
-    execute(() -> fhe_int48_bitxor_assign(getValue(), other.getValue()));
+///```
+@Override
+public void bitXorAssign(FheInt48 other) {
+  execute(() -> fhe_int48_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_scalar_bitxor_assign(struct FheInt48 *lhs, int64_t rhs);
@@ -181,14 +181,14 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
 
   /// ```c
   /// int fhe_int48_not(const struct FheInt48 *input, struct FheInt48 **result);
-  ///```
-  @Override
-  public FheInt48 bitNot() {
+///```
+@Override
+public FheInt48 bitNot(){
     FheInt48 result = new FheInt48();
-    execute(() -> fhe_int48_not(getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int48_not(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_if_then_else(const struct FheBool *condition_ct,
@@ -206,14 +206,14 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
 
   /// ```c
   /// int fhe_int48_eq(const struct FheInt48 *lhs, const struct FheInt48 *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheInt48 other) {
+///```
+@Override
+public FheBool equalTo(FheInt48 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int48_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int48_eq(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_scalar_eq(const struct FheInt48 *lhs, int64_t rhs, struct FheBool **result);
@@ -228,14 +228,14 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
 
   /// ```c
   /// int fhe_int48_ne(const struct FheInt48 *lhs, const struct FheInt48 *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheInt48 other) {
+///```
+@Override
+public FheBool notEqualTo(FheInt48 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int48_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int48_ne(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_scalar_ne(const struct FheInt48 *lhs, int64_t rhs, struct FheBool **result);
@@ -267,18 +267,18 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   ///                                           uint64_t serialized_size_limit,
   ///                                           const struct ServerKey *server_key,
   ///                                           struct FheInt48 **result);
-  ///```
-  public static FheInt48 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+///```
+public static FheInt48 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt48 deserialized = new FheInt48();
     execute(() -> fhe_int48_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_int48_try_encrypt_with_client_key_i64(int64_t value,
   ///                                               const struct ClientKey *client_key,
-  ///                                               struct FheInt48 **result);
+///                                               struct FheInt48 **result);
   ///```
   public static FheInt48 encrypt(Long clearValue, ClientKey clientKey) {
     FheInt48 encrypted = new FheInt48();
@@ -290,34 +290,44 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   /// ```c
   /// int fhe_int48_try_encrypt_with_public_key_i64(int64_t value,
   ///                                               const struct PublicKey *public_key,
-  ///                                               struct FheInt48 **result);
+///                                               struct FheInt48 **result);
   ///```
-  public static FheInt48 encrypt(Long clearValue, PublicKey publicKey) {
+  public static FheInt48 encrypt(Long clearValue, PublicKey publicKey){
     FheInt48 encrypted = new FheInt48();
     execute(() -> fhe_int48_try_encrypt_with_public_key_i64(clearValue, publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
+}
+/// ```c
+/// int fhe_int48_try_encrypt_trivial_i64(int64_t value, struct FheInt48 **result);
+///```
+public static FheInt48 encrypt(Long clearValue) {
+  FheInt48 encrypted = new FheInt48();
+  execute(() -> fhe_int48_try_encrypt_trivial_i64(clearValue, encrypted.getAddress()));
+  return encrypted;
+
+}
 
   /// ```c
-  /// int fhe_int48_try_encrypt_trivial_i64(int64_t value, struct FheInt48 **result);
-  ///```
-  public static FheInt48 encrypt(Long clearValue) {
-    FheInt48 encrypted = new FheInt48();
-    execute(() -> fhe_int48_try_encrypt_trivial_i64(clearValue, encrypted.getAddress()));
-    return encrypted;
+/// int fhe_int48_clone(const struct FheInt48 *sself, struct FheInt48 **result);
+///```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheInt48 clone() {
+  FheInt48 cloned = new FheInt48();
+  execute(() -> fhe_int48_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
+}
 
   /// ```c
-  /// int fhe_int48_clone(const struct FheInt48 *sself, struct FheInt48 **result);
+  /// int fhe_int48_decrypt(const struct FheInt48 *encrypted_value,
+  ///                       const struct ClientKey *client_key,
+  ///                       int64_t *result);
   ///```
   @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt48 clone() {
-    FheInt48 cloned = new FheInt48();
-    execute(() -> fhe_int48_clone(getValue(), cloned.getAddress()));
-    return cloned;
+  public Long decrypt(ClientKey clientKey) {
+    return executeAndReturn(Long.class, address -> fhe_int48_decrypt(getValue(), clientKey.getValue(), address));
 
   }
 
@@ -329,17 +339,6 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
     CompressedFheInt48 compressed = new CompressedFheInt48();
     execute(() -> fhe_int48_compress(getValue(), compressed.getAddress()));
     return compressed;
-
-  }
-
-  /// ```c
-  /// int fhe_int48_decrypt(const struct FheInt48 *encrypted_value,
-  ///                       const struct ClientKey *client_key,
-  ///                       int64_t *result);
-  ///```
-  @Override
-  public Long decrypt(ClientKey clientKey) {
-    return executeAndReturn(Long.class, address -> fhe_int48_decrypt(getValue(), clientKey.getValue(), address));
 
   }
 
@@ -1045,8 +1044,8 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   ///                                                        uint64_t random_bits_count);
   ///```
   @Override
-  public FheInt48 random(long seedLow, long seedHigh, long bitsCount) {
-    FheInt48 result = new FheInt48();
+  public FheInt48 random(long seedLow, long seedHigh, long bitsCount){
+      FheInt48 result = new FheInt48();
     execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int48(result.getAddress(), seedLow, seedHigh, bitsCount));
     return result;
 
@@ -1539,11 +1538,11 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
   /// ```c
   /// int fhe_int48_cast_into_fhe_uint16(const struct FheInt48 *sself, struct FheUint16 **result);
   ///```
-  public FheUint16 castIntoFheUint16() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_int48_cast_into_fhe_uint16(getValue(), result.getAddress()));
-    return result;
-  }
+public FheUint16 castIntoFheUint16() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_int48_cast_into_fhe_uint16(getValue(), result.getAddress()));
+  return result;
+}
 
   /// ```c
   /// int fhe_int48_cast_into_fhe_uint160(const struct FheInt48 *sself, struct FheUint160 **result);
@@ -1759,7 +1758,7 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
     FheUint64 result = new FheUint64();
     execute(() -> fhe_int48_cast_into_fhe_uint64(getValue(), result.getAddress()));
     return result;
-  }
+}
 
   /// ```c
   /// int fhe_int48_cast_into_fhe_uint72(const struct FheInt48 *sself, struct FheUint72 **result);
@@ -1777,34 +1776,34 @@ public class FheInt48 extends NativePointer implements FheInteger<Long, FheInt48
     FheUint8 result = new FheUint8();
     execute(() -> fhe_int48_cast_into_fhe_uint8(getValue(), result.getAddress()));
     return result;
-  }
+}
 
-  /// ```c
-  /// int fhe_int48_cast_into_fhe_uint80(const struct FheInt48 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_int48_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int48_cast_into_fhe_uint80(const struct FheInt48 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_int48_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int48_cast_into_fhe_uint88(const struct FheInt48 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_int48_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int48_cast_into_fhe_uint88(const struct FheInt48 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_int48_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int48_cast_into_fhe_uint96(const struct FheInt48 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_int48_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int48_cast_into_fhe_uint96(const struct FheInt48 *sself, struct FheUint96 **result);
+///```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_int48_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
 
   // @formatter:off
 }

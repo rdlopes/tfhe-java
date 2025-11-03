@@ -13,8 +13,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheInt4 extends NativePointer
-implements CompressedFheType<Byte, FheInt4, CompressedFheInt4> {
+public class CompressedFheInt4 extends NativePointer implements CompressedFheType<Byte, FheInt4, CompressedFheInt4> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt4.class);
 // @formatter:on
 
@@ -55,7 +54,7 @@ implements CompressedFheType<Byte, FheInt4, CompressedFheInt4> {
   ///                                        uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int4_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -83,7 +82,7 @@ implements CompressedFheType<Byte, FheInt4, CompressedFheInt4> {
   ///                                                     const struct ServerKey *server_key,
   ///                                                     struct CompressedFheInt4 **result);
   ///```
-  public static CompressedFheInt4 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt4 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt4 deserialized = new CompressedFheInt4();
     execute(() -> compressed_fhe_int4_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -108,10 +107,10 @@ implements CompressedFheType<Byte, FheInt4, CompressedFheInt4> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt4 clone() {
+public CompressedFheInt4 clone(){
     CompressedFheInt4 cloned = new CompressedFheInt4();
     execute(() -> compressed_fhe_int4_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

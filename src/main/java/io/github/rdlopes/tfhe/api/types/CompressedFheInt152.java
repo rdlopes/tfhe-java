@@ -14,8 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheInt152 extends NativePointer
-implements CompressedFheType<I256, FheInt152, CompressedFheInt152> {
+public class CompressedFheInt152 extends NativePointer implements CompressedFheType<I256, FheInt152, CompressedFheInt152> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt152.class);
 // @formatter:on
 
@@ -57,7 +56,7 @@ implements CompressedFheType<I256, FheInt152, CompressedFheInt152> {
   ///                                          uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int152_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -85,7 +84,7 @@ implements CompressedFheType<I256, FheInt152, CompressedFheInt152> {
   ///                                                       const struct ServerKey *server_key,
   ///                                                       struct CompressedFheInt152 **result);
   ///```
-  public static CompressedFheInt152 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt152 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt152 deserialized = new CompressedFheInt152();
     execute(() -> compressed_fhe_int152_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -110,10 +109,10 @@ implements CompressedFheType<I256, FheInt152, CompressedFheInt152> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt152 clone() {
+public CompressedFheInt152 clone(){
     CompressedFheInt152 cloned = new CompressedFheInt152();
     execute(() -> compressed_fhe_int152_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

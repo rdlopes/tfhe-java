@@ -14,8 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheInt224 extends NativePointer
-implements CompressedFheType<I256, FheInt224, CompressedFheInt224> {
+public class CompressedFheInt224 extends NativePointer implements CompressedFheType<I256, FheInt224, CompressedFheInt224> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt224.class);
 // @formatter:on
 
@@ -57,7 +56,7 @@ implements CompressedFheType<I256, FheInt224, CompressedFheInt224> {
   ///                                          uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int224_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -85,7 +84,7 @@ implements CompressedFheType<I256, FheInt224, CompressedFheInt224> {
   ///                                                       const struct ServerKey *server_key,
   ///                                                       struct CompressedFheInt224 **result);
   ///```
-  public static CompressedFheInt224 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt224 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt224 deserialized = new CompressedFheInt224();
     execute(() -> compressed_fhe_int224_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -110,10 +109,10 @@ implements CompressedFheType<I256, FheInt224, CompressedFheInt224> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt224 clone() {
+public CompressedFheInt224 clone(){
     CompressedFheInt224 cloned = new CompressedFheInt224();
     execute(() -> compressed_fhe_int224_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

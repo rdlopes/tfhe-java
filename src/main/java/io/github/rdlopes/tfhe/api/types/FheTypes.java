@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public enum FheTypes {
+
   /// ```c
   /// typedef enum FheTypes {
   /////...

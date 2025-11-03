@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-public final class U1024 extends AbstractValueHolder {
+public final class U1024 extends AbstractValue {
   public static final int BIT_SIZE = 1024;
   public static final BigInteger MIN_VALUE = ZERO;
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)

@@ -13,8 +13,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheUint48 extends NativePointer
-implements CompressedFheType<Long, FheUint48, CompressedFheUint48> {
+public class CompressedFheUint48 extends NativePointer implements CompressedFheType<Long, FheUint48, CompressedFheUint48> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheUint48.class);
 // @formatter:on
 
@@ -56,7 +55,7 @@ implements CompressedFheType<Long, FheUint48, CompressedFheUint48> {
   ///                                          uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint48_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +83,7 @@ implements CompressedFheType<Long, FheUint48, CompressedFheUint48> {
   ///                                                       const struct ServerKey *server_key,
   ///                                                       struct CompressedFheUint48 **result);
   ///```
-  public static CompressedFheUint48 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheUint48 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheUint48 deserialized = new CompressedFheUint48();
     execute(() -> compressed_fhe_uint48_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +108,10 @@ implements CompressedFheType<Long, FheUint48, CompressedFheUint48> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheUint48 clone() {
+public CompressedFheUint48 clone(){
     CompressedFheUint48 cloned = new CompressedFheUint48();
     execute(() -> compressed_fhe_uint48_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

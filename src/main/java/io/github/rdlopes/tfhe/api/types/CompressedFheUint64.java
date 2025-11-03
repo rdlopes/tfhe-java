@@ -13,8 +13,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheUint64 extends NativePointer
-implements CompressedFheType<Long, FheUint64, CompressedFheUint64> {
+public class CompressedFheUint64 extends NativePointer implements CompressedFheType<Long, FheUint64, CompressedFheUint64> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheUint64.class);
 // @formatter:on
 
@@ -56,7 +55,7 @@ implements CompressedFheType<Long, FheUint64, CompressedFheUint64> {
   ///                                          uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint64_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +83,7 @@ implements CompressedFheType<Long, FheUint64, CompressedFheUint64> {
   ///                                                       const struct ServerKey *server_key,
   ///                                                       struct CompressedFheUint64 **result);
   ///```
-  public static CompressedFheUint64 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheUint64 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheUint64 deserialized = new CompressedFheUint64();
     execute(() -> compressed_fhe_uint64_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +108,10 @@ implements CompressedFheType<Long, FheUint64, CompressedFheUint64> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheUint64 clone() {
+public CompressedFheUint64 clone(){
     CompressedFheUint64 cloned = new CompressedFheUint64();
     execute(() -> compressed_fhe_uint64_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

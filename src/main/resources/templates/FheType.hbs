@@ -21,8 +21,22 @@ public class {{className}} extends NativePointer implements {{implementation thi
   private static final Logger logger = LoggerFactory.getLogger({{className}}.class);
 // @formatter:on
 
-  {{> traits/FheType}}
+  {{> traits/FheObject}}
+  {{> traits/FheLogic}}
+  {{> traits/FheEquality}}
+  {{> traits/FheDeserializationConformant}}
+  {{> traits/FheEncryption}}
+  {{> traits/FheEncryptionPublic}}
+  {{> traits/FheEncryptionTrivial}}
+  {{> traits/FheCloneable}}
+
   {{> traits/FheDecryption}}
+
+  {{#method this (stringFormat "public Compressed%s" className) "compress" "compress"}}
+    {{declare "compressed" class=(stringFormat "Compressed%s" className) }}
+    {{execute "compress" "getValue(), compressed.getAddress()"}}
+    return compressed;
+  {{/method}}
 
   {{#unless isBoolean}}
 

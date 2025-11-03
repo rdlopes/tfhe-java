@@ -1,0 +1,42 @@
+public static {{className}} encrypt(Collection<{{valueClassName}}> values, ClientKey clientKey) {
+  {{trace "encrypt" "values" "clientKey"}}
+  Collection<{{typeName}}> elements = values.stream()
+                                            .map(value -> {{typeName}}.encrypt(value, clientKey))
+                                            .toList();
+  return new {{className}}(elements);
+}
+
+public static {{className}} encrypt(Collection<{{valueClassName}}> values, PublicKey publicKey) {
+  {{trace "encrypt" "values" "publicKey"}}
+  Collection<{{typeName}}> elements = values.stream()
+                                            .map(value -> {{typeName}}.encrypt(value, publicKey))
+                                            .toList();
+  return new {{className}}(elements);
+}
+
+public static {{className}} encrypt(Collection<{{valueClassName}}> values) {
+  {{trace "encrypt" "values"}}
+  Collection<{{typeName}}> elements = values.stream()
+                                            .map({{typeName}}::encrypt)
+                                              .toList();
+  return new {{className}}(elements);
+}
+
+{{#method this "public FheBool" "containsArray" "contains_sub_slice" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "contains_sub_slice" "getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this "public FheBool" "equalsArray" "eq" (stringFormat "%s other" className)}}
+  {{declare "result" class="FheBool"}}
+  {{execute "eq" "getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()"}}
+  return result;
+{{/method}}
+
+{{#method this (stringFormat "public %s" typeName) "sum" "sum" lookupType=true}}
+  {{declare "result" class=typeName}}
+  {{execute "sum" "getAddress(), getSize(), result.getAddress()" lookupType=true}}
+  return result;
+{{/method}}
+

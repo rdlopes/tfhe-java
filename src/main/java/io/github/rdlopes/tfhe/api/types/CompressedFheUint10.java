@@ -13,8 +13,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheUint10 extends NativePointer
-implements CompressedFheType<Short, FheUint10, CompressedFheUint10> {
+public class CompressedFheUint10 extends NativePointer implements CompressedFheType<Short, FheUint10, CompressedFheUint10> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheUint10.class);
 // @formatter:on
 
@@ -56,7 +55,7 @@ implements CompressedFheType<Short, FheUint10, CompressedFheUint10> {
   ///                                          uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_uint10_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +83,7 @@ implements CompressedFheType<Short, FheUint10, CompressedFheUint10> {
   ///                                                       const struct ServerKey *server_key,
   ///                                                       struct CompressedFheUint10 **result);
   ///```
-  public static CompressedFheUint10 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheUint10 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheUint10 deserialized = new CompressedFheUint10();
     execute(() -> compressed_fhe_uint10_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +108,10 @@ implements CompressedFheType<Short, FheUint10, CompressedFheUint10> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheUint10 clone() {
+public CompressedFheUint10 clone(){
     CompressedFheUint10 cloned = new CompressedFheUint10();
     execute(() -> compressed_fhe_uint10_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }

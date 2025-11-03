@@ -6,7 +6,7 @@ import java.math.BigInteger;
 
 import static java.math.BigInteger.ONE;
 
-public final class I128 extends AbstractValueHolder {
+public final class I128 extends AbstractValue {
   public static final int BIT_SIZE = 128;
   public static final BigInteger MIN_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)

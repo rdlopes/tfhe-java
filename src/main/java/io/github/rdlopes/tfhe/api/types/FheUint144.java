@@ -60,7 +60,7 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   ///                        struct FheUint144 **result);
   ///```
   @Override
-  public FheUint144 bitAnd(FheUint144 other) {
+  public FheUint144 bitAnd(FheUint144 other){
     FheUint144 result = new FheUint144();
     execute(() -> fhe_uint144_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -73,7 +73,7 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   ///                               struct FheUint144 **result);
   ///```
   @Override
-  public FheUint144 bitAndScalar(U256 other) {
+  public FheUint144 bitAndScalar(U256 other){
     FheUint144 result = new FheUint144();
     execute(() -> fhe_uint144_scalar_bitand(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -84,7 +84,7 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   /// int fhe_uint144_bitand_assign(struct FheUint144 *lhs, const struct FheUint144 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheUint144 other) {
+public void bitAndAssign(FheUint144 other){
     execute(() -> fhe_uint144_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -103,35 +103,35 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   ///                       const struct FheUint144 *rhs,
   ///                       struct FheUint144 **result);
   ///```
-  @Override
-  public FheUint144 bitOr(FheUint144 other) {
+@Override
+public FheUint144 bitOr(FheUint144 other){
     FheUint144 result = new FheUint144();
     execute(() -> fhe_uint144_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_scalar_bitor(const struct FheUint144 *lhs,
   ///                              struct U256 rhs,
   ///                              struct FheUint144 **result);
-  ///```
-  @Override
-  public FheUint144 bitOrScalar(U256 other) {
-    FheUint144 result = new FheUint144();
-    execute(() -> fhe_uint144_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheUint144 bitOrScalar(U256 other) {
+  FheUint144 result = new FheUint144();
+  execute(() -> fhe_uint144_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_bitor_assign(struct FheUint144 *lhs, const struct FheUint144 *rhs);
-  ///```
-  @Override
-  public void bitOrAssign(FheUint144 other) {
+///```
+@Override
+public void bitOrAssign(FheUint144 other){
     execute(() -> fhe_uint144_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_scalar_bitor_assign(struct FheUint144 *lhs, struct U256 rhs);
@@ -146,36 +146,36 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   /// int fhe_uint144_bitxor(const struct FheUint144 *lhs,
   ///                        const struct FheUint144 *rhs,
   ///                        struct FheUint144 **result);
-  ///```
-  @Override
-  public FheUint144 bitXor(FheUint144 other) {
+///```
+@Override
+public FheUint144 bitXor(FheUint144 other){
     FheUint144 result = new FheUint144();
     execute(() -> fhe_uint144_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_scalar_bitxor(const struct FheUint144 *lhs,
   ///                               struct U256 rhs,
   ///                               struct FheUint144 **result);
-  ///```
-  @Override
-  public FheUint144 bitXorScalar(U256 other) {
-    FheUint144 result = new FheUint144();
-    execute(() -> fhe_uint144_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheUint144 bitXorScalar(U256 other) {
+  FheUint144 result = new FheUint144();
+  execute(() -> fhe_uint144_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_bitxor_assign(struct FheUint144 *lhs, const struct FheUint144 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheUint144 other) {
-    execute(() -> fhe_uint144_bitxor_assign(getValue(), other.getValue()));
+///```
+@Override
+public void bitXorAssign(FheUint144 other) {
+  execute(() -> fhe_uint144_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_scalar_bitxor_assign(struct FheUint144 *lhs, struct U256 rhs);
@@ -188,14 +188,14 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
 
   /// ```c
   /// int fhe_uint144_not(const struct FheUint144 *input, struct FheUint144 **result);
-  ///```
-  @Override
-  public FheUint144 bitNot() {
+///```
+@Override
+public FheUint144 bitNot(){
     FheUint144 result = new FheUint144();
-    execute(() -> fhe_uint144_not(getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint144_not(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_if_then_else(const struct FheBool *condition_ct,
@@ -214,15 +214,15 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   /// ```c
   /// int fhe_uint144_eq(const struct FheUint144 *lhs,
   ///                    const struct FheUint144 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheUint144 other) {
+///                    struct FheBool **result);
+///```
+@Override
+public FheBool equalTo(FheUint144 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint144_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint144_eq(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_scalar_eq(const struct FheUint144 *lhs, struct U256 rhs, struct FheBool **result);
@@ -238,21 +238,21 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   /// ```c
   /// int fhe_uint144_ne(const struct FheUint144 *lhs,
   ///                    const struct FheUint144 *rhs,
-  ///                    struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheUint144 other) {
+///                    struct FheBool **result);
+///```
+@Override
+public FheBool notEqualTo(FheUint144 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint144_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint144_ne(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_scalar_ne(const struct FheUint144 *lhs, struct U256 rhs, struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(U256 other) {
+  public FheBool notEqualToScalar(U256 other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint144_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -278,18 +278,18 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   ///                                             uint64_t serialized_size_limit,
   ///                                             const struct ServerKey *server_key,
   ///                                             struct FheUint144 **result);
-  ///```
-  public static FheUint144 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+///```
+public static FheUint144 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheUint144 deserialized = new FheUint144();
     execute(() -> fhe_uint144_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint144_try_encrypt_with_client_key_u256(struct U256 value,
   ///                                                  const struct ClientKey *client_key,
-  ///                                                  struct FheUint144 **result);
+///                                                  struct FheUint144 **result);
   ///```
   public static FheUint144 encrypt(U256 clearValue, ClientKey clientKey) {
     FheUint144 encrypted = new FheUint144();
@@ -301,47 +301,34 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   /// ```c
   /// int fhe_uint144_try_encrypt_with_public_key_u256(struct U256 value,
   ///                                                  const struct PublicKey *public_key,
-  ///                                                  struct FheUint144 **result);
+///                                                  struct FheUint144 **result);
   ///```
-  public static FheUint144 encrypt(U256 clearValue, PublicKey publicKey) {
+  public static FheUint144 encrypt(U256 clearValue, PublicKey publicKey){
     FheUint144 encrypted = new FheUint144();
     execute(() -> fhe_uint144_try_encrypt_with_public_key_u256(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
+}
+/// ```c
+/// int fhe_uint144_try_encrypt_trivial_u256(struct U256 value, struct FheUint144 **result);
+///```
+public static FheUint144 encrypt(U256 clearValue) {
+  FheUint144 encrypted = new FheUint144();
+  execute(() -> fhe_uint144_try_encrypt_trivial_u256(clearValue.getAddress(), encrypted.getAddress()));
+  return encrypted;
 
-  /// ```c
-  /// int fhe_uint144_try_encrypt_trivial_u256(struct U256 value, struct FheUint144 **result);
-  ///```
-  public static FheUint144 encrypt(U256 clearValue) {
-    FheUint144 encrypted = new FheUint144();
-    execute(() -> fhe_uint144_try_encrypt_trivial_u256(clearValue.getAddress(), encrypted.getAddress()));
-    return encrypted;
+}
+/// ```c
+/// int fhe_uint144_clone(const struct FheUint144 *sself, struct FheUint144 **result);
+///```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheUint144 clone() {
+  FheUint144 cloned = new FheUint144();
+  execute(() -> fhe_uint144_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
-
-  /// ```c
-  /// int fhe_uint144_clone(const struct FheUint144 *sself, struct FheUint144 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheUint144 clone() {
-    FheUint144 cloned = new FheUint144();
-    execute(() -> fhe_uint144_clone(getValue(), cloned.getAddress()));
-    return cloned;
-
-  }
-
-  /// ```c
-  /// int fhe_uint144_compress(const struct FheUint144 *sself, struct CompressedFheUint144 **result);
-  ///```
-  @Override
-  public CompressedFheUint144 compress() {
-    CompressedFheUint144 compressed = new CompressedFheUint144();
-    execute(() -> fhe_uint144_compress(getValue(), compressed.getAddress()));
-    return compressed;
-
-  }
+}
 
   /// ```c
   /// int fhe_uint144_decrypt(const struct FheUint144 *encrypted_value,
@@ -353,6 +340,17 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
     U256 decrypted = new U256();
     executeWithAddress(decrypted.getAddress(), address -> fhe_uint144_decrypt(getValue(), clientKey.getValue(), address));
     return decrypted;
+
+  }
+
+  /// ```c
+  /// int fhe_uint144_compress(const struct FheUint144 *sself, struct CompressedFheUint144 **result);
+  ///```
+  @Override
+  public CompressedFheUint144 compress() {
+    CompressedFheUint144 compressed = new CompressedFheUint144();
+    execute(() -> fhe_uint144_compress(getValue(), compressed.getAddress()));
+    return compressed;
 
   }
 
@@ -1092,7 +1090,7 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   }
 
   /// ```c
-  /// int generate_oblivious_pseudo_random_bounded_fhe_uint144(struct FheUint144 **out_result,
+/// int generate_oblivious_pseudo_random_bounded_fhe_uint144(struct FheUint144 **out_result,
   ///                                                          uint64_t seed_low_bytes,
   ///                                                          uint64_t seed_high_bytes,
   ///                                                          uint64_t random_bits_count);
@@ -1813,35 +1811,36 @@ public class FheUint144 extends NativePointer implements FheUnsignedInteger<U256
   public FheUint8 castIntoFheUint8() {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint144_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint144_cast_into_fhe_uint80(const struct FheUint144 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_uint144_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint144_cast_into_fhe_uint80(const struct FheUint144 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_uint144_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint144_cast_into_fhe_uint88(const struct FheUint144 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_uint144_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint144_cast_into_fhe_uint88(const struct FheUint144 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_uint144_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint144_cast_into_fhe_uint96(const struct FheUint144 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_uint144_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint144_cast_into_fhe_uint96(const struct FheUint144 *sself, struct FheUint96 **result);
+///```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_uint144_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
+
 
   // @formatter:off
 }

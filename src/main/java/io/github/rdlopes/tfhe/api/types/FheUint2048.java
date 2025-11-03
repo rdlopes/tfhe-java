@@ -60,7 +60,7 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   ///                         struct FheUint2048 **result);
   ///```
   @Override
-  public FheUint2048 bitAnd(FheUint2048 other) {
+  public FheUint2048 bitAnd(FheUint2048 other){
     FheUint2048 result = new FheUint2048();
     execute(() -> fhe_uint2048_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -73,7 +73,7 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   ///                                struct FheUint2048 **result);
   ///```
   @Override
-  public FheUint2048 bitAndScalar(U2048 other) {
+  public FheUint2048 bitAndScalar(U2048 other){
     FheUint2048 result = new FheUint2048();
     execute(() -> fhe_uint2048_scalar_bitand(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -84,7 +84,7 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   /// int fhe_uint2048_bitand_assign(struct FheUint2048 *lhs, const struct FheUint2048 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheUint2048 other) {
+public void bitAndAssign(FheUint2048 other){
     execute(() -> fhe_uint2048_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -103,35 +103,35 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   ///                        const struct FheUint2048 *rhs,
   ///                        struct FheUint2048 **result);
   ///```
-  @Override
-  public FheUint2048 bitOr(FheUint2048 other) {
+@Override
+public FheUint2048 bitOr(FheUint2048 other){
     FheUint2048 result = new FheUint2048();
     execute(() -> fhe_uint2048_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_scalar_bitor(const struct FheUint2048 *lhs,
   ///                               struct U2048 rhs,
   ///                               struct FheUint2048 **result);
-  ///```
-  @Override
-  public FheUint2048 bitOrScalar(U2048 other) {
-    FheUint2048 result = new FheUint2048();
-    execute(() -> fhe_uint2048_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheUint2048 bitOrScalar(U2048 other) {
+  FheUint2048 result = new FheUint2048();
+  execute(() -> fhe_uint2048_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_bitor_assign(struct FheUint2048 *lhs, const struct FheUint2048 *rhs);
-  ///```
-  @Override
-  public void bitOrAssign(FheUint2048 other) {
+///```
+@Override
+public void bitOrAssign(FheUint2048 other){
     execute(() -> fhe_uint2048_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_scalar_bitor_assign(struct FheUint2048 *lhs, struct U2048 rhs);
@@ -146,36 +146,36 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   /// int fhe_uint2048_bitxor(const struct FheUint2048 *lhs,
   ///                         const struct FheUint2048 *rhs,
   ///                         struct FheUint2048 **result);
-  ///```
-  @Override
-  public FheUint2048 bitXor(FheUint2048 other) {
+///```
+@Override
+public FheUint2048 bitXor(FheUint2048 other){
     FheUint2048 result = new FheUint2048();
     execute(() -> fhe_uint2048_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_scalar_bitxor(const struct FheUint2048 *lhs,
   ///                                struct U2048 rhs,
   ///                                struct FheUint2048 **result);
-  ///```
-  @Override
-  public FheUint2048 bitXorScalar(U2048 other) {
-    FheUint2048 result = new FheUint2048();
-    execute(() -> fhe_uint2048_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheUint2048 bitXorScalar(U2048 other) {
+  FheUint2048 result = new FheUint2048();
+  execute(() -> fhe_uint2048_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_bitxor_assign(struct FheUint2048 *lhs, const struct FheUint2048 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheUint2048 other) {
-    execute(() -> fhe_uint2048_bitxor_assign(getValue(), other.getValue()));
+///```
+@Override
+public void bitXorAssign(FheUint2048 other) {
+  execute(() -> fhe_uint2048_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_scalar_bitxor_assign(struct FheUint2048 *lhs, struct U2048 rhs);
@@ -188,14 +188,14 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
 
   /// ```c
   /// int fhe_uint2048_not(const struct FheUint2048 *input, struct FheUint2048 **result);
-  ///```
-  @Override
-  public FheUint2048 bitNot() {
+///```
+@Override
+public FheUint2048 bitNot(){
     FheUint2048 result = new FheUint2048();
-    execute(() -> fhe_uint2048_not(getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint2048_not(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_if_then_else(const struct FheBool *condition_ct,
@@ -214,20 +214,20 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   /// ```c
   /// int fhe_uint2048_eq(const struct FheUint2048 *lhs,
   ///                     const struct FheUint2048 *rhs,
-  ///                     struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheUint2048 other) {
+///                     struct FheBool **result);
+///```
+@Override
+public FheBool equalTo(FheUint2048 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint2048_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint2048_eq(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_scalar_eq(const struct FheUint2048 *lhs,
   ///                            struct U2048 rhs,
-  ///                            struct FheBool **result);
+///                            struct FheBool **result);
   ///```
   @Override
   public FheBool equalToScalar(U2048 other) {
@@ -240,23 +240,23 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   /// ```c
   /// int fhe_uint2048_ne(const struct FheUint2048 *lhs,
   ///                     const struct FheUint2048 *rhs,
-  ///                     struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheUint2048 other) {
+///                     struct FheBool **result);
+///```
+@Override
+public FheBool notEqualTo(FheUint2048 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_uint2048_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_uint2048_ne(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_scalar_ne(const struct FheUint2048 *lhs,
   ///                            struct U2048 rhs,
-  ///                            struct FheBool **result);
+///                            struct FheBool **result);
   ///```
   @Override
-  public FheBool notEqualToScalar(U2048 other) {
+  public FheBool notEqualToScalar(U2048 other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint2048_scalar_ne(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -281,21 +281,21 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   /// int fhe_uint2048_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
   ///                                              uint64_t serialized_size_limit,
   ///                                              const struct ServerKey *server_key,
-  ///                                              struct FheUint2048 **result);
-  ///```
-  public static FheUint2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+///                                              struct FheUint2048 **result);
+///```
+public static FheUint2048 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheUint2048 deserialized = new FheUint2048();
-    execute(() -> fhe_uint2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  execute(() -> fhe_uint2048_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_try_encrypt_with_client_key_u2048(struct U2048 value,
   ///                                                    const struct ClientKey *client_key,
-  ///                                                    struct FheUint2048 **result);
+///                                                    struct FheUint2048 **result);
   ///```
-  public static FheUint2048 encrypt(U2048 clearValue, ClientKey clientKey) {
+  public static FheUint2048 encrypt(U2048 clearValue, ClientKey clientKey){
     FheUint2048 encrypted = new FheUint2048();
     execute(() -> fhe_uint2048_try_encrypt_with_client_key_u2048(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
@@ -305,47 +305,34 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   /// ```c
   /// int fhe_uint2048_try_encrypt_with_public_key_u2048(struct U2048 value,
   ///                                                    const struct PublicKey *public_key,
-  ///                                                    struct FheUint2048 **result);
+///                                                    struct FheUint2048 **result);
   ///```
-  public static FheUint2048 encrypt(U2048 clearValue, PublicKey publicKey) {
+  public static FheUint2048 encrypt(U2048 clearValue, PublicKey publicKey){
     FheUint2048 encrypted = new FheUint2048();
     execute(() -> fhe_uint2048_try_encrypt_with_public_key_u2048(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
+}
+/// ```c
+/// int fhe_uint2048_try_encrypt_trivial_u2048(struct U2048 value, struct FheUint2048 **result);
+///```
+public static FheUint2048 encrypt(U2048 clearValue) {
+  FheUint2048 encrypted = new FheUint2048();
+  execute(() -> fhe_uint2048_try_encrypt_trivial_u2048(clearValue.getAddress(), encrypted.getAddress()));
+  return encrypted;
 
-  /// ```c
-  /// int fhe_uint2048_try_encrypt_trivial_u2048(struct U2048 value, struct FheUint2048 **result);
-  ///```
-  public static FheUint2048 encrypt(U2048 clearValue) {
-    FheUint2048 encrypted = new FheUint2048();
-    execute(() -> fhe_uint2048_try_encrypt_trivial_u2048(clearValue.getAddress(), encrypted.getAddress()));
-    return encrypted;
+}
+/// ```c
+/// int fhe_uint2048_clone(const struct FheUint2048 *sself, struct FheUint2048 **result);
+///```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheUint2048 clone() {
+  FheUint2048 cloned = new FheUint2048();
+  execute(() -> fhe_uint2048_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
-
-  /// ```c
-  /// int fhe_uint2048_clone(const struct FheUint2048 *sself, struct FheUint2048 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheUint2048 clone() {
-    FheUint2048 cloned = new FheUint2048();
-    execute(() -> fhe_uint2048_clone(getValue(), cloned.getAddress()));
-    return cloned;
-
-  }
-
-  /// ```c
-  /// int fhe_uint2048_compress(const struct FheUint2048 *sself, struct CompressedFheUint2048 **result);
-  ///```
-  @Override
-  public CompressedFheUint2048 compress() {
-    CompressedFheUint2048 compressed = new CompressedFheUint2048();
-    execute(() -> fhe_uint2048_compress(getValue(), compressed.getAddress()));
-    return compressed;
-
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_decrypt(const struct FheUint2048 *encrypted_value,
@@ -357,6 +344,17 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
     U2048 decrypted = new U2048();
     executeWithAddress(decrypted.getAddress(), address -> fhe_uint2048_decrypt(getValue(), clientKey.getValue(), address));
     return decrypted;
+
+  }
+
+  /// ```c
+  /// int fhe_uint2048_compress(const struct FheUint2048 *sself, struct CompressedFheUint2048 **result);
+  ///```
+  @Override
+  public CompressedFheUint2048 compress() {
+    CompressedFheUint2048 compressed = new CompressedFheUint2048();
+    execute(() -> fhe_uint2048_compress(getValue(), compressed.getAddress()));
+    return compressed;
 
   }
 
@@ -1102,20 +1100,20 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
     return result;
 
   }
+    
+/// ```c
+/// int generate_oblivious_pseudo_random_bounded_fhe_uint2048(struct FheUint2048 **out_result,
+///                                                           uint64_t seed_low_bytes,
+///                                                           uint64_t seed_high_bytes,
+///                                                           uint64_t random_bits_count);
+///```
+@Override
+public FheUint2048 random(long seedLow, long seedHigh, long bitsCount) {
+  FheUint2048 result = new FheUint2048();
+  execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint2048(result.getAddress(), seedLow, seedHigh, bitsCount));
+  return result;
 
-  /// ```c
-  /// int generate_oblivious_pseudo_random_bounded_fhe_uint2048(struct FheUint2048 **out_result,
-  ///                                                           uint64_t seed_low_bytes,
-  ///                                                           uint64_t seed_high_bytes,
-  ///                                                           uint64_t random_bits_count);
-  ///```
-  @Override
-  public FheUint2048 random(long seedLow, long seedHigh, long bitsCount) {
-    FheUint2048 result = new FheUint2048();
-    execute(() -> generate_oblivious_pseudo_random_bounded_fhe_uint2048(result.getAddress(), seedLow, seedHigh, bitsCount));
-    return result;
-
-  }
+}
 
   /// ```c
   /// int fhe_uint2048_cast_into_fhe_int10(const struct FheUint2048 *sself, struct FheInt10 **result);
@@ -1827,35 +1825,36 @@ public class FheUint2048 extends NativePointer implements FheUnsignedInteger<U20
   public FheUint8 castIntoFheUint8() {
     FheUint8 result = new FheUint8();
     execute(() -> fhe_uint2048_cast_into_fhe_uint8(getValue(), result.getAddress()));
-    return result;
-  }
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint2048_cast_into_fhe_uint80(const struct FheUint2048 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_uint2048_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint2048_cast_into_fhe_uint80(const struct FheUint2048 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_uint2048_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint2048_cast_into_fhe_uint88(const struct FheUint2048 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_uint2048_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint2048_cast_into_fhe_uint88(const struct FheUint2048 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_uint2048_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_uint2048_cast_into_fhe_uint96(const struct FheUint2048 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_uint2048_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_uint2048_cast_into_fhe_uint96(const struct FheUint2048 *sself, struct FheUint96 **result);
+///```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_uint2048_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
+
 
   // @formatter:off
 }

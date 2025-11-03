@@ -4,9 +4,10 @@ import java.util.EnumSet;
 
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
-public enum FheTypes {
-  {{#each symbolsIndex.symbols}}
-    {{lookupDoc symbolsIndex this}}
+public enum {{className}} {
+
+  {{#each symbols.set}}
+    {{lookupDoc symbols this}}
     {{replace this "Type_" ""}}({{this}}()){{#if @last}};{{else}},{{/if}}
   {{/each}}
 

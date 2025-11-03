@@ -60,7 +60,7 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   ///                      struct FheInt80 **result);
   ///```
   @Override
-  public FheInt80 bitAnd(FheInt80 other) {
+  public FheInt80 bitAnd(FheInt80 other){
     FheInt80 result = new FheInt80();
     execute(() -> fhe_int80_bitand(getValue(), other.getValue(), result.getAddress()));
     return result;
@@ -71,7 +71,7 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   /// int fhe_int80_scalar_bitand(const struct FheInt80 *lhs, struct I128 rhs, struct FheInt80 **result);
   ///```
   @Override
-  public FheInt80 bitAndScalar(I128 other) {
+  public FheInt80 bitAndScalar(I128 other){
     FheInt80 result = new FheInt80();
     execute(() -> fhe_int80_scalar_bitand(getValue(), other.getAddress(), result.getAddress()));
     return result;
@@ -82,7 +82,7 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   /// int fhe_int80_bitand_assign(struct FheInt80 *lhs, const struct FheInt80 *rhs);
   ///```
   @Override
-  public void bitAndAssign(FheInt80 other) {
+public void bitAndAssign(FheInt80 other){
     execute(() -> fhe_int80_bitand_assign(getValue(), other.getValue()));
 
   }
@@ -101,33 +101,33 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   ///                     const struct FheInt80 *rhs,
   ///                     struct FheInt80 **result);
   ///```
-  @Override
-  public FheInt80 bitOr(FheInt80 other) {
+@Override
+public FheInt80 bitOr(FheInt80 other){
     FheInt80 result = new FheInt80();
     execute(() -> fhe_int80_bitor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_scalar_bitor(const struct FheInt80 *lhs, struct I128 rhs, struct FheInt80 **result);
   ///```
-  @Override
-  public FheInt80 bitOrScalar(I128 other) {
-    FheInt80 result = new FheInt80();
-    execute(() -> fhe_int80_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+@Override
+public FheInt80 bitOrScalar(I128 other) {
+  FheInt80 result = new FheInt80();
+  execute(() -> fhe_int80_scalar_bitor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_bitor_assign(struct FheInt80 *lhs, const struct FheInt80 *rhs);
-  ///```
-  @Override
-  public void bitOrAssign(FheInt80 other) {
+///```
+@Override
+public void bitOrAssign(FheInt80 other){
     execute(() -> fhe_int80_bitor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_scalar_bitor_assign(struct FheInt80 *lhs, struct I128 rhs);
@@ -142,54 +142,54 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   /// int fhe_int80_bitxor(const struct FheInt80 *lhs,
   ///                      const struct FheInt80 *rhs,
   ///                      struct FheInt80 **result);
-  ///```
-  @Override
-  public FheInt80 bitXor(FheInt80 other) {
+///```
+@Override
+public FheInt80 bitXor(FheInt80 other){
     FheInt80 result = new FheInt80();
     execute(() -> fhe_int80_bitxor(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_scalar_bitxor(const struct FheInt80 *lhs, struct I128 rhs, struct FheInt80 **result);
-  ///```
-  @Override
-  public FheInt80 bitXorScalar(I128 other) {
-    FheInt80 result = new FheInt80();
-    execute(() -> fhe_int80_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+///```
+@Override
+public FheInt80 bitXorScalar(I128 other) {
+  FheInt80 result = new FheInt80();
+  execute(() -> fhe_int80_scalar_bitxor(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_bitxor_assign(struct FheInt80 *lhs, const struct FheInt80 *rhs);
-  ///```
-  @Override
-  public void bitXorAssign(FheInt80 other) {
-    execute(() -> fhe_int80_bitxor_assign(getValue(), other.getValue()));
+///```
+@Override
+public void bitXorAssign(FheInt80 other) {
+  execute(() -> fhe_int80_bitxor_assign(getValue(), other.getValue()));
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_scalar_bitxor_assign(struct FheInt80 *lhs, struct I128 rhs);
   ///```
   @Override
-  public void bitXorScalarAssign(I128 other) {
+  public void bitXorScalarAssign(I128 other){
     execute(() -> fhe_int80_scalar_bitxor_assign(getValue(), other.getAddress()));
 
   }
 
   /// ```c
   /// int fhe_int80_not(const struct FheInt80 *input, struct FheInt80 **result);
-  ///```
-  @Override
-  public FheInt80 bitNot() {
+///```
+@Override
+public FheInt80 bitNot(){
     FheInt80 result = new FheInt80();
-    execute(() -> fhe_int80_not(getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int80_not(getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_if_then_else(const struct FheBool *condition_ct,
@@ -207,14 +207,14 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
 
   /// ```c
   /// int fhe_int80_eq(const struct FheInt80 *lhs, const struct FheInt80 *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalTo(FheInt80 other) {
+///```
+@Override
+public FheBool equalTo(FheInt80 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int80_eq(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int80_eq(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_scalar_eq(const struct FheInt80 *lhs, struct I128 rhs, struct FheBool **result);
@@ -222,21 +222,21 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   @Override
   public FheBool equalToScalar(I128 other) {
     FheBool result = new FheBool();
-    execute(() -> fhe_int80_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
+      execute(() -> fhe_int80_scalar_eq(getValue(), other.getAddress(), result.getAddress()));
     return result;
 
   }
 
   /// ```c
   /// int fhe_int80_ne(const struct FheInt80 *lhs, const struct FheInt80 *rhs, struct FheBool **result);
-  ///```
-  @Override
-  public FheBool notEqualTo(FheInt80 other) {
+///```
+@Override
+public FheBool notEqualTo(FheInt80 other){
     FheBool result = new FheBool();
-    execute(() -> fhe_int80_ne(getValue(), other.getValue(), result.getAddress()));
-    return result;
+  execute(() -> fhe_int80_ne(getValue(), other.getValue(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_scalar_ne(const struct FheInt80 *lhs, struct I128 rhs, struct FheBool **result);
@@ -268,18 +268,18 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   ///                                           uint64_t serialized_size_limit,
   ///                                           const struct ServerKey *server_key,
   ///                                           struct FheInt80 **result);
-  ///```
-  public static FheInt80 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+///```
+public static FheInt80 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheInt80 deserialized = new FheInt80();
     execute(() -> fhe_int80_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+  return deserialized;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_try_encrypt_with_client_key_i128(struct I128 value,
   ///                                                const struct ClientKey *client_key,
-  ///                                                struct FheInt80 **result);
+///                                                struct FheInt80 **result);
   ///```
   public static FheInt80 encrypt(I128 clearValue, ClientKey clientKey) {
     FheInt80 encrypted = new FheInt80();
@@ -291,47 +291,35 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   /// ```c
   /// int fhe_int80_try_encrypt_with_public_key_i128(struct I128 value,
   ///                                                const struct PublicKey *public_key,
-  ///                                                struct FheInt80 **result);
+///                                                struct FheInt80 **result);
   ///```
   public static FheInt80 encrypt(I128 clearValue, PublicKey publicKey) {
     FheInt80 encrypted = new FheInt80();
     execute(() -> fhe_int80_try_encrypt_with_public_key_i128(clearValue.getAddress(), publicKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
+}
+/// ```c
+/// int fhe_int80_try_encrypt_trivial_i128(struct I128 value, struct FheInt80 **result);
+///```
+public static FheInt80 encrypt(I128 clearValue) {
+  FheInt80 encrypted = new FheInt80();
+  execute(() -> fhe_int80_try_encrypt_trivial_i128(clearValue.getAddress(), encrypted.getAddress()));
+  return encrypted;
+
+}
 
   /// ```c
-  /// int fhe_int80_try_encrypt_trivial_i128(struct I128 value, struct FheInt80 **result);
-  ///```
-  public static FheInt80 encrypt(I128 clearValue) {
-    FheInt80 encrypted = new FheInt80();
-    execute(() -> fhe_int80_try_encrypt_trivial_i128(clearValue.getAddress(), encrypted.getAddress()));
-    return encrypted;
+/// int fhe_int80_clone(const struct FheInt80 *sself, struct FheInt80 **result);
+///```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
+public FheInt80 clone() {
+  FheInt80 cloned = new FheInt80();
+  execute(() -> fhe_int80_clone(getValue(), cloned.getAddress()));
+  return cloned;
 
-  }
-
-  /// ```c
-  /// int fhe_int80_clone(const struct FheInt80 *sself, struct FheInt80 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public FheInt80 clone() {
-    FheInt80 cloned = new FheInt80();
-    execute(() -> fhe_int80_clone(getValue(), cloned.getAddress()));
-    return cloned;
-
-  }
-
-  /// ```c
-  /// int fhe_int80_compress(const struct FheInt80 *sself, struct CompressedFheInt80 **result);
-  ///```
-  @Override
-  public CompressedFheInt80 compress() {
-    CompressedFheInt80 compressed = new CompressedFheInt80();
-    execute(() -> fhe_int80_compress(getValue(), compressed.getAddress()));
-    return compressed;
-
-  }
+}
 
   /// ```c
   /// int fhe_int80_decrypt(const struct FheInt80 *encrypted_value,
@@ -343,6 +331,17 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
     I128 decrypted = new I128();
     executeWithAddress(decrypted.getAddress(), address -> fhe_int80_decrypt(getValue(), clientKey.getValue(), address));
     return decrypted;
+
+  }
+
+  /// ```c
+  /// int fhe_int80_compress(const struct FheInt80 *sself, struct CompressedFheInt80 **result);
+  ///```
+  @Override
+  public CompressedFheInt80 compress() {
+    CompressedFheInt80 compressed = new CompressedFheInt80();
+    execute(() -> fhe_int80_compress(getValue(), compressed.getAddress()));
+    return compressed;
 
   }
 
@@ -375,13 +374,13 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   /// ```c
   /// int fhe_int80_scalar_add(const struct FheInt80 *lhs, struct I128 rhs, struct FheInt80 **result);
   ///```
-  @Override
-  public FheInt80 addScalar(I128 other) {
-    FheInt80 result = new FheInt80();
-    execute(() -> fhe_int80_scalar_add(getValue(), other.getAddress(), result.getAddress()));
-    return result;
+@Override
+public FheInt80 addScalar(I128 other) {
+  FheInt80 result = new FheInt80();
+  execute(() -> fhe_int80_scalar_add(getValue(), other.getAddress(), result.getAddress()));
+  return result;
 
-  }
+}
 
   /// ```c
   /// int fhe_int80_add_assign(struct FheInt80 *lhs, const struct FheInt80 *rhs);
@@ -1048,8 +1047,8 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   ///                                                        uint64_t random_bits_count);
   ///```
   @Override
-  public FheInt80 random(long seedLow, long seedHigh, long bitsCount) {
-    FheInt80 result = new FheInt80();
+  public FheInt80 random(long seedLow, long seedHigh, long bitsCount){
+      FheInt80 result = new FheInt80();
     execute(() -> generate_oblivious_pseudo_random_bounded_fhe_int80(result.getAddress(), seedLow, seedHigh, bitsCount));
     return result;
 
@@ -1542,11 +1541,11 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
   /// ```c
   /// int fhe_int80_cast_into_fhe_uint16(const struct FheInt80 *sself, struct FheUint16 **result);
   ///```
-  public FheUint16 castIntoFheUint16() {
-    FheUint16 result = new FheUint16();
-    execute(() -> fhe_int80_cast_into_fhe_uint16(getValue(), result.getAddress()));
-    return result;
-  }
+public FheUint16 castIntoFheUint16() {
+  FheUint16 result = new FheUint16();
+  execute(() -> fhe_int80_cast_into_fhe_uint16(getValue(), result.getAddress()));
+  return result;
+}
 
   /// ```c
   /// int fhe_int80_cast_into_fhe_uint160(const struct FheInt80 *sself, struct FheUint160 **result);
@@ -1762,7 +1761,7 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
     FheUint64 result = new FheUint64();
     execute(() -> fhe_int80_cast_into_fhe_uint64(getValue(), result.getAddress()));
     return result;
-  }
+}
 
   /// ```c
   /// int fhe_int80_cast_into_fhe_uint72(const struct FheInt80 *sself, struct FheUint72 **result);
@@ -1780,34 +1779,34 @@ public class FheInt80 extends NativePointer implements FheInteger<I128, FheInt80
     FheUint8 result = new FheUint8();
     execute(() -> fhe_int80_cast_into_fhe_uint8(getValue(), result.getAddress()));
     return result;
-  }
+}
 
-  /// ```c
-  /// int fhe_int80_cast_into_fhe_uint80(const struct FheInt80 *sself, struct FheUint80 **result);
-  ///```
-  public FheUint80 castIntoFheUint80() {
-    FheUint80 result = new FheUint80();
-    execute(() -> fhe_int80_cast_into_fhe_uint80(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int80_cast_into_fhe_uint80(const struct FheInt80 *sself, struct FheUint80 **result);
+///```
+public FheUint80 castIntoFheUint80() {
+  FheUint80 result = new FheUint80();
+  execute(() -> fhe_int80_cast_into_fhe_uint80(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int80_cast_into_fhe_uint88(const struct FheInt80 *sself, struct FheUint88 **result);
-  ///```
-  public FheUint88 castIntoFheUint88() {
-    FheUint88 result = new FheUint88();
-    execute(() -> fhe_int80_cast_into_fhe_uint88(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int80_cast_into_fhe_uint88(const struct FheInt80 *sself, struct FheUint88 **result);
+///```
+public FheUint88 castIntoFheUint88() {
+  FheUint88 result = new FheUint88();
+  execute(() -> fhe_int80_cast_into_fhe_uint88(getValue(), result.getAddress()));
+  return result;
+}
 
-  /// ```c
-  /// int fhe_int80_cast_into_fhe_uint96(const struct FheInt80 *sself, struct FheUint96 **result);
-  ///```
-  public FheUint96 castIntoFheUint96() {
-    FheUint96 result = new FheUint96();
-    execute(() -> fhe_int80_cast_into_fhe_uint96(getValue(), result.getAddress()));
-    return result;
-  }
+/// ```c
+/// int fhe_int80_cast_into_fhe_uint96(const struct FheInt80 *sself, struct FheUint96 **result);
+///```
+public FheUint96 castIntoFheUint96() {
+  FheUint96 result = new FheUint96();
+  execute(() -> fhe_int80_cast_into_fhe_uint96(getValue(), result.getAddress()));
+  return result;
+}
 
   // @formatter:off
 }

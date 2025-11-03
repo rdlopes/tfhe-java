@@ -1,7 +1,7 @@
 package io.github.rdlopes.tfhe.generator.templates;
 
 import com.github.jknack.handlebars.Options;
-import io.github.rdlopes.tfhe.generator.parsers.SymbolsIndex;
+import io.github.rdlopes.tfhe.generator.Symbols;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -10,21 +10,21 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.rdlopes.tfhe.generator.parsers.JextractIncludes.SymbolType.function;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.substringAfter;
 
 public class TemplateHelper {
-  public static String implementation(TemplateContext context, Options ignoredOptions) throws IOException {
+
+  public static String implementation(FheTypeContext context, Options ignoredOptions) throws IOException {
     if (context.isBoolean()) {
-      return "FheBoolean<" + context.className() + ", Compressed" + context.className() + ">";
+      return "FheBoolean<" + context.getClassName() + ", Compressed" + context.getClassName() + ">";
     } else if (context.isSigned()) {
-      return "FheInteger<" + context.valueClassName() + ", " + context.className() + ", Compressed" + context.className() + ">";
+      return "FheInteger<" + context.valueClassName() + ", " + context.getClassName() + ", Compressed" + context.getClassName() + ">";
     }
-    return "FheUnsignedInteger<" + context.valueClassName() + ", " + context.className() + ", Compressed" + context.className() + ">";
+    return "FheUnsignedInteger<" + context.valueClassName() + ", " + context.getClassName() + ", Compressed" + context.getClassName() + ">";
   }
 
-  public static String method(TemplateContext context, Options options) throws IOException {
+  public static String method(FheTypeContext context, Options options) throws IOException {
     String methodPrefix = options.param(0);
     String methodName = options.param(1);
     String methodSearch = options.param(2);
@@ -45,32 +45,32 @@ public class TemplateHelper {
   }
 
   public static String symbol(String symbolSearch, Options options) {
-    TemplateContext context = (TemplateContext) options.context.model();
+    FheTypeContext context = (FheTypeContext) options.context.model();
     boolean lookupType = options.hash("lookupType", false);
     boolean prefixed = options.hash("prefixed", true);
     String prefix = "";
     if (prefixed) {
       prefix = lookupType
-        ? TemplateContext.nativeType(context.typeName())
+        ? FheTypeContext.nativeType(context.getTypeName())
         : context.nativeType();
       prefix += "_";
     }
-    return context.symbolsIndex()
+    return context.getSymbols()
                   .lookupSymbol(prefix + symbolSearch);
   }
 
   @SuppressWarnings("unused")
-  public static String lookupDoc(SymbolsIndex symbolsIndex, String symbol, Options ignored) {
-    String definition = symbolsIndex.definitions()
-                                    .get(symbol);
+  public static String lookupDoc(Symbols symbols, String symbol, Options ignored) {
+    String definition = symbols.definitions()
+                               .get(symbol);
     return javadocText(definition);
   }
 
   public static String javadoc(String symbolSearch, Options options) {
-    TemplateContext context = (TemplateContext) options.context.model();
+    FheTypeContext context = (FheTypeContext) options.context.model();
     String symbol = symbol(symbolSearch, options);
 
-    String definition = context.symbolsIndex()
+    String definition = context.getSymbols()
                                .definitions()
                                .get(symbol);
 
@@ -86,8 +86,8 @@ public class TemplateHelper {
   }
 
   public static String declare(String objectName, Options options) {
-    TemplateContext context = (TemplateContext) options.context.model();
-    String className = options.hash("class", context.className());
+    FheTypeContext context = (FheTypeContext) options.context.model();
+    String className = options.hash("class", context.getClassName());
     return "%s %s = new %s();".formatted(className, objectName, className);
   }
 
@@ -120,9 +120,9 @@ public class TemplateHelper {
   }
 
   @SuppressWarnings("unused")
-  public static String casts(TemplateContext context, Options options) {
-    Collection<String> castMethods = context.symbolsIndex()
-                                            .lookupSymbols(function, s -> s.startsWith(context.nativeType() + "_cast_into"));
+  public static String casts(FheTypeContext context, Options options) {
+    Collection<String> castMethods = context.getSymbols()
+                                            .lookupSymbols(s -> s.startsWith(context.nativeType() + "_cast_into"));
 
     List<String> casts = castMethods.stream()
                                     .map(s ->

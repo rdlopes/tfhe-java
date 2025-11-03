@@ -13,8 +13,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class CompressedFheInt16 extends NativePointer
-implements CompressedFheType<Short, FheInt16, CompressedFheInt16> {
+public class CompressedFheInt16 extends NativePointer implements CompressedFheType<Short, FheInt16, CompressedFheInt16> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt16.class);
 // @formatter:on
 
@@ -56,7 +55,7 @@ implements CompressedFheType<Short, FheInt16, CompressedFheInt16> {
   ///                                         uint64_t serialized_size_limit);
   ///```
   @Override
-  public DynamicBuffer serialize() {
+  public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> compressed_fhe_int16_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
 
@@ -84,7 +83,7 @@ implements CompressedFheType<Short, FheInt16, CompressedFheInt16> {
   ///                                                      const struct ServerKey *server_key,
   ///                                                      struct CompressedFheInt16 **result);
   ///```
-  public static CompressedFheInt16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
+  public static CompressedFheInt16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheInt16 deserialized = new CompressedFheInt16();
     execute(() -> compressed_fhe_int16_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
@@ -109,10 +108,10 @@ implements CompressedFheType<Short, FheInt16, CompressedFheInt16> {
   ///```
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
-  public CompressedFheInt16 clone() {
+public CompressedFheInt16 clone(){
     CompressedFheInt16 cloned = new CompressedFheInt16();
     execute(() -> compressed_fhe_int16_clone(getValue(), cloned.getAddress()));
     return cloned;
 
-  }
+}
 }
