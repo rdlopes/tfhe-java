@@ -30,7 +30,7 @@ jobs:
       - run: make build_c_api
       - run: cp tfhe/LICENSE target/release
       - name: Upload Native Libraries
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: native-libs-${{matrix.os}}
           path: target/release
@@ -42,7 +42,7 @@ jobs:
     needs: native-libs
     steps:
       - name: Download Native Libraries
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: 'native-libs-*'
           merge-multiple: 'true'
@@ -87,7 +87,7 @@ jobs:
           --target-package io.github.rdlopes.tfhe.ffm \
           --output native-bundle/bindings
       - name: Upload Native Libraries Bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: native-bundle
           path: native-bundle
