@@ -59,6 +59,14 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: 'maven'
 
+      - name: Download Native Bundle
+        uses: dawidd6/action-download-artifact@v11
+        with:
+          github_token: ${{github.token}}
+          workflow: native.yaml
+          name: 'native-bundle'
+          path: ${{github.workspace}}/.native
+
       - run: ./mvnw verify
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
