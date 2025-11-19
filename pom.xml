@@ -35,7 +35,7 @@
     <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Library dependencies -->
     <commons-io.version>2.20.0</commons-io.version>
-    <commons-lang3.version>3.19.0</commons-lang3.version>
+    <commons-lang3.version>3.20.0</commons-lang3.version>
     <cucumber.version>7.17.0</cucumber.version>
     <jspecify.version>1.0.0</jspecify.version>
     <picocli.version>4.7.7</picocli.version>
