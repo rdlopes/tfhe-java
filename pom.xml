@@ -36,6 +36,7 @@
     <!-- Library dependencies -->
     <commons-io.version>2.20.0</commons-io.version>
     <commons-lang3.version>3.19.0</commons-lang3.version>
+    <cucumber.version>7.17.0</cucumber.version>
     <jspecify.version>1.0.0</jspecify.version>
     <picocli.version>4.7.7</picocli.version>
     <handlebars.version>4.5.0</handlebars.version>
@@ -108,8 +109,33 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-java</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-picocontainer</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.cucumber</groupId>
+      <artifactId>cucumber-junit-platform-engine</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -127,6 +153,27 @@
             --enable-native-access=ALL-UNNAMED
             -Djava.library.path=${java.library.path}</argLine>
           <excludedGroups>intensive</excludedGroups>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <environmentVariables>
+            <RUST_BACKTRACE>full</RUST_BACKTRACE>
+          </environmentVariables>
+          <argLine combine.children="append">--enable-preview
+            --enable-native-access=ALL-UNNAMED
+            -Djava.library.path=${java.library.path}
+          </argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.cukedoctor</groupId>
+        <artifactId>cukedoctor-maven-plugin</artifactId>
+        <configuration>
+          <documentTitle>TFHE for Java</documentTitle>
+          <introChapterDir>${project.build.testOutputDirectory}</introChapterDir>
         </configuration>
       </plugin>
       <plugin>

@@ -1,0 +1,274 @@
+= *Introduction*
+
+This documentation is also available <<github-doc,online>>.
+
+== About TFHE-Java
+
+TFHE-Java is a comprehensive Java library that provides high-level bindings to <<tfhe-rs-repo,TFHE-rs>>, leveraging Java's Foreign Function & Memory (FFM) API to deliver fully homomorphic encryption capabilities to the JVM ecosystem.
+The project enables developers to perform computations on encrypted data without decrypting it, maintaining data privacy and security throughout the entire computation lifecycle.
+
+Built on top of the battle-tested <<tfhe-rs-repo,TFHE-rs>> native library from <<zama-ai,Zama>>, TFHE-Java brings the power of <<FHE,fully homomorphic encryption>> to Java applications while maintaining type safety, memory safety, and idiomatic Java programming patterns.
+
+== Understanding the TFHE Scheme
+
+<<TFHE,TFHE>> (Torus Fully Homomorphic Encryption) is a <<FHE,fully homomorphic encryption>> scheme that enables fast homomorphic operations on encrypted data.
+The scheme is based on the <<LWE,Learning With Errors>> problem, which is considered resistant to quantum attacks, making it a future-proof cryptographic solution.
+
+=== Core Cryptographic Concepts
+
+The TFHE scheme operates on several fundamental concepts:
+
+* **<<LWE Ciphertext,LWE Ciphertexts>>**: Encrypted values consisting of a <<Mask,mask>> (random values) and a <<Body,body>> (computed value).
+The <<LWE Dimension,LWE dimension>> parameter determines the security level and performance characteristics.
+
+* **<<Noise,Noise Management>>**: Random values added during encryption ensure cryptographic security. <<Noise,Noise>> is encoded in least significant bits and grows during <<Leveled Operation,leveled operations>>, requiring periodic management through <<Bootstrapping,bootstrapping>>.
+
+* **<<PBS,Programmable Bootstrapping>>**: A unique TFHE capability that simultaneously reduces <<Noise,noise>> in <<Ciphertext,ciphertexts>> and computes arbitrary functions using lookup tables.
+This operation requires a <<Bootstrapping Key,bootstrapping key>> and is what makes TFHE particularly efficient for certain computations.
+
+* **<<Keyswitch,Key Switching>>**: An operation that transforms <<Ciphertext,ciphertexts>> encrypted under one key to another key, essential for maintaining consistency in multi-operation workflows.
+This requires a <<Key switching Key,key switching key>>.
+
+=== Key Types and Their Roles
+
+TFHE employs multiple key types, each serving a specific purpose in the encryption workflow:
+
+* **<<Client Key,Client Key>>**: The secret key used for encryption and decryption.
+This key must remain private and secure on the client side.
+It serves as the root of trust for all cryptographic operations.
+
+* **<<Server Key,Server Key>>**: A public evaluation key that enables <<Homomorphic Operation,homomorphic operations>> on encrypted data.
+The server can perform computations without being able to decrypt the data, ensuring privacy.
+
+* **<<Public Key,Public Key>>**: An optional key derived from the <<Client Key,client key>> that allows third parties to encrypt data without possessing the secret key.
+Useful for scenarios where multiple parties need to encrypt data for a single recipient.
+
+* **<<Bootstrapping Key,Bootstrapping Key>>** and **<<Key switching Key,Key Switching Key>>**: Specialized evaluation keys required for advanced operations like <<PBS,programmable bootstrapping>> and <<Keyswitch,keyswitch>> operations.
+
+=== Security Foundation
+
+The security of TFHE rests on the computational hardness of the <<LWE,Learning With Errors>> problem.
+The scheme provides:
+
+* **Quantum Resistance**: The <<LWE,LWE>> problem is believed to be resistant to attacks by quantum computers, unlike traditional RSA or elliptic curve cryptography.
+
+* **Semantic Security**: <<Ciphertext,Ciphertexts>> reveal no information about the underlying <<Plaintext,plaintext>>, even when multiple ciphertexts of the same value are observed.
+
+* **Configurable Security Levels**: Parameters like <<LWE Dimension,LWE dimension>> and <<Noise Distribution,noise distribution>> allow users to tune the security level versus performance trade-off.
+
+Additional security features include <<Zero-Knowledge Proof,zero-knowledge proofs>> for verifying computation correctness without revealing sensitive information, as detailed in the <<tfhe-deep-dive-4,TFHE Deep Dive series>>.
+
+== Main Features
+
+TFHE-Java provides a rich set of features for building privacy-preserving applications:
+
+=== Comprehensive Type System
+
+* **Boolean Operations**: Native <<FHE,FHE>> boolean type supporting all logical operations (AND, OR, XOR, NOT)
+* **Integer Types**: Full spectrum of signed and unsigned integers
+** Signed integers: FheInt2 through FheInt2048 (2, 4, 6, 8, 10, 12, 14, 16, 32, 64, 128, 160, 256, 512, 1024, 2048 bits)
+** Unsigned integers: FheUint2 through FheUint2048 (same bit sizes as signed)
+* **Array Types**: Homomorphic arrays for batch operations on multiple encrypted values
+* **High Precision**: Support for arbitrary-precision arithmetic using BigInteger for types beyond 64 bits
+
+=== Rich Operation Set
+
+* **Arithmetic Operations**: Addition, subtraction, multiplication, division, modulo, and negation
+* **Bitwise Operations**: AND, OR, XOR, NOT, shifts (left/right, logical/arithmetic), and rotations
+* **Comparison Operations**: Equal, not equal, less than, greater than, less than or equal, greater than or equal
+* **Conditional Operations**: Ternary conditional (if-then-else), min/max operations
+* **Type Conversions**: Casting between different integer types and bit widths
+
+=== Advanced Capabilities
+
+* **Compressed Representations**: Compact storage format for <<Ciphertext,ciphertexts>> and keys to reduce memory footprint and transmission costs
+* **Serialization/Deserialization**: Full support for persisting and transmitting encrypted data and keys
+* **<<Public Key,Public Key>> Encryption**: Enable third-party encryption without sharing the <<Secret Key,secret key>>
+* **<<Trivial Ciphertext,Trivial Ciphertexts>>**: Efficient mixing of encrypted and plaintext values in computations
+* **<<Zero-Knowledge Proof,Zero-Knowledge Proofs>>**: Verify computation correctness without revealing sensitive information
+* **Configurable Parameters**: Fine-grained control over security levels, performance characteristics, and <<Noise Distribution,noise distributions>>
+
+=== Integration Features
+
+* **Foreign Function & Memory API**: Direct memory access to native TFHE-rs library using Java's modern FFM API (no JNI overhead)
+* **Type Safety**: Strong Java type system prevents common cryptographic implementation errors
+* **Memory Safety**: Automatic resource management using Java's try-with-resources and AutoCloseable patterns
+* **Comprehensive Testing**: Extensive test suite with BDD-style living documentation
+* **Cross-Platform Support**: Native libraries for macOS (ARM64/x86_64), Linux, and Windows
+
+== Data Structures and TFHE Workflows
+
+=== Core Data Structures
+
+==== Ciphertexts and Keys
+
+The fundamental data structures in TFHE-Java mirror the underlying cryptographic primitives:
+
+* **FHE Value Types** (`FheBool`, `FheInt*`, `FheUint*`): Wrapper classes representing encrypted values.
+Each instance encapsulates an <<LWE Ciphertext,LWE ciphertext>> and provides type-safe operations.
+
+* **Compressed Types** (`CompressedFheBool`, `CompressedFheInt*`, `CompressedFheUint*`): Space-efficient representations that reduce storage and transmission overhead.
+Must be decompressed before performing <<Homomorphic Operation,homomorphic operations>>.
+
+* **Array Types** (`FheBoolArray`, `FheInt*Array`, `FheUint*Array`): Collections of encrypted values supporting batch operations and element-wise computations.
+
+* **Key Objects**:
+** `ClientKey`: Encapsulates the <<Client Key,client key>> for encryption/decryption
+** `ServerKey`: Encapsulates the <<Server Key,server key>> for homomorphic operations
+** `PublicKey`: Encapsulates the <<Public Key,public key>> for third-party encryption
+** `CompressedServerKey` / `CompressedPublicKey`: Compressed key representations
+
+==== Configuration Objects
+
+* **`ConfigBuilder`**: Fluent API for constructing TFHE configurations with custom parameters
+* **Parameter Objects**: Encapsulate cryptographic parameters like <<LWE Dimension,LWE dimension>>, polynomial sizes, <<Noise Distribution,noise distribution>>, and security levels
+* **Noise Distributions**: `TUniform` and centered normal distributions for controlling the random <<Noise,noise>> characteristics
+
+=== Standard TFHE Workflow
+
+A typical TFHE computation follows this workflow:
+
+==== 1. Configuration and Key Generation
+
+[source,java]
+----
+// Create configuration (client-side)
+Config config = new ConfigBuilder().build();
+
+// Generate keys
+KeySet keys = config.generateKeys();
+ClientKey clientKey = keys.clientKey();
+ServerKey serverKey = keys.serverKey();
+----
+
+The configuration defines the cryptographic parameters.
+The key generation produces both the private <<Client Key,client key>> and the public <<Server Key,server key>>.
+
+==== 2. Data Encryption (Client-Side)
+
+[source,java]
+----
+// Encrypt data using client key
+FheUint32 encryptedValue = FheUint32.encrypt(42, clientKey);
+
+// Or use public key for third-party encryption
+PublicKey publicKey = PublicKey.newWith(clientKey);
+FheUint32 encryptedValue2 = FheUint32.encrypt(100, publicKey);
+----
+
+<<Plaintext,Plaintext>> data is encrypted into <<Ciphertext,ciphertexts>> that can be safely transmitted to untrusted servers.
+
+==== 3. Secure Transmission
+
+[source,java]
+----
+// Serialize encrypted data for transmission
+Buffer serializedData = encryptedValue.serialize();
+
+// Serialize server key for computation
+Buffer serializedServerKey = serverKey.serialize();
+
+// Send to server...
+----
+
+Encrypted data and the <<Server Key,server key>> are serialized and transmitted to the computation server.
+The <<Client Key,client key>> never leaves the client.
+
+==== 4. Homomorphic Computation (Server-Side)
+
+[source,java]
+----
+// Deserialize on server
+ServerKey serverKey = ServerKey.deserialize(serializedServerKey);
+FheUint32 value1 = FheUint32.deserialize(serializedData1);
+FheUint32 value2 = FheUint32.deserialize(serializedData2);
+
+// Set server key for operations
+serverKey.setAsKey();
+
+// Perform homomorphic operations
+FheUint32 sum = value1.add(value2);
+FheUint32 product = sum.mul(value1);
+FheUint32 result = product.bitwiseAnd(value2);
+----
+
+The server performs <<Homomorphic Operation,homomorphic operations>> on encrypted data using the <<Server Key,server key>>.
+The server cannot decrypt the data but can compute on it.
+Operations like addition, multiplication, and bitwise operations are performed without revealing the underlying values.
+
+==== 5. Result Decryption (Client-Side)
+
+[source,java]
+----
+// Serialize result for transmission back to client
+Buffer serializedResult = result.serialize();
+
+// Deserialize and decrypt on client
+FheUint32 encryptedResult = FheUint32.deserialize(serializedResult);
+int plainResult = encryptedResult.decrypt(clientKey);
+----
+
+The encrypted result is sent back to the client, where it is decrypted using the <<Client Key,client key>> to obtain the final plaintext result.
+
+=== Advanced Workflows
+
+==== Compressed Ciphertext Workflow
+
+For bandwidth-constrained environments:
+
+[source,java]
+----
+// Client compresses before transmission
+CompressedFheUint32 compressed = encryptedValue.compress();
+Buffer serialized = compressed.serialize();
+
+// Server decompresses before computation
+CompressedFheUint32 compressedReceived = CompressedFheUint32.deserialize(serialized);
+FheUint32 decompressed = compressedReceived.decompress();
+serverKey.setAsKey();
+FheUint32 result = decompressed.add(otherValue);
+----
+
+<<Ciphertext,Ciphertexts>> can be compressed to reduce transmission size, then decompressed on the server before computation.
+
+==== Trivial Ciphertext Workflow
+
+For mixing encrypted and public constants:
+
+[source,java]
+----
+// Create trivial ciphertext from public value
+FheUint32 trivial = FheUint32.tryEncryptTrivial(42);
+
+// Mix with encrypted values
+serverKey.setAsKey();
+FheUint32 result = encryptedValue.add(trivial);
+----
+
+<<Trivial Ciphertext,Trivial ciphertexts>> allow efficient mixing of public constants with encrypted data without the overhead of full encryption.
+
+==== Noise Management
+
+<<Noise,Noise>> accumulates during operations and must be managed:
+
+* **<<Leveled Operation,Leveled Operations>>**: Fast operations that increase noise (additions, subtractions, bitwise operations)
+* **<<PBS,Programmable Bootstrapping>>**: Reduces noise while computing functions (multiplications, comparisons, non-linear operations)
+* **<<Padding,Padding Bits>>**: Reserve space in the most significant bits to handle <<Carry,carries>> and prevent overflow
+
+The TFHE-rs library automatically manages <<Bootstrapping,bootstrapping>> and <<Keyswitch,key switching>> operations to maintain correctness, abstracting away much of the complexity from the developer.
+
+== Additional Resources
+
+For deeper understanding of TFHE concepts and implementations, refer to:
+
+* <<tfhe-deep-dive-1,TFHE Deep Dive Part I>> - Ciphertext types and fundamentals
+* <<tfhe-deep-dive-2,TFHE Deep Dive Part II>> - Encodings and leveled operations
+* <<tfhe-deep-dive-3,TFHE Deep Dive Part III>> - Key switching and multiplications
+* <<tfhe-deep-dive-4,TFHE Deep Dive Part IV>> - Programmable bootstrapping
+* <<tfhe-rs-handbook,TFHE-rs Handbook>> - Algorithm documentation and specifications
+* <<tfhe-iacr-paper,Guide to Fully Homomorphic Encryption over the Discretized Torus>> - Academic foundation
+* <<fhe-org,FHE.org>> - Community resources and latest developments
+* <<zama-community,Zama Community Forum>> - Technical discussions and support
+
+For terminology clarification, please consult the <<Glossary>>.
+All referenced materials are listed in the <<Bibliography>>.
