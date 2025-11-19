@@ -1,10 +1,11 @@
-= TFHE Java image:{maven-badge}[link={maven-central},window=_blank]
+= {documentation}[TFHE Java] image:{maven-badge}[link={maven-central},window=_blank]
 :author:        Rui LOPES
 :owner:         rdlopes
 :email:         mailto:rui.d.lopes@me.com
 :project:       tfhe-java
 :key:           {owner}_{project}
 :repo:          https://github.com/{owner}/{project}
+:documentation: https://{owner}.github.io/{project}?theme=github
 :native:        {repo}/actions/workflows/native.yaml
 :ci:            {repo}/actions/workflows/ci.yaml
 :cd:            {repo}/actions/workflows/cd.yaml
