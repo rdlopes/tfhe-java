@@ -99,7 +99,7 @@ public class FheUint64 extends NativePointer implements FheUnsignedInteger<Long,
   /// int fhe_uint64_bitor(const struct FheUint64 *lhs,
   ///                      const struct FheUint64 *rhs,
   ///                      struct FheUint64 **result);
-  ///```
+///```
 @Override
 public FheUint64 bitOr(FheUint64 other){
     FheUint64 result = new FheUint64();
@@ -111,13 +111,13 @@ public FheUint64 bitOr(FheUint64 other){
   /// ```c
   /// int fhe_uint64_scalar_bitor(const struct FheUint64 *lhs, uint64_t rhs, struct FheUint64 **result);
   ///```
-@Override
-public FheUint64 bitOrScalar(Long other) {
-  FheUint64 result = new FheUint64();
-  execute(() -> fhe_uint64_scalar_bitor(getValue(), other, result.getAddress()));
-  return result;
+  @Override
+  public FheUint64 bitOrScalar(Long other) {
+    FheUint64 result = new FheUint64();
+    execute(() -> fhe_uint64_scalar_bitor(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint64_bitor_assign(struct FheUint64 *lhs, const struct FheUint64 *rhs);
@@ -140,7 +140,7 @@ public void bitOrAssign(FheUint64 other){
   /// ```c
   /// int fhe_uint64_bitxor(const struct FheUint64 *lhs,
   ///                       const struct FheUint64 *rhs,
-  ///                       struct FheUint64 **result);
+///                       struct FheUint64 **result);
 ///```
 @Override
 public FheUint64 bitXor(FheUint64 other){
@@ -152,23 +152,23 @@ public FheUint64 bitXor(FheUint64 other){
 
   /// ```c
   /// int fhe_uint64_scalar_bitxor(const struct FheUint64 *lhs, uint64_t rhs, struct FheUint64 **result);
-///```
-@Override
-public FheUint64 bitXorScalar(Long other) {
-  FheUint64 result = new FheUint64();
-  execute(() -> fhe_uint64_scalar_bitxor(getValue(), other, result.getAddress()));
-  return result;
+  ///```
+  @Override
+  public FheUint64 bitXorScalar(Long other) {
+    FheUint64 result = new FheUint64();
+    execute(() -> fhe_uint64_scalar_bitxor(getValue(), other, result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint64_bitxor_assign(struct FheUint64 *lhs, const struct FheUint64 *rhs);
-///```
-@Override
-public void bitXorAssign(FheUint64 other) {
-  execute(() -> fhe_uint64_bitxor_assign(getValue(), other.getValue()));
+  ///```
+  @Override
+  public void bitXorAssign(FheUint64 other) {
+    execute(() -> fhe_uint64_bitxor_assign(getValue(), other.getValue()));
 
-}
+  }
 
   /// ```c
   /// int fhe_uint64_scalar_bitxor_assign(struct FheUint64 *lhs, uint64_t rhs);
@@ -181,14 +181,14 @@ public void bitXorAssign(FheUint64 other) {
 
   /// ```c
   /// int fhe_uint64_not(const struct FheUint64 *input, struct FheUint64 **result);
-///```
-@Override
-public FheUint64 bitNot(){
+  ///```
+  @Override
+  public FheUint64 bitNot() {
     FheUint64 result = new FheUint64();
-  execute(() -> fhe_uint64_not(getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_uint64_not(getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint64_if_then_else(const struct FheBool *condition_ct,
@@ -207,15 +207,15 @@ public FheUint64 bitNot(){
   /// ```c
   /// int fhe_uint64_eq(const struct FheUint64 *lhs,
   ///                   const struct FheUint64 *rhs,
-  ///                   struct FheBool **result);
-///```
-@Override
-public FheBool equalTo(FheUint64 other){
+///                   struct FheBool **result);
+  ///```
+  @Override
+  public FheBool equalTo(FheUint64 other) {
     FheBool result = new FheBool();
-  execute(() -> fhe_uint64_eq(getValue(), other.getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_uint64_eq(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint64_scalar_eq(const struct FheUint64 *lhs, uint64_t rhs, struct FheBool **result);
@@ -229,17 +229,17 @@ public FheBool equalTo(FheUint64 other){
   }
 
   /// ```c
-  /// int fhe_uint64_ne(const struct FheUint64 *lhs,
-  ///                   const struct FheUint64 *rhs,
+/// int fhe_uint64_ne(const struct FheUint64 *lhs,
+///                   const struct FheUint64 *rhs,
 ///                   struct FheBool **result);
-///```
-@Override
-public FheBool notEqualTo(FheUint64 other){
+  ///```
+  @Override
+  public FheBool notEqualTo(FheUint64 other) {
     FheBool result = new FheBool();
-  execute(() -> fhe_uint64_ne(getValue(), other.getValue(), result.getAddress()));
-  return result;
+    execute(() -> fhe_uint64_ne(getValue(), other.getValue(), result.getAddress()));
+    return result;
 
-}
+  }
 
   /// ```c
   /// int fhe_uint64_scalar_ne(const struct FheUint64 *lhs, uint64_t rhs, struct FheBool **result);
@@ -270,17 +270,17 @@ public FheBool notEqualTo(FheUint64 other){
   /// int fhe_uint64_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
   ///                                            uint64_t serialized_size_limit,
   ///                                            const struct ServerKey *server_key,
-  ///                                            struct FheUint64 **result);
+///                                            struct FheUint64 **result);
 ///```
 public static FheUint64 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     FheUint64 deserialized = new FheUint64();
-    execute(() -> fhe_uint64_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+  execute(() -> fhe_uint64_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
   return deserialized;
 
 }
 
   /// ```c
-  /// int fhe_uint64_try_encrypt_with_client_key_u64(uint64_t value,
+/// int fhe_uint64_try_encrypt_with_client_key_u64(uint64_t value,
   ///                                                const struct ClientKey *client_key,
 ///                                                struct FheUint64 **result);
   ///```
@@ -289,40 +289,41 @@ public static FheUint64 deserialize(DynamicBuffer dynamicBuffer, ServerKey serve
     execute(() -> fhe_uint64_try_encrypt_with_client_key_u64(clearValue, clientKey.getValue(), encrypted.getAddress()));
     return encrypted;
 
-  }
-
-  /// ```c
-  /// int fhe_uint64_try_encrypt_with_public_key_u64(uint64_t value,
-  ///                                                const struct PublicKey *public_key,
-///                                                struct FheUint64 **result);
-  ///```
-  public static FheUint64 encrypt(Long clearValue, PublicKey publicKey){
-    FheUint64 encrypted = new FheUint64();
-    execute(() -> fhe_uint64_try_encrypt_with_public_key_u64(clearValue, publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
 }
+  
 /// ```c
-/// int fhe_uint64_try_encrypt_trivial_u64(uint64_t value, struct FheUint64 **result);
+/// int fhe_uint64_try_encrypt_with_public_key_u64(uint64_t value,
+///                                                const struct PublicKey *public_key,
+///                                                struct FheUint64 **result);
 ///```
-public static FheUint64 encrypt(Long clearValue) {
-  FheUint64 encrypted = new FheUint64();
-  execute(() -> fhe_uint64_try_encrypt_trivial_u64(clearValue, encrypted.getAddress()));
+public static FheUint64 encrypt(Long clearValue, PublicKey publicKey){
+    FheUint64 encrypted = new FheUint64();
+      execute(() -> fhe_uint64_try_encrypt_with_public_key_u64(clearValue, publicKey.getValue(), encrypted.getAddress()));
   return encrypted;
 
 }
 
   /// ```c
-/// int fhe_uint64_clone(const struct FheUint64 *sself, struct FheUint64 **result);
-///```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public FheUint64 clone() {
-  FheUint64 cloned = new FheUint64();
-  execute(() -> fhe_uint64_clone(getValue(), cloned.getAddress()));
-  return cloned;
+  /// int fhe_uint64_try_encrypt_trivial_u64(uint64_t value, struct FheUint64 **result);
+  ///```
+  public static FheUint64 encrypt(Long clearValue){
+    FheUint64 encrypted = new FheUint64();
+      execute(() -> fhe_uint64_try_encrypt_trivial_u64(clearValue, encrypted.getAddress()));
+    return encrypted;
 
-}
+  }
+
+  /// ```c
+  /// int fhe_uint64_clone(const struct FheUint64 *sself, struct FheUint64 **result);
+  ///```
+  @Override
+  @SuppressWarnings("MethodDoesntCallSuperMethod")
+  public FheUint64 clone() {
+    FheUint64 cloned = new FheUint64();
+    execute(() -> fhe_uint64_clone(getValue(), cloned.getAddress()));
+    return cloned;
+
+  }
 
   /// ```c
   /// int fhe_uint64_decrypt(const struct FheUint64 *encrypted_value,
@@ -333,18 +334,19 @@ public FheUint64 clone() {
   public Long decrypt(ClientKey clientKey) {
     return executeAndReturn(Long.class, address -> fhe_uint64_decrypt(getValue(), clientKey.getValue(), address));
 
-  }
+}
+  
 
-  /// ```c
-  /// int fhe_uint64_compress(const struct FheUint64 *sself, struct CompressedFheUint64 **result);
-  ///```
-  @Override
-  public CompressedFheUint64 compress() {
-    CompressedFheUint64 compressed = new CompressedFheUint64();
-    execute(() -> fhe_uint64_compress(getValue(), compressed.getAddress()));
-    return compressed;
+/// ```c
+/// int fhe_uint64_compress(const struct FheUint64 *sself, struct CompressedFheUint64 **result);
+///```
+@Override
+public CompressedFheUint64 compress() {
+  CompressedFheUint64 compressed = new CompressedFheUint64();
+  execute(() -> fhe_uint64_compress(getValue(), compressed.getAddress()));
+  return compressed;
 
-  }
+}
 
   /// ```c
   /// int fhe_uint64_add(const struct FheUint64 *lhs,
@@ -1096,38 +1098,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_int104(const struct FheUint64 *sself, struct FheInt104 **result);
-  ///```
-  public FheInt104 castIntoFheInt104() {
-    FheInt104 result = new FheInt104();
-    execute(() -> fhe_uint64_cast_into_fhe_int104(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int112(const struct FheUint64 *sself, struct FheInt112 **result);
-  ///```
-  public FheInt112 castIntoFheInt112() {
-    FheInt112 result = new FheInt112();
-    execute(() -> fhe_uint64_cast_into_fhe_int112(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_int12(const struct FheUint64 *sself, struct FheInt12 **result);
   ///```
   public FheInt12 castIntoFheInt12() {
     FheInt12 result = new FheInt12();
     execute(() -> fhe_uint64_cast_into_fhe_int12(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int120(const struct FheUint64 *sself, struct FheInt120 **result);
-  ///```
-  public FheInt120 castIntoFheInt120() {
-    FheInt120 result = new FheInt120();
-    execute(() -> fhe_uint64_cast_into_fhe_int120(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1141,38 +1116,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_int136(const struct FheUint64 *sself, struct FheInt136 **result);
-  ///```
-  public FheInt136 castIntoFheInt136() {
-    FheInt136 result = new FheInt136();
-    execute(() -> fhe_uint64_cast_into_fhe_int136(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_int14(const struct FheUint64 *sself, struct FheInt14 **result);
   ///```
   public FheInt14 castIntoFheInt14() {
     FheInt14 result = new FheInt14();
     execute(() -> fhe_uint64_cast_into_fhe_int14(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int144(const struct FheUint64 *sself, struct FheInt144 **result);
-  ///```
-  public FheInt144 castIntoFheInt144() {
-    FheInt144 result = new FheInt144();
-    execute(() -> fhe_uint64_cast_into_fhe_int144(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int152(const struct FheUint64 *sself, struct FheInt152 **result);
-  ///```
-  public FheInt152 castIntoFheInt152() {
-    FheInt152 result = new FheInt152();
-    execute(() -> fhe_uint64_cast_into_fhe_int152(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1195,42 +1143,6 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_int168(const struct FheUint64 *sself, struct FheInt168 **result);
-  ///```
-  public FheInt168 castIntoFheInt168() {
-    FheInt168 result = new FheInt168();
-    execute(() -> fhe_uint64_cast_into_fhe_int168(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int176(const struct FheUint64 *sself, struct FheInt176 **result);
-  ///```
-  public FheInt176 castIntoFheInt176() {
-    FheInt176 result = new FheInt176();
-    execute(() -> fhe_uint64_cast_into_fhe_int176(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int184(const struct FheUint64 *sself, struct FheInt184 **result);
-  ///```
-  public FheInt184 castIntoFheInt184() {
-    FheInt184 result = new FheInt184();
-    execute(() -> fhe_uint64_cast_into_fhe_int184(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int192(const struct FheUint64 *sself, struct FheInt192 **result);
-  ///```
-  public FheInt192 castIntoFheInt192() {
-    FheInt192 result = new FheInt192();
-    execute(() -> fhe_uint64_cast_into_fhe_int192(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_int2(const struct FheUint64 *sself, struct FheInt2 **result);
   ///```
   public FheInt2 castIntoFheInt2() {
@@ -1240,83 +1152,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_int200(const struct FheUint64 *sself, struct FheInt200 **result);
-  ///```
-  public FheInt200 castIntoFheInt200() {
-    FheInt200 result = new FheInt200();
-    execute(() -> fhe_uint64_cast_into_fhe_int200(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_int2048(const struct FheUint64 *sself, struct FheInt2048 **result);
   ///```
   public FheInt2048 castIntoFheInt2048() {
     FheInt2048 result = new FheInt2048();
     execute(() -> fhe_uint64_cast_into_fhe_int2048(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int208(const struct FheUint64 *sself, struct FheInt208 **result);
-  ///```
-  public FheInt208 castIntoFheInt208() {
-    FheInt208 result = new FheInt208();
-    execute(() -> fhe_uint64_cast_into_fhe_int208(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int216(const struct FheUint64 *sself, struct FheInt216 **result);
-  ///```
-  public FheInt216 castIntoFheInt216() {
-    FheInt216 result = new FheInt216();
-    execute(() -> fhe_uint64_cast_into_fhe_int216(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int224(const struct FheUint64 *sself, struct FheInt224 **result);
-  ///```
-  public FheInt224 castIntoFheInt224() {
-    FheInt224 result = new FheInt224();
-    execute(() -> fhe_uint64_cast_into_fhe_int224(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int232(const struct FheUint64 *sself, struct FheInt232 **result);
-  ///```
-  public FheInt232 castIntoFheInt232() {
-    FheInt232 result = new FheInt232();
-    execute(() -> fhe_uint64_cast_into_fhe_int232(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int24(const struct FheUint64 *sself, struct FheInt24 **result);
-  ///```
-  public FheInt24 castIntoFheInt24() {
-    FheInt24 result = new FheInt24();
-    execute(() -> fhe_uint64_cast_into_fhe_int24(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int240(const struct FheUint64 *sself, struct FheInt240 **result);
-  ///```
-  public FheInt240 castIntoFheInt240() {
-    FheInt240 result = new FheInt240();
-    execute(() -> fhe_uint64_cast_into_fhe_int240(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int248(const struct FheUint64 *sself, struct FheInt248 **result);
-  ///```
-  public FheInt248 castIntoFheInt248() {
-    FheInt248 result = new FheInt248();
-    execute(() -> fhe_uint64_cast_into_fhe_int248(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1348,38 +1188,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_int40(const struct FheUint64 *sself, struct FheInt40 **result);
-  ///```
-  public FheInt40 castIntoFheInt40() {
-    FheInt40 result = new FheInt40();
-    execute(() -> fhe_uint64_cast_into_fhe_int40(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int48(const struct FheUint64 *sself, struct FheInt48 **result);
-  ///```
-  public FheInt48 castIntoFheInt48() {
-    FheInt48 result = new FheInt48();
-    execute(() -> fhe_uint64_cast_into_fhe_int48(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_int512(const struct FheUint64 *sself, struct FheInt512 **result);
   ///```
   public FheInt512 castIntoFheInt512() {
     FheInt512 result = new FheInt512();
     execute(() -> fhe_uint64_cast_into_fhe_int512(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int56(const struct FheUint64 *sself, struct FheInt56 **result);
-  ///```
-  public FheInt56 castIntoFheInt56() {
-    FheInt56 result = new FheInt56();
-    execute(() -> fhe_uint64_cast_into_fhe_int56(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1402,47 +1215,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_int72(const struct FheUint64 *sself, struct FheInt72 **result);
-  ///```
-  public FheInt72 castIntoFheInt72() {
-    FheInt72 result = new FheInt72();
-    execute(() -> fhe_uint64_cast_into_fhe_int72(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_int8(const struct FheUint64 *sself, struct FheInt8 **result);
   ///```
   public FheInt8 castIntoFheInt8() {
     FheInt8 result = new FheInt8();
     execute(() -> fhe_uint64_cast_into_fhe_int8(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int80(const struct FheUint64 *sself, struct FheInt80 **result);
-  ///```
-  public FheInt80 castIntoFheInt80() {
-    FheInt80 result = new FheInt80();
-    execute(() -> fhe_uint64_cast_into_fhe_int80(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int88(const struct FheUint64 *sself, struct FheInt88 **result);
-  ///```
-  public FheInt88 castIntoFheInt88() {
-    FheInt88 result = new FheInt88();
-    execute(() -> fhe_uint64_cast_into_fhe_int88(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_int96(const struct FheUint64 *sself, struct FheInt96 **result);
-  ///```
-  public FheInt96 castIntoFheInt96() {
-    FheInt96 result = new FheInt96();
-    execute(() -> fhe_uint64_cast_into_fhe_int96(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1465,38 +1242,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint104(const struct FheUint64 *sself, struct FheUint104 **result);
-  ///```
-  public FheUint104 castIntoFheUint104() {
-    FheUint104 result = new FheUint104();
-    execute(() -> fhe_uint64_cast_into_fhe_uint104(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint112(const struct FheUint64 *sself, struct FheUint112 **result);
-  ///```
-  public FheUint112 castIntoFheUint112() {
-    FheUint112 result = new FheUint112();
-    execute(() -> fhe_uint64_cast_into_fhe_uint112(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_uint12(const struct FheUint64 *sself, struct FheUint12 **result);
   ///```
   public FheUint12 castIntoFheUint12() {
     FheUint12 result = new FheUint12();
     execute(() -> fhe_uint64_cast_into_fhe_uint12(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint120(const struct FheUint64 *sself, struct FheUint120 **result);
-  ///```
-  public FheUint120 castIntoFheUint120() {
-    FheUint120 result = new FheUint120();
-    execute(() -> fhe_uint64_cast_into_fhe_uint120(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1510,38 +1260,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint136(const struct FheUint64 *sself, struct FheUint136 **result);
-  ///```
-  public FheUint136 castIntoFheUint136() {
-    FheUint136 result = new FheUint136();
-    execute(() -> fhe_uint64_cast_into_fhe_uint136(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_uint14(const struct FheUint64 *sself, struct FheUint14 **result);
   ///```
   public FheUint14 castIntoFheUint14() {
     FheUint14 result = new FheUint14();
     execute(() -> fhe_uint64_cast_into_fhe_uint14(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint144(const struct FheUint64 *sself, struct FheUint144 **result);
-  ///```
-  public FheUint144 castIntoFheUint144() {
-    FheUint144 result = new FheUint144();
-    execute(() -> fhe_uint64_cast_into_fhe_uint144(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint152(const struct FheUint64 *sself, struct FheUint152 **result);
-  ///```
-  public FheUint152 castIntoFheUint152() {
-    FheUint152 result = new FheUint152();
-    execute(() -> fhe_uint64_cast_into_fhe_uint152(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1564,42 +1287,6 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint168(const struct FheUint64 *sself, struct FheUint168 **result);
-  ///```
-  public FheUint168 castIntoFheUint168() {
-    FheUint168 result = new FheUint168();
-    execute(() -> fhe_uint64_cast_into_fhe_uint168(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint176(const struct FheUint64 *sself, struct FheUint176 **result);
-  ///```
-  public FheUint176 castIntoFheUint176() {
-    FheUint176 result = new FheUint176();
-    execute(() -> fhe_uint64_cast_into_fhe_uint176(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint184(const struct FheUint64 *sself, struct FheUint184 **result);
-  ///```
-  public FheUint184 castIntoFheUint184() {
-    FheUint184 result = new FheUint184();
-    execute(() -> fhe_uint64_cast_into_fhe_uint184(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint192(const struct FheUint64 *sself, struct FheUint192 **result);
-  ///```
-  public FheUint192 castIntoFheUint192() {
-    FheUint192 result = new FheUint192();
-    execute(() -> fhe_uint64_cast_into_fhe_uint192(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_uint2(const struct FheUint64 *sself, struct FheUint2 **result);
   ///```
   public FheUint2 castIntoFheUint2() {
@@ -1609,83 +1296,11 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint200(const struct FheUint64 *sself, struct FheUint200 **result);
-  ///```
-  public FheUint200 castIntoFheUint200() {
-    FheUint200 result = new FheUint200();
-    execute(() -> fhe_uint64_cast_into_fhe_uint200(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_uint2048(const struct FheUint64 *sself, struct FheUint2048 **result);
   ///```
   public FheUint2048 castIntoFheUint2048() {
     FheUint2048 result = new FheUint2048();
     execute(() -> fhe_uint64_cast_into_fhe_uint2048(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint208(const struct FheUint64 *sself, struct FheUint208 **result);
-  ///```
-  public FheUint208 castIntoFheUint208() {
-    FheUint208 result = new FheUint208();
-    execute(() -> fhe_uint64_cast_into_fhe_uint208(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint216(const struct FheUint64 *sself, struct FheUint216 **result);
-  ///```
-  public FheUint216 castIntoFheUint216() {
-    FheUint216 result = new FheUint216();
-    execute(() -> fhe_uint64_cast_into_fhe_uint216(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint224(const struct FheUint64 *sself, struct FheUint224 **result);
-  ///```
-  public FheUint224 castIntoFheUint224() {
-    FheUint224 result = new FheUint224();
-    execute(() -> fhe_uint64_cast_into_fhe_uint224(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint232(const struct FheUint64 *sself, struct FheUint232 **result);
-  ///```
-  public FheUint232 castIntoFheUint232() {
-    FheUint232 result = new FheUint232();
-    execute(() -> fhe_uint64_cast_into_fhe_uint232(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint24(const struct FheUint64 *sself, struct FheUint24 **result);
-  ///```
-  public FheUint24 castIntoFheUint24() {
-    FheUint24 result = new FheUint24();
-    execute(() -> fhe_uint64_cast_into_fhe_uint24(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint240(const struct FheUint64 *sself, struct FheUint240 **result);
-  ///```
-  public FheUint240 castIntoFheUint240() {
-    FheUint240 result = new FheUint240();
-    execute(() -> fhe_uint64_cast_into_fhe_uint240(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint248(const struct FheUint64 *sself, struct FheUint248 **result);
-  ///```
-  public FheUint248 castIntoFheUint248() {
-    FheUint248 result = new FheUint248();
-    execute(() -> fhe_uint64_cast_into_fhe_uint248(getValue(), result.getAddress()));
     return result;
   }
 
@@ -1717,24 +1332,6 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint40(const struct FheUint64 *sself, struct FheUint40 **result);
-  ///```
-  public FheUint40 castIntoFheUint40() {
-    FheUint40 result = new FheUint40();
-    execute(() -> fhe_uint64_cast_into_fhe_uint40(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint48(const struct FheUint64 *sself, struct FheUint48 **result);
-  ///```
-  public FheUint48 castIntoFheUint48() {
-    FheUint48 result = new FheUint48();
-    execute(() -> fhe_uint64_cast_into_fhe_uint48(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_uint512(const struct FheUint64 *sself, struct FheUint512 **result);
   ///```
   public FheUint512 castIntoFheUint512() {
@@ -1744,74 +1341,29 @@ public FheUint64 clone() {
   }
 
   /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint56(const struct FheUint64 *sself, struct FheUint56 **result);
-  ///```
-  public FheUint56 castIntoFheUint56() {
-    FheUint56 result = new FheUint56();
-    execute(() -> fhe_uint64_cast_into_fhe_uint56(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
   /// int fhe_uint64_cast_into_fhe_uint6(const struct FheUint64 *sself, struct FheUint6 **result);
   ///```
   public FheUint6 castIntoFheUint6() {
-    FheUint6 result = new FheUint6();
-    execute(() -> fhe_uint64_cast_into_fhe_uint6(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint64(const struct FheUint64 *sself, struct FheUint64 **result);
-  ///```
-  public FheUint64 castIntoFheUint64() {
-    FheUint64 result = new FheUint64();
-    execute(() -> fhe_uint64_cast_into_fhe_uint64(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint72(const struct FheUint64 *sself, struct FheUint72 **result);
-  ///```
-  public FheUint72 castIntoFheUint72() {
-    FheUint72 result = new FheUint72();
-    execute(() -> fhe_uint64_cast_into_fhe_uint72(getValue(), result.getAddress()));
-    return result;
-  }
-
-  /// ```c
-  /// int fhe_uint64_cast_into_fhe_uint8(const struct FheUint64 *sself, struct FheUint8 **result);
-  ///```
-  public FheUint8 castIntoFheUint8() {
-    FheUint8 result = new FheUint8();
-    execute(() -> fhe_uint64_cast_into_fhe_uint8(getValue(), result.getAddress()));
+  FheUint6 result = new FheUint6();
+  execute(() -> fhe_uint64_cast_into_fhe_uint6(getValue(), result.getAddress()));
   return result;
 }
 
 /// ```c
-/// int fhe_uint64_cast_into_fhe_uint80(const struct FheUint64 *sself, struct FheUint80 **result);
+/// int fhe_uint64_cast_into_fhe_uint64(const struct FheUint64 *sself, struct FheUint64 **result);
 ///```
-public FheUint80 castIntoFheUint80() {
-  FheUint80 result = new FheUint80();
-  execute(() -> fhe_uint64_cast_into_fhe_uint80(getValue(), result.getAddress()));
+public FheUint64 castIntoFheUint64() {
+  FheUint64 result = new FheUint64();
+  execute(() -> fhe_uint64_cast_into_fhe_uint64(getValue(), result.getAddress()));
   return result;
 }
 
 /// ```c
-/// int fhe_uint64_cast_into_fhe_uint88(const struct FheUint64 *sself, struct FheUint88 **result);
+/// int fhe_uint64_cast_into_fhe_uint8(const struct FheUint64 *sself, struct FheUint8 **result);
 ///```
-public FheUint88 castIntoFheUint88() {
-  FheUint88 result = new FheUint88();
-  execute(() -> fhe_uint64_cast_into_fhe_uint88(getValue(), result.getAddress()));
-  return result;
-}
-
-/// ```c
-/// int fhe_uint64_cast_into_fhe_uint96(const struct FheUint64 *sself, struct FheUint96 **result);
-///```
-public FheUint96 castIntoFheUint96() {
-  FheUint96 result = new FheUint96();
-  execute(() -> fhe_uint64_cast_into_fhe_uint96(getValue(), result.getAddress()));
+public FheUint8 castIntoFheUint8() {
+  FheUint8 result = new FheUint8();
+  execute(() -> fhe_uint64_cast_into_fhe_uint8(getValue(), result.getAddress()));
   return result;
 }
 

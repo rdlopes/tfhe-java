@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public class CompressedCompactPublicKey extends NativePointer implements CompressedFheKey<CompactPublicKey> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedCompactPublicKey.class);

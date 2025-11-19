@@ -54,7 +54,7 @@ public class FheUint6Array extends NativeArray implements FheArray<Byte, FheUint
   ///                                        struct FheBool **result);
   ///```
   @Override
-  public FheBool containsArray(FheUint6Array other) {
+  public FheBool containsArray(FheUint6Array other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint6_array_contains_sub_slice(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
     return result;
@@ -69,7 +69,7 @@ public class FheUint6Array extends NativeArray implements FheArray<Byte, FheUint
   ///                        struct FheBool **result);
   ///```
   @Override
-  public FheBool equalsArray(FheUint6Array other) {
+  public FheBool equalsArray(FheUint6Array other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint6_array_eq(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
     return result;
@@ -80,12 +80,13 @@ public class FheUint6Array extends NativeArray implements FheArray<Byte, FheUint
   /// int fhe_uint6_sum(const struct FheUint6 *const *lhs, size_t len, struct FheUint6 **out_result);
   ///```
   @Override
-  public FheUint6 sum() {
+public FheUint6 sum(){
     FheUint6 result = new FheUint6();
     execute(() -> fhe_uint6_sum(getAddress(), getSize(), result.getAddress()));
     return result;
 
-  }
+}
+  
 
   // @formatter:off
 }

@@ -106,9 +106,9 @@ public class CompressedFheInt2048 extends NativePointer implements CompressedFhe
   /// ```c
   /// int compressed_fhe_int2048_clone(const struct CompressedFheInt2048 *sself,
   ///                                  struct CompressedFheInt2048 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheInt2048 clone(){
     CompressedFheInt2048 cloned = new CompressedFheInt2048();
     execute(() -> compressed_fhe_int2048_clone(getValue(), cloned.getAddress()));

@@ -61,7 +61,7 @@ public final class FheTypeContext extends TemplateContext {
   }
 
   public boolean hasArray() {
-    return getSymbols().lookupSymbol(nativeType(getTypeName() + "_array")) != null;
+    return getSymbols().lookupSymbol(nativeType(getTypeName() + "array")) != null;
   }
 
   @SuppressWarnings("unused")

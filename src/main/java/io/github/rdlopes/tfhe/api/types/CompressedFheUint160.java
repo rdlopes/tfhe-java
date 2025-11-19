@@ -106,9 +106,9 @@ public class CompressedFheUint160 extends NativePointer implements CompressedFhe
   /// ```c
   /// int compressed_fhe_uint160_clone(const struct CompressedFheUint160 *sself,
   ///                                  struct CompressedFheUint160 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheUint160 clone(){
     CompressedFheUint160 cloned = new CompressedFheUint160();
     execute(() -> compressed_fhe_uint160_clone(getValue(), cloned.getAddress()));

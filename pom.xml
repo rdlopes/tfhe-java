@@ -269,7 +269,7 @@
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
                   <executable>make</executable>
                   <arguments>
-                    <argument>build_c_api</argument>
+                    <argument>build_c_api_experimental_deterministic_fft</argument>
                   </arguments>
                 </configuration>
               </execution>

@@ -105,9 +105,9 @@ public class CompressedFheUint14 extends NativePointer implements CompressedFheT
   /// ```c
   /// int compressed_fhe_uint14_clone(const struct CompressedFheUint14 *sself,
   ///                                 struct CompressedFheUint14 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheUint14 clone(){
     CompressedFheUint14 cloned = new CompressedFheUint14();
     execute(() -> compressed_fhe_uint14_clone(getValue(), cloned.getAddress()));

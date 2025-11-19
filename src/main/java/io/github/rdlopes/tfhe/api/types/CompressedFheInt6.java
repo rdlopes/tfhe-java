@@ -104,9 +104,9 @@ public class CompressedFheInt6 extends NativePointer implements CompressedFheTyp
   /// ```c
   /// int compressed_fhe_int6_clone(const struct CompressedFheInt6 *sself,
   ///                               struct CompressedFheInt6 **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheInt6 clone(){
     CompressedFheInt6 cloned = new CompressedFheInt6();
     execute(() -> compressed_fhe_int6_clone(getValue(), cloned.getAddress()));

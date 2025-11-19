@@ -1,7 +1,7 @@
 {{#method this (stringFormat "public %s" valueClassName) "decrypt" "decrypt" "ClientKey clientKey"}}
   {{#if isHighBitSize}}
     {{declare "decrypted" class=valueClassName}}
-    {{executeWithAddress "decrypt" "decrypted" "getValue(), clientKey.getValue(), address"}}
+    {{execute "decrypt" "getValue(), clientKey.getValue(), decrypted.getAddress()"}}
     return decrypted;
   {{else}}
     return {{executeAndReturn "decrypt" valueClassName "getValue(), clientKey.getValue(), address"}}

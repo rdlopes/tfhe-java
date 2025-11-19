@@ -104,9 +104,9 @@ public class CompressedFheBool extends NativePointer implements CompressedFheTyp
   /// ```c
   /// int compressed_fhe_bool_clone(const struct CompressedFheBool *sself,
   ///                               struct CompressedFheBool **result);
-  ///```
-  @Override
-  @SuppressWarnings("MethodDoesntCallSuperMethod")
+/// ```
+@Override
+@SuppressWarnings("MethodDoesntCallSuperMethod")
 public CompressedFheBool clone(){
     CompressedFheBool cloned = new CompressedFheBool();
     execute(() -> compressed_fhe_bool_clone(getValue(), cloned.getAddress()));

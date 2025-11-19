@@ -30,10 +30,6 @@ public final class NativeCall {
     }
   }
 
-  public static void executeWithAddress(MemorySegment address, Function<MemorySegment, Integer> setter) {
-    execute(() -> setter.apply(address));
-  }
-
   public static <R> R executeAndReturn(Class<R> returnType, Function<MemorySegment, Integer> setter) {
     logger.trace("executeAndReturn - returnType: {}, setter: {}", returnType, setter);
 

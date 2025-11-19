@@ -55,7 +55,7 @@ public class FheUint128Array extends NativeArray implements FheArray<U128, FheUi
   ///                                          struct FheBool **result);
   ///```
   @Override
-  public FheBool containsArray(FheUint128Array other) {
+  public FheBool containsArray(FheUint128Array other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint128_array_contains_sub_slice(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
     return result;
@@ -70,7 +70,7 @@ public class FheUint128Array extends NativeArray implements FheArray<U128, FheUi
   ///                          struct FheBool **result);
   ///```
   @Override
-  public FheBool equalsArray(FheUint128Array other) {
+  public FheBool equalsArray(FheUint128Array other){
     FheBool result = new FheBool();
     execute(() -> fhe_uint128_array_eq(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
     return result;
@@ -83,12 +83,13 @@ public class FheUint128Array extends NativeArray implements FheArray<U128, FheUi
   ///                     struct FheUint128 **out_result);
   ///```
   @Override
-  public FheUint128 sum() {
+public FheUint128 sum(){
     FheUint128 result = new FheUint128();
     execute(() -> fhe_uint128_sum(getAddress(), getSize(), result.getAddress()));
     return result;
 
-  }
+}
+  
 
   // @formatter:off
 }

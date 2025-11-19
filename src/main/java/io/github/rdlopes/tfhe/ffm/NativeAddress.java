@@ -9,8 +9,8 @@ import java.lang.foreign.SegmentAllocator;
 import java.lang.ref.Cleaner;
 import java.util.function.Function;
 
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.LIBRARY_ARENA;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.tfhe_error_disable_automatic_prints;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader_16.LIBRARY_ARENA;
 import static java.lang.ref.Cleaner.Cleanable;
 import static java.lang.ref.Cleaner.create;
 

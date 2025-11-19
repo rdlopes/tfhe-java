@@ -101,11 +101,6 @@ public class TemplateHelper {
     return "executeAndReturn(%s.class, address -> %s(%s));".formatted(returnedClassName, symbol, lambdaBody);
   }
 
-  public static String executeWithAddress(String functionSuffix, String variableName, String lambdaBody, Options options) {
-    String symbol = symbol(functionSuffix, options);
-    return "executeWithAddress(%s.getAddress(), address -> %s(%s));".formatted(variableName, symbol, lambdaBody);
-  }
-
   public static String trace(String functionName, Options options) {
     String parametersString = Arrays.stream(options.params)
                                     .map(Object::toString)
