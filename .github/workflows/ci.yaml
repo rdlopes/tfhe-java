@@ -34,7 +34,7 @@ jobs:
           cache: 'maven'
 
       - name: Download Native Bundle
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@v13
         with:
           github_token: ${{github.token}}
           workflow: native.yaml
@@ -60,7 +60,7 @@ jobs:
           cache: 'maven'
 
       - name: Download Native Bundle
-        uses: dawidd6/action-download-artifact@v11
+        uses: dawidd6/action-download-artifact@v13
         with:
           github_token: ${{github.token}}
           workflow: native.yaml
