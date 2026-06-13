@@ -2,6 +2,7 @@ package io.github.rdlopes.tfhe.ffm;
 
 import java.lang.foreign.*;
 
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
 public class TfheHeaderExtension {
@@ -61,35 +62,51 @@ public class TfheHeaderExtension {
   public static class CompressionParameters {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-                                                             TfheHeader.C_LONG.withName("br_level"),
-                                                             TfheHeader.C_LONG.withName("br_base_log"),
-                                                             TfheHeader.C_LONG.withName("packing_ks_level"),
-                                                             TfheHeader.C_LONG.withName("packing_ks_base_log"),
-                                                             TfheHeader.C_LONG.withName("packing_ks_polynomial_size"),
-                                                             TfheHeader.C_LONG.withName("packing_ks_glwe_dimension"),
-                                                             TfheHeader.C_LONG.withName("lwe_per_glwe"),
-                                                             TfheHeader.C_LONG.withName("storage_log_modulus"),
+                                                             C_LONG.withName("br_level"),
+                                                             C_LONG.withName("br_base_log"),
+                                                             C_LONG.withName("packing_ks_level"),
+                                                             C_LONG.withName("packing_ks_base_log"),
+                                                             C_LONG.withName("packing_ks_polynomial_size"),
+                                                             C_LONG.withName("packing_ks_glwe_dimension"),
+                                                             C_LONG.withName("lwe_per_glwe"),
+                                                             C_LONG.withName("storage_log_modulus"),
                                                              DynamicDistribution.layout()
                                                                                 .withName("packing_ks_key_noise_distribution"))
                                                            .withName("CompressionParameters");
-    private static final ValueLayout.OfLong br_level$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("br_level"));
-    private static final long br_level$OFFSET = 0;
-    private static final ValueLayout.OfLong br_base_log$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("br_base_log"));
-    private static final long br_base_log$OFFSET = 8;
-    private static final ValueLayout.OfLong packing_ks_level$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_level"));
-    private static final long packing_ks_level$OFFSET = 16;
-    private static final ValueLayout.OfLong packing_ks_base_log$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_base_log"));
-    private static final long packing_ks_base_log$OFFSET = 24;
-    private static final ValueLayout.OfLong packing_ks_polynomial_size$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_polynomial_size"));
-    private static final long packing_ks_polynomial_size$OFFSET = 32;
-    private static final ValueLayout.OfLong packing_ks_glwe_dimension$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("packing_ks_glwe_dimension"));
-    private static final long packing_ks_glwe_dimension$OFFSET = 40;
-    private static final ValueLayout.OfLong lwe_per_glwe$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("lwe_per_glwe"));
-    private static final long lwe_per_glwe$OFFSET = 48;
-    private static final ValueLayout.OfLong storage_log_modulus$LAYOUT = (ValueLayout.OfLong) $LAYOUT.select(groupElement("storage_log_modulus"));
-    private static final long storage_log_modulus$OFFSET = 56;
+    private static final ValueLayout br_level$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("br_level"));
+    private static final long br_level$OFFSET = $LAYOUT.byteOffset(groupElement("br_level"));
+    private static final ValueLayout br_base_log$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("br_base_log"));
+    private static final long br_base_log$OFFSET = $LAYOUT.byteOffset(groupElement("br_base_log"));
+    private static final ValueLayout packing_ks_level$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("packing_ks_level"));
+    private static final long packing_ks_level$OFFSET = $LAYOUT.byteOffset(groupElement("packing_ks_level"));
+    private static final ValueLayout packing_ks_base_log$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("packing_ks_base_log"));
+    private static final long packing_ks_base_log$OFFSET = $LAYOUT.byteOffset(groupElement("packing_ks_base_log"));
+    private static final ValueLayout packing_ks_polynomial_size$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("packing_ks_polynomial_size"));
+    private static final long packing_ks_polynomial_size$OFFSET = $LAYOUT.byteOffset(groupElement("packing_ks_polynomial_size"));
+    private static final ValueLayout packing_ks_glwe_dimension$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("packing_ks_glwe_dimension"));
+    private static final long packing_ks_glwe_dimension$OFFSET = $LAYOUT.byteOffset(groupElement("packing_ks_glwe_dimension"));
+    private static final ValueLayout lwe_per_glwe$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("lwe_per_glwe"));
+    private static final long lwe_per_glwe$OFFSET = $LAYOUT.byteOffset(groupElement("lwe_per_glwe"));
+    private static final ValueLayout storage_log_modulus$LAYOUT = (ValueLayout) $LAYOUT.select(groupElement("storage_log_modulus"));
+    private static final long storage_log_modulus$OFFSET = $LAYOUT.byteOffset(groupElement("storage_log_modulus"));
     private static final GroupLayout packing_ks_key_noise_distribution$LAYOUT = (GroupLayout) $LAYOUT.select(groupElement("packing_ks_key_noise_distribution"));
-    private static final long packing_ks_key_noise_distribution$OFFSET = 64;
+    private static final long packing_ks_key_noise_distribution$OFFSET = $LAYOUT.byteOffset(groupElement("packing_ks_key_noise_distribution"));
+
+    private static long getLongOrInt(ValueLayout layout, long offset, MemorySegment struct) {
+      if (layout instanceof ValueLayout.OfLong ofLong) {
+        return struct.get(ofLong, offset);
+      } else {
+        return struct.get((ValueLayout.OfInt) layout, offset);
+      }
+    }
+
+    private static void setLongOrInt(ValueLayout layout, long offset, MemorySegment struct, long value) {
+      if (layout instanceof ValueLayout.OfLong ofLong) {
+        struct.set(ofLong, offset, value);
+      } else {
+        struct.set((ValueLayout.OfInt) layout, offset, (int) value);
+      }
+    }
 
     CompressionParameters() {
     }
@@ -98,7 +115,7 @@ public class TfheHeaderExtension {
       return $LAYOUT;
     }
 
-    public static ValueLayout.OfLong br_level$layout() {
+    public static ValueLayout br_level$layout() {
       return br_level$LAYOUT;
     }
 
@@ -107,14 +124,14 @@ public class TfheHeaderExtension {
     }
 
     public static long br_level(MemorySegment struct) {
-      return struct.get(br_level$LAYOUT, br_level$OFFSET);
+      return getLongOrInt(br_level$LAYOUT, br_level$OFFSET, struct);
     }
 
     public static void br_level(MemorySegment struct, long fieldValue) {
-      struct.set(br_level$LAYOUT, br_level$OFFSET, fieldValue);
+      setLongOrInt(br_level$LAYOUT, br_level$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong br_base_log$layout() {
+    public static ValueLayout br_base_log$layout() {
       return br_base_log$LAYOUT;
     }
 
@@ -123,14 +140,14 @@ public class TfheHeaderExtension {
     }
 
     public static long br_base_log(MemorySegment struct) {
-      return struct.get(br_base_log$LAYOUT, br_base_log$OFFSET);
+      return getLongOrInt(br_base_log$LAYOUT, br_base_log$OFFSET, struct);
     }
 
     public static void br_base_log(MemorySegment struct, long fieldValue) {
-      struct.set(br_base_log$LAYOUT, br_base_log$OFFSET, fieldValue);
+      setLongOrInt(br_base_log$LAYOUT, br_base_log$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong packing_ks_level$layout() {
+    public static ValueLayout packing_ks_level$layout() {
       return packing_ks_level$LAYOUT;
     }
 
@@ -139,14 +156,14 @@ public class TfheHeaderExtension {
     }
 
     public static long packing_ks_level(MemorySegment struct) {
-      return struct.get(packing_ks_level$LAYOUT, packing_ks_level$OFFSET);
+      return getLongOrInt(packing_ks_level$LAYOUT, packing_ks_level$OFFSET, struct);
     }
 
     public static void packing_ks_level(MemorySegment struct, long fieldValue) {
-      struct.set(packing_ks_level$LAYOUT, packing_ks_level$OFFSET, fieldValue);
+      setLongOrInt(packing_ks_level$LAYOUT, packing_ks_level$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong packing_ks_base_log$layout() {
+    public static ValueLayout packing_ks_base_log$layout() {
       return packing_ks_base_log$LAYOUT;
     }
 
@@ -155,14 +172,14 @@ public class TfheHeaderExtension {
     }
 
     public static long packing_ks_base_log(MemorySegment struct) {
-      return struct.get(packing_ks_base_log$LAYOUT, packing_ks_base_log$OFFSET);
+      return getLongOrInt(packing_ks_base_log$LAYOUT, packing_ks_base_log$OFFSET, struct);
     }
 
     public static void packing_ks_base_log(MemorySegment struct, long fieldValue) {
-      struct.set(packing_ks_base_log$LAYOUT, packing_ks_base_log$OFFSET, fieldValue);
+      setLongOrInt(packing_ks_base_log$LAYOUT, packing_ks_base_log$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong packing_ks_polynomial_size$layout() {
+    public static ValueLayout packing_ks_polynomial_size$layout() {
       return packing_ks_polynomial_size$LAYOUT;
     }
 
@@ -171,14 +188,14 @@ public class TfheHeaderExtension {
     }
 
     public static long packing_ks_polynomial_size(MemorySegment struct) {
-      return struct.get(packing_ks_polynomial_size$LAYOUT, packing_ks_polynomial_size$OFFSET);
+      return getLongOrInt(packing_ks_polynomial_size$LAYOUT, packing_ks_polynomial_size$OFFSET, struct);
     }
 
     public static void packing_ks_polynomial_size(MemorySegment struct, long fieldValue) {
-      struct.set(packing_ks_polynomial_size$LAYOUT, packing_ks_polynomial_size$OFFSET, fieldValue);
+      setLongOrInt(packing_ks_polynomial_size$LAYOUT, packing_ks_polynomial_size$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong packing_ks_glwe_dimension$layout() {
+    public static ValueLayout packing_ks_glwe_dimension$layout() {
       return packing_ks_glwe_dimension$LAYOUT;
     }
 
@@ -187,14 +204,14 @@ public class TfheHeaderExtension {
     }
 
     public static long packing_ks_glwe_dimension(MemorySegment struct) {
-      return struct.get(packing_ks_glwe_dimension$LAYOUT, packing_ks_glwe_dimension$OFFSET);
+      return getLongOrInt(packing_ks_glwe_dimension$LAYOUT, packing_ks_glwe_dimension$OFFSET, struct);
     }
 
     public static void packing_ks_glwe_dimension(MemorySegment struct, long fieldValue) {
-      struct.set(packing_ks_glwe_dimension$LAYOUT, packing_ks_glwe_dimension$OFFSET, fieldValue);
+      setLongOrInt(packing_ks_glwe_dimension$LAYOUT, packing_ks_glwe_dimension$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong lwe_per_glwe$layout() {
+    public static ValueLayout lwe_per_glwe$layout() {
       return lwe_per_glwe$LAYOUT;
     }
 
@@ -203,14 +220,14 @@ public class TfheHeaderExtension {
     }
 
     public static long lwe_per_glwe(MemorySegment struct) {
-      return struct.get(lwe_per_glwe$LAYOUT, lwe_per_glwe$OFFSET);
+      return getLongOrInt(lwe_per_glwe$LAYOUT, lwe_per_glwe$OFFSET, struct);
     }
 
     public static void lwe_per_glwe(MemorySegment struct, long fieldValue) {
-      struct.set(lwe_per_glwe$LAYOUT, lwe_per_glwe$OFFSET, fieldValue);
+      setLongOrInt(lwe_per_glwe$LAYOUT, lwe_per_glwe$OFFSET, struct, fieldValue);
     }
 
-    public static ValueLayout.OfLong storage_log_modulus$layout() {
+    public static ValueLayout storage_log_modulus$layout() {
       return storage_log_modulus$LAYOUT;
     }
 
@@ -219,11 +236,11 @@ public class TfheHeaderExtension {
     }
 
     public static long storage_log_modulus(MemorySegment struct) {
-      return struct.get(storage_log_modulus$LAYOUT, storage_log_modulus$OFFSET);
+      return getLongOrInt(storage_log_modulus$LAYOUT, storage_log_modulus$OFFSET, struct);
     }
 
     public static void storage_log_modulus(MemorySegment struct, long fieldValue) {
-      struct.set(storage_log_modulus$LAYOUT, storage_log_modulus$OFFSET, fieldValue);
+      setLongOrInt(storage_log_modulus$LAYOUT, storage_log_modulus$OFFSET, struct, fieldValue);
     }
 
     public static GroupLayout packing_ks_key_noise_distribution$layout() {

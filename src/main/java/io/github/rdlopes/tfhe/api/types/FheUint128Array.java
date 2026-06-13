@@ -14,7 +14,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class FheUint128Array extends NativeArray implements FheArray<U128, FheUint128, CompressedFheUint128, FheUint128Array> {
+public class FheUint128Array extends NativeArray implements FheArray<FheUint128, FheUint128Array> {
   private static final Logger logger = LoggerFactory.getLogger(FheUint128Array.class);
 // @formatter:on
 

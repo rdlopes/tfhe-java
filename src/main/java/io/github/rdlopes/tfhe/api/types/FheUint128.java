@@ -375,7 +375,7 @@ public CompressedFheUint128 compress() {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U128, FheUint128, CompressedFheUint128> addWithOverflow(FheUint128 other) {
+  public CheckedResult<FheUint128> addWithOverflow(FheUint128 other) {
     FheUint128 result = new FheUint128();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint128_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -434,7 +434,7 @@ public CompressedFheUint128 compress() {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U128, FheUint128, CompressedFheUint128> subtractWithOverflow(FheUint128 other) {
+  public CheckedResult<FheUint128> subtractWithOverflow(FheUint128 other) {
     FheUint128 result = new FheUint128();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint128_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -493,7 +493,7 @@ public CompressedFheUint128 compress() {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U128, FheUint128, CompressedFheUint128> multiplyWithOverflow(FheUint128 other) {
+  public CheckedResult<FheUint128> multiplyWithOverflow(FheUint128 other) {
     FheUint128 result = new FheUint128();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint128_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -627,7 +627,7 @@ public CompressedFheUint128 compress() {
   ///                         struct FheUint128 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<U128, FheUint128, CompressedFheUint128> divideWithRemainder(FheUint128 other) {
+  public DividerAndRemainder<FheUint128> divideWithRemainder(FheUint128 other) {
     FheUint128 divider = new FheUint128();
     FheUint128 remainder = new FheUint128();
     execute(() -> fhe_uint128_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -642,7 +642,7 @@ public CompressedFheUint128 compress() {
   ///                                struct FheUint128 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<U128, FheUint128, CompressedFheUint128> divideWithRemainderScalar(U128 other) {
+  public DividerAndRemainder<FheUint128> divideWithRemainderScalar(U128 other) {
     FheUint128 divider = new FheUint128();
     FheUint128 remainder = new FheUint128();
     execute(() -> fhe_uint128_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
@@ -689,7 +689,7 @@ public CompressedFheUint128 compress() {
   ///                               struct FheBool **result_2);
   ///```
   @Override
-  public CheckedResult<U128, FheUint128, CompressedFheUint128> ilog2WithCheck() {
+  public CheckedResult<FheUint128> ilog2WithCheck() {
     FheUint128 result = new FheUint128();
     FheBool check = new FheBool();
     execute(() -> fhe_uint128_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));

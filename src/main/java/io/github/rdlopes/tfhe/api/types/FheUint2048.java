@@ -379,7 +379,7 @@ public CompressedFheUint2048 compress() {
   ///                                  struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U2048, FheUint2048, CompressedFheUint2048> addWithOverflow(FheUint2048 other) {
+  public CheckedResult<FheUint2048> addWithOverflow(FheUint2048 other) {
     FheUint2048 result = new FheUint2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint2048_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -438,7 +438,7 @@ public CompressedFheUint2048 compress() {
   ///                                  struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U2048, FheUint2048, CompressedFheUint2048> subtractWithOverflow(FheUint2048 other) {
+  public CheckedResult<FheUint2048> subtractWithOverflow(FheUint2048 other) {
     FheUint2048 result = new FheUint2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint2048_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -497,7 +497,7 @@ public CompressedFheUint2048 compress() {
   ///                                  struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<U2048, FheUint2048, CompressedFheUint2048> multiplyWithOverflow(FheUint2048 other) {
+  public CheckedResult<FheUint2048> multiplyWithOverflow(FheUint2048 other) {
     FheUint2048 result = new FheUint2048();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint2048_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -631,7 +631,7 @@ public CompressedFheUint2048 compress() {
   ///                          struct FheUint2048 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<U2048, FheUint2048, CompressedFheUint2048> divideWithRemainder(FheUint2048 other) {
+  public DividerAndRemainder<FheUint2048> divideWithRemainder(FheUint2048 other) {
     FheUint2048 divider = new FheUint2048();
     FheUint2048 remainder = new FheUint2048();
     execute(() -> fhe_uint2048_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -646,7 +646,7 @@ public CompressedFheUint2048 compress() {
   ///                                 struct FheUint2048 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<U2048, FheUint2048, CompressedFheUint2048> divideWithRemainderScalar(U2048 other) {
+  public DividerAndRemainder<FheUint2048> divideWithRemainderScalar(U2048 other) {
     FheUint2048 divider = new FheUint2048();
     FheUint2048 remainder = new FheUint2048();
     execute(() -> fhe_uint2048_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
@@ -693,7 +693,7 @@ public CompressedFheUint2048 compress() {
   ///                                struct FheBool **result_2);
   ///```
   @Override
-  public CheckedResult<U2048, FheUint2048, CompressedFheUint2048> ilog2WithCheck() {
+  public CheckedResult<FheUint2048> ilog2WithCheck() {
     FheUint2048 result = new FheUint2048();
     FheBool check = new FheBool();
     execute(() -> fhe_uint2048_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));
