@@ -4,7 +4,7 @@ This documentation is also available <<github-doc,online>>.
 
 == About TFHE-Java
 
-TFHE-Java is a comprehensive Java library that provides high-level bindings to <<tfhe-rs-repo,TFHE-rs>>, leveraging Java's Foreign Function & Memory (FFM) API to deliver fully homomorphic encryption capabilities to the JVM ecosystem.
+TFHE-Java is a comprehensive Java library that provides high-level and shortint bindings to <<tfhe-rs-repo,TFHE-rs>>, leveraging Java's Foreign Function & Memory (FFM) API to deliver fully homomorphic encryption capabilities to the JVM ecosystem.
 The project enables developers to perform computations on encrypted data without decrypting it, maintaining data privacy and security throughout the entire computation lifecycle.
 
 Built on top of the battle-tested <<tfhe-rs-repo,TFHE-rs>> native library from <<zama-ai,Zama>>, TFHE-Java brings the power of <<FHE,fully homomorphic encryption>> to Java applications while maintaining type safety, memory safety, and idiomatic Java programming patterns.
@@ -68,6 +68,7 @@ TFHE-Java provides a rich set of features for building privacy-preserving applic
 * **Integer Types**: Full spectrum of signed and unsigned integers
 ** Signed integers: FheInt2 through FheInt2048 (2, 4, 6, 8, 10, 12, 14, 16, 32, 64, 128, 160, 256, 512, 1024, 2048 bits)
 ** Unsigned integers: FheUint2 through FheUint2048 (same bit sizes as signed)
+* **Shortint Types**: Parameterized unsigned integer types with 1 to 8 bits of precision using custom parameter configurations (`ShortintCiphertext`, `ShortintClientKey`, etc.)
 * **Array Types**: Homomorphic arrays for batch operations on multiple encrypted values
 * **High Precision**: Support for arbitrary-precision arithmetic using BigInteger for types beyond 64 bits
 
@@ -78,6 +79,8 @@ TFHE-Java provides a rich set of features for building privacy-preserving applic
 * **Comparison Operations**: Equal, not equal, less than, greater than, less than or equal, greater than or equal
 * **Conditional Operations**: Ternary conditional (if-then-else), min/max operations
 * **Type Conversions**: Casting between different integer types and bit widths
+* **Smart vs. Unchecked Operations**: For shortints, choose between *Smart* operations (automatically managing noise growth using PBS) and *Unchecked* operations (raw, fast operations without noise management)
+* **Bivariate PBS Operations**: Lookup table computations on two ciphertexts
 
 === Advanced Capabilities
 
@@ -87,10 +90,12 @@ TFHE-Java provides a rich set of features for building privacy-preserving applic
 * **<<Trivial Ciphertext,Trivial Ciphertexts>>**: Efficient mixing of encrypted and plaintext values in computations
 * **<<Zero-Knowledge Proof,Zero-Knowledge Proofs>>**: Verify computation correctness without revealing sensitive information
 * **Configurable Parameters**: Fine-grained control over security levels, performance characteristics, and <<Noise Distribution,noise distributions>>
+* **Programmable Bootstrapping (PBS) Lookup Tables**: Support for unary (`ShortintPbsLookupTable`) and bivariate (`ShortintBivariatePbsLookupTable`) lookup tables
 
-=== Integration Features
+=== Integration & Performance Features
 
 * **Foreign Function & Memory API**: Direct memory access to native TFHE-rs library using Java's modern FFM API (no JNI overhead)
+* **Low Downcall Latency**: Panama FFM downcalls have extremely low latency (~9 ns) as measured by JMH micro-benchmarks
 * **Type Safety**: Strong Java type system prevents common cryptographic implementation errors
 * **Memory Safety**: Automatic resource management using Java's try-with-resources and AutoCloseable patterns
 * **Comprehensive Testing**: Extensive test suite with BDD-style living documentation
@@ -107,22 +112,25 @@ The fundamental data structures in TFHE-Java mirror the underlying cryptographic
 * **FHE Value Types** (`FheBool`, `FheInt*`, `FheUint*`): Wrapper classes representing encrypted values.
 Each instance encapsulates an <<LWE Ciphertext,LWE ciphertext>> and provides type-safe operations.
 
-* **Compressed Types** (`CompressedFheBool`, `CompressedFheInt*`, `CompressedFheUint*`): Space-efficient representations that reduce storage and transmission overhead.
+* **Shortint Types** (`ShortintCiphertext`): Wrapper class representing encrypted small integers with parameterized message and carry bit precisions.
+
+* **Compressed Types** (`CompressedFheBool`, `CompressedFheInt*`, `CompressedFheUint*`, `ShortintCompressedCiphertext`): Space-efficient representations that reduce storage and transmission overhead.
 Must be decompressed before performing <<Homomorphic Operation,homomorphic operations>>.
 
 * **Array Types** (`FheBoolArray`, `FheInt*Array`, `FheUint*Array`): Collections of encrypted values supporting batch operations and element-wise computations.
 
 * **Key Objects**:
-** `ClientKey`: Encapsulates the <<Client Key,client key>> for encryption/decryption
-** `ServerKey`: Encapsulates the <<Server Key,server key>> for homomorphic operations
-** `PublicKey`: Encapsulates the <<Public Key,public key>> for third-party encryption
-** `CompressedServerKey` / `CompressedPublicKey`: Compressed key representations
+** `ClientKey` / `ShortintClientKey`: Encapsulates the <<Client Key,client key>> for encryption/decryption.
+** `ServerKey` / `ShortintServerKey`: Encapsulates the <<Server Key,server key>> for homomorphic operations.
+** `PublicKey` / `ShortintPublicKey`: Encapsulates the <<Public Key,public key>> for third-party encryption.
+** `CompressedServerKey` / `CompressedPublicKey`: Compressed key representations.
 
 ==== Configuration Objects
 
-* **`ConfigBuilder`**: Fluent API for constructing TFHE configurations with custom parameters
-* **Parameter Objects**: Encapsulate cryptographic parameters like <<LWE Dimension,LWE dimension>>, polynomial sizes, <<Noise Distribution,noise distribution>>, and security levels
-* **Noise Distributions**: `TUniform` and centered normal distributions for controlling the random <<Noise,noise>> characteristics
+* **`ConfigBuilder`**: Fluent API for constructing TFHE configurations with custom parameters.
+* **`CustomParameters`**: Enum containing preset cryptographic parameter configurations for the `shortint` and high-level integer APIs.
+* **Parameter Objects**: Encapsulate cryptographic parameters like <<LWE Dimension,LWE dimension>>, polynomial sizes, <<Noise Distribution,noise distribution>>, and security levels.
+* **Noise Distributions**: `TUniform` and centered normal distributions for controlling the random <<Noise,noise>> characteristics.
 
 === Standard TFHE Workflow
 
@@ -247,6 +255,31 @@ FheUint32 result = encryptedValue.add(trivial);
 
 <<Trivial Ciphertext,Trivial ciphertexts>> allow efficient mixing of public constants with encrypted data without the overhead of full encryption.
 
+==== Shortint API Workflow
+
+For applications requiring fine-grained control over bit precision (message vs. carry allocation) and noise management:
+
+[source,java]
+----
+// Initialize custom parameters (e.g. 2-bit message, 2-bit carry)
+CustomParameters params = CustomParameters.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128;
+
+// Generate keys
+ShortintClientKey clientKey = ShortintClientKey.generate(params);
+ShortintServerKey serverKey = ShortintServerKey.generate(clientKey);
+
+// Encrypt data (client-side)
+ShortintCiphertext value1 = clientKey.encrypt(2);
+ShortintCiphertext value2 = clientKey.encrypt(1);
+
+// Perform homomorphic computation (server-side)
+// Smart operations automatically manage noise growth
+ShortintCiphertext result = value1.smartAdd(serverKey, value2);
+
+// Decrypt result (client-side)
+long plainResult = clientKey.decrypt(result); // returns 3
+----
+
 ==== Noise Management
 
 <<Noise,Noise>> accumulates during operations and must be managed:
@@ -255,7 +288,23 @@ FheUint32 result = encryptedValue.add(trivial);
 * **<<PBS,Programmable Bootstrapping>>**: Reduces noise while computing functions (multiplications, comparisons, non-linear operations)
 * **<<Padding,Padding Bits>>**: Reserve space in the most significant bits to handle <<Carry,carries>> and prevent overflow
 
-The TFHE-rs library automatically manages <<Bootstrapping,bootstrapping>> and <<Keyswitch,key switching>> operations to maintain correctness, abstracting away much of the complexity from the developer.
+The TFHE-rs library automatically manages <<Bootstrapping,bootstrapping>> and <<Keyswitch,key switching>> operations to maintain correctness in the high-level integer API. For the `shortint` API, noise management is exposed directly to developers through *Smart* and *Unchecked* operations. *Smart* operations automatically manage noise via bootstrapping (`PBS`) using the `ServerKey`, whereas *Unchecked* operations allow developers to perform raw computations (without PBS) for higher throughput when noise bounds are managed manually.
+
+== Performance and Benchmarks
+
+JMH micro-benchmarks (run on Windows 11, OpenJDK 25) show that Project Panama FFM downcall latency is extremely low (~9 ns).
+
+Additionally, the overhead of Java object allocation and GC/Cleaner tracking is negligible (<1%) compared to the CPU time required for FHE computations (~43 ms for homomorphic addition), confirming that developers can safely use immutable API methods without a performance penalty.
+
+[cols="3,1,2,1,5", options="header"]
+|===
+| Benchmark | Mode | Score | Unit | Description
+| `benchmarkTrivialFfmCall` | avgt | ~0.009 | us/op | Baseline FFM downcall latency (9 ns)
+| `benchmarkAdditionInPlace` | avgt | ~43255.885 | us/op | Homomorphic addition mutating object in place (~43.2 ms)
+| `benchmarkAdditionWithAllocation` | avgt | ~42826.146 | us/op | Homomorphic addition with fresh Java object creation (~42.8 ms)
+| `benchmarkSingleThreadedSum` | avgt | ~973721.144 | us/op | Sequential sum of 10 ciphertexts (~973 ms)
+| `benchmarkMultiThreadedSum` | avgt | ~977733.033 | us/op | Sum inside Rayon thread context without parallel decomposition (~977 ms)
+|===
 
 == Additional Resources
 
