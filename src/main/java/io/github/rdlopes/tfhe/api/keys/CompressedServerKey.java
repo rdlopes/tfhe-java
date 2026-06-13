@@ -16,7 +16,7 @@ public class CompressedServerKey extends NativePointer implements CompressedFheK
   CompressedServerKey() {
     logger.trace("init");
 
-    super(TfheHeader::compressed_compact_public_key_destroy);
+    super(TfheHeader::compressed_server_key_destroy);
   }
 
   public CompressedServerKey(ClientKey clientKey) {

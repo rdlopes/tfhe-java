@@ -13,7 +13,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
-public class FheUint32Array extends NativeArray implements FheArray<Integer, FheUint32, CompressedFheUint32, FheUint32Array> {
+public class FheUint32Array extends NativeArray implements FheArray<FheUint32, FheUint32Array> {
   private static final Logger logger = LoggerFactory.getLogger(FheUint32Array.class);
 // @formatter:on
 

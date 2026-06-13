@@ -164,8 +164,7 @@
           </environmentVariables>
           <argLine combine.children="append">--enable-preview
             --enable-native-access=ALL-UNNAMED
-            -Djava.library.path=${java.library.path}
-          </argLine>
+            -Djava.library.path=${java.library.path}</argLine>
         </configuration>
       </plugin>
       <plugin>
@@ -280,6 +279,7 @@
             <artifactId>maven-clean-plugin</artifactId>
             <configuration>
               <excludeDefaultDirectories>false</excludeDefaultDirectories>
+              <force>true</force>
               <filesets>
                 <fileset>
                   <directory>${native.basedir}</directory>
@@ -314,10 +314,19 @@
                 <phase>initialize</phase>
                 <configuration>
                   <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
-                  <executable>make</executable>
+                  <executable>cargo</executable>
                   <arguments>
-                    <argument>build_c_api_experimental_deterministic_fft</argument>
+                    <argument>+nightly-2026-04-22</argument>
+                    <argument>build</argument>
+                    <argument>--profile</argument>
+                    <argument>release</argument>
+                    <argument>--features=boolean-c-api,shortint-c-api,high-level-c-api,zk-pok,experimental-force_fft_algo_dif4</argument>
+                    <argument>-p</argument>
+                    <argument>tfhe</argument>
                   </arguments>
+                  <environmentVariables>
+                    <RUSTFLAGS>-C target-cpu=native</RUSTFLAGS>
+                  </environmentVariables>
                 </configuration>
               </execution>
               <execution>

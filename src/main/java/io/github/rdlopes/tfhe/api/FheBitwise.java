@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.api;
 
-public interface FheBitwise<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
+public interface FheBitwise<V, T> {
 
   T shiftLeft(T shift);
 
