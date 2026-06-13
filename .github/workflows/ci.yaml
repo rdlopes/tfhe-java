@@ -67,6 +67,9 @@ jobs:
           name: 'native-bundle'
           path: ${{github.workspace}}/.native
 
+      - name: Install Graphviz
+        run: sudo apt-get update && sudo apt-get install -y graphviz
+
       - run: ./mvnw verify
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
