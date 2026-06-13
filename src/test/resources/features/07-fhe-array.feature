@@ -70,3 +70,28 @@ Feature: Homomorphic Array Summation
     Given a ClientKey and a PublicKey are initialized
     When I encrypt the list of integers "50, 75, 25" as a FheUint128Array using the PublicKey
     Then the sum of the FheUint128Array decrypted using the ClientKey is 150
+
+  Scenario: Summing a FheInt8Array
+    Given a ClientKey and a PublicKey are initialized
+    When I encrypt the list of bytes "1, -2, 3, -4" as a FheInt8Array
+    Then the sum of the FheInt8Array decrypted using the ClientKey is -2
+
+  Scenario: Summing a FheInt128Array
+    Given a ClientKey and a PublicKey are initialized
+    When I encrypt the list of integers "100, -200, 300" as a FheInt128Array
+    Then the sum of the FheInt128Array decrypted using the ClientKey is 200
+
+  Scenario: Performing homomorphic element-wise addition on FheUint8Array arrays
+    Given a ClientKey and a PublicKey are initialized
+    When I encrypt the list of bytes "1, 2, 3, 4" as a FheUint8Array
+    And I encrypt the list of bytes "10, 20, 30, 40" as another FheUint8Array
+    And I perform homomorphic element-wise addition of the two FheUint8Array arrays
+    Then the element-wise array result decrypted using the ClientKey is "11, 22, 33, 44"
+
+  Scenario: Performing homomorphic element-wise subtraction on FheUint8Array arrays
+    Given a ClientKey and a PublicKey are initialized
+    When I encrypt the list of bytes "10, 20, 30, 40" as a FheUint8Array
+    And I encrypt the list of bytes "1, 2, 3, 4" as another FheUint8Array
+    And I perform homomorphic element-wise subtraction of the two FheUint8Array arrays
+    Then the element-wise array result decrypted using the ClientKey is "9, 18, 27, 36"
+

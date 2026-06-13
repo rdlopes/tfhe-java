@@ -89,6 +89,34 @@ public FheUint256 sum(){
     return result;
 
 }
+
+  @Override
+  public FheUint256Array add(FheUint256Array other) {
+    if (this.getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match");
+    }
+    java.util.List<FheUint256> thisElements = this.getElements();
+    java.util.List<FheUint256> otherElements = other.getElements();
+    java.util.List<FheUint256> result = new java.util.ArrayList<>();
+    for (int i = 0; i < thisElements.size(); i++) {
+      result.add(thisElements.get(i).add(otherElements.get(i)));
+    }
+    return new FheUint256Array(result);
+  }
+
+  @Override
+  public FheUint256Array subtract(FheUint256Array other) {
+    if (this.getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match");
+    }
+    java.util.List<FheUint256> thisElements = this.getElements();
+    java.util.List<FheUint256> otherElements = other.getElements();
+    java.util.List<FheUint256> result = new java.util.ArrayList<>();
+    for (int i = 0; i < thisElements.size(); i++) {
+      result.add(thisElements.get(i).subtract(otherElements.get(i)));
+    }
+    return new FheUint256Array(result);
+  }
   
 
   // @formatter:off

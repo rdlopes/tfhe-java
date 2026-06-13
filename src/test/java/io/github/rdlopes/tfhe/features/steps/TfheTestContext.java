@@ -20,11 +20,15 @@ import io.github.rdlopes.tfhe.api.types.FheUint128;
 import io.github.rdlopes.tfhe.api.types.FheUint128Array;
 import io.github.rdlopes.tfhe.api.types.FheUint8;
 import io.github.rdlopes.tfhe.api.types.FheUint8Array;
+import io.github.rdlopes.tfhe.api.types.FheInt8Array;
+import io.github.rdlopes.tfhe.api.types.FheInt128Array;
 import io.github.rdlopes.tfhe.api.types.ProvenCompactCiphertextList;
 import io.github.rdlopes.tfhe.ffm.NativeAddress;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
 
 public class TfheTestContext {
 
@@ -43,7 +47,10 @@ public class TfheTestContext {
 
   // High-Level Arrays
   public FheUint8Array uint8Array;
+  public FheUint8Array uint8Array2;
   public FheUint128Array uint128Array;
+  public FheInt8Array int8Array;
+  public FheInt128Array int128Array;
 
   // Shortint Types
   public ShortintClientKey shortintClientKey;

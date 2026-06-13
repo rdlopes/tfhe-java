@@ -86,6 +86,34 @@ public FheUint6 sum(){
     return result;
 
 }
+
+  @Override
+  public FheUint6Array add(FheUint6Array other) {
+    if (this.getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match");
+    }
+    java.util.List<FheUint6> thisElements = this.getElements();
+    java.util.List<FheUint6> otherElements = other.getElements();
+    java.util.List<FheUint6> result = new java.util.ArrayList<>();
+    for (int i = 0; i < thisElements.size(); i++) {
+      result.add(thisElements.get(i).add(otherElements.get(i)));
+    }
+    return new FheUint6Array(result);
+  }
+
+  @Override
+  public FheUint6Array subtract(FheUint6Array other) {
+    if (this.getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match");
+    }
+    java.util.List<FheUint6> thisElements = this.getElements();
+    java.util.List<FheUint6> otherElements = other.getElements();
+    java.util.List<FheUint6> result = new java.util.ArrayList<>();
+    for (int i = 0; i < thisElements.size(); i++) {
+      result.add(thisElements.get(i).subtract(otherElements.get(i)));
+    }
+    return new FheUint6Array(result);
+  }
   
 
   // @formatter:off

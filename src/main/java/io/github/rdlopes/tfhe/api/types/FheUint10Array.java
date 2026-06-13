@@ -86,6 +86,34 @@ public FheUint10 sum(){
     return result;
 
 }
+
+  @Override
+  public FheUint10Array add(FheUint10Array other) {
+    if (this.getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match");
+    }
+    java.util.List<FheUint10> thisElements = this.getElements();
+    java.util.List<FheUint10> otherElements = other.getElements();
+    java.util.List<FheUint10> result = new java.util.ArrayList<>();
+    for (int i = 0; i < thisElements.size(); i++) {
+      result.add(thisElements.get(i).add(otherElements.get(i)));
+    }
+    return new FheUint10Array(result);
+  }
+
+  @Override
+  public FheUint10Array subtract(FheUint10Array other) {
+    if (this.getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match");
+    }
+    java.util.List<FheUint10> thisElements = this.getElements();
+    java.util.List<FheUint10> otherElements = other.getElements();
+    java.util.List<FheUint10> result = new java.util.ArrayList<>();
+    for (int i = 0; i < thisElements.size(); i++) {
+      result.add(thisElements.get(i).subtract(otherElements.get(i)));
+    }
+    return new FheUint10Array(result);
+  }
   
 
   // @formatter:off
