@@ -2,10 +2,10 @@ package io.github.rdlopes.tfhe.api;
 
 import io.github.rdlopes.tfhe.api.types.FheBool;
 
-public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
+public interface FheArithmetics<V, T> {
   T add(T other);
 
-  CheckedResult<V, T, C> addWithOverflow(T other);
+  CheckedResult<T> addWithOverflow(T other);
 
   T addScalar(V other);
 
@@ -15,7 +15,7 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   T subtract(T other);
 
-  CheckedResult<V, T, C> subtractWithOverflow(T other);
+  CheckedResult<T> subtractWithOverflow(T other);
 
   T subtractScalar(V other);
 
@@ -25,7 +25,7 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   T multiply(T other);
 
-  CheckedResult<V, T, C> multiplyWithOverflow(T other);
+  CheckedResult<T> multiplyWithOverflow(T other);
 
   T multiplyScalar(V other);
 
@@ -33,9 +33,9 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   void multiplyScalarAssign(V other);
 
-  DividerAndRemainder<V, T, C> divideWithRemainder(T other);
+  DividerAndRemainder<T> divideWithRemainder(T other);
 
-  DividerAndRemainder<V, T, C> divideWithRemainderScalar(V other);
+  DividerAndRemainder<T> divideWithRemainderScalar(V other);
 
   T divide(T other);
 
@@ -57,11 +57,11 @@ public interface FheArithmetics<V, T extends FheType<V, T, C>, C extends Compres
 
   T ilog2();
 
-  CheckedResult<V, T, C> ilog2WithCheck();
+  CheckedResult<T> ilog2WithCheck();
 
-  record CheckedResult<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>>(T result, FheBool check) {
+  record CheckedResult<T>(T result, FheBool check) {
   }
 
-  record DividerAndRemainder<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>>(T divider, T remainder) {
+  record DividerAndRemainder<T>(T divider, T remainder) {
   }
 }

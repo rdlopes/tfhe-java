@@ -375,7 +375,7 @@ public CompressedFheInt1024 compress() {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> addWithOverflow(FheInt1024 other) {
+  public CheckedResult<FheInt1024> addWithOverflow(FheInt1024 other) {
     FheInt1024 result = new FheInt1024();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int1024_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -434,7 +434,7 @@ public CompressedFheInt1024 compress() {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> subtractWithOverflow(FheInt1024 other) {
+  public CheckedResult<FheInt1024> subtractWithOverflow(FheInt1024 other) {
     FheInt1024 result = new FheInt1024();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int1024_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -493,7 +493,7 @@ public CompressedFheInt1024 compress() {
   ///                                 struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> multiplyWithOverflow(FheInt1024 other) {
+  public CheckedResult<FheInt1024> multiplyWithOverflow(FheInt1024 other) {
     FheInt1024 result = new FheInt1024();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int1024_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -627,7 +627,7 @@ public CompressedFheInt1024 compress() {
   ///                         struct FheInt1024 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<I1024, FheInt1024, CompressedFheInt1024> divideWithRemainder(FheInt1024 other) {
+  public DividerAndRemainder<FheInt1024> divideWithRemainder(FheInt1024 other) {
     FheInt1024 divider = new FheInt1024();
     FheInt1024 remainder = new FheInt1024();
     execute(() -> fhe_int1024_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -642,7 +642,7 @@ public CompressedFheInt1024 compress() {
   ///                                struct FheInt1024 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<I1024, FheInt1024, CompressedFheInt1024> divideWithRemainderScalar(I1024 other) {
+  public DividerAndRemainder<FheInt1024> divideWithRemainderScalar(I1024 other) {
     FheInt1024 divider = new FheInt1024();
     FheInt1024 remainder = new FheInt1024();
     execute(() -> fhe_int1024_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
@@ -689,7 +689,7 @@ public CompressedFheInt1024 compress() {
   ///                               struct FheBool **result_2);
   ///```
   @Override
-  public CheckedResult<I1024, FheInt1024, CompressedFheInt1024> ilog2WithCheck() {
+  public CheckedResult<FheInt1024> ilog2WithCheck() {
     FheInt1024 result = new FheInt1024();
     FheBool check = new FheBool();
     execute(() -> fhe_int1024_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));

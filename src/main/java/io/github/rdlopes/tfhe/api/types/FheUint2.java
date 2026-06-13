@@ -362,7 +362,7 @@ public CompressedFheUint2 compress() {
   ///                               struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<Byte, FheUint2, CompressedFheUint2> addWithOverflow(FheUint2 other) {
+  public CheckedResult<FheUint2> addWithOverflow(FheUint2 other) {
     FheUint2 result = new FheUint2();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint2_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -417,7 +417,7 @@ public CompressedFheUint2 compress() {
   ///                               struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<Byte, FheUint2, CompressedFheUint2> subtractWithOverflow(FheUint2 other) {
+  public CheckedResult<FheUint2> subtractWithOverflow(FheUint2 other) {
     FheUint2 result = new FheUint2();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint2_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -472,7 +472,7 @@ public CompressedFheUint2 compress() {
   ///                               struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<Byte, FheUint2, CompressedFheUint2> multiplyWithOverflow(FheUint2 other) {
+  public CheckedResult<FheUint2> multiplyWithOverflow(FheUint2 other) {
     FheUint2 result = new FheUint2();
     FheBool overflow = new FheBool();
     execute(() -> fhe_uint2_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -596,7 +596,7 @@ public CompressedFheUint2 compress() {
   ///                       struct FheUint2 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<Byte, FheUint2, CompressedFheUint2> divideWithRemainder(FheUint2 other) {
+  public DividerAndRemainder<FheUint2> divideWithRemainder(FheUint2 other) {
     FheUint2 divider = new FheUint2();
     FheUint2 remainder = new FheUint2();
     execute(() -> fhe_uint2_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -611,7 +611,7 @@ public CompressedFheUint2 compress() {
   ///                              struct FheUint2 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<Byte, FheUint2, CompressedFheUint2> divideWithRemainderScalar(Byte other) {
+  public DividerAndRemainder<FheUint2> divideWithRemainderScalar(Byte other) {
     FheUint2 divider = new FheUint2();
     FheUint2 remainder = new FheUint2();
     execute(() -> fhe_uint2_scalar_div_rem(getValue(), other, divider.getAddress(), remainder.getAddress()));
@@ -658,7 +658,7 @@ public CompressedFheUint2 compress() {
   ///                             struct FheBool **result_2);
   ///```
   @Override
-  public CheckedResult<Byte, FheUint2, CompressedFheUint2> ilog2WithCheck() {
+  public CheckedResult<FheUint2> ilog2WithCheck() {
     FheUint2 result = new FheUint2();
     FheBool check = new FheBool();
     execute(() -> fhe_uint2_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));

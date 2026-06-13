@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.api;
 
-public interface FheLogic<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
+public interface FheLogic<V, T> {
   T bitAnd(T other);
 
   T bitAndScalar(V other);

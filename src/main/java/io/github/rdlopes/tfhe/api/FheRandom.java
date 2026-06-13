@@ -1,6 +1,6 @@
 package io.github.rdlopes.tfhe.api;
 
-public interface FheRandom<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
+public interface FheRandom<T> {
 
   T random(long seedLow, long seedHigh, long bitsCount);
 
