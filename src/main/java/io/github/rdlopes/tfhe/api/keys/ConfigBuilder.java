@@ -10,7 +10,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class ConfigBuilder extends NativePointer implements Cloneable {
   private static final Logger logger = LoggerFactory.getLogger(ConfigBuilder.class);
 
-  ConfigBuilder() {
+  public ConfigBuilder() {
     logger.trace("init");
 
     super(null);

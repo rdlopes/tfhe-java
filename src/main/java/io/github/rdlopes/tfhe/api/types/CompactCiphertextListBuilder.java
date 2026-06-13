@@ -1,11 +1,15 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.keys.CompactPkeCrs;
 import io.github.rdlopes.tfhe.api.keys.CompactPublicKey;
 import io.github.rdlopes.tfhe.api.values.*;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
@@ -96,5 +100,31 @@ public class CompactCiphertextListBuilder extends NativePointer {
   public void push(U256 value) {
     logger.trace("push - U256: {}", value);
     execute(() -> compact_ciphertext_list_builder_push_u256(getValue(), value.getAddress()));
+  }
+
+  public ProvenCompactCiphertextList buildWithProofPacked(CompactPkeCrs crs, byte[] metadata, ZkComputeLoad computeLoad) {
+    logger.trace("buildWithProofPacked");
+    ProvenCompactCiphertextList result = new ProvenCompactCiphertextList();
+    try (Arena arena = Arena.ofConfined()) {
+      MemorySegment metadataSegment;
+      long metadataLen;
+      if (metadata == null || metadata.length == 0) {
+        metadataSegment = MemorySegment.NULL;
+        metadataLen = 0;
+      } else {
+        metadataSegment = arena.allocate(metadata.length);
+        metadataSegment.copyFrom(MemorySegment.ofArray(metadata));
+        metadataLen = metadata.length;
+      }
+      execute(() -> compact_ciphertext_list_builder_build_with_proof_packed(
+          getValue(),
+          crs.getValue(),
+          metadataSegment,
+          metadataLen,
+          computeLoad.getValue(),
+          result.getAddress()
+      ));
+    }
+    return result;
   }
 }
