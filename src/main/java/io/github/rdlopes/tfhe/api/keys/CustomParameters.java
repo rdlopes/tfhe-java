@@ -446,7 +446,7 @@ public enum CustomParameters {
     this.address = address;
   }
 
-  MemorySegment address() {
+  public MemorySegment address() {
     return address;
   }
 

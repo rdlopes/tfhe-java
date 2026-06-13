@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.api.keys;
 
 import io.github.rdlopes.tfhe.ffm.NativePointer;
+import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class ConfigBuilder extends NativePointer implements Cloneable {
   public ConfigBuilder() {
     logger.trace("init");
 
-    super(null);
+    super(TfheHeader::config_builder_destroy);
     execute(() -> config_builder_default(getAddress()));
   }
 
@@ -22,6 +23,7 @@ public class ConfigBuilder extends NativePointer implements Cloneable {
 
     Config config = new Config();
     execute(() -> config_builder_build(getValue(), config.getAddress()));
+    this.release();
 
     return config;
   }

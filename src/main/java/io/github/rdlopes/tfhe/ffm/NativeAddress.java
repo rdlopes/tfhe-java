@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SegmentAllocator;
 import java.lang.ref.Cleaner;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.LIBRARY_ARENA;
@@ -27,11 +28,12 @@ public class NativeAddress {
 
   private final MemorySegment address;
   private final Cleanable cleanable;
+  private final AtomicBoolean released = new AtomicBoolean(false);
 
   protected NativeAddress(MemorySegment address, @Nullable Function<MemorySegment, Integer> destroyer) {
     this.address = address;
     this.cleanable = destroyer != null
-      ? CLEANER.register(this, new NativeHandle(getClass(), address, destroyer))
+      ? CLEANER.register(this, new NativeHandle(getClass(), address, destroyer, released))
       : null;
   }
 
@@ -47,5 +49,9 @@ public class NativeAddress {
     if (cleanable != null) {
       cleanable.clean();
     }
+  }
+
+  public void release() {
+    released.set(true);
   }
 }

@@ -68,6 +68,22 @@ The `local` profile performs the following steps in `initialize` phase:
 * **Batch Operations**: Group multiple operations when possible to reduce overhead
 * **Resource Management**: Always use try-with-resources for Arena management
 
+== Benchmarks
+
+JMH micro-benchmarks (run on Windows 11, OpenJDK 25) show that Project Panama FFM downcall latency is extremely low (~9 ns).
+
+Additionally, the overhead of Java object allocation and GC/Cleaner tracking is negligible (<1%) compared to the CPU time required for FHE computations (~43 ms for homomorphic addition), confirming that developers can safely use immutable API methods without a performance penalty.
+
+[cols="3,1,2,1,5", options="header"]
+|===
+| Benchmark | Mode | Score | Unit | Description
+| `benchmarkTrivialFfmCall` | avgt | ~0.009 | us/op | Baseline FFM downcall latency (9 ns)
+| `benchmarkAdditionInPlace` | avgt | ~43255.885 | us/op | Homomorphic addition mutating object in place (~43.2 ms)
+| `benchmarkAdditionWithAllocation` | avgt | ~42826.146 | us/op | Homomorphic addition with fresh Java object creation (~42.8 ms)
+| `benchmarkSingleThreadedSum` | avgt | ~973721.144 | us/op | Sequential sum of 10 ciphertexts (~973 ms)
+| `benchmarkMultiThreadedSum` | avgt | ~977733.033 | us/op | Sum inside Rayon thread context without parallel decomposition (~977 ms)
+|===
+
 == License
 
 This project is licensed under the link:{license}[MIT License].

@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.api.keys;
 
 import io.github.rdlopes.tfhe.ffm.NativePointer;
+import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ public class Config extends NativePointer {
   Config() {
     logger.trace("init");
 
-    super(null);
+    super(TfheHeader::config_destroy);
   }
 
   public void initialize(ClientKey clientKey, ServerKey serverKey) {
@@ -27,6 +28,7 @@ public class Config extends NativePointer {
     }
     execute(() -> generate_keys(getValue(), clientKey.getAddress(), serverKey.getAddress()));
     keysGenerated.setRelease(true);
+    this.release();
   }
 
 }

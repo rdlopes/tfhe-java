@@ -34,11 +34,11 @@ public final class NativeCall {
     logger.trace("executeAndReturn - returnType: {}, setter: {}", returnType, setter);
 
     ValueLayout layout = switch (returnType) {
-      case Class<?> type when (type == Boolean.class) -> C_BOOL;
-      case Class<?> type when (type == Byte.class) -> C_CHAR;
-      case Class<?> type when (type == Short.class) -> C_SHORT;
-      case Class<?> type when (type == Integer.class) -> C_INT;
-      case Class<?> type when (type == Long.class) -> C_LONG_LONG;
+      case Class<?> type when type == Boolean.class -> C_BOOL;
+      case Class<?> type when type == Byte.class -> C_CHAR;
+      case Class<?> type when type == Short.class -> C_SHORT;
+      case Class<?> type when type == Integer.class -> C_INT;
+      case Class<?> type when type == Long.class -> C_LONG_LONG;
       default -> C_POINTER;
     };
 
@@ -46,11 +46,11 @@ public final class NativeCall {
     execute(() -> setter.apply(memorySegment));
 
     var result = switch (returnType) {
-      case Class<?> type when (type == Boolean.class) -> memorySegment.get(C_BOOL, 0);
-      case Class<?> type when (type == Byte.class) -> memorySegment.get(C_CHAR, 0);
-      case Class<?> type when (type == Short.class) -> memorySegment.get(C_SHORT, 0);
-      case Class<?> type when (type == Integer.class) -> memorySegment.get(C_INT, 0);
-      case Class<?> type when (type == Long.class) -> memorySegment.get(C_LONG_LONG, 0);
+      case Class<?> type when type == Boolean.class -> memorySegment.get(C_BOOL, 0);
+      case Class<?> type when type == Byte.class -> memorySegment.get(C_CHAR, 0);
+      case Class<?> type when type == Short.class -> memorySegment.get(C_SHORT, 0);
+      case Class<?> type when type == Integer.class -> memorySegment.get(C_INT, 0);
+      case Class<?> type when type == Long.class -> memorySegment.get(C_LONG_LONG, 0);
       case Class<?> _ -> memorySegment.get(C_POINTER, 0);
     };
 

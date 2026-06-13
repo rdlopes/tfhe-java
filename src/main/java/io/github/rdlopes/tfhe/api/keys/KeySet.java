@@ -6,19 +6,11 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
-@SuppressWarnings("ClassCanBeRecord")
-public final class KeySet {
+public record KeySet(ClientKey clientKey, ServerKey serverKey) {
   private static final Logger logger = LoggerFactory.getLogger(KeySet.class);
-  private final ClientKey clientKey;
-  private final ServerKey serverKey;
 
   public static FheKeySetBuilder builder() {
     return new FheKeySetBuilder();
-  }
-
-  KeySet(ClientKey clientKey, ServerKey serverKey) {
-    this.clientKey = clientKey;
-    this.serverKey = serverKey;
   }
 
   public ClientKey getClientKey() {
