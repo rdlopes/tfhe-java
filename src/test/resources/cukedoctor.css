@@ -1,0 +1,272 @@
+/* GitHub Documentation Style Custom Theme for TFHE-Java */
+
+/* --- 1. Typography & Colors --- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji" !important;
+  color: #24292f !important;
+  background-color: #ffffff !important;
+  line-height: 1.5 !important;
+}
+
+h1, h2, h3, h4, h5, h6, #toctitle, .title, .sect0, .sect1, .sect2, .sect3, .sect4, .sect5 {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif !important;
+  font-weight: 600 !important;
+  color: #24292f !important;
+  border-bottom: none !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+h1 {
+  font-size: 2em !important;
+  padding-bottom: 0.3em !important;
+  border-bottom: 1px solid #d0d7de !important;
+}
+
+h2 {
+  font-size: 1.5em !important;
+  padding-bottom: 0.3em !important;
+  border-bottom: 1px solid #d0d7de !important;
+}
+
+h3 {
+  font-size: 1.25em !important;
+}
+
+a {
+  color: #0969da !important;
+  text-decoration: none !important;
+  text-shadow: none !important;
+}
+
+a:hover {
+  text-decoration: underline !important;
+}
+
+/* --- 2. Wide & Responsive Layout --- */
+#header, #content, #footnotes, #footer {
+  max-width: 95% !important; /* Full width with reasonable margins */
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Table of Contents / Sidebar */
+@media screen and (min-width: 768px) {
+  body.toc2 {
+    padding-left: 20rem !important; /* room for the sidebar */
+  }
+  #toc.toc2 {
+    width: 20rem !important;
+    background-color: #f6f8fa !important;
+    border-right: 1px solid #d0d7de !important;
+    padding: 24px !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+  }
+}
+
+#toc.toc2 #toctitle {
+  font-size: 14px !important;
+  text-transform: uppercase !important;
+  color: #57606a !important;
+  border-bottom: 1px solid #d0d7de !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 16px !important;
+  text-shadow: none !important;
+}
+
+#toc.toc2 ul.sectlevel1 > li > a {
+  font-weight: 600 !important;
+  color: #24292f !important;
+}
+
+#toc.toc2 ul.sectlevel2 a {
+  color: #57606a !important;
+  font-size: 0.9em !important;
+}
+
+/* --- 3. Tables & Code Blocks --- */
+table.tableblock {
+  border: 1px solid #d0d7de !important;
+  border-radius: 6px !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  width: 100% !important;
+  margin-bottom: 16px !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+table.tableblock th.tableblock, table.tableblock td.tableblock {
+  border-bottom: 1px solid #d0d7de !important;
+  border-right: 1px solid #d0d7de !important;
+  padding: 8px 16px !important;
+}
+
+/* Remove trailing borders */
+table.tableblock td.tableblock:last-child, table.tableblock th.tableblock:last-child {
+  border-right: none !important;
+}
+table.tableblock tr:last-child td.tableblock {
+  border-bottom: none !important;
+}
+
+table.tableblock thead {
+  background-color: #f6f8fa !important;
+}
+
+table.tableblock th {
+  color: #24292f !important;
+}
+
+/* Code Blocks styling (IntelliJ Editor Look) */
+code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace !important;
+  font-size: 85% !important;
+  background-color: #f2f2f2 !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 4px !important;
+}
+
+pre {
+  background-color: #ffffff !important;
+  border: 1px solid #c9ccd6 !important;
+  border-radius: 4px !important;
+  padding: 16px !important;
+  overflow: auto !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
+
+pre code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, monospace !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  font-size: 90% !important;
+  line-height: 1.45 !important;
+}
+
+pre::selection, pre code::selection {
+  background-color: #b3d7ff !important;
+}
+
+/* --- 4. Admonitions (Notes, Tips, Warnings) --- */
+.admonitionblock td.content {
+  border-left: 4px solid #d0d7de !important;
+  padding-left: 16px !important;
+  color: #57606a !important;
+}
+
+.admonitionblock.note td.content {
+  border-left-color: #0969da !important;
+}
+
+.admonitionblock.tip td.content {
+  border-left-color: #1a7f37 !important;
+}
+
+.admonitionblock.warning td.content {
+  border-left-color: #9a6700 !important;
+}
+
+/* --- 5. Custom Status Badges (Passed/Failed) --- */
+span.green {
+  color: #1a7f37 !important;
+  background-color: #dafbe1 !important;
+  border: 1px solid rgba(26, 127, 55, 0.2) !important;
+  padding: 2px 8px !important;
+  border-radius: 2em !important;
+  font-size: 85% !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+  text-shadow: none !important;
+}
+
+span.red {
+  color: #cf222e !important;
+  background-color: #ffebe9 !important;
+  border: 1px solid rgba(207, 34, 46, 0.2) !important;
+  padding: 2px 8px !important;
+  border-radius: 2em !important;
+  font-size: 85% !important;
+  font-weight: 600 !important;
+  display: inline-block !important;
+  text-shadow: none !important;
+}
+
+/* --- 6. IntelliJ Light Syntax Highlighting (CodeRay overrides) --- */
+pre.CodeRay, table.CodeRay {
+  background-color: #ffffff !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+.CodeRay {
+  background-color: #ffffff !important;
+  color: #080808 !important;
+}
+
+.CodeRay .keyword, .CodeRay .reserved, .CodeRay .type {
+  color: #0033b3 !important;
+  font-weight: bold !important;
+}
+
+.CodeRay .comment {
+  color: #808080 !important;
+  font-style: italic !important;
+}
+
+.CodeRay .string, .CodeRay .string .content, .CodeRay .string .delimiter, .CodeRay .char, .CodeRay .char .content, .CodeRay .char .delimiter {
+  color: #067d17 !important;
+  font-weight: normal !important;
+}
+
+.CodeRay .integer, .CodeRay .float, .CodeRay .binary, .CodeRay .octal, .CodeRay .hex {
+  color: #1750eb !important;
+}
+
+.CodeRay .function {
+  color: #00627a !important;
+  font-weight: normal !important;
+}
+
+.CodeRay .class, .CodeRay .class-variable, .CodeRay .predefined-type {
+  color: #000000 !important;
+  font-weight: normal !important;
+}
+
+.CodeRay .variable, .CodeRay .local-variable {
+  color: #000000 !important;
+}
+
+.CodeRay .instance-variable, .CodeRay .global-variable {
+  color: #871094 !important; /* IntelliJ purple field */
+}
+
+.CodeRay .predefined-constant, .CodeRay .constant {
+  color: #871094 !important;
+  font-style: italic !important;
+}
+
+.CodeRay .annotation {
+  color: #9e880d !important;
+}
+
+.CodeRay .preprocessor {
+  color: #787878 !important;
+}
+
+.CodeRay .tag {
+  color: #0033b3 !important;
+}
+
+.CodeRay .attribute-name {
+  color: #1750eb !important;
+}
+
+.CodeRay .attribute-value {
+  color: #067d17 !important;
+}

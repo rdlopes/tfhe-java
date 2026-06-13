@@ -185,6 +185,7 @@
         <configuration>
           <documentTitle>TFHE for Java</documentTitle>
           <introChapterDir>${project.build.testOutputDirectory}</introChapterDir>
+          <disableTheme>true</disableTheme>
         </configuration>
       </plugin>
       <plugin>
