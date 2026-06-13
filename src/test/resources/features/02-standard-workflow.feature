@@ -6,7 +6,7 @@ Feature: Standard TFHE Workflow
 
   This chapter describes the standard workflow for performing homomorphic computations using the high-level integer API of the TFHE-Java library.
 
-  == The 5-Step Lifecycle
+  === The 5-Step Lifecycle
   A standard Torus FHE computation follows five fundamental steps:
   [plantuml, standard-workflow, svg]
   ....
@@ -89,7 +89,7 @@ Feature: Standard TFHE Workflow
   int plainValue = finalResult.decrypt(clientKey);
   ----
 
-  == Performance & Multi-Threading Warnings
+  === Performance & Multi-Threading Warnings
   While homomorphic evaluations are CPU-intensive, managing native threads correctly is critical to optimize performance and prevent contention.
 
   [WARNING]

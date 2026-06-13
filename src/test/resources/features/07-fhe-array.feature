@@ -6,12 +6,12 @@ Feature: Homomorphic Array Summation
 
   This chapter describes homomorphic array summation and batch operations on collections of ciphertexts in the TFHE-Java library.
 
-  == Homomorphic Arrays
+  === Homomorphic Arrays
   TFHE-Java provides specialized collections for batch encryption and operations:
   * **Unsigned Arrays** (`FheUint8Array`, `FheUint16Array`, `FheUint32Array`, `FheUint64Array`, `FheUint128Array`, `FheUint256Array`).
   * **Signed Arrays** (`FheInt8Array`, `FheInt16Array`, `FheInt32Array`, `FheInt64Array`, `FheInt128Array`, `FheInt256Array`).
 
-  == Parallel Summation
+  === Parallel Summation
   Summing elements in a large array sequentially is slow because of the linear buildup of noise and sequential PBS runs.
   To optimize performance, TFHE-Java array summation uses parallel prefix-tree reduction under the hood, significantly speeding up the evaluation.
 

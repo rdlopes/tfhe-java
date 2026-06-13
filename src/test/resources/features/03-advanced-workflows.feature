@@ -6,7 +6,7 @@ Feature: Advanced Workflows and Noise Management
 
   This chapter describes advanced TFHE workflows, including compressed ciphertexts, trivial ciphertexts, the shortint API, and noise management.
 
-  == Compressed Ciphertext Workflow
+  === Compressed Ciphertext Workflow
   For bandwidth-constrained environments, you can generate keys and compress ciphertexts before sending them.
   This significantly reduces transmission size. On the server, the compressed ciphertext is deserialized and decompressed before evaluation.
 
@@ -16,7 +16,7 @@ Feature: Advanced Workflows and Noise Management
   include::../../src/test/java/io/github/rdlopes/tfhe/api/keys/KeySetTest.java[tags=keyset_advanced_builders]
   ----
 
-  == Trivial Ciphertext Workflow
+  === Trivial Ciphertext Workflow
   A *trivial ciphertext* is created without actual encryption using a public value.
   It is useful for mixing encrypted variables and public plaintext constants in evaluations without generating encryption noise or requiring the private client key.
   [source,java]
@@ -24,12 +24,12 @@ Feature: Advanced Workflows and Noise Management
   FheUint32 trivial = FheUint32.encrypt(42); // Trivial encryption
   ----
 
-  == Shortint API Workflow
+  === Shortint API Workflow
   For applications requiring fine-grained control over message vs. carry bits allocation:
   - You initialize custom parameters detailing message/carry size.
   - You execute **Smart** operations (which automatically run Programmable Bootstrapping (PBS) via the ServerKey to reduce noise) or **Unchecked** operations (raw, fast operations without noise management).
 
-  == Noise Management and PBS
+  === Noise Management and PBS
   Noise accumulates during homomorphic operations. The high-level integer API automatically manages noise via bootstrapping (`PBS`) using the `ServerKey`.
   In the `shortint` API, noise management is directly exposed:
   * **Leveled Operations**: Fast operations (addition, scalar multiplication) that increase noise.

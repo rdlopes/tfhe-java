@@ -7,7 +7,7 @@ Feature: Core Data Structures and Cryptographic Primitives
   This chapter explains the core data structures and cryptographic primitives of the TFHE-Java library.
   TFHE-Java translates native `tfhe-rs` primitives into type-safe, resource-managed Java classes.
 
-  == Cryptographic Primitives Overview
+  === Cryptographic Primitives Overview
   The security and evaluation lifecycle in Torus FHE relies on two main categories of objects:
   1. **Keys**: Private keys for encryption/decryption, public keys for third-party encryption, and server keys for homomorphic evaluations.
   2. **Ciphertexts**: Encrypted data blocks representing booleans, signed/unsigned integers, arrays, or compact lists.
@@ -18,14 +18,14 @@ Feature: Core Data Structures and Cryptographic Primitives
   The **ServerKey** is sent to the server for homomorphic evaluation. It does not contain decryption capability.
   ====
 
-  == Core Ciphertext Types
+  === Core Ciphertext Types
   TFHE-Java provides types corresponding to standard Java primitives:
   * **Value Types** (`FheBool`, `FheInt*`, `FheUint*`): Wrapper classes representing encrypted values.
   * **Shortint Types** (`ShortintCiphertext`): Small integers with parameterized precision (1 to 8 bits).
   * **Compressed Types** (`CompressedFheBool`, `CompressedFheInt*`, `CompressedFheUint*`): Bandwidth-efficient ciphertext representations.
   * **Array Types** (`FheBoolArray`, `FheInt*Array`, `FheUint*Array`): Batch ciphertext collections.
 
-  == Native Memory Safety & Resource Management
+  === Native Memory Safety & Resource Management
   Since the underlying cryptographic operations are executed in Rust via Java's Foreign Function & Memory (FFM) API, all FHE objects allocate off-heap native memory. Failing to release these resources will result in native memory leaks.
 
   TFHE-Java enforces memory safety through:
@@ -37,7 +37,7 @@ Feature: Core Data Structures and Cryptographic Primitives
   Always call `.destroy()` on intermediate ciphertexts created inside loops (such as neural network training epochs or inference sweeps) to prevent native RAM exhaustion.
   ====
 
-  == Configurations and Key Generation
+  === Configurations and Key Generation
   Before performing encryption, you must configure security parameters using the `ConfigBuilder`.
   The configuration determines parameters like LWE dimension, polynomial size, noise distribution, and security level.
 

@@ -21,6 +21,7 @@ public class PerceptronTrainingShowcase {
     logger.info("Starting TFHE Privacy-Preserving Perceptron Training Showcase");
     logger.info("=================================================================");
 
+    // tag::perceptron_setup[]
     // 1. Setup keys
     logger.info("Generating FHE keys...");
     long startTime = System.currentTimeMillis();
@@ -73,7 +74,9 @@ public class PerceptronTrainingShowcase {
     trackedObjects.add(w1);
     trackedObjects.add(w2);
     trackedObjects.add(b);
+    // end::perceptron_setup[]
 
+    // tag::perceptron_training[]
     // 4. Training Loop (8 epochs)
     int epochs = 8;
     logger.info("Starting homomorphic training for {} epochs...", epochs);
@@ -119,6 +122,7 @@ public class PerceptronTrainingShowcase {
       logger.info("  Epoch {} completed in {} ms.", epoch + 1, System.currentTimeMillis() - epochStart);
     }
     logger.info("Training completed in {} ms.", System.currentTimeMillis() - trainStart);
+    // end::perceptron_training[]
 
     // 5. Decrypt and verify convergence
     logger.info("Decrypting trained weights and bias...");

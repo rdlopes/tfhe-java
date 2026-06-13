@@ -1,10 +1,8 @@
 @asciidoc
-@order-09
+@order-10
+@section-PredefinedParameters
 @appendix
 Feature: Predefined Parameters and Cryptographic Types
-
-  [appendix]
-  == Predefined Parameters and Cryptographic Types
 
   === Predefined Shortint Parameters
   TFHE-Java provides preset parameter configurations in the `CustomParameters` enum. These configurations define the security level, message precision, and carry bits.

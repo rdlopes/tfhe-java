@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.showcase;
 
+import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.types.FheBool;
@@ -45,23 +46,23 @@ public class CancerPredictionShowcase {
     public final List<FheInt32> encryptedFeatures = new ArrayList<>();
     public final int trueLabel;
 
-    public EncryptedPatientRecord(PatientRecord record, PublicKey publicKey) {
+    public EncryptedPatientRecord(PatientRecord record, ClientKey clientKey) {
       this.name = record.name();
       this.trueLabel = record.trueLabel();
       
-      // Encrypt each feature using the public key
-      encryptedFeatures.add(FheInt32.encrypt(record.clumpThickness(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.uniformityCellSize(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.uniformityCellShape(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.marginalAdhesion(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.singleEpithelialCellSize(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.bareNuclei(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.blandChromatin(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.normalNucleoli(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.mitoses(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.ageScale(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.geneticRisk(), publicKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.familyHistory(), publicKey));
+      // Encrypt each feature using the client key
+      encryptedFeatures.add(FheInt32.encrypt(record.clumpThickness(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.uniformityCellSize(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.uniformityCellShape(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.marginalAdhesion(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.singleEpithelialCellSize(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.bareNuclei(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.blandChromatin(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.normalNucleoli(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.mitoses(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.ageScale(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.geneticRisk(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(record.familyHistory(), clientKey));
     }
 
     public void destroy() {
@@ -97,7 +98,7 @@ public class CancerPredictionShowcase {
     logger.info("Encrypting sensitive patient records...");
     List<EncryptedPatientRecord> encryptedRecords = new ArrayList<>();
     for (PatientRecord r : records) {
-      encryptedRecords.add(new EncryptedPatientRecord(r, publicKey));
+      encryptedRecords.add(new EncryptedPatientRecord(r, keySet.getClientKey()));
       logger.info("  Encrypted patient data for: {}", r.name());
     }
     // end::cancer_setup[]
@@ -111,8 +112,8 @@ public class CancerPredictionShowcase {
     List<FheInt32> scores = new ArrayList<>();
 
     for (EncryptedPatientRecord er : encryptedRecords) {
-      // Initialize with public bias
-      FheInt32 score = FheInt32.encrypt(BIAS, publicKey);
+      // Initialize with bias (ClientKey encryption is much faster)
+      FheInt32 score = FheInt32.encrypt(BIAS, keySet.getClientKey());
       
       // Homomorphically compute score = sum(w_i * x_i) + bias
       for (int i = 0; i < WEIGHTS.length; i++) {

@@ -6,14 +6,14 @@ Feature: High-Level Integer API (FheInt* and FheUint*)
 
   This chapter describes the high-level integer API of the TFHE-Java library, which supports type-safe homomorphic arithmetic, bitwise, comparison, and conditional operations on signed and unsigned integers of varying bit widths.
 
-  == Supported Integer Types
+  === Supported Integer Types
   TFHE-Java provides complete type-safe wrappers for both signed and unsigned integers corresponding to standard and extended bit widths:
   * **Signed Integers** (`FheInt2` through `FheInt2048`): Represent values in 2's complement format.
   * **Unsigned Integers** (`FheUint2` through `FheUint2048`): Represent positive values from \(0\) to \(2^k - 1\) for a \(k\)-bit integer.
 
   For widths up to 64 bits, standard Java primitives (`byte`, `short`, `int`, `long`) are used for encryption/decryption. For larger widths (128 to 2048 bits), the library interfaces with `BigInteger` wrappers (e.g., `U128`, `U256`).
 
-  == Homomorphic Operations
+  === Homomorphic Operations
   The high-level integer classes implement a uniform set of interfaces:
 
   === Arithmetic Operations

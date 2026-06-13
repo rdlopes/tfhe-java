@@ -56,6 +56,7 @@ public class VotingFlowShowcase {
     logger.info("Starting TFHE Privacy-Preserving Voting Flow Showcase");
     logger.info("=================================================================");
 
+    // tag::voting_setup[]
     // 1. Setup election parameters & CRS
     logger.info("Preparing election cryptographic setup & CRS...");
     long startTime = System.currentTimeMillis();
@@ -76,12 +77,14 @@ public class VotingFlowShowcase {
     PublicKey publicKey = new PublicKey(keySet.getClientKey());
     ElectionTallies tallies = new ElectionTallies(publicKey);
     logger.info("Setup completed in {} ms.", System.currentTimeMillis() - startTime);
+    // end::voting_setup[]
 
     // 2. Submit ballots (encrypted & ZK-proven)
     logger.info("Submitting voter ballots with ZK proofs...");
     List<Ballot> ballots = new ArrayList<>();
 
     class BallotBuilder {
+      // tag::voting_ballots[]
       void vote(String voterName, boolean choiceA, boolean choiceB, boolean choiceC) {
         CompactCiphertextListBuilder builder = new CompactCiphertextListBuilder(compactPublicKey);
         builder.push(choiceA);
@@ -94,6 +97,7 @@ public class VotingFlowShowcase {
           logger.info("  Ballot submitted for voter: {}", voterName);
         }
       }
+      // end::voting_ballots[]
     }
     BallotBuilder bb = new BallotBuilder();
 
@@ -107,6 +111,7 @@ public class VotingFlowShowcase {
 
     logger.info("Submitted {} ballots.", ballots.size());
 
+    // tag::voting_tally[]
     // 3. Tally Server Processes & Aggregates Ballots inside Rayon Context
     logger.info("Tally server processing and aggregating ballots homomorphically...");
     long tallyStart = System.currentTimeMillis();
@@ -167,6 +172,7 @@ public class VotingFlowShowcase {
     }
 
     logger.info("Tally aggregation completed in {} ms.", System.currentTimeMillis() - tallyStart);
+    // end::voting_tally[]
 
     // 4. Decrypt and verify results
     logger.info("Decrypting and verifying election results...");
