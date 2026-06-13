@@ -62,14 +62,14 @@ public class TfheHeaderExtension {
   public static class CompressionParameters {
 
     private static final GroupLayout $LAYOUT = MemoryLayout.structLayout(
-                                                             C_LONG.withName("br_level"),
-                                                             C_LONG.withName("br_base_log"),
-                                                             C_LONG.withName("packing_ks_level"),
-                                                             C_LONG.withName("packing_ks_base_log"),
-                                                             C_LONG.withName("packing_ks_polynomial_size"),
-                                                             C_LONG.withName("packing_ks_glwe_dimension"),
-                                                             C_LONG.withName("lwe_per_glwe"),
-                                                             C_LONG.withName("storage_log_modulus"),
+                                                             C_LONG_LONG.withName("br_level"),
+                                                             C_LONG_LONG.withName("br_base_log"),
+                                                             C_LONG_LONG.withName("packing_ks_level"),
+                                                             C_LONG_LONG.withName("packing_ks_base_log"),
+                                                             C_LONG_LONG.withName("packing_ks_polynomial_size"),
+                                                             C_LONG_LONG.withName("packing_ks_glwe_dimension"),
+                                                             C_LONG_LONG.withName("lwe_per_glwe"),
+                                                             C_LONG_LONG.withName("storage_log_modulus"),
                                                              DynamicDistribution.layout()
                                                                                 .withName("packing_ks_key_noise_distribution"))
                                                            .withName("CompressionParameters");

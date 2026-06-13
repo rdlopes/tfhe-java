@@ -47,6 +47,7 @@ public class ShortintStepDefinitions {
   }
 
   @Then("the shortint ciphertext decrypted using the client key is {long}")
+  @Then("the decompressed shortint ciphertext decrypted using the client key is {long}")
   public void theShortintCiphertextDecryptedUsingTheClientKeyIs(long expected) {
     ShortintCiphertext latest = context.shortintCiphertexts.get(context.shortintCiphertexts.size() - 1);
     long decrypted = context.shortintClientKey.decrypt(latest);
@@ -99,14 +100,7 @@ public class ShortintStepDefinitions {
     ShortintCompressedCiphertext latest = context.shortintCompressedCiphertexts.get(context.shortintCompressedCiphertexts.size() - 1);
     context.shortintCiphertexts.add(context.track(latest.decompress()));
   }
-
-  @Then("the decompressed shortint ciphertext decrypted using the client key is {long}")
-  public void theDecompressedShortintCiphertextDecryptedIs(long expected) {
-    ShortintCiphertext latest = context.shortintCiphertexts.get(context.shortintCiphertexts.size() - 1);
-    long decrypted = context.shortintClientKey.decrypt(latest);
-    assertThat(decrypted).isEqualTo(expected);
-  }
-
+  
   @Then("the smart sum of these ciphertexts is {long}")
   public void theSmartSumOfTheseCiphertextsIs(long expected) {
     ShortintCiphertext ct1 = context.shortintCiphertexts.get(0);

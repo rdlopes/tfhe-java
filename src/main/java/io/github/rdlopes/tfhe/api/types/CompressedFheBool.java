@@ -84,9 +84,8 @@ public class CompressedFheBool extends NativePointer implements CompressedFheTyp
   ///```
   public static CompressedFheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
     CompressedFheBool deserialized = new CompressedFheBool();
-    execute(() -> compressed_fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    execute(() -> compressed_fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress().asSlice(0, 16), dynamicBuffer.getLength(), serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
-
   }
 
   /// ```c

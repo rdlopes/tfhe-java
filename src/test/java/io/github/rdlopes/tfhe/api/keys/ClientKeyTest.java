@@ -15,6 +15,7 @@ class ClientKeyTest {
                    .build();
   }
 
+// tag::client_key_serialization[]
   @Test
   void serializesAndDeserializes() {
     try (DynamicBuffer buffer = keySet.getClientKey()
@@ -23,5 +24,6 @@ class ClientKeyTest {
         .doesNotThrowAnyException();
     }
   }
+// end::client_key_serialization[]
 
 }

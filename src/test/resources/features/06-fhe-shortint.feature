@@ -1,7 +1,38 @@
 @asciidoc
-@order-04
+@order-06
+@low-level-api
 @fhe-shortint
 Feature: Low-Level Shortint API and Programmable Bootstrapping (PBS)
+
+  This chapter describes the low-level `shortint` API, which offers fine-grained control over noise levels, carrying capacity, and Programmable Bootstrapping (PBS).
+
+  == The shortint Representation
+  Unlike the high-level API which automatically manages noise and carries, the `shortint` API exposes individual ciphertexts parameterized with:
+  * **Message Modulus** (\(M\)): The size of the message space (number of bits we can store).
+  * **Carry Modulus** (\(C\)): Additional space to hold carries during additions.
+
+  == Smart vs. Unchecked Operations
+  The `shortint` API exposes two operation modes:
+  1. **Smart Operations**: Automatically check if the ciphertext has accumulated too much noise. If so, a Programmable Bootstrapping (PBS) is automatically run on the server to clean the noise and reset the ciphertext to a nominal noise state.
+  2. **Unchecked Operations**: Directly compute modular arithmetic without verifying noise bounds. They are much faster but will yield incorrect decryption results if the noise exceeds the parameters' tolerance limits.
+
+  == Programmable Bootstrapping (PBS)
+  A Programmable Bootstrapping allows computing an arbitrary function \(f(x)\) on an encrypted value \(x\) while cleaning its noise. It is configured using a **Lookup Table (LUT)**:
+  * **Univariate PBS**: Evaluates a function \(f(x)\) on a single ciphertext block.
+  * **Bivariate PBS**: Evaluates a function \(f(x, y)\) on two ciphertext blocks.
+
+  === Code Example
+  [source,java]
+  ----
+  // Univariate lookup table for f(x) = (x + 1) % 4
+  LookupTable table = serverKey.generateLookupTable(x -> (x + 1) % 4);
+  ShortintCiphertext result = serverKey.applyLookupTable(ciphertext, table);
+  ----
+
+  [IMPORTANT]
+  ====
+  The `shortint` API is recommended for building custom circuits, optimized state machines, or complex non-linear functions (like activation functions in neural networks).
+  ====
 
   Scenario: Initializing client, server, and public keys with custom parameters
     Given a shortint configuration is prepared with custom parameters

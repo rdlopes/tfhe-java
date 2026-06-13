@@ -14,6 +14,7 @@ class ConfigBuilderTest {
     configBuilder = new ConfigBuilder();
   }
 
+// tag::builder_tests[]
   @Test
   void buildsConfig() {
     Config config = configBuilder.build();
@@ -25,5 +26,6 @@ class ConfigBuilderTest {
     ConfigBuilder clone = configBuilder.clone();
     assertThat(clone).isNotNull();
   }
+// end::builder_tests[]
 
 }

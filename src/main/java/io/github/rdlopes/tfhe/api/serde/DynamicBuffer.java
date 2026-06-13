@@ -11,11 +11,11 @@ import java.util.function.Function;
 public class DynamicBuffer extends NativeAddress implements AutoCloseable {
 
   public DynamicBuffer() {
-    this(io.github.rdlopes.tfhe.ffm.DynamicBuffer::allocate);
+    this(io.github.rdlopes.tfhe.ffm.DynamicBuffer::allocate, true);
   }
 
-  DynamicBuffer(Function<SegmentAllocator, MemorySegment> allocator) {
-    super(allocator, TfheHeader::destroy_dynamic_buffer);
+  DynamicBuffer(Function<SegmentAllocator, MemorySegment> allocator, boolean hasDestroyer) {
+    super(allocator, hasDestroyer ? TfheHeader::destroy_dynamic_buffer : null);
   }
 
   @NonNull
@@ -29,7 +29,7 @@ public class DynamicBuffer extends NativeAddress implements AutoCloseable {
       io.github.rdlopes.tfhe.ffm.DynamicBuffer.pointer(newSegment, pointer);
       io.github.rdlopes.tfhe.ffm.DynamicBuffer.length(newSegment, length);
       return newSegment;
-    });
+    }, false);
   }
 
   public Long getLength() {

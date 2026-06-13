@@ -87,7 +87,6 @@ public class CompressedFheUint32 extends NativePointer implements CompressedFheT
     CompressedFheUint32 deserialized = new CompressedFheUint32();
     execute(() -> compressed_fhe_uint32_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
-
   }
 
   /// ```c

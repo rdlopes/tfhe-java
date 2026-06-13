@@ -23,7 +23,7 @@ public class NativeAddress {
   static {
     NativeLibrary.load();
     System.setProperty("jextract.trace.downcalls", String.valueOf(logger.isTraceEnabled()));
-    tfhe_error_disable_automatic_prints();
+    // tfhe_error_disable_automatic_prints();
   }
 
   private final MemorySegment address;
