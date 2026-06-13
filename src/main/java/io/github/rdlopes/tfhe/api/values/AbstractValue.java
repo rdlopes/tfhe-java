@@ -10,8 +10,15 @@ import java.util.function.Function;
 
 import static java.math.BigInteger.ONE;
 
+/**
+ * Abstract base class representing an FHE value.
+ * This class provides standard implementations for value encryption, serialization, and retrieval.
+ */
 public abstract class AbstractValue extends NativeAddress implements FheValue {
 
+  /**
+   * Bitmask used for long values.
+   */
   public static final BigInteger LONG_MASK = ONE.shiftLeft(Long.SIZE)
                                                 .subtract(ONE);
 
@@ -75,8 +82,20 @@ public abstract class AbstractValue extends NativeAddress implements FheValue {
     }
   }
 
+  /**
+   * Sets a specific word of the value at the given index.
+   *
+   * @param index the index of the word to set
+   * @param word the long word value
+   */
   protected abstract void setWord(int index, long word);
 
+  /**
+   * Retrieves a specific word of the value at the given index.
+   *
+   * @param index the index of the word to retrieve
+   * @return the long word value
+   */
   protected abstract long getWord(int index);
 
 }

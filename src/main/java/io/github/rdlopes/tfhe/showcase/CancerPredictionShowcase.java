@@ -11,7 +11,17 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Showcase demonstrating privacy-preserving cancer prediction using TFHE.
+ * This class runs a client-server simulation where patient records are encrypted on the client side,
+ * evaluated using pre-trained homomorphic weights on the server side, and decrypted to verify results.
+ */
 public class CancerPredictionShowcase {
+
+  /**
+   * Private constructor to prevent instantiation of the showcase utility class.
+   */
+  private CancerPredictionShowcase() {}
 
   private static final Logger logger = LoggerFactory.getLogger(CancerPredictionShowcase.class);
 
@@ -24,6 +34,24 @@ public class CancerPredictionShowcase {
   private static final int[] WEIGHTS = {2, 12, 6, 5, -8, 12, -3, 6, 1, -29, 9, 10};
   private static final int BIAS = -46;
 
+  /**
+   * Represents a patient record with cleartext features.
+   *
+   * @param name the name of the patient
+   * @param clumpThickness clump thickness feature value
+   * @param uniformityCellSize uniformity of cell size feature value
+   * @param uniformityCellShape uniformity of cell shape feature value
+   * @param marginalAdhesion marginal adhesion feature value
+   * @param singleEpithelialCellSize single epithelial cell size feature value
+   * @param bareNuclei bare nuclei feature value
+   * @param blandChromatin bland chromatin feature value
+   * @param normalNucleoli normal nucleoli feature value
+   * @param mitoses mitoses feature value
+   * @param ageScale age scale feature value
+   * @param geneticRisk genetic risk feature value
+   * @param familyHistory family history feature value
+   * @param trueLabel the true classification label (0 for benign, 1 for malignant)
+   */
   public record PatientRecord(
       String name,
       int clumpThickness,
@@ -41,11 +69,32 @@ public class CancerPredictionShowcase {
       int trueLabel
   ) {}
 
+  /**
+   * Represents an encrypted patient record.
+   */
   public static class EncryptedPatientRecord {
+
+    /**
+     * The patient's name.
+     */
     public final String name;
+
+    /**
+     * The list of encrypted features for homomorphic computation.
+     */
     public final List<FheInt32> encryptedFeatures = new ArrayList<>();
+
+    /**
+     * The true classification label.
+     */
     public final int trueLabel;
 
+    /**
+     * Constructs an encrypted record from a cleartext record and client key.
+     *
+     * @param record the cleartext patient record
+     * @param clientKey the client key used for encryption
+     */
     public EncryptedPatientRecord(PatientRecord record, ClientKey clientKey) {
       this.name = record.name();
       this.trueLabel = record.trueLabel();
@@ -65,6 +114,9 @@ public class CancerPredictionShowcase {
       encryptedFeatures.add(FheInt32.encrypt(record.familyHistory(), clientKey));
     }
 
+    /**
+     * Destroys the underlying native memory structures of the encrypted features.
+     */
     public void destroy() {
       for (FheInt32 feature : encryptedFeatures) {
         if (feature != null) {
@@ -74,6 +126,11 @@ public class CancerPredictionShowcase {
     }
   }
 
+  /**
+   * Main entry point for running the cancer prediction showcase.
+   *
+   * @param args the command line arguments
+   */
   public static void main(String[] args) {
     logger.info("=================================================================");
     logger.info("Starting TFHE Privacy-Preserving Cancer Prediction Showcase");

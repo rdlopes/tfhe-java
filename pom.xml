@@ -279,6 +279,13 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <excludePackageNames>io.github.rdlopes.tfhe.ffm</excludePackageNames>
+        </configuration>
+      </plugin>
     </plugins>
     <extensions>
       <extension>
