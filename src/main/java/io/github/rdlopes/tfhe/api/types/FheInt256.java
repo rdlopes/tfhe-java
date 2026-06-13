@@ -375,7 +375,7 @@ public CompressedFheInt256 compress() {
   ///                                struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I256, FheInt256, CompressedFheInt256> addWithOverflow(FheInt256 other) {
+  public CheckedResult<FheInt256> addWithOverflow(FheInt256 other) {
     FheInt256 result = new FheInt256();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int256_overflowing_add(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -432,7 +432,7 @@ public CompressedFheInt256 compress() {
   ///                                struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I256, FheInt256, CompressedFheInt256> subtractWithOverflow(FheInt256 other){
+  public CheckedResult<FheInt256> subtractWithOverflow(FheInt256 other){
     FheInt256 result = new FheInt256();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int256_overflowing_sub(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -489,7 +489,7 @@ public CompressedFheInt256 compress() {
   ///                                struct FheBool **out_overflowed);
   ///```
   @Override
-  public CheckedResult<I256, FheInt256, CompressedFheInt256> multiplyWithOverflow(FheInt256 other) {
+  public CheckedResult<FheInt256> multiplyWithOverflow(FheInt256 other) {
     FheInt256 result = new FheInt256();
     FheBool overflow = new FheBool();
     execute(() -> fhe_int256_overflowing_mul(getValue(), other.getValue(), result.getAddress(), overflow.getAddress()));
@@ -617,7 +617,7 @@ public CompressedFheInt256 compress() {
   ///                        struct FheInt256 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<I256, FheInt256, CompressedFheInt256> divideWithRemainder(FheInt256 other) {
+  public DividerAndRemainder<FheInt256> divideWithRemainder(FheInt256 other) {
     FheInt256 divider = new FheInt256();
     FheInt256 remainder = new FheInt256();
     execute(() -> fhe_int256_div_rem(getValue(), other.getValue(), divider.getAddress(), remainder.getAddress()));
@@ -632,7 +632,7 @@ public CompressedFheInt256 compress() {
   ///                               struct FheInt256 **r_result);
   ///```
   @Override
-  public DividerAndRemainder<I256, FheInt256, CompressedFheInt256> divideWithRemainderScalar(I256 other) {
+  public DividerAndRemainder<FheInt256> divideWithRemainderScalar(I256 other) {
     FheInt256 divider = new FheInt256();
     FheInt256 remainder = new FheInt256();
     execute(() -> fhe_int256_scalar_div_rem(getValue(), other.getAddress(), divider.getAddress(), remainder.getAddress()));
@@ -679,7 +679,7 @@ public CompressedFheInt256 compress() {
   ///                              struct FheBool **result_2);
   ///```
   @Override
-  public CheckedResult<I256, FheInt256, CompressedFheInt256> ilog2WithCheck() {
+  public CheckedResult<FheInt256> ilog2WithCheck() {
     FheInt256 result = new FheInt256();
     FheBool check = new FheBool();
     execute(() -> fhe_int256_checked_ilog2(getValue(), result.getAddress(), check.getAddress()));

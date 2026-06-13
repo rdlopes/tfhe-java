@@ -2,6 +2,6 @@ package io.github.rdlopes.tfhe.api;
 
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 
-public interface FheDecryption<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
+public interface FheDecryption<V> {
   V decrypt(ClientKey clientKey);
 }

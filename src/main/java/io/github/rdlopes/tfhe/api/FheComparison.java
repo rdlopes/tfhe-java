@@ -2,7 +2,7 @@ package io.github.rdlopes.tfhe.api;
 
 import io.github.rdlopes.tfhe.api.types.FheBool;
 
-public interface FheComparison<V, T extends FheType<V, T, C>, C extends CompressedFheType<V, T, C>> {
+public interface FheComparison<V, T> {
 
   FheBool lessThan(T other);
 

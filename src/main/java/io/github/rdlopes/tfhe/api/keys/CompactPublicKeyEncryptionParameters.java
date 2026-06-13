@@ -19,7 +19,7 @@ public enum CompactPublicKeyEncryptionParameters {
     this.address = address;
   }
 
-  MemorySegment address() {
+  public MemorySegment address() {
     return address;
   }
 }
