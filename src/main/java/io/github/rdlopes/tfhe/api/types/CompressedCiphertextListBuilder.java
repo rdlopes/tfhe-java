@@ -1,19 +1,19 @@
 package io.github.rdlopes.tfhe.api.types;
 
 import io.github.rdlopes.tfhe.ffm.NativePointer;
-import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+@SuppressWarnings("java:S6539")
 public class CompressedCiphertextListBuilder extends NativePointer implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(CompressedCiphertextListBuilder.class);
 
   public CompressedCiphertextListBuilder() {
     super(builder -> {
-      TfheHeader.compressed_ciphertext_list_builder_destroy(builder);
+      compressed_ciphertext_list_builder_destroy(builder);
       return 0;
     });
     logger.trace("init");

@@ -14,12 +14,13 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
+@SuppressWarnings({"java:S2975", "java:S1182"})
 public class CompressedFheBool extends NativePointer implements CompressedFheType<Boolean, FheBool, CompressedFheBool> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheBool.class);
 // @formatter:on
 
   /// ```c
-  ////**
+  ///**
   ///  *ptr can be null (no-op in that case)
   ///  */
   /// int compressed_fhe_bool_destroy(struct CompressedFheBool *ptr);
@@ -41,7 +42,7 @@ public class CompressedFheBool extends NativePointer implements CompressedFheTyp
   }
 
   /// ```c
-  ////**
+  ///**
   ///  * Serializes safely.
   ///  *
   ///  * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
@@ -64,7 +65,7 @@ public class CompressedFheBool extends NativePointer implements CompressedFheTyp
   }
 
   /// ```c
-  ////**
+  ///**
   ///  * Deserializes safely, and checks that the resulting ciphertext
   ///  * is in compliance with the shape of ciphertext that the `server_key` expects.
   ///  *

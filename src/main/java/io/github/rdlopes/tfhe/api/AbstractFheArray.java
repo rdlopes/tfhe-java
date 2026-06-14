@@ -1,14 +1,13 @@
 package io.github.rdlopes.tfhe.api;
 
 import io.github.rdlopes.tfhe.api.types.FheBool;
-import io.github.rdlopes.tfhe.ffm.FheOps.*;
+import io.github.rdlopes.tfhe.ffm.FheOps.ArrayBinaryOp;
+import io.github.rdlopes.tfhe.ffm.FheOps.ArraySumOp;
 import io.github.rdlopes.tfhe.ffm.NativeArray;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 

@@ -15,39 +15,9 @@ public class PerceptronTrainingShowcase {
   private static final Logger logger = LoggerFactory.getLogger(PerceptronTrainingShowcase.class);
 
   private record Point(FheInt32 x1, FheInt32 x2, FheInt32 label, int rawX1, int rawX2, int rawLabel) {}
-
-  static void main() {
-    logger.info("=================================================================");
-    logger.info("Starting TFHE Privacy-Preserving Perceptron Training Showcase");
-    logger.info("=================================================================");
-
-    // tag::perceptron_setup[]
-    // 1. Setup keys
-    logger.info("Generating FHE keys...");
-    long startTime = System.currentTimeMillis();
-    KeySet keySet = KeySet.builder().build();
-    keySet.getServerKey().use();
-    PublicKey publicKey = new PublicKey(keySet.getClientKey());
-    logger.info("Keys generated in {} ms.", System.currentTimeMillis() - startTime);
-
-    // 2. Set up dataset
-    logger.info("Preparing and encrypting training dataset...");
-    int[][] rawData = {
-        {10, 15, 1},
-        {-15, -20, 0},
-        {20, 45, 0},
-        {5, 5, 1},
-        {-10, -30, 1},
-        {-5, -5, 0},
-        {0, 0, 1},
-        {30, 70, 0},
-        {-25, -45, 0},
-        {15, 25, 1}
-    };
-
+  
+  private static List<Point> encryptDataset(int[][] rawData, PublicKey publicKey, List<FheInt32> trackedObjects) {
     List<Point> dataset = new ArrayList<>();
-    List<FheInt32> trackedObjects = new ArrayList<>();
-
     for (int[] row : rawData) {
       int x1Val = row[0];
       int x2Val = row[1];
@@ -63,21 +33,10 @@ public class PerceptronTrainingShowcase {
 
       dataset.add(new Point(x1Enc, x2Enc, labelEnc, x1Val, x2Val, labelVal));
     }
-    logger.info("Dataset of {} points encrypted and loaded.", dataset.size());
-
-    // 3. Initialize weights and bias
-    logger.info("Initializing weights and bias to 0 (encrypted)...");
-    FheInt32 w1 = FheInt32.encrypt(0, publicKey);
-    FheInt32 w2 = FheInt32.encrypt(0, publicKey);
-    FheInt32 b = FheInt32.encrypt(0, publicKey);
-
-    trackedObjects.add(w1);
-    trackedObjects.add(w2);
-    trackedObjects.add(b);
-    // end::perceptron_setup[]
-
-    // tag::perceptron_training[]
-    // 4. Training Loop (8 epochs)
+    return dataset;
+  }
+  
+  private static void trainPerceptron(List<Point> dataset, FheInt32 w1, FheInt32 w2, FheInt32 b) {
     int epochs = 8;
     logger.info("Starting homomorphic training for {} epochs...", epochs);
     long trainStart = System.currentTimeMillis();
@@ -122,6 +81,74 @@ public class PerceptronTrainingShowcase {
       logger.info("  Epoch {} completed in {} ms.", epoch + 1, System.currentTimeMillis() - epochStart);
     }
     logger.info("Training completed in {} ms.", System.currentTimeMillis() - trainStart);
+  }
+  
+  private static boolean verifyConvergence(List<Point> dataset, int finalW1, int finalW2, int finalB) {
+    boolean allCorrect = true;
+    for (int i = 0; i < dataset.size(); i++) {
+      Point point = dataset.get(i);
+      int score = finalW1 * point.rawX1 + finalW2 * point.rawX2 + finalB;
+      int prediction = score >= 0 ? 1 : 0;
+      boolean correct = prediction == point.rawLabel;
+      logger.info(
+          "  Point {}: ({}, {}) | Label: {} | Score: {} | Predicted: {} | {}",
+          i + 1, point.rawX1, point.rawX2, point.rawLabel, score, prediction, correct ? "SUCCESS" : "FAILED"
+      );
+      if (!correct) {
+        allCorrect = false;
+      }
+    }
+    return allCorrect;
+  }
+  
+  @SuppressWarnings("PMD.EmptyCatchBlock")
+  static void main() {
+    logger.info("=================================================================");
+    logger.info("Starting TFHE Privacy-Preserving Perceptron Training Showcase");
+    logger.info("=================================================================");
+    
+    // tag::perceptron_setup[]
+    // 1. Setup keys
+    logger.info("Generating FHE keys...");
+    long startTime = System.currentTimeMillis();
+    KeySet keySet = KeySet.builder().build();
+    keySet.getServerKey().use();
+    PublicKey publicKey = new PublicKey(keySet.getClientKey());
+    logger.info("Keys generated in {} ms.", System.currentTimeMillis() - startTime);
+    
+    // 2. Set up dataset
+    logger.info("Preparing and encrypting training dataset...");
+    int[][] rawData = {
+        {10, 15, 1},
+        {-15, -20, 0},
+        {20, 45, 0},
+        {5, 5, 1},
+        {-10, -30, 1},
+        {-5, -5, 0},
+        {0, 0, 1},
+        {30, 70, 0},
+        {-25, -45, 0},
+        {15, 25, 1}
+    };
+    
+    List<FheInt32> trackedObjects = new ArrayList<>();
+    List<Point> dataset = encryptDataset(rawData, publicKey, trackedObjects);
+    logger.info("Dataset of {} points encrypted and loaded.", dataset.size());
+    
+    // 3. Initialize weights and bias
+    logger.info("Initializing weights and bias to 0 (encrypted)...");
+    FheInt32 w1 = FheInt32.encrypt(0, publicKey);
+    FheInt32 w2 = FheInt32.encrypt(0, publicKey);
+    FheInt32 b = FheInt32.encrypt(0, publicKey);
+    
+    trackedObjects.add(w1);
+    trackedObjects.add(w2);
+    trackedObjects.add(b);
+    // end::perceptron_setup[]
+    
+    // tag::perceptron_training[]
+    // 4. Training Loop
+    trainPerceptron(dataset, w1, w2, b);
     // end::perceptron_training[]
 
     // 5. Decrypt and verify convergence
@@ -136,18 +163,7 @@ public class PerceptronTrainingShowcase {
     logger.info("------------------------\n");
 
     logger.info("Verifying model classifications on training dataset:");
-    boolean allCorrect = true;
-    for (int i = 0; i < dataset.size(); i++) {
-      Point point = dataset.get(i);
-      int score = finalW1 * point.rawX1 + finalW2 * point.rawX2 + finalB;
-      int prediction = score >= 0 ? 1 : 0;
-      boolean correct = prediction == point.rawLabel;
-      logger.info("  Point {}: ({}, {}) | Label: {} | Score: {} | Predicted: {} | {}",
-          i + 1, point.rawX1, point.rawX2, point.rawLabel, score, prediction, correct ? "SUCCESS" : "FAILED");
-      if (!correct) {
-        allCorrect = false;
-      }
-    }
+    boolean allCorrect = verifyConvergence(dataset, finalW1, finalW2, finalB);
 
     if (allCorrect) {
       logger.info("\nShowcase completed successfully! Perceptron successfully converged and separates all points.");
@@ -161,11 +177,15 @@ public class PerceptronTrainingShowcase {
     for (FheInt32 obj : trackedObjects) {
       try {
         obj.destroy();
-      } catch (Exception ignored) {}
+      } catch (Exception _) {
+        // Ignored during clean up
+      }
     }
     try {
       publicKey.destroy();
-    } catch (Exception ignored) {}
+    } catch (Exception _) {
+      // Ignored during clean up
+    }
     logger.info("Done.");
   }
 }

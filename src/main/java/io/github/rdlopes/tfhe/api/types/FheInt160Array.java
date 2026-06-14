@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int160_sum;
 
 public final class FheInt160Array extends NativeArray implements FheArray<FheInt160, FheInt160Array> {
 
@@ -21,20 +21,26 @@ public final class FheInt160Array extends NativeArray implements FheArray<FheInt
   public FheBool containsArray(FheInt160Array other) {
     List<FheUint160> lhsU = this.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
     List<FheUint160> rhsU = other.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
-    FheBool result = new FheUint160Array(lhsU).containsArray(new FheUint160Array(rhsU));
-    lhsU.forEach(FheUint160::destroy);
-    rhsU.forEach(FheUint160::destroy);
-    return result;
+    try (FheUint160Array lhsArr = new FheUint160Array(lhsU);
+         FheUint160Array rhsArr = new FheUint160Array(rhsU)) {
+      FheBool result = lhsArr.containsArray(rhsArr);
+      lhsU.forEach(FheUint160::destroy);
+      rhsU.forEach(FheUint160::destroy);
+      return result;
+    }
   }
 
   @Override
   public FheBool equalsArray(FheInt160Array other) {
     List<FheUint160> lhsU = this.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
     List<FheUint160> rhsU = other.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
-    FheBool result = new FheUint160Array(lhsU).equalsArray(new FheUint160Array(rhsU));
-    lhsU.forEach(FheUint160::destroy);
-    rhsU.forEach(FheUint160::destroy);
-    return result;
+    try (FheUint160Array lhsArr = new FheUint160Array(lhsU);
+         FheUint160Array rhsArr = new FheUint160Array(rhsU)) {
+      FheBool result = lhsArr.equalsArray(rhsArr);
+      lhsU.forEach(FheUint160::destroy);
+      rhsU.forEach(FheUint160::destroy);
+      return result;
+    }
   }
 
   @Override
@@ -47,7 +53,8 @@ public final class FheInt160Array extends NativeArray implements FheArray<FheInt
   @Override
   public FheInt160Array add(FheInt160Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt160> a = this.getElements(); List<FheInt160> b = other.getElements();
+    List<FheInt160> a = this.getElements();
+    List<FheInt160> b = other.getElements();
     List<FheInt160> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
     return new FheInt160Array(r);
@@ -56,7 +63,8 @@ public final class FheInt160Array extends NativeArray implements FheArray<FheInt
   @Override
   public FheInt160Array subtract(FheInt160Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt160> a = this.getElements(); List<FheInt160> b = other.getElements();
+    List<FheInt160> a = this.getElements();
+    List<FheInt160> b = other.getElements();
     List<FheInt160> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
     return new FheInt160Array(r);

@@ -25,6 +25,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 /// @param <V> the Java clear-text type
 /// @param <D> the decompressed type (e.g. `FheInt8`)
 /// @param <T> the compressed type itself (self-referential)
+@SuppressWarnings({"java:S2975", "java:S1182"})
 public abstract class AbstractCompressedFheType<
     V,
     D extends AbstractFheType<V, D, T>,
@@ -98,9 +99,9 @@ public abstract class AbstractCompressedFheType<
       Handles<V> h, V clear, ClientKey key, Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
-      case FheValueKind.Primitive<V> ignored ->
+      case FheValueKind.Primitive<V> _ ->
           h.encryptClientKey().apply(clear, key.getValue(), r.getAddress());
-      case FheValueKind.Wide<V> ignored ->
+      case FheValueKind.Wide<V> _ ->
           h.encryptWideClientKey().apply(
               ((NativeAddress) clear).getAddress(), key.getValue(), r.getAddress());
     });

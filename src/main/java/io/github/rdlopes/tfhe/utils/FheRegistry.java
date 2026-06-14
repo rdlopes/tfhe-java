@@ -82,17 +82,19 @@ public final class FheRegistry {
   }
   
   // ── Factory registration ──────────────────────────────────────────────────
-
+  
+  @SuppressWarnings("PMD.EmptyCatchBlock")
   public static void registerFactory(Class<?> clazz, Supplier<?> factory) {
     FACTORIES.put(clazz, factory);
   }
-
-  @SuppressWarnings("unchecked")
+  
+  @SuppressWarnings({"unchecked", "PMD.EmptyCatchBlock"})
   public static <T> Supplier<T> getFactory(Class<T> clazz) {
     try {
       // Ensure the class's static initializer has run (registers the factory).
       Class.forName(clazz.getName(), true, clazz.getClassLoader());
-    } catch (ClassNotFoundException ignored) {
+    } catch (ClassNotFoundException _) {
+      // Class might not exist or be generated yet, ignore
     }
     return (Supplier<T>) FACTORIES.get(clazz);
   }
@@ -179,10 +181,11 @@ public final class FheRegistry {
         try {
           return (int) mh.invokeExact(self, result);
         } catch (Throwable t) {
-          throw new RuntimeException("Native call failed: " + methodName, t);
+          throw new IllegalStateException("Native call failed: " + methodName, t);
         }
       });
-    } catch (NoSuchMethodException | IllegalAccessException e) {
+    } catch (NoSuchMethodException | IllegalAccessException _) {
+      // Method doesn't exist in native, ignore
       return Optional.empty();
     }
   }
@@ -199,10 +202,11 @@ public final class FheRegistry {
         try {
           return (int) mh.invokeExact(list, index, result);
         } catch (Throwable t) {
-          throw new RuntimeException("Native call failed: " + methodName, t);
+          throw new IllegalStateException("Native call failed: " + methodName, t);
         }
       });
-    } catch (NoSuchMethodException | IllegalAccessException e) {
+    } catch (NoSuchMethodException | IllegalAccessException _) {
+      // Method doesn't exist in native, ignore
       return Optional.empty();
     }
   }

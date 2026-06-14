@@ -1,34 +1,16 @@
 package io.github.rdlopes.tfhe.features.steps;
 
-import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.CompactPkeCrs;
 import io.github.rdlopes.tfhe.api.keys.CompactPublicKey;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
-import io.github.rdlopes.tfhe.api.shortint.ShortintBivariatePbsLookupTable;
-import io.github.rdlopes.tfhe.api.shortint.ShortintCiphertext;
-import io.github.rdlopes.tfhe.api.shortint.ShortintClientKey;
-import io.github.rdlopes.tfhe.api.shortint.ShortintCompressedCiphertext;
-import io.github.rdlopes.tfhe.api.shortint.ShortintPbsLookupTable;
-import io.github.rdlopes.tfhe.api.shortint.ShortintPublicKey;
-import io.github.rdlopes.tfhe.api.shortint.ShortintServerKey;
-import io.github.rdlopes.tfhe.api.types.CompactCiphertextList;
-import io.github.rdlopes.tfhe.api.types.CompactCiphertextListExpander;
-import io.github.rdlopes.tfhe.api.types.CompressedCiphertextList;
-import io.github.rdlopes.tfhe.api.types.FheBool;
-import io.github.rdlopes.tfhe.api.types.FheUint128;
-import io.github.rdlopes.tfhe.api.types.FheUint128Array;
-import io.github.rdlopes.tfhe.api.types.FheUint8;
-import io.github.rdlopes.tfhe.api.types.FheUint8Array;
-import io.github.rdlopes.tfhe.api.types.FheInt8Array;
-import io.github.rdlopes.tfhe.api.types.FheInt128Array;
-import io.github.rdlopes.tfhe.api.types.ProvenCompactCiphertextList;
+import io.github.rdlopes.tfhe.api.shortint.*;
+import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.ffm.NativeAddress;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
 
 public class TfheTestContext {
 

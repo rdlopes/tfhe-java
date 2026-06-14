@@ -7,14 +7,15 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 @Tag("intensive")
-public class TfheBenchmarkRunner {
+@SuppressWarnings("java:S3577")
+class TfheBenchmarkRunner {
 
   @Test
-  public void runBenchmarks() throws Exception {
+  void runBenchmarks() {
     Options opt = new OptionsBuilder()
         .include(TfheBenchmarks.class.getSimpleName())
         .forks(1)
         .build();
-    new Runner(opt).run();
+    org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> new Runner(opt).run());
   }
 }

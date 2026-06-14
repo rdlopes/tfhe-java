@@ -2,9 +2,10 @@ package io.github.rdlopes.tfhe.ffm;
 
 import java.lang.foreign.*;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.C_LONG_LONG;
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
+@SuppressWarnings({"java:S100", "java:S115", "java:S1192"})
 public class TfheHeaderExtension {
   static {
     NativeLibrary.load();

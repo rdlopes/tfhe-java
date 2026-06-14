@@ -20,7 +20,7 @@ public final class U1024 extends AbstractValue {
   
   /// Creates a new zero-initialized instance for use as a native output slot.
   public static U1024 newEmpty() {
-    return new U1024(BigInteger.ZERO);
+    return new U1024(ZERO);
   }
 
   @NonNull

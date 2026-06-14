@@ -48,7 +48,11 @@ public class CompactPkeCrs extends NativePointer implements FheObject, AutoClose
   public static CompactPkeCrs safeDeserializeFromParams(DynamicBuffer dynamicBuffer) {
     logger.trace("safeDeserializeFromParams");
     CompactPkeCrs deserialized = new CompactPkeCrs();
-    execute(() -> compact_pke_crs_safe_deserialize_from_params(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
+    execute(() -> compact_pke_crs_safe_deserialize_from_params(
+        dynamicBuffer.getAddress(),
+        dynamicBuffer.getLength(),
+        deserialized.getAddress()
+    ));
     return deserialized;
   }
 

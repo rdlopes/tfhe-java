@@ -338,9 +338,7 @@ public class CompactListStepDefinitions {
 
   @Then("verifying and expanding the conformant list with metadata {string} succeeds")
   public void verifyingAndExpandingTheConformantListWithMetadataSucceeds(String metadataStr) {
-    byte[] metadata = parseMetadata(metadataStr);
-    context.expander = context.track(context.provenList.verifyAndExpand(context.crs, context.compactPublicKey, metadata));
-    assertThat(context.expander).isNotNull();
+    verifyingAndExpandingTheListWithMetadataSucceeds(metadataStr);
   }
 
   @Then("the decrypted elements match the original values")

@@ -16,7 +16,7 @@ import static java.math.BigInteger.ONE;
 /// native memory during construction; after that the memory region is read-only through
 /// this API (no `setValue` method is exposed).
 ///
-/// The native memory is owned by this object (no destroyer — the allocator writes
+/// This object owns the native memory (no destroyer — the allocator writes
 /// into a LIBRARY_ARENA-backed segment that lives for the duration of the process).
 public abstract class AbstractValue extends NativeAddress implements FheValue {
   
@@ -35,7 +35,7 @@ public abstract class AbstractValue extends NativeAddress implements FheValue {
   /// @param signed       `true` if this is a signed two's-complement type
   /// @param minValue     the minimum representable value (used for range validation)
   /// @param maxValue     the maximum representable value (used for range validation)
-  /// @param initialValue the value to store; must be within [`minValue`,`maxValue`]
+  /// @param initialValue the value to store; must be within {minValue, maxValue}
   /// @throws IllegalArgumentException if `initialValue` is out of range
   AbstractValue(
     Function<SegmentAllocator, MemorySegment> allocator,
@@ -64,7 +64,7 @@ public abstract class AbstractValue extends NativeAddress implements FheValue {
     }
     if (signed) {
       int signBitPosition = bitSize - 1;
-      BigInteger signBit = BigInteger.ONE.shiftLeft(bitSize);
+      BigInteger signBit = ONE.shiftLeft(bitSize);
       return result.testBit(signBitPosition) ? result.subtract(signBit) : result;
     }
     return result;
@@ -82,7 +82,7 @@ public abstract class AbstractValue extends NativeAddress implements FheValue {
     BigInteger valueStored = value;
     if (signed) {
       int signBitPosition = bitSize - 1;
-      BigInteger signBit = BigInteger.ONE.shiftLeft(bitSize);
+      BigInteger signBit = ONE.shiftLeft(bitSize);
       valueStored = value.testBit(signBitPosition) ? value.add(signBit) : value;
     }
     int wordCount = bitSize / Long.SIZE;

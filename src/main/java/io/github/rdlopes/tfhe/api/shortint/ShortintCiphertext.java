@@ -9,6 +9,7 @@ import java.lang.foreign.ValueLayout;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
+@SuppressWarnings({"java:S2975", "java:S1182"})
 public class ShortintCiphertext extends NativePointer {
 
   public ShortintCiphertext() {

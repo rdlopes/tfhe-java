@@ -4,7 +4,7 @@
   <parent>
     <groupId>io.github.rdlopes</groupId>
     <artifactId>maven-root-pom</artifactId>
-    <version>2.2.0</version>
+    <version>2.3.0</version>
   </parent>
 
   <artifactId>tfhe-java</artifactId>
@@ -30,6 +30,7 @@
     <generated.test.output.directory>${project.build.directory}/generated-test-sources</generated.test.output.directory>
     <native-bindings.output.directory>${generated.output.directory}/tfhe-rs</native-bindings.output.directory>
     <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
+    <rust-backtrace>0</rust-backtrace>
     <!--suppress XmlUnresolvedReference -->
     <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Plugin dependencies-->
@@ -37,8 +38,10 @@
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <sonar.organization>rdlopes</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.exclusions>
-    <sonar.cpd.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.cpd.exclusions>
+    <sonar.exclusions>**/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/showcase/VotingFlowShowcase*,**/showcase/PerceptronTrainingShowcase*,**/types/*Int2.java,**/types/*Int2$*,**/types/*Uint2.java,**/types/*Uint2$*,**/types/*Int4*,**/types/*Uint4*,**/types/*Int6*,**/types/*Uint6*,**/types/*Int10*,**/types/*Uint10*,**/types/*Int12*,**/types/*Uint12*,**/types/*Int14*,**/types/*Uint14*,**/types/*Int160*,**/types/*Uint160*,**/types/*512*,**/types/*1024*,**/types/*2048*,**/values/*160*,**/values/*512*,**/values/*1024*,**/values/*2048*</sonar.exclusions>
+    <sonar.cpd.exclusions>**/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/showcase/VotingFlowShowcase*,**/showcase/PerceptronTrainingShowcase*,**/types/*Int2.java,**/types/*Int2$*,**/types/*Uint2.java,**/types/*Uint2$*,**/types/*Int4*,**/types/*Uint4*,**/types/*Int6*,**/types/*Uint6*,**/types/*Int10*,**/types/*Uint10*,**/types/*Int12*,**/types/*Uint12*,**/types/*Int14*,**/types/*Uint14*,**/types/*Int160*,**/types/*Uint160*,**/types/*512*,**/types/*1024*,**/types/*2048*,**/values/*160*,**/values/*512*,**/values/*1024*,**/values/*2048*</sonar.cpd.exclusions>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
   </properties>
 
   <dependencies>
@@ -116,15 +119,47 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>io/github/rdlopes/tfhe/ffm/**/*</exclude>
+            <exclude>io/github/rdlopes/tfhe/showcase/VotingFlowShowcase*</exclude>
+            <exclude>io/github/rdlopes/tfhe/showcase/PerceptronTrainingShowcase*</exclude>
+            <exclude>**/types/*Int2.class</exclude>
+            <exclude>**/types/*Int2$*.class</exclude>
+            <exclude>**/types/*Uint2.class</exclude>
+            <exclude>**/types/*Uint2$*.class</exclude>
+            <exclude>**/types/*Int4*</exclude>
+            <exclude>**/types/*Uint4*</exclude>
+            <exclude>**/types/*Int6*</exclude>
+            <exclude>**/types/*Uint6*</exclude>
+            <exclude>**/types/*Int10*</exclude>
+            <exclude>**/types/*Uint10*</exclude>
+            <exclude>**/types/*Int12*</exclude>
+            <exclude>**/types/*Uint12*</exclude>
+            <exclude>**/types/*Int14*</exclude>
+            <exclude>**/types/*Uint14*</exclude>
+            <exclude>**/types/*Int160*</exclude>
+            <exclude>**/types/*Uint160*</exclude>
+            <exclude>**/types/*512*</exclude>
+            <exclude>**/types/*1024*</exclude>
+            <exclude>**/types/*2048*</exclude>
+            <exclude>**/values/*160*</exclude>
+            <exclude>**/values/*512*</exclude>
+            <exclude>**/values/*1024*</exclude>
+            <exclude>**/values/*2048*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <environmentVariables>
-            <RUST_BACKTRACE>full</RUST_BACKTRACE>
+            <RUST_BACKTRACE>${rust-backtrace}</RUST_BACKTRACE>
           </environmentVariables>
-          <argLine combine.children="append">--enable-preview
-            --enable-native-access=ALL-UNNAMED
-            -Djava.library.path=${java.library.path}</argLine>
+          <argLine>@{surefireArgLine} -XX:+EnableDynamicAgentLoading -Xshare:off --enable-preview --enable-native-access=ALL-UNNAMED -Djava.library.path=${java.library.path}</argLine>
           <excludedGroups>intensive</excludedGroups>
         </configuration>
       </plugin>
@@ -133,11 +168,9 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <environmentVariables>
-            <RUST_BACKTRACE>full</RUST_BACKTRACE>
+            <RUST_BACKTRACE>${rust-backtrace}</RUST_BACKTRACE>
           </environmentVariables>
-          <argLine combine.children="append">--enable-preview
-            --enable-native-access=ALL-UNNAMED
-            -Djava.library.path=${java.library.path}</argLine>
+          <argLine>@{failsafeArgLine} -XX:+EnableDynamicAgentLoading -Xshare:off --enable-preview --enable-native-access=ALL-UNNAMED -Djava.library.path=${java.library.path}</argLine>
         </configuration>
       </plugin>
       <plugin>
@@ -150,7 +183,7 @@
             <goals>
               <goal>sonar</goal>
             </goals>
-            <phase>post-integration-test</phase>
+            <phase>verify</phase>
           </execution>
         </executions>
       </plugin>

@@ -19,16 +19,32 @@ public class VotingFlowShowcase {
   
   // tag::voting_tallies[]
   public static final class ElectionTallies implements AutoCloseable {
-    public FheUint8 alice;
-    public FheUint8 bob;
-    public FheUint8 charlie;
-    public FheUint8 invalid;
+    private final FheUint8 alice;
+    private final FheUint8 bob;
+    private final FheUint8 charlie;
+    private final FheUint8 invalid;
 
     public ElectionTallies(PublicKey publicKey) {
       this.alice = FheUint8.encrypt((byte) 0, publicKey);
       this.bob = FheUint8.encrypt((byte) 0, publicKey);
       this.charlie = FheUint8.encrypt((byte) 0, publicKey);
       this.invalid = FheUint8.encrypt((byte) 0, publicKey);
+    }
+    
+    public FheUint8 getAlice() {
+      return alice;
+    }
+    
+    public FheUint8 getBob() {
+      return bob;
+    }
+    
+    public FheUint8 getCharlie() {
+      return charlie;
+    }
+    
+    public FheUint8 getInvalid() {
+      return invalid;
     }
     
     @Override
@@ -40,9 +56,32 @@ public class VotingFlowShowcase {
     }
   }
   // end::voting_tallies[]
-
-  public record Ballot(byte[] serializedData, byte[] metadata) {}
-
+  
+  public record Ballot(byte[] serializedData, byte[] metadata) {
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Ballot(var otherSerializedData, var otherMetadata))) return false;
+      return java.util.Arrays.equals(serializedData, otherSerializedData) &&
+          java.util.Arrays.equals(metadata, otherMetadata);
+    }
+    
+    @Override
+    public int hashCode() {
+      int result = java.util.Arrays.hashCode(serializedData);
+      result = 31 * result + java.util.Arrays.hashCode(metadata);
+      return result;
+    }
+    
+    @Override
+    public String toString() {
+      return "Ballot[" +
+          "serializedData=" + java.util.Arrays.toString(serializedData) + ", " +
+          "metadata=" + java.util.Arrays.toString(metadata) + ']';
+    }
+  }
+  
+  @SuppressWarnings("java:S1172")
   public static void main(String[] args) {
     logger.info("=================================================================");
     logger.info("Starting TFHE Privacy-Preserving Voting Flow Showcase");
@@ -52,12 +91,14 @@ public class VotingFlowShowcase {
     // 1. Setup election parameters & CRS
     logger.info("Preparing election cryptographic setup & CRS...");
     long startTime = System.currentTimeMillis();
-    ConfigBuilder crsBuilder = new ConfigBuilder();
-    execute(() -> use_dedicated_compact_public_key_parameters(
-        crsBuilder.getAddress(),
-        CompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128.address()
-    ));
-    Config crsConfig = crsBuilder.build();
+    Config crsConfig;
+    try (ConfigBuilder crsBuilder = new ConfigBuilder()) {
+      execute(() -> use_dedicated_compact_public_key_parameters(
+          crsBuilder.getAddress(),
+          CompactPublicKeyEncryptionParameters.SHORTINT_PARAM_PKE_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128.address()
+      ));
+      crsConfig = crsBuilder.build();
+    }
     
     try (CompactPkeCrs crs = new CompactPkeCrs(crsConfig, 8);
          KeySet keySet = KeySet.builder()
@@ -134,10 +175,10 @@ public class VotingFlowShowcase {
                  FheUint8 isValidU8 = isValid.castInto(FheUint8.class);
                  FheUint8 isInvalidU8 = one.subtract(isValidU8)) {
               
-              tallies.alice.addAssign(contribA);
-              tallies.bob.addAssign(contribB);
-              tallies.charlie.addAssign(contribC);
-              tallies.invalid.addAssign(isInvalidU8);
+              tallies.getAlice().addAssign(contribA);
+              tallies.getBob().addAssign(contribB);
+              tallies.getCharlie().addAssign(contribC);
+              tallies.getInvalid().addAssign(isInvalidU8);
             }
           }
         });
@@ -148,10 +189,10 @@ public class VotingFlowShowcase {
       
       // 4. Decrypt and verify results
       logger.info("Decrypting and verifying election results...");
-      byte finalAlice = tallies.alice.decrypt(keySet.getClientKey());
-      byte finalBob = tallies.bob.decrypt(keySet.getClientKey());
-      byte finalCharlie = tallies.charlie.decrypt(keySet.getClientKey());
-      byte finalInvalid = tallies.invalid.decrypt(keySet.getClientKey());
+      byte finalAlice = tallies.getAlice().decrypt(keySet.getClientKey());
+      byte finalBob = tallies.getBob().decrypt(keySet.getClientKey());
+      byte finalCharlie = tallies.getCharlie().decrypt(keySet.getClientKey());
+      byte finalInvalid = tallies.getInvalid().decrypt(keySet.getClientKey());
       
       logger.info("\n--- Election Tally Results ---");
       logger.info("Candidate 0 (Alice choice):   {} votes", finalAlice);
@@ -160,7 +201,7 @@ public class VotingFlowShowcase {
       logger.info("Invalid / Spoiled Ballots:    {} votes", finalInvalid);
       logger.info("------------------------------\n");
       
-      boolean correct = (finalAlice == 2 && finalBob == 1 && finalCharlie == 2 && finalInvalid == 2);
+      boolean correct = finalAlice == 2 && finalBob == 1 && finalCharlie == 2 && finalInvalid == 2;
       if (correct) {
         logger.info("Showcase completed successfully! Election results decrypted and verified correctly.");
       } else {

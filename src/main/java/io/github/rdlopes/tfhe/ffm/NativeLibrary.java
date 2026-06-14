@@ -6,10 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class NativeLibrary {
+public final class NativeLibrary {
+  private NativeLibrary() {
+    // Utility class
+  }
+  
   public static final String NAME = "tfhe";
   private static final Logger logger = LoggerFactory.getLogger(NativeLibrary.class);
   private static volatile boolean loaded = false;
@@ -26,19 +31,18 @@ public class NativeLibrary {
     try {
       loadFromName();
       loaded = true;
-      return;
-    } catch (Throwable throwable) {
-      logger.debug("Failed loading TFHE native library from name, message: {}", throwable.getMessage());
+    } catch (LinkageError | SecurityException e) {
+      logger.debug("Failed loading TFHE native library from name, message: {}", e.getMessage());
     }
 
     logger.debug("Loading TFHE native library from path");
     try {
       loadFromPath();
       loaded = true;
-    } catch (Throwable throwable) {
+    } catch (IOException | LinkageError | SecurityException e) {
       String msg = "Failed to load TFHE native library from both name and classpath path";
-      logger.error(msg, throwable);
-      throw new RuntimeException(msg, throwable);
+      logger.error(msg, e);
+      throw new UnsatisfiedLinkError(msg + ": " + e.getMessage());
     }
   }
 
@@ -47,7 +51,8 @@ public class NativeLibrary {
     System.loadLibrary(NAME);
     logger.info("TFHE native library loaded from name");
   }
-
+  
+  @SuppressWarnings("java:S5443")
   private static void loadFromPath() throws IOException {
     logger.trace("loadFromPath");
 
@@ -58,7 +63,7 @@ public class NativeLibrary {
     String libraryJarPath = "/native/%s/%s/%s".formatted(osName(), osArch(), System.mapLibraryName(NAME));
     try (InputStream is = NativeLibrary.class.getResourceAsStream(libraryJarPath)) {
       if (is == null) {
-        throw new RuntimeException("Native library not found in " + libraryJarPath);
+        throw new FileNotFoundException("Native library not found in " + libraryJarPath);
       }
       File libraryFile = new File(temporaryLibraryDirectory, new File(libraryJarPath).getName());
       FileUtils.copyInputStreamToFile(is, libraryFile);
@@ -78,8 +83,8 @@ public class NativeLibrary {
     } else if (SystemUtils.IS_OS_LINUX) {
       return "linux";
     }
-
-    throw new RuntimeException("Unsupported operating system: " + SystemUtils.OS_NAME);
+    
+    throw new UnsupportedOperationException("Unsupported operating system: " + SystemUtils.OS_NAME);
   }
 
   private static String osArch() {
@@ -91,7 +96,7 @@ public class NativeLibrary {
     } else if (osArch.contains("amd64") || osArch.contains("x86_64")) {
       return "x86_64";
     }
-
-    throw new RuntimeException("Unsupported architecture: " + osArch);
+    
+    throw new UnsupportedOperationException("Unsupported architecture: " + osArch);
   }
 }

@@ -155,7 +155,7 @@ public final class FheOps {
   /// if_then_else: `(FheBool* cond, T* then, T* else, T** result) → int`
   @FunctionalInterface
   public interface IfThenElseOp {
-    int apply(MemorySegment cond, MemorySegment then_, MemorySegment else_, MemorySegment result);
+    int apply(MemorySegment cond, MemorySegment thenBranch, MemorySegment elseBranch, MemorySegment result);
   }
 
   /// Array contains / equals: `(lhs*, lhsLen, rhs*, rhsLen, FheBool** result) → int`

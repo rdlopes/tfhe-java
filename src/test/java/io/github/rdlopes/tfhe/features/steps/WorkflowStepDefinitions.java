@@ -3,7 +3,10 @@ package io.github.rdlopes.tfhe.features.steps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.github.rdlopes.tfhe.api.keys.*;
+import io.github.rdlopes.tfhe.api.keys.ClientKey;
+import io.github.rdlopes.tfhe.api.keys.ConfigBuilder;
+import io.github.rdlopes.tfhe.api.keys.KeySet;
+import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.CompressedFheUint32;
 import io.github.rdlopes.tfhe.api.types.FheUint32;
@@ -15,8 +18,6 @@ public class WorkflowStepDefinitions {
   private final TfheTestContext context;
 
   // Local state for the scenario
-  private ConfigBuilder configBuilder;
-  private Config config;
   private ClientKey clientKey;
   private ServerKey serverKey;
   
@@ -48,7 +49,9 @@ public class WorkflowStepDefinitions {
 
   @Given("a standard configuration is prepared")
   public void aStandardConfigurationIsPrepared() {
-    configBuilder = new ConfigBuilder();
+    try (ConfigBuilder builder = new ConfigBuilder()) {
+      assertThat(builder).isNotNull();
+    }
   }
 
   @When("the keys are generated")

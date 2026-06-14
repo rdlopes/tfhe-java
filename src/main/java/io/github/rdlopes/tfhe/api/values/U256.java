@@ -20,7 +20,7 @@ public final class U256 extends AbstractValue {
   
   /// Creates a new zero-initialized instance for use as a native output slot.
   public static U256 newEmpty() {
-    return new U256(BigInteger.ZERO);
+    return new U256(ZERO);
   }
 
   @NonNull

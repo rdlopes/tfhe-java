@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int2048_sum;
 
 public final class FheInt2048Array extends NativeArray implements FheArray<FheInt2048, FheInt2048Array> {
 
@@ -21,20 +21,26 @@ public final class FheInt2048Array extends NativeArray implements FheArray<FheIn
   public FheBool containsArray(FheInt2048Array other) {
     List<FheUint2048> lhsU = this.<FheInt2048>getElements().stream().map(e -> e.castInto(FheUint2048.class)).toList();
     List<FheUint2048> rhsU = other.<FheInt2048>getElements().stream().map(e -> e.castInto(FheUint2048.class)).toList();
-    FheBool result = new FheUint2048Array(lhsU).containsArray(new FheUint2048Array(rhsU));
-    lhsU.forEach(FheUint2048::destroy);
-    rhsU.forEach(FheUint2048::destroy);
-    return result;
+    try (FheUint2048Array lhsArr = new FheUint2048Array(lhsU);
+         FheUint2048Array rhsArr = new FheUint2048Array(rhsU)) {
+      FheBool result = lhsArr.containsArray(rhsArr);
+      lhsU.forEach(FheUint2048::destroy);
+      rhsU.forEach(FheUint2048::destroy);
+      return result;
+    }
   }
 
   @Override
   public FheBool equalsArray(FheInt2048Array other) {
     List<FheUint2048> lhsU = this.<FheInt2048>getElements().stream().map(e -> e.castInto(FheUint2048.class)).toList();
     List<FheUint2048> rhsU = other.<FheInt2048>getElements().stream().map(e -> e.castInto(FheUint2048.class)).toList();
-    FheBool result = new FheUint2048Array(lhsU).equalsArray(new FheUint2048Array(rhsU));
-    lhsU.forEach(FheUint2048::destroy);
-    rhsU.forEach(FheUint2048::destroy);
-    return result;
+    try (FheUint2048Array lhsArr = new FheUint2048Array(lhsU);
+         FheUint2048Array rhsArr = new FheUint2048Array(rhsU)) {
+      FheBool result = lhsArr.equalsArray(rhsArr);
+      lhsU.forEach(FheUint2048::destroy);
+      rhsU.forEach(FheUint2048::destroy);
+      return result;
+    }
   }
 
   @Override
@@ -47,7 +53,8 @@ public final class FheInt2048Array extends NativeArray implements FheArray<FheIn
   @Override
   public FheInt2048Array add(FheInt2048Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt2048> a = this.getElements(); List<FheInt2048> b = other.getElements();
+    List<FheInt2048> a = this.getElements();
+    List<FheInt2048> b = other.getElements();
     List<FheInt2048> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
     return new FheInt2048Array(r);
@@ -56,7 +63,8 @@ public final class FheInt2048Array extends NativeArray implements FheArray<FheIn
   @Override
   public FheInt2048Array subtract(FheInt2048Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt2048> a = this.getElements(); List<FheInt2048> b = other.getElements();
+    List<FheInt2048> a = this.getElements();
+    List<FheInt2048> b = other.getElements();
     List<FheInt2048> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
     return new FheInt2048Array(r);

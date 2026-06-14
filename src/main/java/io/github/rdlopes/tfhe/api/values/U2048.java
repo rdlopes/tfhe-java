@@ -20,7 +20,7 @@ public final class U2048 extends AbstractValue {
   
   /// Creates a new zero-initialized instance for use as a native output slot.
   public static U2048 newEmpty() {
-    return new U2048(BigInteger.ZERO);
+    return new U2048(ZERO);
   }
 
   @NonNull

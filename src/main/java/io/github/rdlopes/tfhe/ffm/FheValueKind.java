@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 ///   Decrypt writes directly into `V`'s native address.
 ///
 /// @param <V> the Java clear-text type
+@SuppressWarnings("java:S2326")
 public sealed interface FheValueKind<V> {
 
   /// V is a Java primitive wrapper.

@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int512_sum;
 
 public final class FheInt512Array extends NativeArray implements FheArray<FheInt512, FheInt512Array> {
 
@@ -21,20 +21,26 @@ public final class FheInt512Array extends NativeArray implements FheArray<FheInt
   public FheBool containsArray(FheInt512Array other) {
     List<FheUint512> lhsU = this.<FheInt512>getElements().stream().map(e -> e.castInto(FheUint512.class)).toList();
     List<FheUint512> rhsU = other.<FheInt512>getElements().stream().map(e -> e.castInto(FheUint512.class)).toList();
-    FheBool result = new FheUint512Array(lhsU).containsArray(new FheUint512Array(rhsU));
-    lhsU.forEach(FheUint512::destroy);
-    rhsU.forEach(FheUint512::destroy);
-    return result;
+    try (FheUint512Array lhsArr = new FheUint512Array(lhsU);
+         FheUint512Array rhsArr = new FheUint512Array(rhsU)) {
+      FheBool result = lhsArr.containsArray(rhsArr);
+      lhsU.forEach(FheUint512::destroy);
+      rhsU.forEach(FheUint512::destroy);
+      return result;
+    }
   }
 
   @Override
   public FheBool equalsArray(FheInt512Array other) {
     List<FheUint512> lhsU = this.<FheInt512>getElements().stream().map(e -> e.castInto(FheUint512.class)).toList();
     List<FheUint512> rhsU = other.<FheInt512>getElements().stream().map(e -> e.castInto(FheUint512.class)).toList();
-    FheBool result = new FheUint512Array(lhsU).equalsArray(new FheUint512Array(rhsU));
-    lhsU.forEach(FheUint512::destroy);
-    rhsU.forEach(FheUint512::destroy);
-    return result;
+    try (FheUint512Array lhsArr = new FheUint512Array(lhsU);
+         FheUint512Array rhsArr = new FheUint512Array(rhsU)) {
+      FheBool result = lhsArr.equalsArray(rhsArr);
+      lhsU.forEach(FheUint512::destroy);
+      rhsU.forEach(FheUint512::destroy);
+      return result;
+    }
   }
 
   @Override
@@ -47,7 +53,8 @@ public final class FheInt512Array extends NativeArray implements FheArray<FheInt
   @Override
   public FheInt512Array add(FheInt512Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt512> a = this.getElements(); List<FheInt512> b = other.getElements();
+    List<FheInt512> a = this.getElements();
+    List<FheInt512> b = other.getElements();
     List<FheInt512> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
     return new FheInt512Array(r);
@@ -56,7 +63,8 @@ public final class FheInt512Array extends NativeArray implements FheArray<FheInt
   @Override
   public FheInt512Array subtract(FheInt512Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt512> a = this.getElements(); List<FheInt512> b = other.getElements();
+    List<FheInt512> a = this.getElements();
+    List<FheInt512> b = other.getElements();
     List<FheInt512> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
     return new FheInt512Array(r);

@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_uint2048_sum;
 
 public final class FheUint2048Array extends NativeArray implements FheArray<FheUint2048, FheUint2048Array> {
 
@@ -19,17 +19,17 @@ public final class FheUint2048Array extends NativeArray implements FheArray<FheU
 
   @Override
   public FheBool containsArray(FheUint2048Array other) {
-    int L = (int) getSize();
-    int M = (int) other.getSize();
-    if (M > L) {
+    int lhsLen = (int) getSize();
+    int rhsLen = (int) other.getSize();
+    if (rhsLen > lhsLen) {
       return FheBool.encrypt(false);
     }
     List<FheUint2048> a = this.getElements();
     List<FheUint2048> b = other.getElements();
     FheBool result = FheBool.encrypt(false);
-    for (int offset = 0; offset <= L - M; offset++) {
+    for (int offset = 0; offset <= lhsLen - rhsLen; offset++) {
       FheBool eq = a.get(offset).equalTo(b.get(0));
-      for (int j = 1; j < M; j++) {
+      for (int j = 1; j < rhsLen; j++) {
         FheBool eq2 = a.get(offset + j).equalTo(b.get(j));
         eq.bitAndAssign(eq2);
         eq2.destroy();
@@ -69,7 +69,8 @@ public final class FheUint2048Array extends NativeArray implements FheArray<FheU
   @Override
   public FheUint2048Array add(FheUint2048Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheUint2048> a = this.getElements(); List<FheUint2048> b = other.getElements();
+    List<FheUint2048> a = this.getElements();
+    List<FheUint2048> b = other.getElements();
     List<FheUint2048> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
     return new FheUint2048Array(r);
@@ -78,7 +79,8 @@ public final class FheUint2048Array extends NativeArray implements FheArray<FheU
   @Override
   public FheUint2048Array subtract(FheUint2048Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheUint2048> a = this.getElements(); List<FheUint2048> b = other.getElements();
+    List<FheUint2048> a = this.getElements();
+    List<FheUint2048> b = other.getElements();
     List<FheUint2048> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
     return new FheUint2048Array(r);

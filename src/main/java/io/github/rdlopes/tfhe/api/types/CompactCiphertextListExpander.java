@@ -1,7 +1,10 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.FheType;
+import io.github.rdlopes.tfhe.ffm.FheOps;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,13 +12,9 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 
-import io.github.rdlopes.tfhe.api.AbstractFheType;
-import io.github.rdlopes.tfhe.api.FheType;
-import io.github.rdlopes.tfhe.ffm.FheOps;
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.compact_ciphertext_list_expander_get_kind_of;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.compact_ciphertext_list_expander_len;
 
 public class CompactCiphertextListExpander extends NativePointer implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(CompactCiphertextListExpander.class);

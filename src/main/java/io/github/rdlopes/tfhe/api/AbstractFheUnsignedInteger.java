@@ -1,7 +1,5 @@
 package io.github.rdlopes.tfhe.api;
 
-import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
-
 import java.lang.foreign.MemorySegment;
 import java.util.function.Function;
 

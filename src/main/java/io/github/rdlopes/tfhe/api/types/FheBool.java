@@ -6,6 +6,7 @@ import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.FheOps;
+import io.github.rdlopes.tfhe.ffm.NativeCallException;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import io.github.rdlopes.tfhe.utils.FheRegistry;
@@ -20,6 +21,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
+@SuppressWarnings({"java:S2975", "java:S1182"})
 public class FheBool extends NativePointer implements FheBoolean<FheBool, CompressedFheBool> {
   private static final Logger logger = LoggerFactory.getLogger(FheBool.class);
 // @formatter:on
@@ -220,17 +222,17 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
   @Override
   public java.util.Optional<Boolean> tryDecryptTrivial() {
     try (Arena arena = Arena.ofConfined()) {
-      MemorySegment memorySegment = arena.allocate(io.github.rdlopes.tfhe.ffm.TfheHeader.C_BOOL);
+      MemorySegment memorySegment = arena.allocate(C_BOOL);
       int status = fhe_bool_try_decrypt_trivial(getValue(), memorySegment);
       if (status != 0) {
         MemorySegment errorMessageAddress = tfhe_error_get_last();
         String errorMessage = errorMessageAddress.getString(0);
         if (!NO_ERROR_MESSAGE.equals(errorMessage)) {
-          throw new io.github.rdlopes.tfhe.ffm.NativeCallException(status, errorMessage);
+          throw new NativeCallException(status, errorMessage);
         }
         return java.util.Optional.empty();
       }
-      return java.util.Optional.of(memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_BOOL, 0));
+      return java.util.Optional.of(memorySegment.get(C_BOOL, 0));
     }
   }
 

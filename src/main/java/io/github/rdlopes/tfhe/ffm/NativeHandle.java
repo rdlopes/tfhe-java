@@ -23,18 +23,28 @@ public record NativeHandle(
   private static final Logger logger = LoggerFactory.getLogger(NativeHandle.class);
 
   public NativeHandle {
-    logger.trace("init - javaClass: {}, address: {}, destroyer: {}, lifecycle: {}",
-      javaClass, address, destroyer, lifecycle);
+    if (logger.isTraceEnabled()) {
+      logger.trace(
+        "init - javaClass: {}, address: {}, destroyer: {}, lifecycle: {}",
+        javaClass, address, destroyer, lifecycle
+      );
+    }
   }
 
   @Override
   public void run() {
     if (lifecycle.isReleased()) {
-      logger.trace("run {}[0x{}] - skipped (released)",
-        javaClass.getSimpleName(), Long.toHexString(address.address()));
+      if (logger.isTraceEnabled()) {
+        logger.trace(
+          "run {}[0x{}] - skipped (released)",
+          javaClass.getSimpleName(), Long.toHexString(address.address())
+        );
+      }
       return;
     }
-    logger.trace("run {}[0x{}]", javaClass.getSimpleName(), Long.toHexString(address.address()));
+    if (logger.isTraceEnabled()) {
+      logger.trace("run {}[0x{}]", javaClass.getSimpleName(), Long.toHexString(address.address()));
+    }
     lifecycle.release(); // mark before calling to prevent re-entrancy
     execute(() -> destroyer.apply(address));
   }

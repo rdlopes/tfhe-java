@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int256_sum;
 
 public final class FheInt256Array extends NativeArray implements FheArray<FheInt256, FheInt256Array> {
 
@@ -21,20 +21,26 @@ public final class FheInt256Array extends NativeArray implements FheArray<FheInt
   public FheBool containsArray(FheInt256Array other) {
     List<FheUint256> lhsU = this.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
     List<FheUint256> rhsU = other.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
-    FheBool result = new FheUint256Array(lhsU).containsArray(new FheUint256Array(rhsU));
-    lhsU.forEach(FheUint256::destroy);
-    rhsU.forEach(FheUint256::destroy);
-    return result;
+    try (FheUint256Array lhsArr = new FheUint256Array(lhsU);
+         FheUint256Array rhsArr = new FheUint256Array(rhsU)) {
+      FheBool result = lhsArr.containsArray(rhsArr);
+      lhsU.forEach(FheUint256::destroy);
+      rhsU.forEach(FheUint256::destroy);
+      return result;
+    }
   }
 
   @Override
   public FheBool equalsArray(FheInt256Array other) {
     List<FheUint256> lhsU = this.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
     List<FheUint256> rhsU = other.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
-    FheBool result = new FheUint256Array(lhsU).equalsArray(new FheUint256Array(rhsU));
-    lhsU.forEach(FheUint256::destroy);
-    rhsU.forEach(FheUint256::destroy);
-    return result;
+    try (FheUint256Array lhsArr = new FheUint256Array(lhsU);
+         FheUint256Array rhsArr = new FheUint256Array(rhsU)) {
+      FheBool result = lhsArr.equalsArray(rhsArr);
+      lhsU.forEach(FheUint256::destroy);
+      rhsU.forEach(FheUint256::destroy);
+      return result;
+    }
   }
 
   @Override
@@ -47,7 +53,8 @@ public final class FheInt256Array extends NativeArray implements FheArray<FheInt
   @Override
   public FheInt256Array add(FheInt256Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt256> a = this.getElements(); List<FheInt256> b = other.getElements();
+    List<FheInt256> a = this.getElements();
+    List<FheInt256> b = other.getElements();
     List<FheInt256> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
     return new FheInt256Array(r);
@@ -56,7 +63,8 @@ public final class FheInt256Array extends NativeArray implements FheArray<FheInt
   @Override
   public FheInt256Array subtract(FheInt256Array other) {
     if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt256> a = this.getElements(); List<FheInt256> b = other.getElements();
+    List<FheInt256> a = this.getElements();
+    List<FheInt256> b = other.getElements();
     List<FheInt256> r = new ArrayList<>(a.size());
     for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
     return new FheInt256Array(r);

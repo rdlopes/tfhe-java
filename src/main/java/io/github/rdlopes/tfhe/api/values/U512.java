@@ -20,7 +20,7 @@ public final class U512 extends AbstractValue {
   
   /// Creates a new zero-initialized instance for use as a native output slot.
   public static U512 newEmpty() {
-    return new U512(BigInteger.ZERO);
+    return new U512(ZERO);
   }
 
   @NonNull

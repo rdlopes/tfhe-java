@@ -29,6 +29,7 @@ import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
 /// @param <V> the Java clear-text type (e.g. `Byte`)
 /// @param <T> the concrete encrypted type (e.g. `FheInt8`)
 /// @param <C> the corresponding compressed type (e.g. `CompressedFheInt8`)
+@SuppressWarnings({"java:S2975", "java:S1182"})
 public abstract class AbstractFheType<
     V,
     T extends AbstractFheType<V, T, C>,
@@ -224,7 +225,7 @@ public abstract class AbstractFheType<
     return new CheckedResult<>(r, flag);
   }
   
-  /// `abs()` — only valid for signed types; exposed via {@link FheSignedInteger}.
+  /// `abs()` — only valid for signed types; exposed via [FheSignedInteger].
   /// Overridden in [AbstractFheUnsignedInteger] to throw [UnsupportedOperationException].
   public T abs() {
     return unary(handles().arithmetic().abs());
@@ -288,11 +289,11 @@ public abstract class AbstractFheType<
   @Override
   public final V decrypt(ClientKey clientKey) {
     return switch (handles().valueKind()) {
-      case FheValueKind.Primitive<V> p ->
-          executeAndReturn(p.javaType(),
+      case FheValueKind.Primitive<V>(var javaType) -> executeAndReturn(
+          javaType,
               addr -> handles().encryption().decryptPrimitive().apply(getValue(), clientKey.getValue(), addr));
-      case FheValueKind.Wide<V> w -> {
-        V out = w.factory().get();
+      case FheValueKind.Wide<V>(var factory) -> {
+        V out = factory.get();
         execute(() -> handles().encryption().decryptWide().apply(
             getValue(), clientKey.getValue(), ((NativeAddress) out).getAddress()));
         yield out;
@@ -303,50 +304,50 @@ public abstract class AbstractFheType<
   @Override
   public final java.util.Optional<V> tryDecryptTrivial() {
     return switch (handles().valueKind()) {
-      case FheValueKind.Primitive<V> p -> {
+      case FheValueKind.Primitive<V>(var javaType) -> {
         var op = FheRegistry.getTryDecryptPrimitiveOp(this.getClass());
         if (op == null) yield java.util.Optional.empty();
         try (java.lang.foreign.Arena arena = java.lang.foreign.Arena.ofConfined()) {
           MemorySegment memorySegment = arena.allocate(
-              switch (p.javaType()) {
-                case Class<?> type when type == Boolean.class -> io.github.rdlopes.tfhe.ffm.TfheHeader.C_BOOL;
-                case Class<?> type when type == Byte.class -> io.github.rdlopes.tfhe.ffm.TfheHeader.C_CHAR;
-                case Class<?> type when type == Short.class -> io.github.rdlopes.tfhe.ffm.TfheHeader.C_SHORT;
-                case Class<?> type when type == Integer.class -> io.github.rdlopes.tfhe.ffm.TfheHeader.C_INT;
-                case Class<?> type when type == Long.class -> io.github.rdlopes.tfhe.ffm.TfheHeader.C_LONG_LONG;
-                default -> io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER;
+              switch (javaType) {
+                case Class<?> type when type == Boolean.class -> TfheHeader$shared.C_BOOL;
+                case Class<?> type when type == Byte.class -> TfheHeader$shared.C_CHAR;
+                case Class<?> type when type == Short.class -> TfheHeader$shared.C_SHORT;
+                case Class<?> type when type == Integer.class -> TfheHeader$shared.C_INT;
+                case Class<?> type when type == Long.class -> TfheHeader$shared.C_LONG_LONG;
+                default -> TfheHeader$shared.C_POINTER;
               }
           );
           int status = op.apply(getValue(), memorySegment);
           if (status != 0) {
-            MemorySegment errorMessageAddress = io.github.rdlopes.tfhe.ffm.TfheHeader.tfhe_error_get_last();
+            MemorySegment errorMessageAddress = TfheHeader.tfhe_error_get_last();
             String errorMessage = errorMessageAddress.getString(0);
             if (!NO_ERROR_MESSAGE.equals(errorMessage)) {
-              throw new io.github.rdlopes.tfhe.ffm.NativeCallException(status, errorMessage);
+              throw new NativeCallException(status, errorMessage);
             }
             yield java.util.Optional.empty();
           }
-          var result = switch (p.javaType()) {
-            case Class<?> type when type == Boolean.class -> memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_BOOL, 0);
-            case Class<?> type when type == Byte.class -> memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_CHAR, 0);
-            case Class<?> type when type == Short.class -> memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_SHORT, 0);
-            case Class<?> type when type == Integer.class -> memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_INT, 0);
-            case Class<?> type when type == Long.class -> memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_LONG_LONG, 0);
-            default -> memorySegment.get(io.github.rdlopes.tfhe.ffm.TfheHeader.C_POINTER, 0);
+          var result = switch (javaType) {
+            case Class<?> type when type == Boolean.class -> memorySegment.get(TfheHeader$shared.C_BOOL, 0);
+            case Class<?> type when type == Byte.class -> memorySegment.get(TfheHeader$shared.C_CHAR, 0);
+            case Class<?> type when type == Short.class -> memorySegment.get(TfheHeader$shared.C_SHORT, 0);
+            case Class<?> type when type == Integer.class -> memorySegment.get(TfheHeader$shared.C_INT, 0);
+            case Class<?> type when type == Long.class -> memorySegment.get(TfheHeader$shared.C_LONG_LONG, 0);
+            default -> memorySegment.get(TfheHeader$shared.C_POINTER, 0);
           };
-          yield java.util.Optional.of(p.javaType().cast(result));
+          yield java.util.Optional.of(javaType.cast(result));
         }
       }
-      case FheValueKind.Wide<V> w -> {
+      case FheValueKind.Wide<V>(var factory) -> {
         var op = FheRegistry.getTryDecryptWideOp(this.getClass());
         if (op == null) yield java.util.Optional.empty();
-        V out = w.factory().get();
+        V out = factory.get();
         int status = op.apply(getValue(), ((NativeAddress) out).getAddress());
         if (status != 0) {
-          MemorySegment errorMessageAddress = io.github.rdlopes.tfhe.ffm.TfheHeader.tfhe_error_get_last();
+          MemorySegment errorMessageAddress = TfheHeader.tfhe_error_get_last();
           String errorMessage = errorMessageAddress.getString(0);
           if (!NO_ERROR_MESSAGE.equals(errorMessage)) {
-            throw new io.github.rdlopes.tfhe.ffm.NativeCallException(status, errorMessage);
+            throw new NativeCallException(status, errorMessage);
           }
           ((NativeAddress) out).destroy();
           yield java.util.Optional.empty();
@@ -384,9 +385,9 @@ public abstract class AbstractFheType<
       FheTypeHandles<V> h, V clear, ClientKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
-      case FheValueKind.Primitive<V> ignored ->
+      case FheValueKind.Primitive<V> _ ->
           h.encryption().encryptClientKey().apply(clear, key.getValue(), r.getAddress());
-      case FheValueKind.Wide<V> ignored ->
+      case FheValueKind.Wide<V> _ ->
           h.encryption().encryptWideClientKey().apply(
               ((NativeAddress) clear).getAddress(), key.getValue(), r.getAddress());
     });
@@ -398,9 +399,9 @@ public abstract class AbstractFheType<
       FheTypeHandles<V> h, V clear, PublicKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
-      case FheValueKind.Primitive<V> ignored ->
+      case FheValueKind.Primitive<V> _ ->
           h.encryption().encryptPublicKey().apply(clear, key.getValue(), r.getAddress());
-      case FheValueKind.Wide<V> ignored ->
+      case FheValueKind.Wide<V> _ ->
           h.encryption().encryptWidePublicKey().apply(
               ((NativeAddress) clear).getAddress(), key.getValue(), r.getAddress());
     });
@@ -412,9 +413,9 @@ public abstract class AbstractFheType<
       FheTypeHandles<V> h, V clear, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
-      case FheValueKind.Primitive<V> ignored ->
+      case FheValueKind.Primitive<V> _ ->
           h.encryption().encryptTrivial().apply(clear, r.getAddress());
-      case FheValueKind.Wide<V> ignored ->
+      case FheValueKind.Wide<V> _ ->
           h.encryption().encryptWideTrivial().apply(
               ((NativeAddress) clear).getAddress(), r.getAddress());
     });

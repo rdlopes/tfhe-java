@@ -24,7 +24,7 @@ jobs:
       - run: gh repo clone zama-ai/tfhe-rs .
         env:
           GH_TOKEN: ${{github.token}}
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@46268bd060767258de96ed93c1251119784f2ab6 # v1.16.1
         with:
           cache-shared-key: ${{matrix.os}}
       - run: make build_c_api
@@ -79,7 +79,7 @@ jobs:
           path: native-bundle
           retention-days: 30
       - name: Delete Native Libraries Specific Artifacts
-        uses: geekyeggo/delete-artifact@v6
+        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
         with:
           name: 'native-libs-*'
 

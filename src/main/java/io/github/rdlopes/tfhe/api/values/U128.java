@@ -20,7 +20,7 @@ public final class U128 extends AbstractValue {
   
   /// Creates a new zero-initialized instance for use as a native output slot.
   public static U128 newEmpty() {
-    return new U128(BigInteger.ZERO);
+    return new U128(ZERO);
   }
 
   @NonNull

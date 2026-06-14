@@ -13,14 +13,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class U512Test {
 
   @Test
-  public void initializesFromMinimumValue() {
+  void initializesFromMinimumValue() {
     U512 value = of(MIN_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MIN_VALUE);
   }
 
   @Test
-  public void initializesFromMaximumValue() {
+  void initializesFromMaximumValue() {
     U512 value = of(MAX_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MAX_VALUE);

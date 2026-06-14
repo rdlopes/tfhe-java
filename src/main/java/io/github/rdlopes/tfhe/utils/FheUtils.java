@@ -34,19 +34,22 @@ public final class FheUtils {
                  .map(String::toLowerCase)
                  .reduce("", (acc, part) -> acc + (acc.isBlank() || isNumeric(part) ? "" : "_") + part);
   }
-
+  
+  private static final int[] BUCKETS = {1, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+  
   public static Class<?> valueClass(String typeName) {
-    return switch (bitSize(typeName)) {
+    boolean signed = isSigned(typeName);
+    return switch (bitLength(typeName)) {
       case 1 -> Boolean.class;
-      case int bitSize when (bitSize <= 8) -> Byte.class;
-      case int bitSize when (bitSize <= 16) -> Short.class;
-      case int bitSize when (bitSize <= 32) -> Integer.class;
-      case int bitSize when (bitSize <= 64) -> Long.class;
-      case int bitSize when (bitSize <= 128) -> isSigned(typeName) ? I128.class : U128.class;
-      case int bitSize when (bitSize <= 256) -> isSigned(typeName) ? I256.class : U256.class;
-      case int bitSize when (bitSize <= 512) -> isSigned(typeName) ? I512.class : U512.class;
-      case int bitSize when (bitSize <= 1024) -> isSigned(typeName) ? I1024.class : U1024.class;
-      case int bitSize when (bitSize <= 2048) -> isSigned(typeName) ? I2048.class : U2048.class;
+      case 8 -> Byte.class;
+      case 16 -> Short.class;
+      case 32 -> Integer.class;
+      case 64 -> Long.class;
+      case 128 -> signed ? I128.class : U128.class;
+      case 256 -> signed ? I256.class : U256.class;
+      case 512 -> signed ? I512.class : U512.class;
+      case 1024 -> signed ? I1024.class : U1024.class;
+      case 2048 -> signed ? I2048.class : U2048.class;
       default -> throw new IllegalArgumentException("Unknown type: " + typeName);
     };
   }
@@ -58,26 +61,20 @@ public final class FheUtils {
   public static int bitSize(String typeName) {
     String[] parts = splitByCharacterTypeCamelCase(typeName);
     String bitSizeString = parts[parts.length - 1];
-    return isNumeric(bitSizeString)
-      ? parseInt(bitSizeString)
-      : isBool(typeName) ? 1 : 8;
+    if (isNumeric(bitSizeString)) {
+      return parseInt(bitSizeString);
+    }
+    return isBool(typeName) ? 1 : 8;
   }
 
   public static int bitLength(String typeName) {
     int bitSize = bitSize(typeName);
-    return switch (bitSize) {
-      case 1 -> 1;
-      case int size when (size <= 8) -> 8;
-      case int size when (size <= 16) -> 16;
-      case int size when (size <= 32) -> 32;
-      case int size when (size <= 64) -> 64;
-      case int size when (size <= 128) -> 128;
-      case int size when (size <= 256) -> 256;
-      case int size when (size <= 512) -> 512;
-      case int size when (size <= 1024) -> 1024;
-      case int size when (size <= 2048) -> 2048;
-      default -> throw new IllegalArgumentException("Unknown type: " + typeName);
-    };
+    for (int bucket : BUCKETS) {
+      if (bitSize <= bucket) {
+        return bucket;
+      }
+    }
+    throw new IllegalArgumentException("Unknown type: " + typeName);
   }
 
 }

@@ -2,7 +2,6 @@ package io.github.rdlopes.tfhe.api;
 
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
-import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import io.github.rdlopes.tfhe.ffm.tfhe_threading_context_run$func;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +17,7 @@ public class TfheThreadingContext extends NativePointer implements AutoCloseable
 
   public TfheThreadingContext(long numThreads) {
     super(context -> {
-      TfheHeader.tfhe_threading_context_destroy(context);
+      tfhe_threading_context_destroy(context);
       return 0;
     });
     logger.trace("init - numThreads: {}", numThreads);

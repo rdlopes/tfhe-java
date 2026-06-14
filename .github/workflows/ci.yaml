@@ -15,10 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  actions: read
   contents: read
-  id-token: write
-  pages: write
 
 jobs:
 
@@ -48,6 +45,10 @@ jobs:
     name: Living Documentation
     runs-on: ubuntu-latest
     needs: [ build ]
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

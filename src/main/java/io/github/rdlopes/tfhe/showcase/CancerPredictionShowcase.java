@@ -107,7 +107,69 @@ public class CancerPredictionShowcase {
       }
     }
   }
-
+  
+  private static List<EncryptedPatientRecord> encryptPatientRecords(List<PatientRecord> records, ClientKey clientKey) {
+    List<EncryptedPatientRecord> encryptedRecords = new ArrayList<>();
+    for (PatientRecord r : records) {
+      encryptedRecords.add(new EncryptedPatientRecord(r, clientKey));
+      logger.info("  Encrypted patient data for: {}", r.name());
+    }
+    return encryptedRecords;
+  }
+  
+  private static void evaluatePredictions(List<EncryptedPatientRecord> encryptedRecords, ClientKey clientKey,
+                                          List<FheBool> encryptedPredictions, List<FheInt32> scores) {
+    for (EncryptedPatientRecord er : encryptedRecords) {
+      // Initialize with bias (ClientKey encryption is much faster)
+      FheInt32 score = FheInt32.encrypt(BIAS, clientKey);
+      
+      // Homomorphically compute score = sum(w_i * x_i) + bias
+      for (int i = 0; i < WEIGHTS.length; i++) {
+        int weight = WEIGHTS[i];
+        FheInt32 term = er.encryptedFeatures.get(i).multiplyScalar(weight);
+        FheInt32 oldScore = score;
+        score = oldScore.add(term);
+        
+        // Clean up intermediate ciphertexts to prevent memory leaks
+        term.destroy();
+        oldScore.destroy();
+      }
+      
+      // Classify: malignant if score >= 0
+      FheBool pred = score.greaterThanOrEqualToScalar(0);
+      
+      scores.add(score);
+      encryptedPredictions.add(pred);
+    }
+  }
+  
+  private static boolean verifyAndPrintResults(List<PatientRecord> records, List<FheBool> encryptedPredictions,
+                                               List<FheInt32> scores, ClientKey clientKey) {
+    boolean allCorrect = true;
+    for (int i = 0; i < records.size(); i++) {
+      PatientRecord r = records.get(i);
+      FheBool encryptedPred = encryptedPredictions.get(i);
+      FheInt32 score = scores.get(i);
+      
+      boolean pred = encryptedPred.decrypt(clientKey);
+      int decryptedScore = score.decrypt(clientKey);
+      
+      int predInt = pred ? 1 : 0;
+      boolean correct = predInt == r.trueLabel();
+      
+      logger.info(
+          "  {}: Decrypted Score = {} | Predicted = {} | True Label = {} | Verification: {}",
+          r.name(), decryptedScore, predInt == 1 ? "Malignant" : "Benign", r.trueLabel() == 1 ? "Malignant" : "Benign",
+          correct ? "SUCCESS" : "FAILED"
+      );
+      
+      if (!correct) {
+        allCorrect = false;
+      }
+    }
+    return allCorrect;
+  }
+  
   /// Main entry point for running the cancer prediction showcase.
   public static void main() {
     logger.info("=================================================================");
@@ -131,11 +193,7 @@ public class CancerPredictionShowcase {
     records.add(new PatientRecord("Patient-004", 4, 1, 1, 3, 2, 1, 3, 1, 1, 7, 2, 4, 0)); // Benign
 
     logger.info("Encrypting sensitive patient records...");
-    List<EncryptedPatientRecord> encryptedRecords = new ArrayList<>();
-    for (PatientRecord r : records) {
-      encryptedRecords.add(new EncryptedPatientRecord(r, keySet.getClientKey()));
-      logger.info("  Encrypted patient data for: {}", r.name());
-    }
+    List<EncryptedPatientRecord> encryptedRecords = encryptPatientRecords(records, keySet.getClientKey());
     // end::cancer_setup[]
 
     // tag::cancer_inference[]
@@ -145,54 +203,14 @@ public class CancerPredictionShowcase {
 
     List<FheBool> encryptedPredictions = new ArrayList<>();
     List<FheInt32> scores = new ArrayList<>();
-
-    for (EncryptedPatientRecord er : encryptedRecords) {
-      // Initialize with bias (ClientKey encryption is much faster)
-      FheInt32 score = FheInt32.encrypt(BIAS, keySet.getClientKey());
-      
-      // Homomorphically compute score = sum(w_i * x_i) + bias
-      for (int i = 0; i < WEIGHTS.length; i++) {
-        int weight = WEIGHTS[i];
-        FheInt32 term = er.encryptedFeatures.get(i).multiplyScalar(weight);
-        FheInt32 oldScore = score;
-        score = oldScore.add(term);
-        
-        // Clean up intermediate ciphertexts to prevent memory leaks
-        term.destroy();
-        oldScore.destroy();
-      }
-      
-      // Classify: malignant if score >= 0
-      FheBool pred = score.greaterThanOrEqualToScalar(0);
-      
-      scores.add(score);
-      encryptedPredictions.add(pred);
-    }
+    
+    evaluatePredictions(encryptedRecords, keySet.getClientKey(), encryptedPredictions, scores);
     logger.info("Homomorphic evaluation completed in {} ms.", System.currentTimeMillis() - evalStart);
     // end::cancer_inference[]
 
     // 4. Decrypt and verify outcomes (Client-side)
     logger.info("Decrypting and verifying results (Client-side)...");
-    boolean allCorrect = true;
-    for (int i = 0; i < records.size(); i++) {
-      PatientRecord r = records.get(i);
-      FheBool encryptedPred = encryptedPredictions.get(i);
-      FheInt32 score = scores.get(i);
-      
-      boolean pred = encryptedPred.decrypt(keySet.getClientKey());
-      int decryptedScore = score.decrypt(keySet.getClientKey());
-      
-      int predInt = pred ? 1 : 0;
-      boolean correct = (predInt == r.trueLabel());
-      
-      logger.info("  {}: Decrypted Score = {} | Predicted = {} | True Label = {} | Verification: {}",
-          r.name(), decryptedScore, predInt == 1 ? "Malignant" : "Benign", r.trueLabel() == 1 ? "Malignant" : "Benign",
-          correct ? "SUCCESS" : "FAILED");
-      
-      if (!correct) {
-        allCorrect = false;
-      }
-    }
+    boolean allCorrect = verifyAndPrintResults(records, encryptedPredictions, scores, keySet.getClientKey());
 
     if (allCorrect) {
       logger.info("Showcase completed successfully! FHE cancer prediction matches ground truth values.");

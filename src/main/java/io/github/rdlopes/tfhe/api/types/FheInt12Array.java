@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int12_sum;
 
 public final class FheInt12Array extends NativeArray implements FheArray<FheInt12, FheInt12Array> {
 
@@ -20,20 +20,26 @@ public final class FheInt12Array extends NativeArray implements FheArray<FheInt1
   public FheBool containsArray(FheInt12Array other) {
     List<FheUint12> lhsU = this.<FheInt12>getElements().stream().map(e -> e.castInto(FheUint12.class)).toList();
     List<FheUint12> rhsU = other.<FheInt12>getElements().stream().map(e -> e.castInto(FheUint12.class)).toList();
-    FheBool result = new FheUint12Array(lhsU).containsArray(new FheUint12Array(rhsU));
-    lhsU.forEach(FheUint12::destroy);
-    rhsU.forEach(FheUint12::destroy);
-    return result;
+    try (FheUint12Array lhsArr = new FheUint12Array(lhsU);
+         FheUint12Array rhsArr = new FheUint12Array(rhsU)) {
+      FheBool result = lhsArr.containsArray(rhsArr);
+      lhsU.forEach(FheUint12::destroy);
+      rhsU.forEach(FheUint12::destroy);
+      return result;
+    }
   }
 
   @Override
   public FheBool equalsArray(FheInt12Array other) {
     List<FheUint12> lhsU = this.<FheInt12>getElements().stream().map(e -> e.castInto(FheUint12.class)).toList();
     List<FheUint12> rhsU = other.<FheInt12>getElements().stream().map(e -> e.castInto(FheUint12.class)).toList();
-    FheBool result = new FheUint12Array(lhsU).equalsArray(new FheUint12Array(rhsU));
-    lhsU.forEach(FheUint12::destroy);
-    rhsU.forEach(FheUint12::destroy);
-    return result;
+    try (FheUint12Array lhsArr = new FheUint12Array(lhsU);
+         FheUint12Array rhsArr = new FheUint12Array(rhsU)) {
+      FheBool result = lhsArr.equalsArray(rhsArr);
+      lhsU.forEach(FheUint12::destroy);
+      rhsU.forEach(FheUint12::destroy);
+      return result;
+    }
   }
 
   @Override

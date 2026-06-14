@@ -12,13 +12,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class I128Test {
 
   @Test
-  public void initializesFromMinimumValue() {
+  void initializesFromMinimumValue() {
     I128 value = of(MIN_VALUE);
     assertThat(value).hasValue(MIN_VALUE);
   }
 
   @Test
-  public void initializesFromMaximumValue() {
+  void initializesFromMaximumValue() {
     I128 value = of(MAX_VALUE);
     assertThat(value).hasValue(MAX_VALUE);
   }

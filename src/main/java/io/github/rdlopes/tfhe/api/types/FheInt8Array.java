@@ -29,20 +29,26 @@ public final class FheInt8Array extends NativeArray implements FheArray<FheInt8,
   public FheBool containsArray(FheInt8Array other) {
     List<FheUint8> lhsU = this.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
     List<FheUint8> rhsU = other.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
-    FheBool result = new FheUint8Array(lhsU).containsArray(new FheUint8Array(rhsU));
-    lhsU.forEach(FheUint8::destroy);
-    rhsU.forEach(FheUint8::destroy);
-    return result;
+    try (FheUint8Array lhsArr = new FheUint8Array(lhsU);
+         FheUint8Array rhsArr = new FheUint8Array(rhsU)) {
+      FheBool result = lhsArr.containsArray(rhsArr);
+      lhsU.forEach(FheUint8::destroy);
+      rhsU.forEach(FheUint8::destroy);
+      return result;
+    }
   }
 
   @Override
   public FheBool equalsArray(FheInt8Array other) {
     List<FheUint8> lhsU = this.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
     List<FheUint8> rhsU = other.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
-    FheBool result = new FheUint8Array(lhsU).equalsArray(new FheUint8Array(rhsU));
-    lhsU.forEach(FheUint8::destroy);
-    rhsU.forEach(FheUint8::destroy);
-    return result;
+    try (FheUint8Array lhsArr = new FheUint8Array(lhsU);
+         FheUint8Array rhsArr = new FheUint8Array(rhsU)) {
+      FheBool result = lhsArr.equalsArray(rhsArr);
+      lhsU.forEach(FheUint8::destroy);
+      rhsU.forEach(FheUint8::destroy);
+      return result;
+    }
   }
 
   // ── FheArray — sum ────────────────────────────────────────────────────────────

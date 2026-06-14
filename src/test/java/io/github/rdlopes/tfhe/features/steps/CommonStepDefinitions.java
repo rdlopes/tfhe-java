@@ -24,13 +24,15 @@ public class CommonStepDefinitions {
     for (NativeAddress obj : context.getNativeObjects()) {
       try {
         obj.close();
-      } catch (Exception ignored) {
+      } catch (Exception _) {
+        // Ignored during native resource clean up
       }
     }
     if (context.keySet != null) {
       try {
         context.keySet.close();
-      } catch (Exception ignored) {
+      } catch (Exception _) {
+        // Ignored during native resource clean up
       }
     }
   }
