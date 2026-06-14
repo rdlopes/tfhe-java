@@ -35,6 +35,8 @@
     <!-- Plugin dependencies-->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
+    <sonar.organization>rdlopes</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.exclusions>
     <sonar.cpd.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.cpd.exclusions>
   </properties>
