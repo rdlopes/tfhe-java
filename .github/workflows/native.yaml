@@ -77,7 +77,7 @@ jobs:
         with:
           name: native-bundle
           path: native-bundle
-          retention-days: 1
+          retention-days: 30
       - name: Delete Native Libraries Specific Artifacts
         uses: geekyeggo/delete-artifact@v6
         with:

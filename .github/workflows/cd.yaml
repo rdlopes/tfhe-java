@@ -32,7 +32,10 @@ jobs:
           git config --global user.name "GitHub Actions"
 
       - name: Download Native Bundle
-        run: gh run download -w native.yaml -n native-bundle -D .native
+        run: |
+          RUN_ID=$(gh run list --workflow "Native Libraries Bundle" --status success --limit 1 --json databaseId --jq ".[0].databaseId")
+          echo "Latest successful run ID: $RUN_ID"
+          gh run download $RUN_ID -n native-bundle -D .native
         env:
           GH_TOKEN: ${{ github.token }}
 
