@@ -70,7 +70,12 @@ jobs:
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
-      - run: ./mvnw verify
+      - run: |
+          if [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
+            ./mvnw verify -Dsonar.skip=false
+          else
+            ./mvnw verify
+          fi
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
