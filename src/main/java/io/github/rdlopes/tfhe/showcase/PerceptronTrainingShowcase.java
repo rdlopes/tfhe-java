@@ -16,7 +16,7 @@ public class PerceptronTrainingShowcase {
 
   private record Point(FheInt32 x1, FheInt32 x2, FheInt32 label, int rawX1, int rawX2, int rawLabel) {}
 
-  public static void main(String[] args) {
+  static void main() {
     logger.info("=================================================================");
     logger.info("Starting TFHE Privacy-Preserving Perceptron Training Showcase");
     logger.info("=================================================================");

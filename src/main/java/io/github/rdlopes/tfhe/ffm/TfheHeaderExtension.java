@@ -6,6 +6,10 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 import static java.lang.foreign.MemoryLayout.PathElement.groupElement;
 
 public class TfheHeaderExtension {
+  static {
+    NativeLibrary.load();
+  }
+
   TfheHeaderExtension() {
     // Should not be called directly
   }

@@ -36,7 +36,7 @@ public class ShowcaseStepDefinitions {
   @When("I execute the breast cancer prediction showcase pipeline")
   public void iExecuteTheBreastCancerPredictionShowcasePipeline() {
     logger.info("Step: Executing CancerPredictionShowcase pipeline...");
-    CancerPredictionShowcase.main(new String[0]);
+    CancerPredictionShowcase.main();
   }
 
   @Then("the verification logs confirm correct predictions matching ground truth values")

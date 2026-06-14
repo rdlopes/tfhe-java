@@ -50,9 +50,9 @@ jobs:
           github-token: ${{github.token}}
       - name: Pack OSX Library
         run: |
-          mkdir -p native-bundle/libs/osx/aarch64
-          cp native-libs/tfhe.h native-bundle/libs/osx/aarch64
-          cp native-libs/*.dylib native-bundle/libs/osx/aarch64
+          mkdir -p native-bundle/libs/osx/aarch_64
+          cp native-libs/tfhe.h native-bundle/libs/osx/aarch_64
+          cp native-libs/*.dylib native-bundle/libs/osx/aarch_64
       - name: Pack Linux Library
         run: |
           mkdir -p native-bundle/libs/linux/x86_64

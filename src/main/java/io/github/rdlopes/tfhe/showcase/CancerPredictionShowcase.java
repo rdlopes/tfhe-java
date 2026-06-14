@@ -35,7 +35,7 @@ public class CancerPredictionShowcase {
   private static final int BIAS = -46;
 
   /**
-   * Represents a patient record with cleartext features.
+   * Represents a patient patientRecord with cleartext features.
    *
    * @param name the name of the patient
    * @param clumpThickness clump thickness feature value
@@ -70,7 +70,7 @@ public class CancerPredictionShowcase {
   ) {}
 
   /**
-   * Represents an encrypted patient record.
+   * Represents an encrypted patient patientRecord.
    */
   public static class EncryptedPatientRecord {
 
@@ -90,28 +90,28 @@ public class CancerPredictionShowcase {
     public final int trueLabel;
 
     /**
-     * Constructs an encrypted record from a cleartext record and client key.
+     * Constructs an encrypted patientRecord from a cleartext patientRecord and client key.
      *
-     * @param record the cleartext patient record
+     * @param patientRecord the cleartext patient patientRecord
      * @param clientKey the client key used for encryption
      */
-    public EncryptedPatientRecord(PatientRecord record, ClientKey clientKey) {
-      this.name = record.name();
-      this.trueLabel = record.trueLabel();
+    public EncryptedPatientRecord(PatientRecord patientRecord, ClientKey clientKey) {
+      this.name = patientRecord.name();
+      this.trueLabel = patientRecord.trueLabel();
       
       // Encrypt each feature using the client key
-      encryptedFeatures.add(FheInt32.encrypt(record.clumpThickness(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.uniformityCellSize(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.uniformityCellShape(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.marginalAdhesion(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.singleEpithelialCellSize(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.bareNuclei(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.blandChromatin(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.normalNucleoli(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.mitoses(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.ageScale(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.geneticRisk(), clientKey));
-      encryptedFeatures.add(FheInt32.encrypt(record.familyHistory(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.clumpThickness(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.uniformityCellSize(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.uniformityCellShape(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.marginalAdhesion(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.singleEpithelialCellSize(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.bareNuclei(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.blandChromatin(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.normalNucleoli(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.mitoses(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.ageScale(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.geneticRisk(), clientKey));
+      encryptedFeatures.add(FheInt32.encrypt(patientRecord.familyHistory(), clientKey));
     }
 
     /**
@@ -129,9 +129,8 @@ public class CancerPredictionShowcase {
   /**
    * Main entry point for running the cancer prediction showcase.
    *
-   * @param args the command line arguments
    */
-  public static void main(String[] args) {
+  public static void main() {
     logger.info("=================================================================");
     logger.info("Starting TFHE Privacy-Preserving Cancer Prediction Showcase");
     logger.info("=================================================================");
@@ -175,15 +174,13 @@ public class CancerPredictionShowcase {
       // Homomorphically compute score = sum(w_i * x_i) + bias
       for (int i = 0; i < WEIGHTS.length; i++) {
         int weight = WEIGHTS[i];
-        if (weight != 0) {
-          FheInt32 term = er.encryptedFeatures.get(i).multiplyScalar(weight);
-          FheInt32 oldScore = score;
-          score = oldScore.add(term);
-          
-          // Clean up intermediate ciphertexts to prevent memory leaks
-          term.destroy();
-          oldScore.destroy();
-        }
+        FheInt32 term = er.encryptedFeatures.get(i).multiplyScalar(weight);
+        FheInt32 oldScore = score;
+        score = oldScore.add(term);
+        
+        // Clean up intermediate ciphertexts to prevent memory leaks
+        term.destroy();
+        oldScore.destroy();
       }
       
       // Classify: malignant if score >= 0
