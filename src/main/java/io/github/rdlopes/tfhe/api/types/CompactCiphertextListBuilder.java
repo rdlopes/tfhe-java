@@ -102,6 +102,76 @@ public class CompactCiphertextListBuilder extends NativePointer {
     execute(() -> compact_ciphertext_list_builder_push_u256(getValue(), value.getAddress()));
   }
 
+  public void pushI2(byte value) {
+    logger.trace("pushI2 - byte: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i2(getValue(), value));
+  }
+
+  public void pushI4(byte value) {
+    logger.trace("pushI4 - byte: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i4(getValue(), value));
+  }
+
+  public void pushI6(byte value) {
+    logger.trace("pushI6 - byte: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i6(getValue(), value));
+  }
+
+  public void pushI10(short value) {
+    logger.trace("pushI10 - short: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i10(getValue(), value));
+  }
+
+  public void pushI12(short value) {
+    logger.trace("pushI12 - short: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i12(getValue(), value));
+  }
+
+  public void pushI14(short value) {
+    logger.trace("pushI14 - short: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i14(getValue(), value));
+  }
+
+  public void pushI160(I256 value) {
+    logger.trace("pushI160 - I256: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_i160(getValue(), value.getAddress()));
+  }
+
+  public void pushU2(byte value) {
+    logger.trace("pushU2 - byte: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u2(getValue(), value));
+  }
+
+  public void pushU4(byte value) {
+    logger.trace("pushU4 - byte: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u4(getValue(), value));
+  }
+
+  public void pushU6(byte value) {
+    logger.trace("pushU6 - byte: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u6(getValue(), value));
+  }
+
+  public void pushU10(short value) {
+    logger.trace("pushU10 - short: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u10(getValue(), value));
+  }
+
+  public void pushU12(short value) {
+    logger.trace("pushU12 - short: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u12(getValue(), value));
+  }
+
+  public void pushU14(short value) {
+    logger.trace("pushU14 - short: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u14(getValue(), value));
+  }
+
+  public void pushU160(U256 value) {
+    logger.trace("pushU160 - U256: {}", value);
+    execute(() -> compact_ciphertext_list_builder_push_u160(getValue(), value.getAddress()));
+  }
+
   public ProvenCompactCiphertextList buildWithProofPacked(CompactPkeCrs crs, byte[] metadata, ZkComputeLoad computeLoad) {
     logger.trace("buildWithProofPacked");
     ProvenCompactCiphertextList result = new ProvenCompactCiphertextList();

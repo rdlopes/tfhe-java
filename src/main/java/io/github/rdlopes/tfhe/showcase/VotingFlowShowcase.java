@@ -127,13 +127,13 @@ public class VotingFlowShowcase {
                ProvenCompactCiphertextList provenList = ProvenCompactCiphertextList.deserializeConformant(buffer, compactPublicKey, crs);
                CompactCiphertextListExpander expander = provenList.verifyAndExpand(crs, compactPublicKey, ballot.metadata())) {
 
-            FheBool choiceA = expander.getFheBool(0);
-            FheBool choiceB = expander.getFheBool(1);
-            FheBool choiceC = expander.getFheBool(2);
+            FheBool choiceA = expander.get(0, FheBool.class);
+            FheBool choiceB = expander.get(1, FheBool.class);
+            FheBool choiceC = expander.get(2, FheBool.class);
 
-            FheUint8 choiceAUint8 = choiceA.castIntoFheUint8();
-            FheUint8 choiceBUint8 = choiceB.castIntoFheUint8();
-            FheUint8 choiceCUint8 = choiceC.castIntoFheUint8();
+            FheUint8 choiceAUint8 = choiceA.castInto(FheUint8.class);
+            FheUint8 choiceBUint8 = choiceB.castInto(FheUint8.class);
+            FheUint8 choiceCUint8 = choiceC.castInto(FheUint8.class);
 
             FheUint8 sumAB = choiceAUint8.add(choiceBUint8);
             FheUint8 sum = sumAB.add(choiceCUint8);
@@ -148,7 +148,7 @@ public class VotingFlowShowcase {
             tallies.bob.addAssign(contribB);
             tallies.charlie.addAssign(contribC);
 
-            FheUint8 isValidUint8 = isValid.castIntoFheUint8();
+            FheUint8 isValidUint8 = isValid.castInto(FheUint8.class);
             FheUint8 isInvalidUint8 = one.subtract(isValidUint8);
             tallies.invalid.addAssign(isInvalidUint8);
 

@@ -16,7 +16,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public class ShortintServerKey extends NativePointer {
 
-  private ShortintServerKey() {
+  ShortintServerKey() {
     super(TfheHeader::shortint_destroy_server_key);
   }
 
@@ -36,6 +36,12 @@ public class ShortintServerKey extends NativePointer {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
     execute(() -> shortint_serialize_server_key(getValue(), dynamicBuffer.getAddress()));
     return dynamicBuffer;
+  }
+
+  public ShortintCiphertext createTrivial(long value) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_create_trivial(getValue(), value, result.getAddress()));
+    return result;
   }
 
   // ==========================================
@@ -174,6 +180,14 @@ public class ShortintServerKey extends NativePointer {
 
   public void uncheckedMulAssign(ShortintCiphertext lhsAndResult, ShortintCiphertext rhs) {
     lhsAndResult.uncheckedMulAssign(this, rhs);
+  }
+
+  public ShortintCiphertext uncheckedDiv(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedDiv(this, rhs);
+  }
+
+  public void uncheckedDivAssign(ShortintCiphertext lhsAndResult, ShortintCiphertext rhs) {
+    lhsAndResult.uncheckedDivAssign(this, rhs);
   }
 
   public ShortintCiphertext uncheckedNeg(ShortintCiphertext lhs) {
@@ -366,5 +380,33 @@ public class ShortintServerKey extends NativePointer {
 
   public ShortintCiphertext smartScalarGreaterOrEqual(ShortintCiphertext lhs, byte rhs) {
     return lhs.smartScalarGreaterOrEqual(this, rhs);
+  }
+
+  // ==========================================
+  // Unchecked Comparison symmetric helpers
+  // ==========================================
+
+  public ShortintCiphertext uncheckedEqual(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedEqual(this, rhs);
+  }
+
+  public ShortintCiphertext uncheckedNotEqual(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedNotEqual(this, rhs);
+  }
+
+  public ShortintCiphertext uncheckedLess(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedLess(this, rhs);
+  }
+
+  public ShortintCiphertext uncheckedLessOrEqual(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedLessOrEqual(this, rhs);
+  }
+
+  public ShortintCiphertext uncheckedGreater(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedGreater(this, rhs);
+  }
+
+  public ShortintCiphertext uncheckedGreaterOrEqual(ShortintCiphertext lhs, ShortintCiphertext rhs) {
+    return lhs.uncheckedGreaterOrEqual(this, rhs);
   }
 }

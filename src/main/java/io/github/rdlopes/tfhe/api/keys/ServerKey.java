@@ -36,6 +36,46 @@ public class ServerKey extends NativePointer implements FheKey {
     return dynamicBuffer;
   }
 
+  private static final ThreadLocal<ServerKey> CURRENT_KEY = new ThreadLocal<>();
+
+  public static ServerKey current() {
+    return CURRENT_KEY.get();
+  }
+
+  public void runWith(Runnable runnable) {
+    ServerKey oldKey = CURRENT_KEY.get();
+    CURRENT_KEY.set(this);
+    this.use();
+    try {
+      runnable.run();
+    } finally {
+      if (oldKey != null) {
+        CURRENT_KEY.set(oldKey);
+        oldKey.use();
+      } else {
+        CURRENT_KEY.remove();
+        this.unset();
+      }
+    }
+  }
+
+  public <V> V callWith(java.util.concurrent.Callable<V> callable) throws Exception {
+    ServerKey oldKey = CURRENT_KEY.get();
+    CURRENT_KEY.set(this);
+    this.use();
+    try {
+      return callable.call();
+    } finally {
+      if (oldKey != null) {
+        CURRENT_KEY.set(oldKey);
+        oldKey.use();
+      } else {
+        CURRENT_KEY.remove();
+        this.unset();
+      }
+    }
+  }
+
   public void use() {
     logger.trace("use");
 
@@ -47,5 +87,4 @@ public class ServerKey extends NativePointer implements FheKey {
 
     execute(TfheHeader::unset_server_key);
   }
-
 }

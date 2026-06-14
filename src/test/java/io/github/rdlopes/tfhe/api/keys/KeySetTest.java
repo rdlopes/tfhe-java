@@ -1,5 +1,9 @@
 package io.github.rdlopes.tfhe.api.keys;
 
+import io.github.rdlopes.tfhe.api.types.FheUint256;
+import io.github.rdlopes.tfhe.api.types.CompressedFheUint256;
+import io.github.rdlopes.tfhe.api.values.U256;
+import java.math.BigInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -152,6 +156,32 @@ class KeySetTest {
       io.github.rdlopes.tfhe.api.types.FheUint8 decompressed = deserialized.decompress();
       byte result = decompressed.decrypt(keySet.getClientKey());
       assertThat(result).isEqualTo((byte) 100);
+    }
+  }
+
+  @Test
+  void testCompressedFheUint256() {
+    KeySet keySet = KeySet.builder()
+                          .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                          .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                          .build();
+    keySet.getServerKey().use();
+
+    U256 value = U256.valueOf(BigInteger.valueOf(100));
+
+    // In-memory compression & direct decompression
+    FheUint256 clientCiphertext = FheUint256.encrypt(value, keySet.getClientKey());
+    CompressedFheUint256 compressedInMemory = clientCiphertext.compress();
+    FheUint256 decompressedDirect = compressedInMemory.decompress();
+    assertThat(decompressedDirect.decrypt(keySet.getClientKey()).getValue()).isEqualTo(value.getValue());
+
+    // Direct encryption (seeded compressed ciphertext) supports safe serialization/deserialization
+    CompressedFheUint256 compressed = CompressedFheUint256.encrypt(value, keySet.getClientKey());
+    try (io.github.rdlopes.tfhe.api.serde.DynamicBuffer serialized = compressed.serialize()) {
+      CompressedFheUint256 deserialized = CompressedFheUint256.deserialize(serialized, keySet.getServerKey());
+      FheUint256 decompressed = deserialized.decompress();
+      U256 result = decompressed.decrypt(keySet.getClientKey());
+      assertThat(result.getValue()).isEqualTo(value.getValue());
     }
   }
 }

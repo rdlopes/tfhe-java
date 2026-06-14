@@ -1,118 +1,37 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.api.CompressedFheType;
+import io.github.rdlopes.tfhe.api.AbstractCompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.values.U128;
-import io.github.rdlopes.tfhe.ffm.NativePointer;
+import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+/**
+ * Compressed encrypted unsigned 128-bit integer.
+ */
+public final class CompressedFheUint128 extends AbstractCompressedFheType<U128, FheUint128, CompressedFheUint128> {
 
-// @formatter:off
-public class CompressedFheUint128 extends NativePointer implements CompressedFheType<U128, FheUint128, CompressedFheUint128> {
-  private static final Logger logger = LoggerFactory.getLogger(CompressedFheUint128.class);
-// @formatter:on
+  static final Handles<U128> H = new Handles<>(
+      new FheValueKind.Wide<>(U128::new),
+      TfheHeader::compressed_fhe_uint128_decompress,
+      TfheHeader::compressed_fhe_uint128_clone,
+      TfheHeader::compressed_fhe_uint128_safe_serialize,
+      TfheHeader::compressed_fhe_uint128_safe_deserialize_conformant,
+      null,
+      TfheHeader::compressed_fhe_uint128_try_encrypt_with_client_key_u128);
 
-  /// ```c
-  ////**
-  ///  *ptr can be null (no-op in that case)
-  ///  */
-  /// int compressed_fhe_uint128_destroy(struct CompressedFheUint128 *ptr);
-  ///```
-  CompressedFheUint128() {
-    logger.trace("init");
-    super(TfheHeader::compressed_fhe_uint128_destroy);
-  }
+  CompressedFheUint128() { super(TfheHeader::compressed_fhe_uint128_destroy); }
 
-  /// ```c
-  /// int compressed_fhe_uint128_decompress(const struct CompressedFheUint128 *sself,
-  ///                                       struct FheUint128 **result);
-  ///```
-  @Override
-  public FheUint128 decompress() {
-    FheUint128 decompressed = new FheUint128();
-    execute(() -> compressed_fhe_uint128_decompress(getValue(), decompressed.getAddress()));
-    return decompressed;
+  @Override protected Handles<U128>         handles()         { return H; }
+  @Override protected FheUint128            newDecompressed() { return new FheUint128(); }
+  @Override protected CompressedFheUint128  newInstance()     { return new CompressedFheUint128(); }
 
-  }
-
-  /// ```c
-  ////**
-  ///  * Serializes safely.
-  ///  *
-  ///  * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
-  ///  * versions of TFHE-rs.
-  ///  *
-  ///  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
-  ///  *    (to avoid out of memory attacks)
-  ///  */
-  /// int compressed_fhe_uint128_safe_serialize(const struct CompressedFheUint128 *sself,
-  ///                                           struct DynamicBuffer *result,
-  ///                                           uint64_t serialized_size_limit);
-  ///```
-  @Override
-  public DynamicBuffer serialize(){
-    DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compressed_fhe_uint128_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-
-    return dynamicBuffer;
-
-  }
-
-  /// ```c
-  ////**
-  ///  * Deserializes safely, and checks that the resulting ciphertext
-  ///  * is in compliance with the shape of ciphertext that the `server_key` expects.
-  ///  *
-  ///  * This function can only deserialize types which have been serialized
-  ///  * by a `safe_serialize` function.
-  ///  *
-  ///  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
-  ///  *    (to avoid out of memory attacks)
-  ///  * - `server_key`: ServerKey used in the conformance check
-  ///  * - `result`: pointer where resulting deserialized object needs to be stored.
-  ///  *    * cannot be NULL
-  ///  *    * (*result) will point the deserialized object on success, else NULL
-  ///  */
-  /// int compressed_fhe_uint128_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
-  ///                                                        uint64_t serialized_size_limit,
-  ///                                                        const struct ServerKey *server_key,
-  ///                                                        struct CompressedFheUint128 **result);
-  ///```
-  public static CompressedFheUint128 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
-    CompressedFheUint128 deserialized = new CompressedFheUint128();
-    execute(() -> compressed_fhe_uint128_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /// ```c
-  /// int compressed_fhe_uint128_try_encrypt_with_client_key_u128(struct U128 value,
-  ///                                                             const struct ClientKey *client_key,
-  ///                                                             struct CompressedFheUint128 **result);
-  ///```
   public static CompressedFheUint128 encrypt(U128 clearValue, ClientKey clientKey) {
-    CompressedFheUint128 encrypted = new CompressedFheUint128();
-    execute(() -> compressed_fhe_uint128_try_encrypt_with_client_key_u128(clearValue.getAddress(), clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
+    return encryptClientKey(H, clearValue, clientKey, CompressedFheUint128::new);
   }
-
-  /// ```c
-  /// int compressed_fhe_uint128_clone(const struct CompressedFheUint128 *sself,
-  ///                                  struct CompressedFheUint128 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public CompressedFheUint128 clone(){
-    CompressedFheUint128 cloned = new CompressedFheUint128();
-    execute(() -> compressed_fhe_uint128_clone(getValue(), cloned.getAddress()));
-    return cloned;
-
-}
+  public static CompressedFheUint128 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
+    return deserialize(H, buffer, serverKey, CompressedFheUint128::new);
+  }
 }

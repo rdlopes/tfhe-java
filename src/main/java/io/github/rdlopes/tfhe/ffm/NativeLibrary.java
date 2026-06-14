@@ -49,11 +49,7 @@ public class NativeLibrary {
   private static void loadFromPath() throws IOException {
     logger.trace("loadFromPath");
 
-    File temporaryLibraryDirectory;
-    temporaryLibraryDirectory = new File(FileUtils.getTempDirectory(), "tfhe-native-" + System.currentTimeMillis());
-    if (!temporaryLibraryDirectory.mkdirs()) {
-      throw new IOException("Failed to create temporary directory: " + temporaryLibraryDirectory);
-    }
+    File temporaryLibraryDirectory = java.nio.file.Files.createTempDirectory("tfhe-native-").toFile();
     FileUtils.forceDeleteOnExit(temporaryLibraryDirectory);
     logger.debug("Temporary directory for TFHE native library: {}", temporaryLibraryDirectory);
 

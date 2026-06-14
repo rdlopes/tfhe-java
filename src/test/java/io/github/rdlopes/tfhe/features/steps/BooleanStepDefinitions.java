@@ -62,6 +62,6 @@ public class BooleanStepDefinitions {
   @When("I cast the FheBool ciphertext into a FheUint8 ciphertext")
   public void iCastTheFheBoolCiphertextIntoAFheUint8Ciphertext() {
     FheBool latest = context.bools.get(context.bools.size() - 1);
-    context.uint8s.add(context.track(latest.castIntoFheUint8()));
+    context.uint8s.add(context.track(latest.castInto(FheUint8.class)));
   }
 }

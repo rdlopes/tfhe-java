@@ -3,6 +3,8 @@ package io.github.rdlopes.tfhe.api.shortint;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import java.lang.foreign.Arena;
+import java.lang.foreign.ValueLayout;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
@@ -11,6 +13,18 @@ public class ShortintCiphertext extends NativePointer {
 
   public ShortintCiphertext() {
     super(TfheHeader::shortint_destroy_ciphertext);
+  }
+
+  public long getDegree() {
+    try (Arena arena = Arena.ofConfined()) {
+      java.lang.foreign.MemorySegment result = arena.allocate(ValueLayout.JAVA_LONG);
+      execute(() -> shortint_ciphertext_get_degree(getValue(), result));
+      return result.get(ValueLayout.JAVA_LONG, 0);
+    }
+  }
+
+  public void setDegree(long degree) {
+    execute(() -> shortint_ciphertext_set_degree(getValue(), degree));
   }
 
   public DynamicBuffer serialize() {
@@ -151,6 +165,16 @@ public class ShortintCiphertext extends NativePointer {
 
   public void uncheckedMulAssign(ShortintServerKey serverKey, ShortintCiphertext other) {
     execute(() -> shortint_server_key_unchecked_mul_assign(serverKey.getValue(), getValue(), other.getValue()));
+  }
+
+  public ShortintCiphertext uncheckedDiv(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_div(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public void uncheckedDivAssign(ShortintServerKey serverKey, ShortintCiphertext other) {
+    execute(() -> shortint_server_key_unchecked_div_assign(serverKey.getValue(), getValue(), other.getValue()));
   }
 
   public ShortintCiphertext uncheckedNeg(ShortintServerKey serverKey) {
@@ -406,6 +430,46 @@ public class ShortintCiphertext extends NativePointer {
   public ShortintCiphertext smartScalarGreaterOrEqual(ShortintServerKey serverKey, byte other) {
     ShortintCiphertext result = new ShortintCiphertext();
     execute(() -> shortint_server_key_smart_scalar_greater_or_equal(serverKey.getValue(), getValue(), other, result.getAddress()));
+    return result;
+  }
+
+  // ==========================================
+  // Unchecked Comparisons
+  // ==========================================
+
+  public ShortintCiphertext uncheckedEqual(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_equal(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public ShortintCiphertext uncheckedNotEqual(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_not_equal(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public ShortintCiphertext uncheckedLess(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_less(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public ShortintCiphertext uncheckedLessOrEqual(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_less_or_equal(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public ShortintCiphertext uncheckedGreater(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_greater(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
+    return result;
+  }
+
+  public ShortintCiphertext uncheckedGreaterOrEqual(ShortintServerKey serverKey, ShortintCiphertext other) {
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_server_key_unchecked_greater_or_equal(serverKey.getValue(), getValue(), other.getValue(), result.getAddress()));
     return result;
   }
 }

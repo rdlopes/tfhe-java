@@ -4,110 +4,100 @@ import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.ffm.NativeArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
-// @formatter:off
-public class FheInt8Array extends NativeArray implements FheArray<FheInt8, FheInt8Array> {
-  private static final Logger logger = LoggerFactory.getLogger(FheInt8Array.class);
-// @formatter:on
+/**
+ * Array of encrypted signed 8-bit integers.
+ *
+ * <p>Signed arrays do not have native {@code containsArray}/{@code equalsArray} operations.
+ * These are implemented by casting each element to {@link FheUint8} and delegating
+ * to {@link FheUint8Array}, exactly as in the original boilerplate.
+ */
+public final class FheInt8Array extends NativeArray implements FheArray<FheInt8, FheInt8Array> {
 
   public FheInt8Array(Collection<FheInt8> elements) {
-    logger.trace("init - elements: {}", elements);
     super(elements);
   }
 
-  public static FheInt8Array encrypt(Collection<Byte> values, ClientKey clientKey) {
-    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
-    Collection<FheInt8> elements = values.stream()
-                                          .map(value -> FheInt8.encrypt(value, clientKey))
-                                          .toList();
-    return new FheInt8Array(elements);
-  }
-
-  public static FheInt8Array encrypt(Collection<Byte> values, PublicKey publicKey) {
-    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
-    Collection<FheInt8> elements = values.stream()
-                                          .map(value -> FheInt8.encrypt(value, publicKey))
-                                          .toList();
-    return new FheInt8Array(elements);
-  }
-
-  public static FheInt8Array encrypt(Collection<Byte> values) {
-    logger.trace("encrypt - values: {}", values);
-    Collection<FheInt8> elements = values.stream()
-                                          .map(FheInt8::encrypt)
-                                          .toList();
-    return new FheInt8Array(elements);
-  }
+  // ── FheArray — containsArray / equalsArray via unsigned cast ─────────────────
 
   @Override
-  public FheBool containsArray(FheInt8Array other){
-    List<FheInt8> thisElements = this.getElements();
-    List<FheInt8> otherElements = other.getElements();
-    List<FheUint8> thisUnsigned = thisElements.stream().map(FheInt8::castIntoFheUint8).toList();
-    List<FheUint8> otherUnsigned = otherElements.stream().map(FheInt8::castIntoFheUint8).toList();
-    FheUint8Array thisArray = new FheUint8Array(thisUnsigned);
-    FheUint8Array otherArray = new FheUint8Array(otherUnsigned);
-    FheBool result = thisArray.containsArray(otherArray);
-    thisUnsigned.forEach(FheUint8::destroy);
-    otherUnsigned.forEach(FheUint8::destroy);
+  public FheBool containsArray(FheInt8Array other) {
+    List<FheUint8> lhsU = this.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
+    List<FheUint8> rhsU = other.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
+    FheBool result = new FheUint8Array(lhsU).containsArray(new FheUint8Array(rhsU));
+    lhsU.forEach(FheUint8::destroy);
+    rhsU.forEach(FheUint8::destroy);
     return result;
   }
 
   @Override
-  public FheBool equalsArray(FheInt8Array other){
-    List<FheInt8> thisElements = this.getElements();
-    List<FheInt8> otherElements = other.getElements();
-    List<FheUint8> thisUnsigned = thisElements.stream().map(FheInt8::castIntoFheUint8).toList();
-    List<FheUint8> otherUnsigned = otherElements.stream().map(FheInt8::castIntoFheUint8).toList();
-    FheUint8Array thisArray = new FheUint8Array(thisUnsigned);
-    FheUint8Array otherArray = new FheUint8Array(otherUnsigned);
-    FheBool result = thisArray.equalsArray(otherArray);
-    thisUnsigned.forEach(FheUint8::destroy);
-    otherUnsigned.forEach(FheUint8::destroy);
+  public FheBool equalsArray(FheInt8Array other) {
+    List<FheUint8> lhsU = this.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
+    List<FheUint8> rhsU = other.<FheInt8>getElements().stream().map(e -> e.castInto(FheUint8.class)).toList();
+    FheBool result = new FheUint8Array(lhsU).equalsArray(new FheUint8Array(rhsU));
+    lhsU.forEach(FheUint8::destroy);
+    rhsU.forEach(FheUint8::destroy);
     return result;
   }
 
+  // ── FheArray — sum ────────────────────────────────────────────────────────────
+
   @Override
-  public FheInt8 sum(){
+  public FheInt8 sum() {
     FheInt8 result = new FheInt8();
     execute(() -> fhe_int8_sum(getAddress(), getSize(), result.getAddress()));
     return result;
   }
 
+  // ── FheArray — element-wise add / subtract ────────────────────────────────────
+
   @Override
   public FheInt8Array add(FheInt8Array other) {
-    if (this.getSize() != other.getSize()) {
-      throw new IllegalArgumentException("Array sizes must match");
-    }
-    List<FheInt8> thisElements = this.getElements();
-    List<FheInt8> otherElements = other.getElements();
-    List<FheInt8> result = new ArrayList<>();
-    for (int i = 0; i < thisElements.size(); i++) {
-      result.add(thisElements.get(i).add(otherElements.get(i)));
-    }
-    return new FheInt8Array(result);
+    sizeCheck(other);
+    List<FheInt8> a = this.getElements();
+    List<FheInt8> b = other.getElements();
+    List<FheInt8> r = new ArrayList<>(a.size());
+    for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
+    return new FheInt8Array(r);
   }
 
   @Override
   public FheInt8Array subtract(FheInt8Array other) {
-    if (this.getSize() != other.getSize()) {
-      throw new IllegalArgumentException("Array sizes must match");
+    sizeCheck(other);
+    List<FheInt8> a = this.getElements();
+    List<FheInt8> b = other.getElements();
+    List<FheInt8> r = new ArrayList<>(a.size());
+    for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
+    return new FheInt8Array(r);
+  }
+
+  // ── Static factories ──────────────────────────────────────────────────────────
+
+  public static FheInt8Array encrypt(Collection<Byte> values, ClientKey clientKey) {
+    return new FheInt8Array(values.stream().map(v -> FheInt8.encrypt(v, clientKey)).toList());
+  }
+
+  public static FheInt8Array encrypt(Collection<Byte> values, PublicKey publicKey) {
+    return new FheInt8Array(values.stream().map(v -> FheInt8.encrypt(v, publicKey)).toList());
+  }
+
+  public static FheInt8Array encrypt(Collection<Byte> values) {
+    return new FheInt8Array(values.stream().map(FheInt8::encrypt).toList());
+  }
+
+  // ── Helper ────────────────────────────────────────────────────────────────────
+
+  private void sizeCheck(FheInt8Array other) {
+    if (getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match: " + getSize() + " vs " + other.getSize());
     }
-    List<FheInt8> thisElements = this.getElements();
-    List<FheInt8> otherElements = other.getElements();
-    List<FheInt8> result = new ArrayList<>();
-    for (int i = 0; i < thisElements.size(); i++) {
-      result.add(thisElements.get(i).subtract(otherElements.get(i)));
-    }
-    return new FheInt8Array(result);
   }
 }

@@ -9,7 +9,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public class ShortintPublicKey extends NativePointer {
 
-  private ShortintPublicKey() {
+  ShortintPublicKey() {
     super(TfheHeader::shortint_destroy_public_key);
   }
 

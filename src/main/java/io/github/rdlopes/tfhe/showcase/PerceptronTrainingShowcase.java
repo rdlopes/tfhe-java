@@ -92,7 +92,7 @@ public class PerceptronTrainingShowcase {
         
         // Predict y_hat = (activation >= 0)
         FheBool predBool = activation.greaterThanOrEqualToScalar(0);
-        FheInt32 predInt = predBool.castIntoFheInt32();
+        FheInt32 predInt = predBool.castInto(FheInt32.class);
         
         // Error: e = label - y_hat
         FheInt32 error = point.label.subtract(predInt);

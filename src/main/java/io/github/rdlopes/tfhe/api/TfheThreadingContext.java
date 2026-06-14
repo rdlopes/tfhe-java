@@ -33,12 +33,12 @@ public class TfheThreadingContext extends NativePointer implements AutoCloseable
   public void run(Runnable task) {
     logger.trace("run");
     try (Arena arena = Arena.ofConfined()) {
-      MemorySegment stub = tfhe_threading_context_run$func.allocate(_x0 -> {
+      MemorySegment stub = tfhe_threading_context_run$func.allocate(_ -> {
         try {
           task.run();
           return 0; // Success
-        } catch (Throwable t) {
-          logger.error("Error running task in threading context", t);
+        } catch (Exception e) {
+          logger.error("Error running task in threading context", e);
           return 1; // Error
         }
       }, arena);

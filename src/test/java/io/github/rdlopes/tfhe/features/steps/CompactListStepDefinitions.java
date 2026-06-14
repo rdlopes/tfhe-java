@@ -165,30 +165,30 @@ public class CompactListStepDefinitions {
         FheTypes kind = context.expander.getKindOf(i);
         switch (kind) {
           case FheBool -> {
-            FheBool decrypted = context.track(context.expander.getFheBool(i));
+            FheBool decrypted = context.track(context.expander.get(i, FheBool.class));
             assertThat(decrypted.decrypt(clientKey)).isEqualTo(expected);
           }
           case FheInt8, FheUint8 -> {
             byte decrypted;
             if (kind == FheTypes.FheInt8) {
-              FheInt8 dec = context.track(context.expander.getFheInt8(i));
+              FheInt8 dec = context.track(context.expander.get(i, FheInt8.class));
               decrypted = dec.decrypt(clientKey);
             } else {
-              FheUint8 dec = context.track(context.expander.getFheUint8(i));
+              FheUint8 dec = context.track(context.expander.get(i, FheUint8.class));
               decrypted = dec.decrypt(clientKey);
             }
             assertThat(decrypted).isEqualTo(((Number) expected).byteValue());
           }
           case FheInt32 -> {
-            FheInt32 decrypted = context.track(context.expander.getFheInt32(i));
+            FheInt32 decrypted = context.track(context.expander.get(i, FheInt32.class));
             assertThat(decrypted.decrypt(clientKey)).isEqualTo(((Number) expected).intValue());
           }
           case FheInt64 -> {
-            FheInt64 decrypted = context.track(context.expander.getFheInt64(i));
+            FheInt64 decrypted = context.track(context.expander.get(i, FheInt64.class));
             assertThat(decrypted.decrypt(clientKey)).isEqualTo(((Number) expected).longValue());
           }
           case FheUint256 -> {
-            FheUint256 decrypted = context.track(context.expander.getFheUint256(i));
+            FheUint256 decrypted = context.track(context.expander.get(i, FheUint256.class));
             assertThat(decrypted.decrypt(clientKey).getValue()).isEqualTo((BigInteger) expected);
           }
           default -> throw new IllegalArgumentException("Unsupported kind: " + kind);
@@ -200,19 +200,19 @@ public class CompactListStepDefinitions {
         FheTypes kind = context.compressedList.getKindOf(i);
         switch (kind) {
           case FheBool -> {
-            FheBool decrypted = context.track(context.compressedList.getFheBool(i));
+            FheBool decrypted = context.track(context.compressedList.get(i, FheBool.class));
             assertThat(decrypted.decrypt(clientKey)).isEqualTo(expected);
           }
           case FheUint8 -> {
-            FheUint8 decrypted = context.track(context.compressedList.getFheUint8(i));
+            FheUint8 decrypted = context.track(context.compressedList.get(i, FheUint8.class));
             assertThat(decrypted.decrypt(clientKey)).isEqualTo(((Number) expected).byteValue());
           }
           case FheInt32 -> {
-            FheInt32 decrypted = context.track(context.compressedList.getFheInt32(i));
+            FheInt32 decrypted = context.track(context.compressedList.get(i, FheInt32.class));
             assertThat(decrypted.decrypt(clientKey)).isEqualTo(((Number) expected).intValue());
           }
           case FheUint256 -> {
-            FheUint256 decrypted = context.track(context.compressedList.getFheUint256(i));
+            FheUint256 decrypted = context.track(context.compressedList.get(i, FheUint256.class));
             assertThat(decrypted.decrypt(clientKey).getValue()).isEqualTo((BigInteger) expected);
           }
           default -> throw new IllegalArgumentException("Unsupported kind: " + kind);
@@ -370,15 +370,15 @@ public class CompactListStepDefinitions {
       FheTypes kind = context.expander.getKindOf(i);
       switch (kind) {
         case FheBool -> {
-          FheBool decrypted = context.track(context.expander.getFheBool(i));
+          FheBool decrypted = context.track(context.expander.get(i, FheBool.class));
           assertThat(decrypted.decrypt(clientKey)).isEqualTo(expected);
         }
         case FheInt8 -> {
-          FheInt8 decrypted = context.track(context.expander.getFheInt8(i));
+          FheInt8 decrypted = context.track(context.expander.get(i, FheInt8.class));
           assertThat(decrypted.decrypt(clientKey)).isEqualTo(((Number) expected).byteValue());
         }
         case FheInt32 -> {
-          FheInt32 decrypted = context.track(context.expander.getFheInt32(i));
+          FheInt32 decrypted = context.track(context.expander.get(i, FheInt32.class));
           assertThat(decrypted.decrypt(clientKey)).isEqualTo(((Number) expected).intValue());
         }
         default -> throw new IllegalArgumentException("Unsupported kind: " + kind);

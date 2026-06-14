@@ -24,6 +24,20 @@ public class CompactCiphertextList extends NativePointer implements FheObject, A
     return deserialized;
   }
 
+  public static CompactCiphertextList safeDeserializeConformant(
+      DynamicBuffer dynamicBuffer, io.github.rdlopes.tfhe.api.keys.CompactPublicKey publicKey, long expectedNumElements) {
+    logger.trace("safeDeserializeConformant");
+    CompactCiphertextList deserialized = new CompactCiphertextList();
+    execute(() -> compact_ciphertext_list_safe_deserialize_conformant(
+        dynamicBuffer.getAddress(),
+        BUFFER_MAX_SIZE,
+        publicKey.getValue(),
+        expectedNumElements,
+        deserialized.getAddress()
+    ));
+    return deserialized;
+  }
+
   @Override
   public DynamicBuffer serialize() {
     logger.trace("serialize");

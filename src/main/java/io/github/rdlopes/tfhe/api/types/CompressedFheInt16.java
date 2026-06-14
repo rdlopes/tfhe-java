@@ -1,117 +1,33 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.api.CompressedFheType;
+import io.github.rdlopes.tfhe.api.AbstractCompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
-import io.github.rdlopes.tfhe.ffm.NativePointer;
+import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+public final class CompressedFheInt16 extends AbstractCompressedFheType<Short, FheInt16, CompressedFheInt16> {
 
-// @formatter:off
-public class CompressedFheInt16 extends NativePointer implements CompressedFheType<Short, FheInt16, CompressedFheInt16> {
-  private static final Logger logger = LoggerFactory.getLogger(CompressedFheInt16.class);
-// @formatter:on
+  static final Handles<Short> H = new Handles<>(
+      FheValueKind.SHORT,
+      TfheHeader::compressed_fhe_int16_decompress,
+      TfheHeader::compressed_fhe_int16_clone,
+      TfheHeader::compressed_fhe_int16_safe_serialize,
+      TfheHeader::compressed_fhe_int16_safe_deserialize_conformant,
+      TfheHeader::compressed_fhe_int16_try_encrypt_with_client_key_i16,
+      null);
 
-  /// ```c
-  ////**
-  ///  *ptr can be null (no-op in that case)
-  ///  */
-  /// int compressed_fhe_int16_destroy(struct CompressedFheInt16 *ptr);
-  ///```
-  CompressedFheInt16() {
-    logger.trace("init");
-    super(TfheHeader::compressed_fhe_int16_destroy);
-  }
+  CompressedFheInt16() { super(TfheHeader::compressed_fhe_int16_destroy); }
 
-  /// ```c
-  /// int compressed_fhe_int16_decompress(const struct CompressedFheInt16 *sself,
-  ///                                     struct FheInt16 **result);
-  ///```
-  @Override
-  public FheInt16 decompress() {
-    FheInt16 decompressed = new FheInt16();
-    execute(() -> compressed_fhe_int16_decompress(getValue(), decompressed.getAddress()));
-    return decompressed;
+  @Override protected Handles<Short>       handles()         { return H; }
+  @Override protected FheInt16             newDecompressed() { return new FheInt16(); }
+  @Override protected CompressedFheInt16   newInstance()     { return new CompressedFheInt16(); }
 
-  }
-
-  /// ```c
-  ////**
-  ///  * Serializes safely.
-  ///  *
-  ///  * This function adds versioning information to the serialized buffer, meaning that it will keep compatibility with future
-  ///  * versions of TFHE-rs.
-  ///  *
-  ///  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
-  ///  *    (to avoid out of memory attacks)
-  ///  */
-  /// int compressed_fhe_int16_safe_serialize(const struct CompressedFheInt16 *sself,
-  ///                                         struct DynamicBuffer *result,
-  ///                                         uint64_t serialized_size_limit);
-  ///```
-  @Override
-  public DynamicBuffer serialize(){
-    DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compressed_fhe_int16_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
-
-    return dynamicBuffer;
-
-  }
-
-  /// ```c
-  ////**
-  ///  * Deserializes safely, and checks that the resulting ciphertext
-  ///  * is in compliance with the shape of ciphertext that the `server_key` expects.
-  ///  *
-  ///  * This function can only deserialize types which have been serialized
-  ///  * by a `safe_serialize` function.
-  ///  *
-  ///  * - `serialized_size_limit`: size limit (in number of byte) of the serialized object
-  ///  *    (to avoid out of memory attacks)
-  ///  * - `server_key`: ServerKey used in the conformance check
-  ///  * - `result`: pointer where resulting deserialized object needs to be stored.
-  ///  *    * cannot be NULL
-  ///  *    * (*result) will point the deserialized object on success, else NULL
-  ///  */
-  /// int compressed_fhe_int16_safe_deserialize_conformant(struct DynamicBufferView buffer_view,
-  ///                                                      uint64_t serialized_size_limit,
-  ///                                                      const struct ServerKey *server_key,
-  ///                                                      struct CompressedFheInt16 **result);
-  ///```
-  public static CompressedFheInt16 deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey){
-    CompressedFheInt16 deserialized = new CompressedFheInt16();
-    execute(() -> compressed_fhe_int16_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
-
-  }
-
-  /// ```c
-  /// int compressed_fhe_int16_try_encrypt_with_client_key_i16(int16_t value,
-  ///                                                          const struct ClientKey *client_key,
-  ///                                                          struct CompressedFheInt16 **result);
-  ///```
   public static CompressedFheInt16 encrypt(Short clearValue, ClientKey clientKey) {
-    CompressedFheInt16 encrypted = new CompressedFheInt16();
-    execute(() -> compressed_fhe_int16_try_encrypt_with_client_key_i16(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
-
+    return encryptClientKey(H, clearValue, clientKey, CompressedFheInt16::new);
   }
-
-  /// ```c
-  /// int compressed_fhe_int16_clone(const struct CompressedFheInt16 *sself,
-  ///                                struct CompressedFheInt16 **result);
-/// ```
-@Override
-@SuppressWarnings("MethodDoesntCallSuperMethod")
-public CompressedFheInt16 clone(){
-    CompressedFheInt16 cloned = new CompressedFheInt16();
-    execute(() -> compressed_fhe_int16_clone(getValue(), cloned.getAddress()));
-    return cloned;
-
-}
+  public static CompressedFheInt16 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
+    return deserialize(H, buffer, serverKey, CompressedFheInt16::new);
+  }
 }

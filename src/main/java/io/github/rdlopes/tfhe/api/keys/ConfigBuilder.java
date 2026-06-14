@@ -11,6 +11,8 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class ConfigBuilder extends NativePointer implements Cloneable {
   private static final Logger logger = LoggerFactory.getLogger(ConfigBuilder.class);
 
+  private final java.util.concurrent.atomic.AtomicBoolean consumed = new java.util.concurrent.atomic.AtomicBoolean(false);
+
   public ConfigBuilder() {
     logger.trace("init");
 
@@ -20,6 +22,10 @@ public class ConfigBuilder extends NativePointer implements Cloneable {
 
   public Config build() {
     logger.trace("build");
+
+    if (!consumed.compareAndSet(false, true)) {
+      throw new IllegalStateException("This builder has already been built/consumed.");
+    }
 
     Config config = new Config();
     execute(() -> config_builder_build(getValue(), config.getAddress()));

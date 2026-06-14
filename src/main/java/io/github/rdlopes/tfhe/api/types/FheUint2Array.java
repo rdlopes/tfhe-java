@@ -1,121 +1,33 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.AbstractFheArray;
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
-import io.github.rdlopes.tfhe.ffm.NativeArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.rdlopes.tfhe.ffm.FheOps;
+import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
 import java.util.Collection;
+import java.util.List;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+public final class FheUint2Array extends AbstractFheArray<FheUint2, FheUint2Array>
+    implements FheArray<FheUint2, FheUint2Array> {
 
-// @formatter:off
-public class FheUint2Array extends NativeArray implements FheArray<FheUint2, FheUint2Array> {
-  private static final Logger logger = LoggerFactory.getLogger(FheUint2Array.class);
-// @formatter:on
+  public FheUint2Array(Collection<FheUint2> elements) { super(elements); }
 
-  public FheUint2Array(Collection<FheUint2> elements) {
-    logger.trace("init - elements: {}", elements);
-    super(elements);
-  }
+  @Override protected FheOps.ArrayBinaryOp containsArrayOp() { return TfheHeader::fhe_uint2_array_contains_sub_slice; }
+  @Override protected FheOps.ArrayBinaryOp equalsArrayOp()   { return TfheHeader::fhe_uint2_array_eq; }
+  @Override protected FheOps.ArraySumOp    sumOp()           { return TfheHeader::fhe_uint2_sum; }
+  @Override protected FheUint2             newElement()       { return new FheUint2(); }
+  @Override protected FheUint2Array        newArray(List<FheUint2> elements) { return new FheUint2Array(elements); }
 
   public static FheUint2Array encrypt(Collection<Byte> values, ClientKey clientKey) {
-    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
-    Collection<FheUint2> elements = values.stream()
-                                          .map(value -> FheUint2.encrypt(value, clientKey))
-                                          .toList();
-    return new FheUint2Array(elements);
+    return new FheUint2Array(values.stream().map(v -> FheUint2.encrypt(v, clientKey)).toList());
   }
-
   public static FheUint2Array encrypt(Collection<Byte> values, PublicKey publicKey) {
-    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
-    Collection<FheUint2> elements = values.stream()
-                                          .map(value -> FheUint2.encrypt(value, publicKey))
-                                          .toList();
-    return new FheUint2Array(elements);
+    return new FheUint2Array(values.stream().map(v -> FheUint2.encrypt(v, publicKey)).toList());
   }
-
   public static FheUint2Array encrypt(Collection<Byte> values) {
-    logger.trace("encrypt - values: {}", values);
-    Collection<FheUint2> elements = values.stream()
-                                          .map(FheUint2::encrypt)
-                                          .toList();
-    return new FheUint2Array(elements);
+    return new FheUint2Array(values.stream().map(FheUint2::encrypt).toList());
   }
-
-  /// ```c
-  /// int fhe_uint2_array_contains_sub_slice(struct FheUint2 *const *lhs,
-  ///                                        size_t lhs_len,
-  ///                                        struct FheUint2 *const *rhs,
-  ///                                        size_t rhs_len,
-  ///                                        struct FheBool **result);
-  ///```
-  @Override
-  public FheBool containsArray(FheUint2Array other){
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint2_array_contains_sub_slice(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint2_array_eq(struct FheUint2 *const *lhs,
-  ///                        size_t lhs_len,
-  ///                        struct FheUint2 *const *rhs,
-  ///                        size_t rhs_len,
-  ///                        struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalsArray(FheUint2Array other){
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint2_array_eq(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint2_sum(const struct FheUint2 *const *lhs, size_t len, struct FheUint2 **out_result);
-  ///```
-  @Override
-public FheUint2 sum(){
-    FheUint2 result = new FheUint2();
-    execute(() -> fhe_uint2_sum(getAddress(), getSize(), result.getAddress()));
-    return result;
-
 }
-
-  @Override
-  public FheUint2Array add(FheUint2Array other) {
-    if (this.getSize() != other.getSize()) {
-      throw new IllegalArgumentException("Array sizes must match");
-    }
-    java.util.List<FheUint2> thisElements = this.getElements();
-    java.util.List<FheUint2> otherElements = other.getElements();
-    java.util.List<FheUint2> result = new java.util.ArrayList<>();
-    for (int i = 0; i < thisElements.size(); i++) {
-      result.add(thisElements.get(i).add(otherElements.get(i)));
-    }
-    return new FheUint2Array(result);
-  }
-
-  @Override
-  public FheUint2Array subtract(FheUint2Array other) {
-    if (this.getSize() != other.getSize()) {
-      throw new IllegalArgumentException("Array sizes must match");
-    }
-    java.util.List<FheUint2> thisElements = this.getElements();
-    java.util.List<FheUint2> otherElements = other.getElements();
-    java.util.List<FheUint2> result = new java.util.ArrayList<>();
-    for (int i = 0; i < thisElements.size(); i++) {
-      result.add(thisElements.get(i).subtract(otherElements.get(i)));
-    }
-    return new FheUint2Array(result);
-  }
-  
-
-  // @formatter:off
-}
-// @formatter:on

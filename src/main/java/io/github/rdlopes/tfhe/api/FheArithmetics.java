@@ -33,9 +33,9 @@ public interface FheArithmetics<V, T> {
 
   void multiplyScalarAssign(V other);
 
-  DividerAndRemainder<T> divideWithRemainder(T other);
+  QuotientAndRemainder<T> divideWithRemainder(T other);
 
-  DividerAndRemainder<T> divideWithRemainderScalar(V other);
+  QuotientAndRemainder<T> divideWithRemainderScalar(V other);
 
   T divide(T other);
 
@@ -62,6 +62,6 @@ public interface FheArithmetics<V, T> {
   record CheckedResult<T>(T result, FheBool check) {
   }
 
-  record DividerAndRemainder<T>(T divider, T remainder) {
+  record QuotientAndRemainder<T>(T quotient, T remainder) {
   }
 }

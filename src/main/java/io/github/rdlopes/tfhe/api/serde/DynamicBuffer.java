@@ -4,6 +4,7 @@ import io.github.rdlopes.tfhe.ffm.NativeAddress;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.jspecify.annotations.NonNull;
 
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.SegmentAllocator;
 import java.util.function.Function;
@@ -17,10 +18,13 @@ public class DynamicBuffer extends NativeAddress implements AutoCloseable {
   DynamicBuffer(Function<SegmentAllocator, MemorySegment> allocator, boolean hasDestroyer) {
     super(allocator, hasDestroyer ? TfheHeader::destroy_dynamic_buffer : null);
   }
-
-  @NonNull
-  public static DynamicBuffer fromByteArray(byte[] bytes) {
-    return new DynamicBuffer(allocator -> {
+  
+  private DynamicBuffer(Arena arena, Function<SegmentAllocator, MemorySegment> allocator, boolean hasDestroyer) {
+    super(allocator.apply(arena), hasDestroyer ? TfheHeader::destroy_dynamic_buffer : null);
+  }
+  
+  private static Function<SegmentAllocator, MemorySegment> fromBytes(byte[] bytes) {
+    return allocator -> {
       long length = bytes.length;
       MemorySegment pointer = allocator.allocate(length);
       pointer.asByteBuffer()
@@ -29,7 +33,17 @@ public class DynamicBuffer extends NativeAddress implements AutoCloseable {
       io.github.rdlopes.tfhe.ffm.DynamicBuffer.pointer(newSegment, pointer);
       io.github.rdlopes.tfhe.ffm.DynamicBuffer.length(newSegment, length);
       return newSegment;
-    }, false);
+    };
+  }
+
+  @NonNull
+  public static DynamicBuffer fromByteArray(byte[] bytes) {
+    return new DynamicBuffer(fromBytes(bytes), false);
+  }
+  
+  @NonNull
+  public static DynamicBuffer fromByteArray(byte[] bytes, Arena arena) {
+    return new DynamicBuffer(arena, fromBytes(bytes), false);
   }
 
   public Long getLength() {

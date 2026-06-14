@@ -39,4 +39,30 @@ class ServerKeyTest {
                                .unset())
       .doesNotThrowAnyException();
   }
+
+  @Test
+  void runWithPropagatesServerKey() {
+    ServerKey key = keySet.getServerKey();
+    org.assertj.core.api.Assertions.assertThat(ServerKey.current()).isNull();
+
+    key.runWith(() -> {
+      org.assertj.core.api.Assertions.assertThat(ServerKey.current()).isSameAs(key);
+    });
+
+    org.assertj.core.api.Assertions.assertThat(ServerKey.current()).isNull();
+  }
+
+  @Test
+  void callWithPropagatesServerKey() throws Exception {
+    ServerKey key = keySet.getServerKey();
+    org.assertj.core.api.Assertions.assertThat(ServerKey.current()).isNull();
+
+    String result = key.callWith(() -> {
+      org.assertj.core.api.Assertions.assertThat(ServerKey.current()).isSameAs(key);
+      return "success";
+    });
+
+    org.assertj.core.api.Assertions.assertThat(result).isEqualTo("success");
+    org.assertj.core.api.Assertions.assertThat(ServerKey.current()).isNull();
+  }
 }

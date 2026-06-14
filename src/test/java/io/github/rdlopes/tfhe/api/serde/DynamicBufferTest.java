@@ -70,4 +70,15 @@ class DynamicBufferTest {
       publicKey.destroy();
     }
   }
+
+  @Test
+  void initializesFromByteArrayWithCustomArena() {
+    byte[] bytes = {1, 2, 3, 4, 5};
+    try (java.lang.foreign.Arena arena = java.lang.foreign.Arena.ofConfined()) {
+      try (DynamicBuffer dynamicBuffer = DynamicBuffer.fromByteArray(bytes, arena)) {
+        assertThat(dynamicBuffer.getLength()).isEqualTo(bytes.length);
+        assertThat(dynamicBuffer.toByteArray()).isEqualTo(bytes);
+      }
+    }
+  }
 }

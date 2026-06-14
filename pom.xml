@@ -22,7 +22,6 @@
 
   <properties>
     <!-- Project properties -->
-    <java.version>25</java.version>
     <native.basedir>${project.basedir}/.native</native.basedir>
     <native-libs.basedir>${native.basedir}/libs</native-libs.basedir>
     <native-bindings.basedir>${native.basedir}/bindings</native-bindings.basedir>
@@ -41,6 +40,9 @@
 
     <!-- Plugin dependencies-->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
+    <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
+    <sonar.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.exclusions>
+    <sonar.cpd.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.cpd.exclusions>
   </properties>
 
   <dependencyManagement>
@@ -163,6 +165,20 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>${sonar-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>sonar-analysis</id>
+            <goals>
+              <goal>sonar</goal>
+            </goals>
+            <phase>post-integration-test</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.github.cukedoctor</groupId>
         <artifactId>cukedoctor-maven-plugin</artifactId>
         <configuration>
@@ -267,6 +283,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <excludePackageNames>io.github.rdlopes.tfhe.ffm</excludePackageNames>
+          <doclint>none</doclint>
         </configuration>
       </plugin>
     </plugins>

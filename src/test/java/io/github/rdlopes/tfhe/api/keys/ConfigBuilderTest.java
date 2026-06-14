@@ -19,6 +19,10 @@ class ConfigBuilderTest {
   void buildsConfig() {
     Config config = configBuilder.build();
     assertThat(config).isNotNull();
+
+    org.assertj.core.api.Assertions.assertThatThrownBy(() -> configBuilder.build())
+      .isInstanceOf(IllegalStateException.class)
+      .hasMessage("This builder has already been built/consumed.");
   }
 
   @Test

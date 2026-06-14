@@ -1,121 +1,33 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.AbstractFheArray;
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
-import io.github.rdlopes.tfhe.ffm.NativeArray;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.rdlopes.tfhe.ffm.FheOps;
+import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
 import java.util.Collection;
+import java.util.List;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+public final class FheUint6Array extends AbstractFheArray<FheUint6, FheUint6Array>
+    implements FheArray<FheUint6, FheUint6Array> {
 
-// @formatter:off
-public class FheUint6Array extends NativeArray implements FheArray<FheUint6, FheUint6Array> {
-  private static final Logger logger = LoggerFactory.getLogger(FheUint6Array.class);
-// @formatter:on
+  public FheUint6Array(Collection<FheUint6> elements) { super(elements); }
 
-  public FheUint6Array(Collection<FheUint6> elements) {
-    logger.trace("init - elements: {}", elements);
-    super(elements);
-  }
+  @Override protected FheOps.ArrayBinaryOp containsArrayOp() { return TfheHeader::fhe_uint6_array_contains_sub_slice; }
+  @Override protected FheOps.ArrayBinaryOp equalsArrayOp()   { return TfheHeader::fhe_uint6_array_eq; }
+  @Override protected FheOps.ArraySumOp    sumOp()           { return TfheHeader::fhe_uint6_sum; }
+  @Override protected FheUint6             newElement()       { return new FheUint6(); }
+  @Override protected FheUint6Array        newArray(List<FheUint6> elements) { return new FheUint6Array(elements); }
 
   public static FheUint6Array encrypt(Collection<Byte> values, ClientKey clientKey) {
-    logger.trace("encrypt - values: {}, clientKey: {}", values, clientKey);
-    Collection<FheUint6> elements = values.stream()
-                                          .map(value -> FheUint6.encrypt(value, clientKey))
-                                          .toList();
-    return new FheUint6Array(elements);
+    return new FheUint6Array(values.stream().map(v -> FheUint6.encrypt(v, clientKey)).toList());
   }
-
   public static FheUint6Array encrypt(Collection<Byte> values, PublicKey publicKey) {
-    logger.trace("encrypt - values: {}, publicKey: {}", values, publicKey);
-    Collection<FheUint6> elements = values.stream()
-                                          .map(value -> FheUint6.encrypt(value, publicKey))
-                                          .toList();
-    return new FheUint6Array(elements);
+    return new FheUint6Array(values.stream().map(v -> FheUint6.encrypt(v, publicKey)).toList());
   }
-
   public static FheUint6Array encrypt(Collection<Byte> values) {
-    logger.trace("encrypt - values: {}", values);
-    Collection<FheUint6> elements = values.stream()
-                                          .map(FheUint6::encrypt)
-                                          .toList();
-    return new FheUint6Array(elements);
+    return new FheUint6Array(values.stream().map(FheUint6::encrypt).toList());
   }
-
-  /// ```c
-  /// int fhe_uint6_array_contains_sub_slice(struct FheUint6 *const *lhs,
-  ///                                        size_t lhs_len,
-  ///                                        struct FheUint6 *const *rhs,
-  ///                                        size_t rhs_len,
-  ///                                        struct FheBool **result);
-  ///```
-  @Override
-  public FheBool containsArray(FheUint6Array other){
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint6_array_contains_sub_slice(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint6_array_eq(struct FheUint6 *const *lhs,
-  ///                        size_t lhs_len,
-  ///                        struct FheUint6 *const *rhs,
-  ///                        size_t rhs_len,
-  ///                        struct FheBool **result);
-  ///```
-  @Override
-  public FheBool equalsArray(FheUint6Array other){
-    FheBool result = new FheBool();
-    execute(() -> fhe_uint6_array_eq(getAddress(), getSize(), other.getAddress(), other.getSize(), result.getAddress()));
-    return result;
-
-  }
-
-  /// ```c
-  /// int fhe_uint6_sum(const struct FheUint6 *const *lhs, size_t len, struct FheUint6 **out_result);
-  ///```
-  @Override
-public FheUint6 sum(){
-    FheUint6 result = new FheUint6();
-    execute(() -> fhe_uint6_sum(getAddress(), getSize(), result.getAddress()));
-    return result;
-
 }
-
-  @Override
-  public FheUint6Array add(FheUint6Array other) {
-    if (this.getSize() != other.getSize()) {
-      throw new IllegalArgumentException("Array sizes must match");
-    }
-    java.util.List<FheUint6> thisElements = this.getElements();
-    java.util.List<FheUint6> otherElements = other.getElements();
-    java.util.List<FheUint6> result = new java.util.ArrayList<>();
-    for (int i = 0; i < thisElements.size(); i++) {
-      result.add(thisElements.get(i).add(otherElements.get(i)));
-    }
-    return new FheUint6Array(result);
-  }
-
-  @Override
-  public FheUint6Array subtract(FheUint6Array other) {
-    if (this.getSize() != other.getSize()) {
-      throw new IllegalArgumentException("Array sizes must match");
-    }
-    java.util.List<FheUint6> thisElements = this.getElements();
-    java.util.List<FheUint6> otherElements = other.getElements();
-    java.util.List<FheUint6> result = new java.util.ArrayList<>();
-    for (int i = 0; i < thisElements.size(); i++) {
-      result.add(thisElements.get(i).subtract(otherElements.get(i)));
-    }
-    return new FheUint6Array(result);
-  }
-  
-
-  // @formatter:off
-}
-// @formatter:on
