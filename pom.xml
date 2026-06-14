@@ -32,39 +32,12 @@
     <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
     <!--suppress XmlUnresolvedReference -->
     <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
-    <!-- Library dependencies -->
-    <commons-io.version>2.22.0</commons-io.version>
-    <commons-lang3.version>3.20.0</commons-lang3.version>
-    <cucumber.version>7.17.0</cucumber.version>
-    <jspecify.version>1.0.0</jspecify.version>
-
     <!-- Plugin dependencies-->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <sonar.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.exclusions>
     <sonar.cpd.exclusions>**/target/generated-sources/**/*,**/generated-sources/**/*</sonar.cpd.exclusions>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.jspecify</groupId>
-        <artifactId>jspecify</artifactId>
-        <version>${jspecify.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>${commons-lang3.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${commons-io.version}</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
@@ -78,6 +51,7 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
+      <version>2.22.0</version>
     </dependency>
 
     <dependency>
@@ -319,139 +293,16 @@
             <artifactId>exec-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>clone-tfhe-rs</id>
+                <id>run-build-script</id>
                 <goals>
                   <goal>exec</goal>
                 </goals>
                 <phase>initialize</phase>
                 <configuration>
-                  <executable>git</executable>
+                  <executable>java</executable>
                   <arguments>
-                    <argument>clone</argument>
-                    <argument>https://github.com/zama-ai/tfhe-rs.git</argument>
-                    <argument>${tfhe-rs.basedir}</argument>
+                    <argument>build-support/BuildNative.java</argument>
                   </arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>generate-native-library</id>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <phase>initialize</phase>
-                <configuration>
-                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
-                  <executable>cargo</executable>
-                  <arguments>
-                    <argument>+nightly-2026-04-22</argument>
-                    <argument>build</argument>
-                    <argument>--profile</argument>
-                    <argument>release</argument>
-                    <argument>--features=boolean-c-api,shortint-c-api,high-level-c-api,zk-pok,experimental-force_fft_algo_dif4</argument>
-                    <argument>-p</argument>
-                    <argument>tfhe</argument>
-                  </arguments>
-                  <environmentVariables>
-                    <RUSTFLAGS>-C target-cpu=native</RUSTFLAGS>
-                  </environmentVariables>
-                </configuration>
-              </execution>
-              <execution>
-                <id>generate-bindings-includes</id>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <phase>initialize</phase>
-                <configuration>
-                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
-                  <executable>jextract</executable>
-                  <arguments>
-                    <argument>target/release/tfhe.h</argument>
-                    <argument>--dump-includes</argument>
-                    <argument>jextract-includes.txt</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>filter-bindings-includes</id>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <phase>initialize</phase>
-                <configuration>
-                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
-                  <executable>grep</executable>
-                  <arguments>
-                    <argument>tfhe</argument>
-                    <argument>jextract-includes.txt</argument>
-                  </arguments>
-                  <outputFile>${tfhe-rs.basedir}/jextract-includes-filtered.txt</outputFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>generate-bindings</id>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <phase>initialize</phase>
-                <configuration>
-                  <workingDirectory>${tfhe-rs.basedir}</workingDirectory>
-                  <executable>jextract</executable>
-                  <arguments>
-                    <argument>@jextract-includes-filtered.txt</argument>
-                    <argument>target/release/tfhe.h</argument>
-                    <argument>--header-class-name</argument>
-                    <argument>TfheHeader</argument>
-                    <argument>--target-package</argument>
-                    <argument>io.github.rdlopes.tfhe.ffm</argument>
-                    <argument>--output</argument>
-                    <argument>${native-bindings.basedir}</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>prepare-native-libraries</id>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <phase>initialize</phase>
-                <configuration>
-                  <outputDirectory>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${tfhe-rs.basedir}/target/release</directory>
-                      <includes>
-                        <include>*.h</include>
-                        <include>*.dylib</include>
-                        <include>*.so</include>
-                        <include>*.dll</include>
-                      </includes>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>copy-licence</id>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <phase>initialize</phase>
-                <configuration>
-                  <outputDirectory>${native-libs.basedir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${tfhe-rs.basedir}/tfhe</directory>
-                      <includes>
-                        <include>LICENSE</include>
-                      </includes>
-                    </resource>
-                  </resources>
                 </configuration>
               </execution>
             </executions>

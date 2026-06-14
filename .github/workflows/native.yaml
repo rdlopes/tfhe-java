@@ -64,28 +64,14 @@ jobs:
           cp native-libs/tfhe.h native-bundle/libs/windows/x86_64
           cp native-libs/*.dll native-bundle/libs/windows/x86_64
       - run: cp native-libs/LICENSE native-bundle/libs
-      - uses: jcwillox/install-tool-action@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
-          id: 'jextract'
-          download_url: https://download.java.net/java/early_access/jextract/22/6/openjdk-22-jextract+6-47_linux-x64_bin.tar.gz
-          version: '22+6-47'
-          bin_path: 'jextract-22/bin'
-      - name: Jextract Dump includes
+          java-version: '25'
+          distribution: 'temurin'
+      - name: Generate Bindings
         run: |
-          jextract native-libs/tfhe.h \
-          --dump-includes jextract-includes.txt
-      - name: Jextract filter Includes
-        run: |
-          grep tfhe jextract-includes.txt > jextract-includes-filtered.txt
-          cat jextract-includes-filtered.txt
-      - name: Jextract Bindings
-        run: |
-          mkdir -p .native/bindings
-          jextract native-libs/tfhe.h \
-          @jextract-includes-filtered.txt \
-          --header-class-name TfheHeader \
-          --target-package io.github.rdlopes.tfhe.ffm \
-          --output native-bundle/bindings
+          java build-support/BuildNative.java --only-bindings --header native-libs/tfhe.h --output native-bundle/bindings
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v7
         with:

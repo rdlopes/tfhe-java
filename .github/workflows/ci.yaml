@@ -1,7 +1,7 @@
 name: CI
 
 env:
-  JAVA_VERSION: '25-ea'
+  JAVA_VERSION: '25'
   JAVA_DISTRIBUTION: 'temurin'
 
 on:
@@ -34,12 +34,9 @@ jobs:
           cache: 'maven'
 
       - name: Download Native Bundle
-        uses: dawidd6/action-download-artifact@v21
-        with:
-          github_token: ${{github.token}}
-          workflow: native.yaml
-          name: 'native-bundle'
-          path: ${{github.workspace}}/.native
+        run: gh run download -w native.yaml -n native-bundle -D .native
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Compile with Maven
         run: ./mvnw package
@@ -60,12 +57,9 @@ jobs:
           cache: 'maven'
 
       - name: Download Native Bundle
-        uses: dawidd6/action-download-artifact@v21
-        with:
-          github_token: ${{github.token}}
-          workflow: native.yaml
-          name: 'native-bundle'
-          path: ${{github.workspace}}/.native
+        run: gh run download -w native.yaml -n native-bundle -D .native
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz

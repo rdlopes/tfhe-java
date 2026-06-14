@@ -27,6 +27,14 @@ https://docs.zama.ai/tfhe-rs[Zama TFHE^] wrapper enabling homomorphic encryption
 TFHE Java is a Java wrapper for the https://github.com/zama-ai/tfhe-rs[Zama TFHE-rs library], providing access to Torus Fully Homomorphic Encryption (TFHE) operations directly from Java applications.
 This library enables developers to perform computations on encrypted data without decrypting it first, ensuring privacy and security in cloud computing scenarios.
 
+== Key Features
+
+* **Arbitrary Bit-Width Support**: Supports homomorphic booleans (`FheBool`) and arbitrary bit-width signed and unsigned integers (`FheInt` / `FheUint` from 2-bit to 2048-bit, including standard sizes like 8, 16, 32, 64, 128, 256, 512, 1024, and 2048).
+* **Flexible Generic APIs**:
+** **Type Casting**: Generic `.castInto(Class)` API to cast between ciphertext types (e.g. `fheBool.castInto(FheUint8.class)`).
+** **List Extraction**: Extract typed elements from compact or compressed ciphertext lists via generic `.get(index, Class)` (e.g. `list.get(index, FheInt32.class)`).
+* **Native Thread Safety**: Thread-safe execution context management via `ServerKey.runWith()` and `ServerKey.callWith()`.
+
 == Installation
 
 Add the following dependency to your `pom.xml`:
@@ -63,10 +71,10 @@ The `local` profile performs the following steps in `initialize` phase:
 
 === Performance Tips
 
-* **Key Reuse**: Generate keys once and reuse them across operations
-* **Memory Efficiency**: Use appropriate data types (U128 for integers, Boolean for binary operations)
-* **Batch Operations**: Group multiple operations when possible to reduce overhead
-* **Resource Management**: Always use try-with-resources for Arena management
+* **Key Reuse**: Generate keys once and reuse them across operations.
+* **Memory Efficiency**: Select the smallest appropriate bit-width data types (e.g., `FheUint2` / `FheUint4` / `FheUint8` instead of large default widths) to optimize performance and reduce memory usage.
+* **Batch Operations**: Group multiple operations when possible to reduce overhead.
+* **Resource Management**: Always use try-with-resources for Arena management.
 
 == Benchmarks
 

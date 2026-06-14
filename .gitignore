@@ -16,6 +16,7 @@ pom.xml.versionsBackup
 ### Jextract CICD ###
 jextract-22/
 jextract.tar.gz
+.jextract/
 
 ### Native libs ###
 .native
