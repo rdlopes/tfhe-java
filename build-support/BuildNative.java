@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -20,6 +19,30 @@ public class BuildNative {
     private static final String JEXTRACT_BASE_URL = "https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_";
     private static final String TFHE_RS_REPO = "https://github.com/zama-ai/tfhe-rs.git";
     private static final String TFHE_RS_COMMIT = "407fa762bce85df9f5e4485c8573672a005d3c6a";
+
+    private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(BuildNative.class.getName());
+
+    static {
+        // Reset standard logging to clear default console handler
+        java.util.logging.LogManager.getLogManager().reset();
+        java.util.logging.Logger rootLogger = java.util.logging.Logger.getLogger("");
+        java.util.logging.ConsoleHandler handler = new java.util.logging.ConsoleHandler();
+        handler.setFormatter(new java.util.logging.Formatter() {
+            @Override
+            public String format(java.util.logging.LogRecord record) {
+                return record.getMessage() + System.lineSeparator();
+            }
+        });
+        rootLogger.addHandler(handler);
+    }
+
+    private static void log(String msg) {
+        LOGGER.info(msg);
+    }
+
+    private static void logError(String msg) {
+        LOGGER.severe(msg);
+    }
 
     public static void main(String[] args) {
         try {
@@ -43,8 +66,8 @@ public class BuildNative {
                 }
             }
 
-            System.out.println("Starting TFHE-Java native build/generation phase...");
-            System.out.println("Mode: " + (onlyBindings ? "Only Bindings" : "Full Build"));
+            log("Starting TFHE-Java native build/generation phase...");
+            log("Mode: " + (onlyBindings ? "Only Bindings" : "Full Build"));
 
             // 1. Detect platform and bootstrap jextract
             Path jextractExec = bootstrapJextract();
@@ -59,7 +82,7 @@ public class BuildNative {
 
             // 3. Locate the C header file
             Path headerFile = locateHeader(customHeader, tfheRsDir);
-            System.out.println("Using C header file: " + headerFile.toAbsolutePath());
+            log("Using C header file: " + headerFile.toAbsolutePath());
 
             // 4. Generate the bindings
             generateBindings(jextractExec, headerFile, outputDir);
@@ -69,23 +92,26 @@ public class BuildNative {
                 copyNativeLibraries(tfheRsDir, libsDir);
             }
 
-            System.out.println("Initialization and generation completed successfully!");
+            log("Initialization and generation completed successfully!");
 
         } catch (Exception e) {
-            System.err.println("BUILD FAILED: " + e.getMessage());
-            e.printStackTrace();
+            logError("BUILD FAILED: " + e.getMessage());
+            java.io.StringWriter sw = new java.io.StringWriter();
+            java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+            e.printStackTrace(pw);
+            logError(sw.toString());
             System.exit(1);
         }
     }
 
     private static void printHelp() {
-        System.out.println("Usage: java build-support/BuildNative.java [options]");
-        System.out.println("Options:");
-        System.out.println("  --only-bindings     Generate Panama FFM Java bindings from existing headers. Skip rust compilation.");
-        System.out.println("  --header <path>     Specify custom path to tfhe.h header file.");
-        System.out.println("  --output <path>     Specify bindings output directory (default: .native/bindings).");
-        System.out.println("  --libs-dir <path>   Specify native libraries copy destination (default: .native/libs).");
-        System.out.println("  --help, -h          Print this help message.");
+        log("Usage: java build-support/BuildNative.java [options]");
+        log("Options:");
+        log("  --only-bindings     Generate Panama FFM Java bindings from existing headers. Skip rust compilation.");
+        log("  --header <path>     Specify custom path to tfhe.h header file.");
+        log("  --output <path>     Specify bindings output directory (default: .native/bindings).");
+        log("  --libs-dir <path>   Specify native libraries copy destination (default: .native/libs).");
+        log("  --help, -h          Print this help message.");
     }
 
     private static void verifyToolsInstalled() throws Exception {
@@ -108,7 +134,7 @@ public class BuildNative {
         Path jextractExec = jextractBinDir.resolve(isWindows ? "jextract.bat" : "jextract");
 
         if (Files.exists(jextractExec)) {
-            System.out.println("Found cached jextract at: " + jextractExec.toAbsolutePath());
+            log("Found cached jextract at: " + jextractExec.toAbsolutePath());
             return jextractExec;
         }
 
@@ -138,7 +164,7 @@ public class BuildNative {
         String downloadUrl = JEXTRACT_BASE_URL + platform + "_bin" + extension;
         Path downloadTarget = cacheDir.resolve("download").resolve("jextract" + extension);
 
-        System.out.println("jextract not found locally. Bootstrapping " + platform + " build...");
+        log("jextract not found locally. Bootstrapping " + platform + " build...");
         downloadFile(downloadUrl, downloadTarget);
 
         if (extension.equals(".zip")) {
@@ -148,10 +174,10 @@ public class BuildNative {
             // On macOS, we need to clear the quarantine flag
             if (osName.contains("mac")) {
                 try {
-                    System.out.println("Removing quarantine flag from jextract on macOS...");
+                    log("Removing quarantine flag from jextract on macOS...");
                     runCommand(cacheDir.toFile(), "xattr", "-r", "-d", "com.apple.quarantine", "jextract-25");
                 } catch (Exception e) {
-                    System.err.println("Warning: failed to clear macOS quarantine attribute: " + e.getMessage());
+                    logError("Warning: failed to clear macOS quarantine attribute: " + e.getMessage());
                 }
             }
         }
@@ -161,12 +187,12 @@ public class BuildNative {
             try {
                 runCommand(jextractBinDir.toFile(), "chmod", "+x", "jextract");
             } catch (Exception e) {
-                System.err.println("Warning: failed to set executable permission on jextract: " + e.getMessage());
+                logError("Warning: failed to set executable permission on jextract: " + e.getMessage());
             }
         }
 
         if (Files.exists(jextractExec)) {
-            System.out.println("Successfully bootstrapped jextract!");
+            log("Successfully bootstrapped jextract!");
             return jextractExec;
         } else {
             throw new FileNotFoundException("Expected jextract binary at " + jextractExec.toAbsolutePath() + " but it was not found after extraction.");
@@ -174,7 +200,7 @@ public class BuildNative {
     }
 
     private static void downloadFile(String urlStr, Path targetPath) throws Exception {
-        System.out.println("Downloading " + urlStr + " -> " + targetPath.toAbsolutePath());
+        log("Downloading " + urlStr + " -> " + targetPath.toAbsolutePath());
         Files.createDirectories(targetPath.getParent());
         HttpClient client = HttpClient.newBuilder()
                 .followRedirects(HttpClient.Redirect.ALWAYS)
@@ -189,7 +215,7 @@ public class BuildNative {
     }
 
     private static void extractZip(Path zipFile, Path destDir) throws Exception {
-        System.out.println("Extracting ZIP " + zipFile + " -> " + destDir.toAbsolutePath());
+        log("Extracting ZIP " + zipFile + " -> " + destDir.toAbsolutePath());
         Files.createDirectories(destDir);
         try (ZipInputStream zis = new ZipInputStream(new BufferedInputStream(Files.newInputStream(zipFile)))) {
             ZipEntry entry;
@@ -213,26 +239,26 @@ public class BuildNative {
     }
 
     private static void extractTarGz(Path tarGzFile, Path destDir) throws Exception {
-        System.out.println("Extracting TAR.GZ " + tarGzFile + " -> " + destDir.toAbsolutePath());
+        log("Extracting TAR.GZ " + tarGzFile + " -> " + destDir.toAbsolutePath());
         Files.createDirectories(destDir);
         runCommand(destDir.toFile(), "tar", "-xzf", tarGzFile.toAbsolutePath().toString());
     }
 
     private static void setupTfheRsRepo(Path tfheRsDir) throws Exception {
         if (!Files.exists(tfheRsDir)) {
-            System.out.println("Cloning tfhe-rs repository...");
+            log("Cloning tfhe-rs repository...");
             Files.createDirectories(tfheRsDir.getParent());
             runCommand(Path.of(".native").toFile(), "git", "clone", TFHE_RS_REPO, "tfhe-rs");
         } else {
-            System.out.println("tfhe-rs repository already cloned.");
+            log("tfhe-rs repository already cloned.");
         }
 
-        System.out.println("Checking out pinned commit: " + TFHE_RS_COMMIT);
+        log("Checking out pinned commit: " + TFHE_RS_COMMIT);
         runCommand(tfheRsDir.toFile(), "git", "checkout", TFHE_RS_COMMIT);
     }
 
     private static void buildNativeLibrary(Path tfheRsDir) throws Exception {
-        System.out.println("Building tfhe-rs C API library from source (profile: release)...");
+        log("Building tfhe-rs C API library from source (profile: release)...");
         // We use cargo directly instead of 'make build_c_api' to ensure compatibility with Windows without make
         runCommand(tfheRsDir.toFile(),
                 "cargo",
@@ -268,7 +294,7 @@ public class BuildNative {
     }
 
     private static void generateBindings(Path jextractExec, Path headerFile, Path outputDir) throws Exception {
-        System.out.println("Generating FFM Java bindings from C header...");
+        log("Generating FFM Java bindings from C header...");
         Files.createDirectories(outputDir);
 
         Path workingDir = headerFile.getParent();
@@ -276,7 +302,7 @@ public class BuildNative {
         Path filteredIncludes = workingDir.resolve("jextract-includes-filtered.txt");
 
         // 1. Dump includes
-        System.out.println("Dumping includes list...");
+        log("Dumping includes list...");
         runCommand(workingDir.toFile(),
                 jextractExec.toAbsolutePath().toString(),
                 headerFile.getFileName().toString(),
@@ -285,15 +311,15 @@ public class BuildNative {
         );
 
         // 2. Filter includes in Java (replaces shell grep)
-        System.out.println("Filtering includes list (replaces grep)...");
+        log("Filtering includes list (replaces grep)...");
         List<String> filteredLines = Files.readAllLines(rawIncludes).stream()
                 .filter(line -> line.contains("tfhe"))
                 .collect(Collectors.toList());
         Files.write(filteredIncludes, filteredLines);
-        System.out.println("Filtered " + filteredLines.size() + " lines out of " + Files.readAllLines(rawIncludes).size());
+        log("Filtered " + filteredLines.size() + " lines out of " + Files.readAllLines(rawIncludes).size());
 
         // 3. Generate bindings
-        System.out.println("Running jextract to generate FFM Java code...");
+        log("Running jextract to generate FFM Java code...");
         runCommand(workingDir.toFile(),
                 jextractExec.toAbsolutePath().toString(),
                 "@" + filteredIncludes.getFileName().toString(),
@@ -302,11 +328,11 @@ public class BuildNative {
                 "--target-package", "io.github.rdlopes.tfhe.ffm",
                 "--output", outputDir.toAbsolutePath().toString()
         );
-        System.out.println("Java bindings generated in: " + outputDir.toAbsolutePath());
+        log("Java bindings generated in: " + outputDir.toAbsolutePath());
     }
 
     private static void copyNativeLibraries(Path tfheRsDir, Path libsDir) throws Exception {
-        System.out.println("Copying native libraries to bundle folder...");
+        log("Copying native libraries to bundle folder...");
 
         String osName = System.getProperty("os.name").toLowerCase();
         String osArch = System.getProperty("os.arch").toLowerCase();
@@ -344,7 +370,7 @@ public class BuildNative {
         Path licenseDest = libsDir.resolve("LICENSE");
         if (Files.exists(licenseSrc)) {
             Files.copy(licenseSrc, licenseDest, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("Copied LICENSE to " + licenseDest.toAbsolutePath());
+            log("Copied LICENSE to " + licenseDest.toAbsolutePath());
         }
 
         // Copy header
@@ -352,7 +378,7 @@ public class BuildNative {
         Path headerDest = targetDir.resolve("tfhe.h");
         if (Files.exists(headerSrc)) {
             Files.copy(headerSrc, headerDest, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("Copied tfhe.h to " + headerDest.toAbsolutePath());
+            log("Copied tfhe.h to " + headerDest.toAbsolutePath());
         }
 
         // Copy binary libraries
@@ -364,7 +390,7 @@ public class BuildNative {
                     if (filename.endsWith(ext) && !filename.contains("dangling")) {
                         Path dest = targetDir.resolve(filename);
                         Files.copy(entry, dest, StandardCopyOption.REPLACE_EXISTING);
-                        System.out.println("Copied " + filename + " to " + dest.toAbsolutePath());
+                        log("Copied " + filename + " to " + dest.toAbsolutePath());
                     }
                 }
             }
