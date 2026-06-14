@@ -18,6 +18,7 @@
 image:{native}/badge.svg[link={native},window=_blank]
 image:{ci}/badge.svg[link={ci},window=_blank]
 image:{cd}/badge.svg[link={cd},window=_blank]
+image:https://sonarcloud.io/api/project_badges/measure?project=io.github.rdlopes%3Atfhe-java&metric=alert_status[link=https://sonarcloud.io/project/overview?id=io.github.rdlopes%3Atfhe-java,window=_blank]
 image:{badges}/badge/License-MIT-yellow.svg[link={license},title=MIT License]
 
 https://docs.zama.ai/tfhe-rs[Zama TFHE^] wrapper enabling homomorphic encryption in Java using the Foreign Function & Memory API (Project Panama).
