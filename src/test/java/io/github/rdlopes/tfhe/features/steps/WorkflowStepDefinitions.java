@@ -3,14 +3,10 @@ package io.github.rdlopes.tfhe.features.steps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.github.rdlopes.tfhe.api.keys.KeySet;
-import io.github.rdlopes.tfhe.api.keys.ConfigBuilder;
-import io.github.rdlopes.tfhe.api.keys.Config;
-import io.github.rdlopes.tfhe.api.keys.ClientKey;
-import io.github.rdlopes.tfhe.api.keys.ServerKey;
-import io.github.rdlopes.tfhe.api.types.FheUint32;
-import io.github.rdlopes.tfhe.api.types.CompressedFheUint32;
+import io.github.rdlopes.tfhe.api.keys.*;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.types.CompressedFheUint32;
+import io.github.rdlopes.tfhe.api.types.FheUint32;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,14 +53,12 @@ public class WorkflowStepDefinitions {
 
   @When("the keys are generated")
   public void theKeysAreGenerated() {
-    KeySet keySet = KeySet.builder()
-                          .enableCompression(io.github.rdlopes.tfhe.api.keys.CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                          .build();
-    clientKey = keySet.getClientKey();
-    serverKey = keySet.getServerKey();
+    context.keySet = KeySet.builder()
+                           .enableCompression(io.github.rdlopes.tfhe.api.keys.CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                           .build();
+    clientKey = context.keySet.getClientKey();
+    serverKey = context.keySet.getServerKey();
     serverKey.use();
-    context.track(clientKey);
-    context.track(serverKey);
   }
 
   @Then("the ClientKey and ServerKey are initialized and ready")

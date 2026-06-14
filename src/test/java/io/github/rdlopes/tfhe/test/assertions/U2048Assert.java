@@ -16,8 +16,8 @@ public class U2048Assert extends AbstractAssert<U2048Assert, U2048> {
     if (expected == null) {
       failWithMessage("Expected U2048 should not be null");
     }
-    BigInteger actualValue = actual.getValue();
-    BigInteger expectedValue = expected.getValue();
+    BigInteger actualValue = actual.asBigInteger();
+    BigInteger expectedValue = expected.asBigInteger();
     if (!actualValue.equals(expectedValue)) {
       failWithMessage("Expected U2048 to be equal to <%s> but was <%s>", expectedValue, actualValue);
     }
@@ -32,7 +32,7 @@ public class U2048Assert extends AbstractAssert<U2048Assert, U2048> {
     if (expected.signum() < 0) {
       failWithMessage("Expected BigInteger should not be negative for U2048 comparison");
     }
-    BigInteger actualValue = actual.getValue();
+    BigInteger actualValue = actual.asBigInteger();
     if (!actualValue.equals(expected)) {
       failWithMessage("Expected U2048 to have value <%s> but was <%s>", expected, actualValue);
     }

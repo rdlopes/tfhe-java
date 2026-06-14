@@ -1,8 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -10,9 +9,10 @@ import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
 public final class FheInt14 extends AbstractFheType<Short, FheInt14, CompressedFheInt14>
-    implements FheInteger<Short, FheInt14, CompressedFheInt14> {
+  implements FheSignedInteger<Short, FheInt14, CompressedFheInt14> {
 
   static {
     FheRegistry.registerFactory(FheInt14.class, FheInt14::new);

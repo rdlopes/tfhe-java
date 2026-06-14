@@ -7,6 +7,7 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
@@ -26,7 +27,7 @@ public class CompactPkeCrs extends NativePointer implements FheObject, AutoClose
   public static CompactPkeCrs deserialize(DynamicBuffer dynamicBuffer) {
     logger.trace("deserialize");
     CompactPkeCrs deserialized = new CompactPkeCrs();
-    execute(() -> compact_pke_crs_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
+    execute(() -> compact_pke_crs_safe_deserialize(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
     return deserialized;
   }
 
@@ -47,7 +48,7 @@ public class CompactPkeCrs extends NativePointer implements FheObject, AutoClose
   public static CompactPkeCrs safeDeserializeFromParams(DynamicBuffer dynamicBuffer) {
     logger.trace("safeDeserializeFromParams");
     CompactPkeCrs deserialized = new CompactPkeCrs();
-    execute(() -> compact_pke_crs_safe_deserialize_from_params(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
+    execute(() -> compact_pke_crs_safe_deserialize_from_params(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
     return deserialized;
   }
 
@@ -59,7 +60,7 @@ public class CompactPkeCrs extends NativePointer implements FheObject, AutoClose
   public DynamicBuffer serialize(boolean compress) {
     logger.trace("serialize - compress: {}", compress);
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compact_pke_crs_safe_serialize(getValue(), compress, BUFFER_MAX_SIZE, dynamicBuffer.getAddress()));
+    execute(() -> compact_pke_crs_safe_serialize(getValue(), compress, MAX_SERIALIZATION_SIZE, dynamicBuffer.getAddress()));
     return dynamicBuffer;
   }
 

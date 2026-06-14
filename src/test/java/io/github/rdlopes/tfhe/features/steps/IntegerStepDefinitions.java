@@ -2,16 +2,9 @@ package io.github.rdlopes.tfhe.features.steps;
 
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.github.rdlopes.tfhe.api.types.FheUint128;
-import io.github.rdlopes.tfhe.api.types.FheUint128Array;
-import io.github.rdlopes.tfhe.api.types.FheUint8;
-import io.github.rdlopes.tfhe.api.types.FheUint8Array;
-import io.github.rdlopes.tfhe.api.types.FheInt8;
-import io.github.rdlopes.tfhe.api.types.FheInt8Array;
-import io.github.rdlopes.tfhe.api.types.FheInt128;
-import io.github.rdlopes.tfhe.api.types.FheInt128Array;
-import io.github.rdlopes.tfhe.api.values.U128;
+import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.api.values.I128;
+import io.github.rdlopes.tfhe.api.values.U128;
 
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -108,7 +101,7 @@ public class IntegerStepDefinitions {
     List<U128> values = Arrays.stream(intsStr.split(","))
                               .map(String::trim)
                               .map(BigInteger::new)
-                              .map(U128::valueOf)
+                              .map(U128::of)
                               .toList();
     context.uint128Array = context.track(FheUint128Array.encrypt(values, context.keySet.getClientKey()));
   }
@@ -123,7 +116,7 @@ public class IntegerStepDefinitions {
     List<U128> values = Arrays.stream(intsStr.split(","))
                               .map(String::trim)
                               .map(BigInteger::new)
-                              .map(U128::valueOf)
+                              .map(U128::of)
                               .toList();
     context.uint128Array = context.track(FheUint128Array.encrypt(values, context.publicKey));
   }
@@ -132,7 +125,7 @@ public class IntegerStepDefinitions {
   public void theSumOfTheFheUint128ArrayDecryptedUsingTheClientKeyIs(int expected) {
     FheUint128 sum = context.track(context.uint128Array.sum());
     U128 decrypted = sum.decrypt(context.keySet.getClientKey());
-    assertThat(decrypted.getValue()).isEqualTo(BigInteger.valueOf(expected));
+    assertThat(decrypted.asBigInteger()).isEqualTo(BigInteger.valueOf(expected));
   }
 
   // FheInt8Array steps
@@ -158,7 +151,7 @@ public class IntegerStepDefinitions {
     List<I128> values = Arrays.stream(intsStr.split(","))
                               .map(String::trim)
                               .map(BigInteger::new)
-                              .map(I128::valueOf)
+                              .map(I128::of)
                               .toList();
     context.int128Array = context.track(FheInt128Array.encrypt(values, context.keySet.getClientKey()));
   }
@@ -167,7 +160,7 @@ public class IntegerStepDefinitions {
   public void theSumOfTheFheInt128ArrayDecryptedUsingTheClientKeyIs(int expected) {
     FheInt128 sum = context.track(context.int128Array.sum());
     I128 decrypted = sum.decrypt(context.keySet.getClientKey());
-    assertThat(decrypted.getValue()).isEqualTo(BigInteger.valueOf(expected));
+    assertThat(decrypted.asBigInteger()).isEqualTo(BigInteger.valueOf(expected));
   }
 
   // Element-wise array operations steps

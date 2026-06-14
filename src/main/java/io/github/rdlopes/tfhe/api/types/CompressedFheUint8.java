@@ -7,9 +7,7 @@ import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted unsigned 8-bit integer.
- */
+/// Compressed encrypted unsigned 8-bit integer.
 public final class CompressedFheUint8 extends AbstractCompressedFheType<Byte, FheUint8, CompressedFheUint8> {
 
   static final Handles<Byte> H = new Handles<>(

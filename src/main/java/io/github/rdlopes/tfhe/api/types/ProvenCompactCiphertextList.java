@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
@@ -25,7 +26,7 @@ public class ProvenCompactCiphertextList extends NativePointer implements FheObj
   public static ProvenCompactCiphertextList deserialize(DynamicBuffer dynamicBuffer) {
     logger.trace("deserialize");
     ProvenCompactCiphertextList deserialized = new ProvenCompactCiphertextList();
-    execute(() -> proven_compact_ciphertext_list_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
+    execute(() -> proven_compact_ciphertext_list_safe_deserialize(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
     return deserialized;
   }
 
@@ -34,7 +35,7 @@ public class ProvenCompactCiphertextList extends NativePointer implements FheObj
     ProvenCompactCiphertextList deserialized = new ProvenCompactCiphertextList();
     execute(() -> proven_compact_ciphertext_list_safe_deserialize_conformant(
         dynamicBuffer.getAddress(),
-        BUFFER_MAX_SIZE,
+      MAX_SERIALIZATION_SIZE,
         publicKey.getValue(),
         crs.getValue(),
         deserialized.getAddress()
@@ -46,7 +47,7 @@ public class ProvenCompactCiphertextList extends NativePointer implements FheObj
   public DynamicBuffer serialize() {
     logger.trace("serialize");
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> proven_compact_ciphertext_list_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> proven_compact_ciphertext_list_safe_serialize(getValue(), dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE));
     return dynamicBuffer;
   }
 

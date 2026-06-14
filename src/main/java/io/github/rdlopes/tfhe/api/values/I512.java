@@ -14,18 +14,22 @@ public final class I512 extends AbstractValue {
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)
                                                        .subtract(ONE);
-
-  public I512() {
-    super(io.github.rdlopes.tfhe.ffm.I512::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
+  
+  private I512(BigInteger value) {
+    super(io.github.rdlopes.tfhe.ffm.I512::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE, value);
+  }
+  
+  /// Creates a new zero-initialized instance for use as a native output slot.
+  public static I512 newEmpty() {
+    return new I512(BigInteger.ZERO);
   }
 
   @NonNull
-  public static I512 valueOf(@NonNull BigInteger value) {
-    I512 i512 = new I512();
-    i512.setValue(value);
-    return i512;
+  public static I512 of(@NonNull BigInteger value) {
+    return new I512(value);
   }
-
+  
+  
   @Override
   protected void setWord(int index, long word) {
     io.github.rdlopes.tfhe.ffm.I512.words(getAddress(), index, word);

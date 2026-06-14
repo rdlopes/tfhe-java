@@ -36,7 +36,9 @@ public class NativeLibrary {
       loadFromPath();
       loaded = true;
     } catch (Throwable throwable) {
-      logger.debug("Failed loading TFHE native library from path, message: {}", throwable.getMessage());
+      String msg = "Failed to load TFHE native library from both name and classpath path";
+      logger.error(msg, throwable);
+      throw new RuntimeException(msg, throwable);
     }
   }
 

@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.I1024;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted signed 1024-bit integer.
- */
+/// Compressed encrypted signed 1024-bit integer.
 public final class CompressedFheInt1024 extends AbstractCompressedFheType<I1024, FheInt1024, CompressedFheInt1024> {
 
   static final Handles<I1024> H = new Handles<>(
-      new FheValueKind.Wide<>(I1024::new),
+    new FheValueKind.Wide<>(I1024::newEmpty),
       TfheHeader::compressed_fhe_int1024_decompress,
       TfheHeader::compressed_fhe_int1024_clone,
       TfheHeader::compressed_fhe_int1024_safe_serialize,

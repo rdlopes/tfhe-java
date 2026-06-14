@@ -16,8 +16,8 @@ public class U512Assert extends AbstractAssert<U512Assert, U512> {
     if (expected == null) {
       failWithMessage("Expected U512 should not be null");
     }
-    BigInteger actualValue = actual.getValue();
-    BigInteger expectedValue = expected.getValue();
+    BigInteger actualValue = actual.asBigInteger();
+    BigInteger expectedValue = expected.asBigInteger();
     if (!actualValue.equals(expectedValue)) {
       failWithMessage("Expected U512 to be equal to <%s> but was <%s>", expectedValue, actualValue);
     }
@@ -32,7 +32,7 @@ public class U512Assert extends AbstractAssert<U512Assert, U512> {
     if (expected.signum() < 0) {
       failWithMessage("Expected BigInteger should not be negative for U512 comparison");
     }
-    BigInteger actualValue = actual.getValue();
+    BigInteger actualValue = actual.asBigInteger();
     if (!actualValue.equals(expected)) {
       failWithMessage("Expected U512 to have value <%s> but was <%s>", expected, actualValue);
     }

@@ -1,8 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -11,23 +10,22 @@ import io.github.rdlopes.tfhe.api.values.I256;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted signed 160-bit integer ({@code int160_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods.
- */
+/// Encrypted signed 160-bit integer (`int160_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods.
 public final class FheInt160 extends AbstractFheType<I256, FheInt160, CompressedFheInt160>
-    implements FheInteger<I256, FheInt160, CompressedFheInt160> {
+  implements FheSignedInteger<I256, FheInt160, CompressedFheInt160> {
 
   static {
     FheRegistry.registerFactory(FheInt160.class, FheInt160::new);
   }
 
   static final FheTypeHandles<I256> HANDLES = new FheTypeHandles<>(
-      new FheValueKind.Wide<>(I256::new),
+    new FheValueKind.Wide<>(I256::newEmpty),
 
       new FheTypeHandles.Lifecycle(
           TfheHeader::fhe_int160_destroy,

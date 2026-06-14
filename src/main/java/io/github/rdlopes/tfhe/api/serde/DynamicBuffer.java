@@ -10,7 +10,10 @@ import java.lang.foreign.SegmentAllocator;
 import java.util.function.Function;
 
 public class DynamicBuffer extends NativeAddress implements AutoCloseable {
-
+  
+  /// Maximum number of bytes consumed or produced by safe serialize/deserialize operations.
+  public static final long MAX_SERIALIZATION_SIZE = Long.MAX_VALUE;
+  
   public DynamicBuffer() {
     this(io.github.rdlopes.tfhe.ffm.DynamicBuffer::allocate, true);
   }

@@ -14,14 +14,14 @@ class U1024Test {
 
   @Test
   public void initializesFromMinimumValue() {
-    U1024 value = valueOf(MIN_VALUE);
+    U1024 value = of(MIN_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MIN_VALUE);
   }
 
   @Test
   public void initializesFromMaximumValue() {
-    U1024 value = valueOf(MAX_VALUE);
+    U1024 value = of(MAX_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MAX_VALUE);
   }
@@ -29,14 +29,14 @@ class U1024Test {
   @Test
   void throwsIllegalArgumentExceptionBelowMinimumValue() {
     BigInteger belowMin = MIN_VALUE.subtract(ONE);
-    assertThatThrownBy(() -> valueOf(belowMin))
+    assertThatThrownBy(() -> of(belowMin))
       .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void throwsIllegalArgumentExceptionAboveMaximumValue() {
     BigInteger aboveMax = MAX_VALUE.add(ONE);
-    assertThatThrownBy(() -> valueOf(aboveMax))
+    assertThatThrownBy(() -> of(aboveMax))
       .isInstanceOf(IllegalArgumentException.class);
   }
 }

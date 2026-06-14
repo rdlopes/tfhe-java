@@ -1,8 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -11,23 +10,22 @@ import io.github.rdlopes.tfhe.api.values.I2048;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted signed 2048-bit integer ({@code int2048_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods.
- */
+/// Encrypted signed 2048-bit integer (`int2048_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods.
 public final class FheInt2048 extends AbstractFheType<I2048, FheInt2048, CompressedFheInt2048>
-    implements FheInteger<I2048, FheInt2048, CompressedFheInt2048> {
+  implements FheSignedInteger<I2048, FheInt2048, CompressedFheInt2048> {
 
   static {
     FheRegistry.registerFactory(FheInt2048.class, FheInt2048::new);
   }
 
   static final FheTypeHandles<I2048> HANDLES = new FheTypeHandles<>(
-      new FheValueKind.Wide<>(I2048::new),
+    new FheValueKind.Wide<>(I2048::newEmpty),
 
       new FheTypeHandles.Lifecycle(
           TfheHeader::fhe_int2048_destroy,

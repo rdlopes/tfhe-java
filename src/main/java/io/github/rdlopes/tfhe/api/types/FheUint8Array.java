@@ -10,9 +10,7 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Array of encrypted unsigned 8-bit integers.
- */
+/// Array of encrypted unsigned 8-bit integers.
 public final class FheUint8Array extends AbstractFheArray<FheUint8, FheUint8Array>
     implements FheArray<FheUint8, FheUint8Array> {
 

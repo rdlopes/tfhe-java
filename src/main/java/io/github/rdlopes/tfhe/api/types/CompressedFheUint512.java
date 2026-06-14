@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.U512;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted unsigned 512-bit integer.
- */
+/// Compressed encrypted unsigned 512-bit integer.
 public final class CompressedFheUint512 extends AbstractCompressedFheType<U512, FheUint512, CompressedFheUint512> {
 
   static final Handles<U512> H = new Handles<>(
-      new FheValueKind.Wide<>(U512::new),
+    new FheValueKind.Wide<>(U512::newEmpty),
       TfheHeader::compressed_fhe_uint512_decompress,
       TfheHeader::compressed_fhe_uint512_clone,
       TfheHeader::compressed_fhe_uint512_safe_serialize,

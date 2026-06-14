@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.api.keys;
 
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,12 +16,16 @@ class FheCompressedCompactPublicKeyTest {
     keySet = KeySet.builder()
                    .build();
   }
-
+  
+  @AfterEach
+  void tearDown() {
+    if (keySet != null) keySet.close();
+  }
+  
   @Test
   void serializesAndDeserializes() {
-    CompressedCompactPublicKey publicKey = new CompressedCompactPublicKey(keySet.getClientKey());
-
-    try (DynamicBuffer buffer = publicKey.serialize()) {
+    try (CompressedCompactPublicKey publicKey = new CompressedCompactPublicKey(keySet.getClientKey());
+         DynamicBuffer buffer = publicKey.serialize()) {
       assertThatCode(() -> CompressedCompactPublicKey.deserialize(buffer))
         .doesNotThrowAnyException();
     }
@@ -28,11 +33,10 @@ class FheCompressedCompactPublicKeyTest {
 
   @Test
   void decompresses() {
-    CompressedCompactPublicKey publicKey = new CompressedCompactPublicKey(keySet.getClientKey());
-
-    CompactPublicKey decompressed = publicKey.decompress();
-
-    assertThat(decompressed).isNotNull();
+    try (CompressedCompactPublicKey publicKey = new CompressedCompactPublicKey(keySet.getClientKey());
+         CompactPublicKey decompressed = publicKey.decompress()) {
+      assertThat(decompressed).isNotNull();
+    }
   }
 
 }

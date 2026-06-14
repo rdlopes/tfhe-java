@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
-public record KeySet(ClientKey clientKey, ServerKey serverKey) {
+public record KeySet(ClientKey clientKey, ServerKey serverKey) implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(KeySet.class);
 
   public static FheKeySetBuilder builder() {
@@ -22,7 +22,16 @@ public record KeySet(ClientKey clientKey, ServerKey serverKey) {
     logger.trace("getServerKey");
     return serverKey;
   }
-
+  
+  /// Destroys both the client key and server key native resources.
+  /// Usable in try-with-resources for deterministic cleanup.
+  @Override
+  public void close() {
+    logger.trace("close");
+    clientKey.destroy();
+    serverKey.destroy();
+  }
+  
   public static class FheKeySetBuilder {
     private static final Logger logger = LoggerFactory.getLogger(FheKeySetBuilder.class);
     private final ConfigBuilder builder = new ConfigBuilder();

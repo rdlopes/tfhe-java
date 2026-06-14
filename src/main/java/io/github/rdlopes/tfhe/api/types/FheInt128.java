@@ -1,8 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -11,23 +10,22 @@ import io.github.rdlopes.tfhe.api.values.I128;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted signed 128-bit integer ({@code int128_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods.
- */
+/// Encrypted signed 128-bit integer (`int128_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods.
 public final class FheInt128 extends AbstractFheType<I128, FheInt128, CompressedFheInt128>
-    implements FheInteger<I128, FheInt128, CompressedFheInt128> {
+  implements FheSignedInteger<I128, FheInt128, CompressedFheInt128> {
 
   static {
     FheRegistry.registerFactory(FheInt128.class, FheInt128::new);
   }
 
   static final FheTypeHandles<I128> HANDLES = new FheTypeHandles<>(
-      new FheValueKind.Wide<>(I128::new),
+    new FheValueKind.Wide<>(I128::newEmpty),
 
       new FheTypeHandles.Lifecycle(
           TfheHeader::fhe_int128_destroy,

@@ -2,6 +2,7 @@ package io.github.rdlopes.tfhe.api.serde;
 
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,12 @@ class DynamicBufferTest {
     keySet = KeySet.builder()
                    .build();
   }
-
+  
+  @AfterEach
+  void tearDown() {
+    if (keySet != null) keySet.close();
+  }
+  
   @Test
   void initializesEmpty() {
     try (DynamicBuffer buffer = new DynamicBuffer()) {
@@ -59,15 +65,11 @@ class DynamicBufferTest {
 
   @Test
   void throwsWhenByteArrayExceedsLengthLimit() {
-    PublicKey publicKey = new PublicKey(keySet.getClientKey());
-
-    try (DynamicBuffer buffer = publicKey.serialize()) {
+    try (PublicKey publicKey = new PublicKey(keySet.getClientKey());
+         DynamicBuffer buffer = publicKey.serialize()) {
       assertThatCode(buffer::toByteArray)
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageStartingWith("Buffer length");
-
-    } finally {
-      publicKey.destroy();
     }
   }
 

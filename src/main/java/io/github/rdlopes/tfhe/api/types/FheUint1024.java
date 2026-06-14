@@ -1,8 +1,8 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
+import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -11,14 +11,13 @@ import io.github.rdlopes.tfhe.api.values.U1024;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted unsigned 1024-bit integer ({@code uint1024_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods.
- */
+/// Encrypted unsigned 1024-bit integer (`uint1024_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods.
 public final class FheUint1024 extends AbstractFheUnsignedInteger<U1024, FheUint1024, CompressedFheUint1024>
     implements FheUnsignedInteger<U1024, FheUint1024, CompressedFheUint1024> {
 
@@ -27,7 +26,7 @@ public final class FheUint1024 extends AbstractFheUnsignedInteger<U1024, FheUint
   }
 
   static final FheTypeHandles<U1024> HANDLES = new FheTypeHandles<>(
-      new FheValueKind.Wide<>(U1024::new),
+    new FheValueKind.Wide<>(U1024::newEmpty),
 
       new FheTypeHandles.Lifecycle(
           TfheHeader::fhe_uint1024_destroy,

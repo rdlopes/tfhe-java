@@ -11,27 +11,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TfheThreadingContextTest {
 
   @Test
-  void testThreadingContextExecution() throws Exception {
-    KeySet keySet = KeySet.builder()
-                           .build();
-
-    FheUint8 lhs = FheUint8.encrypt((byte) 10, keySet.getClientKey());
-    FheUint8 rhs = FheUint8.encrypt((byte) 20, keySet.getClientKey());
-
-    AtomicReference<FheUint8> sumRef = new AtomicReference<>();
-
-    try (TfheThreadingContext context = new TfheThreadingContext(2)) {
-      context.setServerKey(keySet.getServerKey());
-
-      context.run(() -> {
-        // This will run inside Rayon's thread pool
-        FheUint8 sum = lhs.add(rhs);
-        sumRef.set(sum);
-      });
+  void testThreadingContextExecution() {
+    try (KeySet keySet = KeySet.builder().build()) {
+      FheUint8 lhs = FheUint8.encrypt((byte) 10, keySet.getClientKey());
+      FheUint8 rhs = FheUint8.encrypt((byte) 20, keySet.getClientKey());
+      
+      AtomicReference<FheUint8> sumRef = new AtomicReference<>();
+      
+      try (TfheThreadingContext context = new TfheThreadingContext(2)) {
+        context.setServerKey(keySet.getServerKey());
+        
+        context.run(() -> {
+          // This will run inside Rayon's thread pool
+          FheUint8 sum = lhs.add(rhs);
+          sumRef.set(sum);
+        });
+      }
+      
+      FheUint8 result = sumRef.get();
+      assertThat(result).isNotNull();
+      assertThat(result.decrypt(keySet.getClientKey())).isEqualTo((byte) 30);
     }
-
-    FheUint8 result = sumRef.get();
-    assertThat(result).isNotNull();
-    assertThat(result.decrypt(keySet.getClientKey())).isEqualTo((byte) 30);
   }
 }

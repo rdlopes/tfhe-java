@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.I256;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted signed 256-bit integer.
- */
+/// Compressed encrypted signed 256-bit integer.
 public final class CompressedFheInt256 extends AbstractCompressedFheType<I256, FheInt256, CompressedFheInt256> {
 
   static final Handles<I256> H = new Handles<>(
-      new FheValueKind.Wide<>(I256::new),
+    new FheValueKind.Wide<>(I256::newEmpty),
       TfheHeader::compressed_fhe_int256_decompress,
       TfheHeader::compressed_fhe_int256_clone,
       TfheHeader::compressed_fhe_int256_safe_serialize,

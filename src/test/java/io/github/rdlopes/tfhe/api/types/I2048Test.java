@@ -14,14 +14,14 @@ class I2048Test {
 
   @Test
   public void initializesFromMinimumValue() {
-    I2048 value = valueOf(MIN_VALUE);
+    I2048 value = of(MIN_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MIN_VALUE);
   }
 
   @Test
   public void initializesFromMaximumValue() {
-    I2048 value = valueOf(MAX_VALUE);
+    I2048 value = of(MAX_VALUE);
     TfheAssertions.assertThat(value)
                   .hasValue(MAX_VALUE);
   }
@@ -29,14 +29,14 @@ class I2048Test {
   @Test
   void throwsIllegalArgumentExceptionBelowMinimumValue() {
     BigInteger belowMin = MIN_VALUE.subtract(ONE);
-    assertThatThrownBy(() -> valueOf(belowMin))
+    assertThatThrownBy(() -> of(belowMin))
       .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void throwsIllegalArgumentExceptionAboveMaximumValue() {
     BigInteger aboveMax = MAX_VALUE.add(ONE);
-    assertThatThrownBy(() -> valueOf(aboveMax))
+    assertThatThrownBy(() -> of(aboveMax))
       .isInstanceOf(IllegalArgumentException.class);
   }
 }

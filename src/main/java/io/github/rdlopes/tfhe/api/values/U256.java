@@ -13,18 +13,22 @@ public final class U256 extends AbstractValue {
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE)
                                                        .subtract(ONE);
-
-  public U256() {
-    super(io.github.rdlopes.tfhe.ffm.U256::allocate, BIT_SIZE, false, MIN_VALUE, MAX_VALUE);
+  
+  private U256(BigInteger value) {
+    super(io.github.rdlopes.tfhe.ffm.U256::allocate, BIT_SIZE, false, MIN_VALUE, MAX_VALUE, value);
+  }
+  
+  /// Creates a new zero-initialized instance for use as a native output slot.
+  public static U256 newEmpty() {
+    return new U256(BigInteger.ZERO);
   }
 
   @NonNull
-  public static U256 valueOf(@NonNull BigInteger value) {
-    U256 u256 = new U256();
-    u256.setValue(value);
-    return u256;
+  public static U256 of(@NonNull BigInteger value) {
+    return new U256(value);
   }
-
+  
+  
   @Override
   protected void setWord(int index, long word) {
     switch (index) {

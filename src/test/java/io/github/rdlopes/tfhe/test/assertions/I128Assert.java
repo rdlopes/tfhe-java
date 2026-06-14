@@ -16,8 +16,8 @@ public class I128Assert extends AbstractAssert<I128Assert, I128> {
     if (expected == null) {
       failWithMessage("Expected I128 should not be null");
     }
-    BigInteger actualValue = actual.getValue();
-    BigInteger expectedValue = expected.getValue();
+    BigInteger actualValue = actual.asBigInteger();
+    BigInteger expectedValue = expected.asBigInteger();
     if (!actualValue.equals(expectedValue)) {
       failWithMessage("Expected I128 to be equal to <%s> but was <%s>", expectedValue, actualValue);
     }
@@ -29,7 +29,7 @@ public class I128Assert extends AbstractAssert<I128Assert, I128> {
     if (expected == null) {
       failWithMessage("Expected BigInteger should not be null");
     }
-    BigInteger actualValue = actual.getValue();
+    BigInteger actualValue = actual.asBigInteger();
     if (!actualValue.equals(expected)) {
       failWithMessage("Expected I128 to have value <%s> but was <%s>", expected, actualValue);
     }

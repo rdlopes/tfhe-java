@@ -43,14 +43,16 @@ public class TfheBenchmarks {
 
   @TearDown(Level.Trial)
   public void tearDown() {
-    if (c1 != null) c1.destroy();
-    if (c2 != null) c2.destroy();
-    if (c3 != null) c3.destroy();
+    if (c1 != null) c1.close();
+    if (c2 != null) c2.close();
+    if (c3 != null) c3.close();
     if (arrayToSum != null) {
       for (FheUint8 c : arrayToSum) {
-        c.destroy();
+        c.close();
       }
     }
+    if (publicKey != null) publicKey.close();
+    if (keySet != null) keySet.close();
   }
 
   @Benchmark

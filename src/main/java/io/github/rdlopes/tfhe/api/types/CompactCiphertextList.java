@@ -7,6 +7,7 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
@@ -20,7 +21,7 @@ public class CompactCiphertextList extends NativePointer implements FheObject, A
   public static CompactCiphertextList deserialize(DynamicBuffer dynamicBuffer) {
     logger.trace("deserialize - dynamicBuffer: {}", dynamicBuffer);
     CompactCiphertextList deserialized = new CompactCiphertextList();
-    execute(() -> compact_ciphertext_list_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
+    execute(() -> compact_ciphertext_list_safe_deserialize(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
     return deserialized;
   }
 
@@ -30,7 +31,7 @@ public class CompactCiphertextList extends NativePointer implements FheObject, A
     CompactCiphertextList deserialized = new CompactCiphertextList();
     execute(() -> compact_ciphertext_list_safe_deserialize_conformant(
         dynamicBuffer.getAddress(),
-        BUFFER_MAX_SIZE,
+      MAX_SERIALIZATION_SIZE,
         publicKey.getValue(),
         expectedNumElements,
         deserialized.getAddress()
@@ -42,7 +43,7 @@ public class CompactCiphertextList extends NativePointer implements FheObject, A
   public DynamicBuffer serialize() {
     logger.trace("serialize");
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compact_ciphertext_list_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> compact_ciphertext_list_safe_serialize(getValue(), dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE));
     return dynamicBuffer;
   }
 

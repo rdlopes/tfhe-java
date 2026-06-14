@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.I128;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted signed 128-bit integer.
- */
+/// Compressed encrypted signed 128-bit integer.
 public final class CompressedFheInt128 extends AbstractCompressedFheType<I128, FheInt128, CompressedFheInt128> {
 
   static final Handles<I128> H = new Handles<>(
-      new FheValueKind.Wide<>(I128::new),
+    new FheValueKind.Wide<>(I128::newEmpty),
       TfheHeader::compressed_fhe_int128_decompress,
       TfheHeader::compressed_fhe_int128_clone,
       TfheHeader::compressed_fhe_int128_safe_serialize,

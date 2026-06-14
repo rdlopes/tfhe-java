@@ -92,6 +92,25 @@ Additionally, the overhead of Java object allocation and GC/Cleaner tracking is 
 | `benchmarkMultiThreadedSum` | avgt | ~977733.033 | us/op | Sum inside Rayon thread context without parallel decomposition (~977 ms)
 |===
 
+== Coding Guidelines
+
+=== Javadoc Style
+
+This project utilizes **Markdown Javadoc** (introduced in JDK 23 link:https://openjdk.org/jeps/467[JEP 467]) for all Java code documentation. 
+
+* Use three slashes (`///`) instead of traditional `/** ... */` block comments.
+* Use standard Markdown formatting (backticks for code font, `*` or `_` for emphasis, etc.) instead of HTML tags or `{@code ...}`.
+* Inline tag `{@link ...}` should be replaced by a Markdown link, e.g. `[MyClass]` or `[MyClass#myMethod()]`.
+* Standard Javadoc block tags (like `@param`, `@return`, and `@throws`) are still supported, but must start with `///` at the beginning of the line at the end of the comment block.
+
+A CI validation step ensures that traditional `/** ... */` comments are not introduced into the codebase.
+
+=== Logging vs Console Output
+
+Do not use `System.out` or `System.err` print statements in any production or test code (under `src/`). Instead, use an SLF4J logger (e.g. `LoggerFactory.getLogger(MyClass.class)`).
+
+A CI validation step ensures that console print statements are not introduced into the codebase.
+
 == License
 
 This project is licensed under the link:{license}[MIT License].

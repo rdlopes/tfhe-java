@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.U128;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted unsigned 128-bit integer.
- */
+/// Compressed encrypted unsigned 128-bit integer.
 public final class CompressedFheUint128 extends AbstractCompressedFheType<U128, FheUint128, CompressedFheUint128> {
 
   static final Handles<U128> H = new Handles<>(
-      new FheValueKind.Wide<>(U128::new),
+    new FheValueKind.Wide<>(U128::newEmpty),
       TfheHeader::compressed_fhe_uint128_decompress,
       TfheHeader::compressed_fhe_uint128_clone,
       TfheHeader::compressed_fhe_uint128_safe_serialize,

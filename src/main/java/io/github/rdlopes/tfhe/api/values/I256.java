@@ -14,18 +14,22 @@ public final class I256 extends AbstractValue {
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)
                                                        .subtract(ONE);
-
-  public I256() {
-    super(io.github.rdlopes.tfhe.ffm.I256::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
+  
+  private I256(BigInteger value) {
+    super(io.github.rdlopes.tfhe.ffm.I256::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE, value);
+  }
+  
+  /// Creates a new zero-initialized instance for use as a native output slot.
+  public static I256 newEmpty() {
+    return new I256(BigInteger.ZERO);
   }
 
   @NonNull
-  public static I256 valueOf(@NonNull BigInteger value) {
-    I256 i256 = new I256();
-    i256.setValue(value);
-    return i256;
+  public static I256 of(@NonNull BigInteger value) {
+    return new I256(value);
   }
-
+  
+  
   @Override
   protected void setWord(int index, long word) {
     switch (index) {

@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
@@ -674,23 +675,28 @@ public enum FheTypes {
   ///} FheTypes;
   ///```
   FheInt88(Type_FheInt88());
-
-  private final int ordinal;
-
-  FheTypes(int ordinal) {
-    this.ordinal = ordinal;
+  
+  private final int typeId;
+  
+  private static final Map<Integer, FheTypes> BY_TYPE_ID;
+  
+  static {
+    BY_TYPE_ID = new HashMap<>();
+    for (FheTypes t : values()) BY_TYPE_ID.put(t.typeId, t);
   }
-
-  public int getValue() {
-    return ordinal;
+  
+  FheTypes(int typeId) {
+    this.typeId = typeId;
   }
-
-  @SuppressWarnings("unused")
-  public static FheTypes valueOrdered(int ordinal) {
-    return EnumSet.allOf(FheTypes.class)
-                  .stream()
-                  .filter(e -> e.ordinal == ordinal)
-                  .findFirst()
-                  .orElseThrow(() -> new IllegalArgumentException("unknown type ordinal"));
+  
+  /// Returns the native TFHE C enum type ID.
+  public int typeId() {
+    return typeId;
+  }
+  
+  public static FheTypes valueOrdered(int typeId) {
+    FheTypes t = BY_TYPE_ID.get(typeId);
+    if (t == null) throw new IllegalArgumentException("Unknown FHE type id: " + typeId);
+    return t;
   }
 }

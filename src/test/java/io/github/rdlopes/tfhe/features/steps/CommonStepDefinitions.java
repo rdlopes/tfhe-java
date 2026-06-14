@@ -23,11 +23,16 @@ public class CommonStepDefinitions {
     logger.trace("Tear down scenario - cleaning up native resources");
     for (NativeAddress obj : context.getNativeObjects()) {
       try {
-        obj.destroy();
+        obj.close();
       } catch (Exception ignored) {
       }
     }
-
+    if (context.keySet != null) {
+      try {
+        context.keySet.close();
+      } catch (Exception ignored) {
+      }
+    }
   }
 
   @Given("a ClientKey and a PublicKey are initialized")

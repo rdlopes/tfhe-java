@@ -1,22 +1,22 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
 import io.github.rdlopes.tfhe.api.FheBoolean;
-import io.github.rdlopes.tfhe.ffm.FheOps;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.ffm.FheOps;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
+
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
+import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
@@ -65,7 +65,7 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
   @Override
   public DynamicBuffer serialize() {
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> H.serialize.apply(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> H.serialize.apply(getValue(), dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE));
     return dynamicBuffer;
   }
 
@@ -182,7 +182,7 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
 
   public static FheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
     FheBool deserialized = new FheBool();
-    execute(() -> fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, serverKey.getValue(), deserialized.getAddress()));
+    execute(() -> fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, serverKey.getValue(), deserialized.getAddress()));
     return deserialized;
   }
 
@@ -225,7 +225,7 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
       if (status != 0) {
         MemorySegment errorMessageAddress = tfhe_error_get_last();
         String errorMessage = errorMessageAddress.getString(0);
-        if (!"no error".equals(errorMessage)) {
+        if (!NO_ERROR_MESSAGE.equals(errorMessage)) {
           throw new io.github.rdlopes.tfhe.ffm.NativeCallException(status, errorMessage);
         }
         return java.util.Optional.empty();

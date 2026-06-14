@@ -7,6 +7,7 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.client_key_safe_deserialize;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.client_key_safe_serialize;
@@ -24,7 +25,7 @@ public class ClientKey extends NativePointer implements FheKey {
     logger.trace("deserialize - dynamicBuffer: {}", dynamicBuffer);
 
     ClientKey deserialized = new ClientKey();
-    execute(() -> client_key_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
+    execute(() -> client_key_safe_deserialize(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
     return deserialized;
   }
 
@@ -33,7 +34,7 @@ public class ClientKey extends NativePointer implements FheKey {
     logger.trace("serialize");
 
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> client_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> client_key_safe_serialize(getValue(), dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE));
 
     return dynamicBuffer;
   }

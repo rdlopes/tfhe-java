@@ -8,18 +8,15 @@ import io.github.rdlopes.tfhe.ffm.NativeArray;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
+import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int8_sum;
 
-/**
- * Array of encrypted signed 8-bit integers.
- *
- * <p>Signed arrays do not have native {@code containsArray}/{@code equalsArray} operations.
- * These are implemented by casting each element to {@link FheUint8} and delegating
- * to {@link FheUint8Array}, exactly as in the original boilerplate.
- */
+/// Array of encrypted signed 8-bit integers.
+///
+/// Signed arrays do not have native `containsArray`/`equalsArray` operations.
+/// These are implemented by casting each element to [FheUint8] and delegating
+/// to [FheUint8Array], exactly as in the original boilerplate.
 public final class FheInt8Array extends NativeArray implements FheArray<FheInt8, FheInt8Array> {
 
   public FheInt8Array(Collection<FheInt8> elements) {

@@ -1,8 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
+import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -10,10 +9,9 @@ import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted unsigned 8-bit integer ({@code uint8_t}).
- */
+/// Encrypted unsigned 8-bit integer (`uint8_t`).
 public final class FheUint8 extends AbstractFheUnsignedInteger<Byte, FheUint8, CompressedFheUint8>
     implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
 

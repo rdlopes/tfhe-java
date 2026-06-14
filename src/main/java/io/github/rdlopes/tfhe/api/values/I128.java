@@ -14,18 +14,22 @@ public final class I128 extends AbstractValue {
   public static final BigInteger MAX_VALUE = BigInteger.valueOf(2)
                                                        .pow(BIT_SIZE - 1)
                                                        .subtract(ONE);
-
-  public I128() {
-    super(io.github.rdlopes.tfhe.ffm.I128::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE);
+  
+  private I128(BigInteger value) {
+    super(io.github.rdlopes.tfhe.ffm.I128::allocate, BIT_SIZE, true, MIN_VALUE, MAX_VALUE, value);
+  }
+  
+  /// Creates a new zero-initialized instance for use as a native output slot.
+  public static I128 newEmpty() {
+    return new I128(BigInteger.ZERO);
   }
 
   @NonNull
-  public static I128 valueOf(@NonNull BigInteger value) {
-    I128 i128 = new I128();
-    i128.setValue(value);
-    return i128;
+  public static I128 of(@NonNull BigInteger value) {
+    return new I128(value);
   }
-
+  
+  
   @Override
   protected void setWord(int index, long word) {
     switch (index) {

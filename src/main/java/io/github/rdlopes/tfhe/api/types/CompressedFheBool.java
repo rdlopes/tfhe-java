@@ -9,6 +9,7 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
@@ -56,7 +57,7 @@ public class CompressedFheBool extends NativePointer implements CompressedFheTyp
   @Override
   public DynamicBuffer serialize(){
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compressed_fhe_bool_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> compressed_fhe_bool_safe_serialize(getValue(), dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE));
 
     return dynamicBuffer;
 

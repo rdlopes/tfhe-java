@@ -1,9 +1,12 @@
 package io.github.rdlopes.tfhe.api.types;
 
 import io.github.rdlopes.tfhe.api.FheObject;
+import io.github.rdlopes.tfhe.api.FheType;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.ffm.FheOps;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +14,7 @@ import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 
-import io.github.rdlopes.tfhe.api.FheType;
-import io.github.rdlopes.tfhe.ffm.FheOps;
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
@@ -28,7 +28,7 @@ public class CompressedCiphertextList extends NativePointer implements FheObject
   public static CompressedCiphertextList deserialize(DynamicBuffer dynamicBuffer) {
     logger.trace("deserialize");
     CompressedCiphertextList deserialized = new CompressedCiphertextList();
-    execute(() -> compressed_ciphertext_list_safe_deserialize(dynamicBuffer.getAddress(), BUFFER_MAX_SIZE, deserialized.getAddress()));
+    execute(() -> compressed_ciphertext_list_safe_deserialize(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, deserialized.getAddress()));
     return deserialized;
   }
 
@@ -36,7 +36,7 @@ public class CompressedCiphertextList extends NativePointer implements FheObject
   public DynamicBuffer serialize() {
     logger.trace("serialize");
     DynamicBuffer dynamicBuffer = new DynamicBuffer();
-    execute(() -> compressed_ciphertext_list_safe_serialize(getValue(), dynamicBuffer.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> compressed_ciphertext_list_safe_serialize(getValue(), dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE));
     return dynamicBuffer;
   }
 

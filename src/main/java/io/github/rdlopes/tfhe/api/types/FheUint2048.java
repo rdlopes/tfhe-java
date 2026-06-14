@@ -1,8 +1,8 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
+import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -11,14 +11,13 @@ import io.github.rdlopes.tfhe.api.values.U2048;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted unsigned 2048-bit integer ({@code uint2048_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods.
- */
+/// Encrypted unsigned 2048-bit integer (`uint2048_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods.
 public final class FheUint2048 extends AbstractFheUnsignedInteger<U2048, FheUint2048, CompressedFheUint2048>
     implements FheUnsignedInteger<U2048, FheUint2048, CompressedFheUint2048> {
 
@@ -27,7 +26,7 @@ public final class FheUint2048 extends AbstractFheUnsignedInteger<U2048, FheUint
   }
 
   static final FheTypeHandles<U2048> HANDLES = new FheTypeHandles<>(
-      new FheValueKind.Wide<>(U2048::new),
+    new FheValueKind.Wide<>(U2048::newEmpty),
 
       new FheTypeHandles.Lifecycle(
           TfheHeader::fhe_uint2048_destroy,

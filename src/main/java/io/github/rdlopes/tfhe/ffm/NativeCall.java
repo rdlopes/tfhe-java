@@ -12,7 +12,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public final class NativeCall {
   private static final Logger logger = LoggerFactory.getLogger(NativeCall.class);
-  private static final String NO_ERROR_MESSAGE = "no error";
+  public static final String NO_ERROR_MESSAGE = "no error";
 
   private NativeCall() {
   }
@@ -51,7 +51,9 @@ public final class NativeCall {
       case Class<?> type when type == Short.class -> memorySegment.get(C_SHORT, 0);
       case Class<?> type when type == Integer.class -> memorySegment.get(C_INT, 0);
       case Class<?> type when type == Long.class -> memorySegment.get(C_LONG_LONG, 0);
-      case Class<?> _ -> memorySegment.get(C_POINTER, 0);
+      case Class<?> type when type == MemorySegment.class -> memorySegment.get(C_POINTER, 0);
+      default -> throw new IllegalArgumentException(
+        "executeAndReturn: unsupported return type " + returnType.getName());
     };
 
     return returnType.cast(result);

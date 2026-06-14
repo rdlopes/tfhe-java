@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.U1024;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted unsigned 1024-bit integer.
- */
+/// Compressed encrypted unsigned 1024-bit integer.
 public final class CompressedFheUint1024 extends AbstractCompressedFheType<U1024, FheUint1024, CompressedFheUint1024> {
 
   static final Handles<U1024> H = new Handles<>(
-      new FheValueKind.Wide<>(U1024::new),
+    new FheValueKind.Wide<>(U1024::newEmpty),
       TfheHeader::compressed_fhe_uint1024_decompress,
       TfheHeader::compressed_fhe_uint1024_clone,
       TfheHeader::compressed_fhe_uint1024_safe_serialize,

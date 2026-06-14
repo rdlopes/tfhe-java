@@ -16,8 +16,8 @@ public class U256Assert extends AbstractAssert<U256Assert, U256> {
     if (expected == null) {
       failWithMessage("Expected U256 should not be null");
     }
-    BigInteger actualValue = actual.getValue();
-    BigInteger expectedValue = expected.getValue();
+    BigInteger actualValue = actual.asBigInteger();
+    BigInteger expectedValue = expected.asBigInteger();
     if (!actualValue.equals(expectedValue)) {
       failWithMessage("Expected U256 to be equal to <%s> but was <%s>", expectedValue, actualValue);
     }
@@ -32,7 +32,7 @@ public class U256Assert extends AbstractAssert<U256Assert, U256> {
     if (expected.signum() < 0) {
       failWithMessage("Expected BigInteger should not be negative for U256 comparison");
     }
-    BigInteger actualValue = actual.getValue();
+    BigInteger actualValue = actual.asBigInteger();
     if (!actualValue.equals(expected)) {
       failWithMessage("Expected U256 to have value <%s> but was <%s>", expected, actualValue);
     }

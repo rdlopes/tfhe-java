@@ -16,8 +16,8 @@ public class I2048Assert extends AbstractAssert<I2048Assert, I2048> {
     if (expected == null) {
       failWithMessage("Expected I2048 should not be null");
     }
-    BigInteger actualValue = actual.getValue();
-    BigInteger expectedValue = expected.getValue();
+    BigInteger actualValue = actual.asBigInteger();
+    BigInteger expectedValue = expected.asBigInteger();
     if (!actualValue.equals(expectedValue)) {
       failWithMessage("Expected I2048 to be equal to <%s> but was <%s>", expectedValue, actualValue);
     }
@@ -29,7 +29,7 @@ public class I2048Assert extends AbstractAssert<I2048Assert, I2048> {
     if (expected == null) {
       failWithMessage("Expected BigInteger should not be null");
     }
-    BigInteger actualValue = actual.getValue();
+    BigInteger actualValue = actual.asBigInteger();
     if (!actualValue.equals(expected)) {
       failWithMessage("Expected I2048 to have value <%s> but was <%s>", expected, actualValue);
     }

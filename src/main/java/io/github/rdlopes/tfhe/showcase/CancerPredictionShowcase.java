@@ -11,16 +11,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Showcase demonstrating privacy-preserving cancer prediction using TFHE.
- * This class runs a client-server simulation where patient records are encrypted on the client side,
- * evaluated using pre-trained homomorphic weights on the server side, and decrypted to verify results.
- */
+/// Showcase demonstrating privacy-preserving cancer prediction using TFHE.
+/// This class runs a client-server simulation where patient records are encrypted on the client side,
+/// evaluated using pre-trained homomorphic weights on the server side, and decrypted to verify results.
 public class CancerPredictionShowcase {
-
-  /**
-   * Private constructor to prevent instantiation of the showcase utility class.
-   */
+  
+  /// Private constructor to prevent instantiation of the showcase utility class.
   private CancerPredictionShowcase() {}
 
   private static final Logger logger = LoggerFactory.getLogger(CancerPredictionShowcase.class);
@@ -33,25 +29,23 @@ public class CancerPredictionShowcase {
   // 9: Age Scale (age / 10), 10: Genetic Risk, 11: Family History
   private static final int[] WEIGHTS = {2, 12, 6, 5, -8, 12, -3, 6, 1, -29, 9, 10};
   private static final int BIAS = -46;
-
-  /**
-   * Represents a patient patientRecord with cleartext features.
-   *
-   * @param name the name of the patient
-   * @param clumpThickness clump thickness feature value
-   * @param uniformityCellSize uniformity of cell size feature value
-   * @param uniformityCellShape uniformity of cell shape feature value
-   * @param marginalAdhesion marginal adhesion feature value
-   * @param singleEpithelialCellSize single epithelial cell size feature value
-   * @param bareNuclei bare nuclei feature value
-   * @param blandChromatin bland chromatin feature value
-   * @param normalNucleoli normal nucleoli feature value
-   * @param mitoses mitoses feature value
-   * @param ageScale age scale feature value
-   * @param geneticRisk genetic risk feature value
-   * @param familyHistory family history feature value
-   * @param trueLabel the true classification label (0 for benign, 1 for malignant)
-   */
+  
+  /// Represents a patient patientRecord with cleartext features.
+  ///
+  /// @param name                     the name of the patient
+  /// @param clumpThickness           clump thickness feature value
+  /// @param uniformityCellSize       uniformity of cell size feature value
+  /// @param uniformityCellShape      uniformity of cell shape feature value
+  /// @param marginalAdhesion         marginal adhesion feature value
+  /// @param singleEpithelialCellSize single epithelial cell size feature value
+  /// @param bareNuclei               bare nuclei feature value
+  /// @param blandChromatin           bland chromatin feature value
+  /// @param normalNucleoli           normal nucleoli feature value
+  /// @param mitoses                  mitoses feature value
+  /// @param ageScale                 age scale feature value
+  /// @param geneticRisk              genetic risk feature value
+  /// @param familyHistory            family history feature value
+  /// @param trueLabel                the true classification label (0 for benign, 1 for malignant)
   public record PatientRecord(
       String name,
       int clumpThickness,
@@ -69,32 +63,22 @@ public class CancerPredictionShowcase {
       int trueLabel
   ) {}
 
-  /**
-   * Represents an encrypted patient patientRecord.
-   */
+  /// Represents an encrypted patient patientRecord.
   public static class EncryptedPatientRecord {
 
-    /**
-     * The patient's name.
-     */
+    /// The patient's name.
     public final String name;
-
-    /**
-     * The list of encrypted features for homomorphic computation.
-     */
+    
+    /// The list of encrypted features for homomorphic computation.
     public final List<FheInt32> encryptedFeatures = new ArrayList<>();
-
-    /**
-     * The true classification label.
-     */
+    
+    /// The true classification label.
     public final int trueLabel;
-
-    /**
-     * Constructs an encrypted patientRecord from a cleartext patientRecord and client key.
-     *
-     * @param patientRecord the cleartext patient patientRecord
-     * @param clientKey the client key used for encryption
-     */
+    
+    /// Constructs an encrypted patientRecord from a cleartext patientRecord and client key.
+    ///
+    /// @param patientRecord the cleartext patient patientRecord
+    /// @param clientKey the client key used for encryption
     public EncryptedPatientRecord(PatientRecord patientRecord, ClientKey clientKey) {
       this.name = patientRecord.name();
       this.trueLabel = patientRecord.trueLabel();
@@ -114,9 +98,7 @@ public class CancerPredictionShowcase {
       encryptedFeatures.add(FheInt32.encrypt(patientRecord.familyHistory(), clientKey));
     }
 
-    /**
-     * Destroys the underlying native memory structures of the encrypted features.
-     */
+    /// Destroys the underlying native memory structures of the encrypted features.
     public void destroy() {
       for (FheInt32 feature : encryptedFeatures) {
         if (feature != null) {
@@ -126,10 +108,7 @@ public class CancerPredictionShowcase {
     }
   }
 
-  /**
-   * Main entry point for running the cancer prediction showcase.
-   *
-   */
+  /// Main entry point for running the cancer prediction showcase.
   public static void main() {
     logger.info("=================================================================");
     logger.info("Starting TFHE Privacy-Preserving Cancer Prediction Showcase");

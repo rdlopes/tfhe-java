@@ -1,8 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -10,18 +9,15 @@ import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
-
-/**
- * Encrypted signed 8-bit integer ({@code int8_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods. The entire business logic is ~25 lines.
- */
+/// Encrypted signed 8-bit integer (`int8_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods. The entire business logic is ~25 lines.
 public final class FheInt8 extends AbstractFheType<Byte, FheInt8, CompressedFheInt8>
-    implements FheInteger<Byte, FheInt8, CompressedFheInt8> {
+  implements FheSignedInteger<Byte, FheInt8, CompressedFheInt8> {
 
   static {
     FheRegistry.registerFactory(FheInt8.class, FheInt8::new);

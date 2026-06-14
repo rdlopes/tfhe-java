@@ -1,18 +1,18 @@
 package io.github.rdlopes.tfhe.api;
 
-import io.github.rdlopes.tfhe.ffm.FheOps.*;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.ffm.FheOps.*;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
-import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.NativeAddress;
+import io.github.rdlopes.tfhe.ffm.NativePointer;
 
 import java.lang.foreign.MemorySegment;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static io.github.rdlopes.tfhe.ffm.NativeAddress.BUFFER_MAX_SIZE;
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 
 /// Abstract base for all compressed FHE types (e.g. `CompressedFheInt8`).
@@ -85,7 +85,7 @@ public abstract class AbstractCompressedFheType<
   @Override
   public final DynamicBuffer serialize() {
     DynamicBuffer buf = new DynamicBuffer();
-    execute(() -> handles().serialize().apply(getValue(), buf.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> handles().serialize().apply(getValue(), buf.getAddress(), MAX_SERIALIZATION_SIZE));
     return buf;
   }
 
@@ -111,7 +111,7 @@ public abstract class AbstractCompressedFheType<
   protected static <V, T extends AbstractCompressedFheType<V, ?, T>> T deserialize(
       Handles<V> h, DynamicBuffer buf, ServerKey key, Supplier<T> factory) {
     T r = factory.get();
-    execute(() -> h.deserialize().apply(buf.getAddress(), BUFFER_MAX_SIZE, key.getValue(), r.getAddress()));
+    execute(() -> h.deserialize().apply(buf.getAddress(), MAX_SERIALIZATION_SIZE, key.getValue(), r.getAddress()));
     return r;
   }
 }

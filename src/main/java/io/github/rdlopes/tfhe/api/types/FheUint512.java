@@ -1,8 +1,8 @@
 package io.github.rdlopes.tfhe.api.types;
 
-import io.github.rdlopes.tfhe.utils.FheRegistry;
-
-import io.github.rdlopes.tfhe.api.*;
+import io.github.rdlopes.tfhe.api.AbstractFheType;
+import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
+import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -11,14 +11,13 @@ import io.github.rdlopes.tfhe.api.values.U512;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-/**
- * Encrypted unsigned 512-bit integer ({@code uint512_t}).
- *
- * <p>All FHE operations are implemented in {@link AbstractFheType}. This class
- * supplies only the static {@link #HANDLES} metadata record and type-specific
- * factory methods.
- */
+/// Encrypted unsigned 512-bit integer (`uint512_t`).
+///
+/// All FHE operations are implemented in [AbstractFheType]. This class
+/// supplies only the static [HANDLES] metadata record and type-specific
+/// factory methods.
 public final class FheUint512 extends AbstractFheUnsignedInteger<U512, FheUint512, CompressedFheUint512>
     implements FheUnsignedInteger<U512, FheUint512, CompressedFheUint512> {
 
@@ -27,7 +26,7 @@ public final class FheUint512 extends AbstractFheUnsignedInteger<U512, FheUint51
   }
 
   static final FheTypeHandles<U512> HANDLES = new FheTypeHandles<>(
-      new FheValueKind.Wide<>(U512::new),
+    new FheValueKind.Wide<>(U512::newEmpty),
 
       new FheTypeHandles.Lifecycle(
           TfheHeader::fhe_uint512_destroy,

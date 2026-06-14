@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.api.keys;
 
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,12 +15,16 @@ class PublicKeyTest {
     keySet = KeySet.builder()
                    .build();
   }
-
+  
+  @AfterEach
+  void tearDown() {
+    if (keySet != null) keySet.close();
+  }
+  
   @Test
   void serializesAndDeserializes() {
-    PublicKey publicKey = new PublicKey(keySet.getClientKey());
-
-    try (DynamicBuffer buffer = publicKey.serialize()) {
+    try (PublicKey publicKey = new PublicKey(keySet.getClientKey());
+         DynamicBuffer buffer = publicKey.serialize()) {
       assertThatCode(() -> PublicKey.deserialize(buffer))
         .doesNotThrowAnyException();
     }

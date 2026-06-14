@@ -14,27 +14,27 @@ class I256Test {
 
   @Test
   public void initializesFromMinimumValue() {
-    I256 value = valueOf(MIN_VALUE);
+    I256 value = of(MIN_VALUE);
     assertThat(value).hasValue(MIN_VALUE);
   }
 
   @Test
   public void initializesFromMaximumValue() {
-    I256 value = valueOf(MAX_VALUE);
+    I256 value = of(MAX_VALUE);
     assertThat(value).hasValue(MAX_VALUE);
   }
 
   @Test
   void throwsIllegalArgumentExceptionBelowMinimumValue() {
     BigInteger belowMin = MIN_VALUE.subtract(ONE);
-    assertThatThrownBy(() -> valueOf(belowMin))
+    assertThatThrownBy(() -> of(belowMin))
       .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void throwsIllegalArgumentExceptionAboveMaximumValue() {
     BigInteger aboveMax = MAX_VALUE.add(ONE);
-    assertThatThrownBy(() -> valueOf(aboveMax))
+    assertThatThrownBy(() -> of(aboveMax))
       .isInstanceOf(IllegalArgumentException.class);
   }
 

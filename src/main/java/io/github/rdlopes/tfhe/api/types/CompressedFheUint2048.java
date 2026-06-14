@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.U2048;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted unsigned 2048-bit integer.
- */
+/// Compressed encrypted unsigned 2048-bit integer.
 public final class CompressedFheUint2048 extends AbstractCompressedFheType<U2048, FheUint2048, CompressedFheUint2048> {
 
   static final Handles<U2048> H = new Handles<>(
-      new FheValueKind.Wide<>(U2048::new),
+    new FheValueKind.Wide<>(U2048::newEmpty),
       TfheHeader::compressed_fhe_uint2048_decompress,
       TfheHeader::compressed_fhe_uint2048_clone,
       TfheHeader::compressed_fhe_uint2048_safe_serialize,

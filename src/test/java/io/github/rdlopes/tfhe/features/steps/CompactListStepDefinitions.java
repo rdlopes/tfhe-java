@@ -4,28 +4,9 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.github.rdlopes.tfhe.api.keys.ClientKey;
-import io.github.rdlopes.tfhe.api.keys.CompactPkeCrs;
-import io.github.rdlopes.tfhe.api.keys.CompactPublicKey;
-import io.github.rdlopes.tfhe.api.keys.CompactPublicKeyEncryptionParameters;
-import io.github.rdlopes.tfhe.api.keys.Config;
-import io.github.rdlopes.tfhe.api.keys.ConfigBuilder;
-import io.github.rdlopes.tfhe.api.keys.KeySet;
+import io.github.rdlopes.tfhe.api.keys.*;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
-import io.github.rdlopes.tfhe.api.types.CompactCiphertextList;
-import io.github.rdlopes.tfhe.api.types.CompactCiphertextListBuilder;
-import io.github.rdlopes.tfhe.api.types.CompactCiphertextListExpander;
-import io.github.rdlopes.tfhe.api.types.CompressedCiphertextList;
-import io.github.rdlopes.tfhe.api.types.CompressedCiphertextListBuilder;
-import io.github.rdlopes.tfhe.api.types.FheBool;
-import io.github.rdlopes.tfhe.api.types.FheInt32;
-import io.github.rdlopes.tfhe.api.types.FheInt64;
-import io.github.rdlopes.tfhe.api.types.FheInt8;
-import io.github.rdlopes.tfhe.api.types.FheTypes;
-import io.github.rdlopes.tfhe.api.types.FheUint256;
-import io.github.rdlopes.tfhe.api.types.FheUint8;
-import io.github.rdlopes.tfhe.api.types.ProvenCompactCiphertextList;
-import io.github.rdlopes.tfhe.api.types.ZkComputeLoad;
+import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.api.values.U256;
 
 import java.math.BigInteger;
@@ -118,7 +99,7 @@ public class CompactListStepDefinitions {
         case "U256" -> {
           BigInteger val = new BigInteger(valueStr);
           originalInputs.add(val);
-          builder.push(U256.valueOf(val));
+          builder.push(U256.of(val));
         }
         default -> throw new IllegalArgumentException("Unsupported type: " + type);
       }
@@ -189,7 +170,7 @@ public class CompactListStepDefinitions {
           }
           case FheUint256 -> {
             FheUint256 decrypted = context.track(context.expander.get(i, FheUint256.class));
-            assertThat(decrypted.decrypt(clientKey).getValue()).isEqualTo((BigInteger) expected);
+            assertThat(decrypted.decrypt(clientKey).asBigInteger()).isEqualTo(expected);
           }
           default -> throw new IllegalArgumentException("Unsupported kind: " + kind);
         }
@@ -213,7 +194,7 @@ public class CompactListStepDefinitions {
           }
           case FheUint256 -> {
             FheUint256 decrypted = context.track(context.compressedList.get(i, FheUint256.class));
-            assertThat(decrypted.decrypt(clientKey).getValue()).isEqualTo((BigInteger) expected);
+            assertThat(decrypted.decrypt(clientKey).asBigInteger()).isEqualTo(expected);
           }
           default -> throw new IllegalArgumentException("Unsupported kind: " + kind);
         }
@@ -254,7 +235,7 @@ public class CompactListStepDefinitions {
           case "U256" -> {
             BigInteger val = new BigInteger(valueStr);
             originalInputs.add(val);
-            FheUint256 encrypted = context.track(FheUint256.encrypt(U256.valueOf(val), clientKey));
+            FheUint256 encrypted = context.track(FheUint256.encrypt(U256.of(val), clientKey));
             builder.push(encrypted);
           }
           default -> throw new IllegalArgumentException("Unsupported type: " + type);

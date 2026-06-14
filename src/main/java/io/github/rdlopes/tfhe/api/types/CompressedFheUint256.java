@@ -8,13 +8,11 @@ import io.github.rdlopes.tfhe.api.values.U256;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
-/**
- * Compressed encrypted unsigned 256-bit integer.
- */
+/// Compressed encrypted unsigned 256-bit integer.
 public final class CompressedFheUint256 extends AbstractCompressedFheType<U256, FheUint256, CompressedFheUint256> {
 
   static final Handles<U256> H = new Handles<>(
-      new FheValueKind.Wide<>(U256::new),
+    new FheValueKind.Wide<>(U256::newEmpty),
       TfheHeader::compressed_fhe_uint256_decompress,
       TfheHeader::compressed_fhe_uint256_clone,
       TfheHeader::compressed_fhe_uint256_safe_serialize,

@@ -1,25 +1,18 @@
 package io.github.rdlopes.tfhe.api;
 
-import io.github.rdlopes.tfhe.api.FheArithmetics.CheckedResult;
-import io.github.rdlopes.tfhe.api.FheArithmetics.QuotientAndRemainder;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.FheBool;
-import io.github.rdlopes.tfhe.ffm.FheOps;
-import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
-import io.github.rdlopes.tfhe.ffm.FheValueKind;
-import io.github.rdlopes.tfhe.ffm.NativePointer;
-import io.github.rdlopes.tfhe.ffm.NativeAddress;
+import io.github.rdlopes.tfhe.ffm.*;
+import io.github.rdlopes.tfhe.utils.FheRegistry;
 
 import java.lang.foreign.MemorySegment;
 import java.util.function.Function;
-import io.github.rdlopes.tfhe.utils.FheRegistry;
 
-import static io.github.rdlopes.tfhe.ffm.NativeAddress.BUFFER_MAX_SIZE;
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.NativeCall.executeAndReturn;
+import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
+import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
 
 /// Abstract base class for all FHE encrypted integer types (signed and unsigned).
 ///
@@ -230,11 +223,9 @@ public abstract class AbstractFheType<
     execute(() -> handles().arithmetic().checkedIlog2().apply(getValue(), r.getAddress(), flag.getAddress()));
     return new CheckedResult<>(r, flag);
   }
-
-  /// `abs()` — only valid for signed types.
-/// Overridden in [AbstractFheUnsignedInteger] to throw
-/// [UnsupportedOperationException].
-  @Override
+  
+  /// `abs()` — only valid for signed types; exposed via {@link FheSignedInteger}.
+  /// Overridden in [AbstractFheUnsignedInteger] to throw [UnsupportedOperationException].
   public T abs() {
     return unary(handles().arithmetic().abs());
   }
@@ -278,7 +269,7 @@ public abstract class AbstractFheType<
   @Override
   public final DynamicBuffer serialize() {
     DynamicBuffer buf = new DynamicBuffer();
-    execute(() -> handles().lifecycle().serialize().apply(getValue(), buf.getAddress(), BUFFER_MAX_SIZE));
+    execute(() -> handles().lifecycle().serialize().apply(getValue(), buf.getAddress(), MAX_SERIALIZATION_SIZE));
     return buf;
   }
 
@@ -330,7 +321,7 @@ public abstract class AbstractFheType<
           if (status != 0) {
             MemorySegment errorMessageAddress = io.github.rdlopes.tfhe.ffm.TfheHeader.tfhe_error_get_last();
             String errorMessage = errorMessageAddress.getString(0);
-            if (!"no error".equals(errorMessage)) {
+            if (!NO_ERROR_MESSAGE.equals(errorMessage)) {
               throw new io.github.rdlopes.tfhe.ffm.NativeCallException(status, errorMessage);
             }
             yield java.util.Optional.empty();
@@ -354,7 +345,7 @@ public abstract class AbstractFheType<
         if (status != 0) {
           MemorySegment errorMessageAddress = io.github.rdlopes.tfhe.ffm.TfheHeader.tfhe_error_get_last();
           String errorMessage = errorMessageAddress.getString(0);
-          if (!"no error".equals(errorMessage)) {
+          if (!NO_ERROR_MESSAGE.equals(errorMessage)) {
             throw new io.github.rdlopes.tfhe.ffm.NativeCallException(status, errorMessage);
           }
           ((NativeAddress) out).destroy();
@@ -368,15 +359,15 @@ public abstract class AbstractFheType<
   // ══════════════════════════════════════════════════════════════════════════
   // FheRandom
   // ══════════════════════════════════════════════════════════════════════════
-
-  @Override
+  
+  /// Returns a new random encrypted value using the given 128-bit seed.
   public final T random(long seedLow, long seedHigh) {
     T r = newInstance();
     execute(() -> handles().misc().random().apply(r.getAddress(), seedLow, seedHigh));
     return r;
   }
-
-  @Override
+  
+  /// Returns a new random encrypted value bounded to `bitsCount` significant bits.
   public final T random(long seedLow, long seedHigh, long bitsCount) {
     T r = newInstance();
     execute(() -> handles().misc().randomBounded().apply(r.getAddress(), seedLow, seedHigh, bitsCount));
@@ -434,7 +425,9 @@ public abstract class AbstractFheType<
   protected static <V, T extends AbstractFheType<V, T, ?>> T deserialize(
       FheTypeHandles<V> h, DynamicBuffer buf, ServerKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
-    execute(() -> h.lifecycle().deserialize().apply(buf.getAddress(), BUFFER_MAX_SIZE, key.getValue(), r.getAddress()));
+    execute(() -> h.lifecycle()
+                   .deserialize()
+                   .apply(buf.getAddress(), MAX_SERIALIZATION_SIZE, key.getValue(), r.getAddress()));
     return r;
   }
 
