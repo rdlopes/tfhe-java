@@ -288,6 +288,18 @@ public class BuildNative {
 
     private static void buildGpuLibrary(Path tfheRsDir) throws Exception {
         log("Building tfhe-rs GPU C API library from source (profile: release)...");
+        
+        // Touch build.rs to force Cargo to rerun the build script and regenerate tfhe.h with GPU features!
+        Path buildRs = tfheRsDir.resolve("tfhe").resolve("build.rs");
+        if (Files.exists(buildRs)) {
+            try {
+                Files.setLastModifiedTime(buildRs, java.nio.file.attribute.FileTime.fromMillis(System.currentTimeMillis()));
+                log("Touched build.rs to force header regeneration.");
+            } catch (Exception e) {
+                log("Warning: failed to touch build.rs: " + e.getMessage());
+            }
+        }
+
         runCommand(tfheRsDir.toFile(),
                 "cargo",
                 "+nightly-2026-04-22",
@@ -334,6 +346,7 @@ public class BuildNative {
         runCommand(workingDir.toFile(),
                 jextractExec.toAbsolutePath().toString(),
                 headerFile.getFileName().toString(),
+                "-DWITH_FEATURE_GPU",
                 "--dump-includes",
                 rawIncludes.getFileName().toString()
         );
@@ -341,7 +354,7 @@ public class BuildNative {
         // 2. Filter includes in Java (replaces shell grep)
         log("Filtering includes list (replaces grep)...");
         List<String> filteredLines = Files.readAllLines(rawIncludes).stream()
-                .filter(line -> line.contains("tfhe"))
+                .filter(line -> line.trim().startsWith("--") && line.contains("tfhe.h"))
                 .collect(Collectors.toList());
         Files.write(filteredIncludes, filteredLines);
         log("Filtered " + filteredLines.size() + " lines out of " + Files.readAllLines(rawIncludes).size());
@@ -351,6 +364,7 @@ public class BuildNative {
         runCommand(workingDir.toFile(),
                 jextractExec.toAbsolutePath().toString(),
                 "@" + filteredIncludes.getFileName().toString(),
+                "-DWITH_FEATURE_GPU",
                 headerFile.getFileName().toString(),
                 "--header-class-name", "TfheHeader",
                 "--target-package", "io.github.rdlopes.tfhe.ffm",
@@ -458,6 +472,14 @@ public class BuildNative {
         Files.createDirectories(targetDir);
 
         Path releaseDir = tfheRsDir.resolve("target").resolve("release");
+
+        // Copy header containing GPU definitions
+        Path headerSrc = releaseDir.resolve("tfhe.h");
+        Path headerDest = targetDir.resolve("tfhe.h");
+        if (Files.exists(headerSrc)) {
+            Files.copy(headerSrc, headerDest, StandardCopyOption.REPLACE_EXISTING);
+            log("Copied GPU-enabled tfhe.h to " + headerDest.toAbsolutePath());
+        }
 
         // Copy binary libraries and rename them to include "-gpu"
         String[] extensions = {".dll", ".so", ".dylib"};

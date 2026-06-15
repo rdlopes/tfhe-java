@@ -57,6 +57,15 @@ public record KeySet(ClientKey clientKey, ServerKey serverKey) implements AutoCl
       ClientKey clientKey = new ClientKey();
       ServerKey serverKey = new ServerKey();
       config.initialize(clientKey, serverKey);
+
+      if (Boolean.getBoolean("tfhe.gpu")) {
+        CompressedServerKey compressed = new CompressedServerKey(clientKey);
+        ServerKey gpuServerKey = new ServerKey(compressed);
+        serverKey.destroy();
+        compressed.destroy();
+        return new KeySet(clientKey, gpuServerKey);
+      }
+
       return new KeySet(clientKey, serverKey);
     }
   }

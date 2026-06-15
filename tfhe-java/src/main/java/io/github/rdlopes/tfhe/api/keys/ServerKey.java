@@ -13,11 +13,28 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public class ServerKey extends NativePointer implements FheKey {
   private static final Logger logger = LoggerFactory.getLogger(ServerKey.class);
+  private final boolean isGpu;
 
   ServerKey() {
-    logger.trace("init");
+    this(false);
+  }
 
-    super(TfheHeader::server_key_destroy);
+  ServerKey(boolean isGpu) {
+    logger.trace("init - isGpu: {}", isGpu);
+
+    super(isGpu ? TfheHeader::cuda_server_key_destroy : TfheHeader::server_key_destroy);
+    this.isGpu = isGpu;
+  }
+
+  public ServerKey(CompressedServerKey compressedServerKey) {
+    this(Boolean.getBoolean("tfhe.gpu"));
+    execute(() -> {
+      if (Boolean.getBoolean("tfhe.gpu")) {
+        return compressed_server_key_decompress_to_gpu(compressedServerKey.getValue(), getAddress());
+      } else {
+        return compressed_server_key_decompress(compressedServerKey.getValue(), getAddress());
+      }
+    });
   }
 
   public static ServerKey deserialize(DynamicBuffer dynamicBuffer) {
@@ -80,7 +97,11 @@ public class ServerKey extends NativePointer implements FheKey {
   public void use() {
     logger.trace("use");
 
-    execute(() -> set_server_key(getValue()));
+    if (isGpu) {
+      execute(() -> set_cuda_server_key(getValue()));
+    } else {
+      execute(() -> set_server_key(getValue()));
+    }
   }
 
   public void unset() {

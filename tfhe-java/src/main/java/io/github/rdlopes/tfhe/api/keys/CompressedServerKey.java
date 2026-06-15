@@ -39,9 +39,7 @@ public class CompressedServerKey extends NativePointer implements CompressedFheK
   public ServerKey decompress() {
     logger.trace("decompress");
 
-    ServerKey decompressed = new ServerKey();
-    execute(() -> compressed_server_key_decompress(getValue(), decompressed.getAddress()));
-    return decompressed;
+    return new ServerKey(this);
   }
 
   @Override
