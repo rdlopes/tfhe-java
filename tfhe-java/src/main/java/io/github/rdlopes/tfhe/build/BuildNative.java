@@ -19,8 +19,8 @@ public class BuildNative {
 
     private static final String JEXTRACT_VERSION = "25+2-4";
     private static final String JEXTRACT_BASE_URL = "https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_";
-    private static final String TFHE_RS_REPO = "https://github.com/zama-ai/tfhe-rs.git";
-    private static final String TFHE_RS_COMMIT = "407fa762bce85df9f5e4485c8573672a005d3c6a";
+    private static final String TFHE_RS_REPO = "https://github.com/rdlopes/tfhe-rs.git";
+    private static final String TFHE_RS_COMMIT = "gpu-windows";
 
     private static final java.util.logging.Logger LOGGER = java.util.logging.Logger.getLogger(BuildNative.class.getName());
 
@@ -79,7 +79,14 @@ public class BuildNative {
             if (!onlyBindings) {
                 verifyToolsInstalled();
                 setupTfheRsRepo(tfheRsDir);
-                buildNativeLibrary(tfheRsDir);
+                
+                log("--- BUILDING CPU NATIVE LIBRARY ---");
+                buildCpuLibrary(tfheRsDir);
+                copyCpuLibraries(tfheRsDir, libsDir);
+                
+                log("--- BUILDING GPU NATIVE LIBRARY ---");
+                buildGpuLibrary(tfheRsDir);
+                copyGpuLibraries(tfheRsDir, libsDir);
             }
 
             // 3. Locate the C header file
@@ -88,11 +95,6 @@ public class BuildNative {
 
             // 4. Generate the bindings
             generateBindings(jextractExec, headerFile, outputDir);
-
-            // 5. Copy libraries to native libs folder (if not onlyBindings)
-            if (!onlyBindings) {
-                copyNativeLibraries(tfheRsDir, libsDir);
-            }
 
             log("Initialization and generation completed successfully!");
 
@@ -257,14 +259,23 @@ public class BuildNative {
             runCommand(Path.of(".native").toFile(), "git", "clone", TFHE_RS_REPO, "tfhe-rs");
         } else {
             log("tfhe-rs repository already cloned.");
+            log("Fetching latest changes...");
+            runCommand(tfheRsDir.toFile(), "git", "fetch", "origin");
         }
 
         log("Checking out pinned commit: " + TFHE_RS_COMMIT);
         runCommand(tfheRsDir.toFile(), "git", "checkout", TFHE_RS_COMMIT);
+        
+        log("Pulling latest changes for branch: " + TFHE_RS_COMMIT);
+        try {
+            runCommand(tfheRsDir.toFile(), "git", "pull", "origin", TFHE_RS_COMMIT);
+        } catch (Exception e) {
+            log("Git pull failed: " + e.getMessage());
+        }
     }
 
-    private static void buildNativeLibrary(Path tfheRsDir) throws Exception {
-        log("Building tfhe-rs C API library from source (profile: release)...");
+    private static void buildCpuLibrary(Path tfheRsDir) throws Exception {
+        log("Building tfhe-rs CPU C API library from source (profile: release)...");
         // We use cargo directly instead of 'make build_c_api' to ensure compatibility with Windows without make
         runCommand(tfheRsDir.toFile(),
                 "cargo",
@@ -272,6 +283,17 @@ public class BuildNative {
                 "build",
                 "--profile", "release",
                 "--features=boolean-c-api,shortint-c-api,high-level-c-api,zk-pok,experimental-force_fft_algo_dif4",
+                "-p", "tfhe");
+    }
+
+    private static void buildGpuLibrary(Path tfheRsDir) throws Exception {
+        log("Building tfhe-rs GPU C API library from source (profile: release)...");
+        runCommand(tfheRsDir.toFile(),
+                "cargo",
+                "+nightly-2026-04-22",
+                "build",
+                "--profile", "release",
+                "--features=boolean-c-api,shortint-c-api,high-level-c-api,zk-pok,experimental-force_fft_algo_dif4,gpu",
                 "-p", "tfhe");
     }
 
@@ -337,8 +359,8 @@ public class BuildNative {
         log("Java bindings generated in: " + outputDir.toAbsolutePath());
     }
 
-    private static void copyNativeLibraries(Path tfheRsDir, Path libsDir) throws Exception {
-        log("Copying native libraries to bundle folder...");
+    private static void copyCpuLibraries(Path tfheRsDir, Path libsDir) throws Exception {
+        log("Copying native CPU libraries to bundle folder...");
 
         String osName = System.getProperty("os.name").toLowerCase();
         String osArch = System.getProperty("os.arch").toLowerCase();
@@ -397,6 +419,57 @@ public class BuildNative {
                         Path dest = targetDir.resolve(filename);
                         Files.copy(entry, dest, StandardCopyOption.REPLACE_EXISTING);
                         log("Copied " + filename + " to " + dest.toAbsolutePath());
+                    }
+                }
+            }
+        }
+    }
+
+    private static void copyGpuLibraries(Path tfheRsDir, Path libsDir) throws Exception {
+        log("Copying native GPU libraries to bundle folder...");
+
+        String osName = System.getProperty("os.name").toLowerCase();
+        String osArch = System.getProperty("os.arch").toLowerCase();
+
+        String targetOsDir;
+        String targetArchDir;
+
+        // Map OS
+        if (osName.contains("win")) {
+            targetOsDir = "windows";
+        } else if (osName.contains("mac")) {
+            targetOsDir = "osx";
+        } else if (osName.contains("nux")) {
+            targetOsDir = "linux";
+        } else {
+            throw new UnsupportedOperationException("Unsupported OS for library copying: " + osName);
+        }
+
+        // Map Arch
+        if (osArch.contains("aarch64") || osArch.contains("arm64")) {
+            targetArchDir = "aarch_64";
+        } else if (osArch.contains("amd64") || osArch.contains("x86_64")) {
+            targetArchDir = "x86_64";
+        } else {
+            throw new UnsupportedOperationException("Unsupported architecture for library copying: " + osArch);
+        }
+
+        Path targetDir = libsDir.resolve(targetOsDir).resolve(targetArchDir);
+        Files.createDirectories(targetDir);
+
+        Path releaseDir = tfheRsDir.resolve("target").resolve("release");
+
+        // Copy binary libraries and rename them to include "-gpu"
+        String[] extensions = {".dll", ".so", ".dylib"};
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(releaseDir)) {
+            for (Path entry : stream) {
+                String filename = entry.getFileName().toString();
+                for (String ext : extensions) {
+                    if (filename.endsWith(ext) && !filename.contains("dangling")) {
+                        String newFilename = filename.replace("tfhe", "tfhe-gpu");
+                        Path dest = targetDir.resolve(newFilename);
+                        Files.copy(entry, dest, StandardCopyOption.REPLACE_EXISTING);
+                        log("Copied GPU library " + filename + " as " + newFilename + " to " + dest.toAbsolutePath());
                     }
                 }
             }
