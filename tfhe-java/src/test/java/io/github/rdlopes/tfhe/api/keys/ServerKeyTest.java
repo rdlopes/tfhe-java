@@ -4,6 +4,7 @@ import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
@@ -22,6 +23,7 @@ class ServerKeyTest {
   }
   
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void serializesAndDeserializes() {
     try (DynamicBuffer buffer = keySet.getServerKey()
                                       .serialize()) {

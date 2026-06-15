@@ -8,6 +8,7 @@ import io.github.rdlopes.tfhe.api.values.extended.U256;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,7 @@ class KeySetTest {
 
 // tag::keyset_advanced_builders[]
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void enablesCompression() {
     try (KeySet compressionKeySet = KeySet.builder()
                                           .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
@@ -66,6 +68,7 @@ class KeySetTest {
 // end::keyset_advanced_builders[]
 
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testCompressedFheUint32() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
@@ -91,6 +94,7 @@ class KeySetTest {
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testCompressedFheBool() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
@@ -116,6 +120,7 @@ class KeySetTest {
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testFheUint32() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
@@ -134,6 +139,7 @@ class KeySetTest {
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testFheUint32WithCompression() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
@@ -153,6 +159,7 @@ class KeySetTest {
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testCompressedFheUint8() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
@@ -178,6 +185,7 @@ class KeySetTest {
   }
 
   @Test
+  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testCompressedFheUint256() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)

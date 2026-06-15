@@ -6,6 +6,7 @@ import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.extended.*;
 import io.github.rdlopes.tfhe.utils.FheRegistry;
 import io.github.rdlopes.tfhe.utils.FheUtils;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
@@ -33,14 +34,21 @@ class FheTypesTest {
   private static final ServerKey serverKey;
 
   static {
-    keySet = KeySet.builder()
-                   .useCustomParameters(CustomParameters.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                   .enableCompression(CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
-                   .build();
-    clientKey = keySet.getClientKey();
-    serverKey = keySet.getServerKey();
-    publicKey = new PublicKey(clientKey);
-    serverKey.use();
+    if (Boolean.getBoolean("tfhe.gpu")) {
+      keySet = null;
+      clientKey = null;
+      serverKey = null;
+      publicKey = null;
+    } else {
+      keySet = KeySet.builder()
+                     .useCustomParameters(CustomParameters.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                     .enableCompression(CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
+                     .build();
+      clientKey = keySet.getClientKey();
+      serverKey = keySet.getServerKey();
+      publicKey = new PublicKey(clientKey);
+      serverKey.use();
+    }
   }
 
   private boolean isCoveredType(Class<?> clazz) {
@@ -67,6 +75,7 @@ class FheTypesTest {
 
   @TestFactory
   Stream<DynamicNode> generateZombiesTests() throws Exception {
+    Assumptions.assumeFalse(Boolean.getBoolean("tfhe.gpu"), "Skipping FheTypesTest in GPU mode");
     String packageName = "io.github.rdlopes.tfhe.api.types";
     String packagePath = packageName.replace('.', '/');
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -108,16 +117,16 @@ class FheTypesTest {
     for (Class<?> clazz : classes) {
       if (AbstractFheType.class.isAssignableFrom(clazz) || clazz == FheBool.class) {
         containers.add(buildFheTypeContainer(clazz));
-      } else if (FheArray.class.isAssignableFrom(clazz)) {
+      } else if (!Boolean.getBoolean("tfhe.gpu") && FheArray.class.isAssignableFrom(clazz)) {
         containers.add(buildFheArrayContainer(clazz));
-      } else if (clazz == CompactCiphertextList.class
+      } else if (!Boolean.getBoolean("tfhe.gpu") && (clazz == CompactCiphertextList.class
           || clazz == CompactCiphertextListBuilder.class
           || clazz == CompactCiphertextListExpander.class
           || clazz == CompressedCiphertextList.class
           || clazz == CompressedCiphertextListBuilder.class
-          || clazz == ProvenCompactCiphertextList.class) {
+          || clazz == ProvenCompactCiphertextList.class)) {
         containers.add(buildListAndBuilderContainer(clazz));
-      } else if (clazz == ZkComputeLoad.class) {
+      } else if (!Boolean.getBoolean("tfhe.gpu") && clazz == ZkComputeLoad.class) {
         containers.add(buildZkComputeLoadContainer());
       }
     }
@@ -199,7 +208,7 @@ class FheTypesTest {
       try (AutoCloseable encrypted = encrypt(clazz, finalCleartextType, clearVal, clientKey)) {
         
         // 5a. Serialization
-        if (encrypted instanceof FheObject fheObj) {
+        if (!Boolean.getBoolean("tfhe.gpu") && encrypted instanceof FheObject fheObj) {
           try (DynamicBuffer buffer = fheObj.serialize()) {
             assertThat(buffer).isNotNull();
             Method deserializeMethod = clazz.getMethod("deserialize", DynamicBuffer.class, ServerKey.class);
@@ -210,7 +219,7 @@ class FheTypesTest {
         }
 
         // 5b. Compression
-        if (encrypted instanceof FheType fheType) {
+        if (!Boolean.getBoolean("tfhe.gpu") && encrypted instanceof FheType fheType) {
           try (AutoCloseable compressed = (AutoCloseable) fheType.compress()) {
             assertThat(compressed).isNotNull();
             Method decompressMethod = compressed.getClass().getMethod("decompress");
