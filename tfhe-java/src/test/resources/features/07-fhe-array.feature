@@ -2,6 +2,7 @@
 @order-07
 @core-api
 @fhe-array
+@gpu
 Feature: Homomorphic Array Summation
 
   This chapter describes homomorphic array summation and batch operations on collections of ciphertexts in the TFHE-Java library.

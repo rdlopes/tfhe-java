@@ -29,7 +29,7 @@ public class TfheBenchmarks {
   @Setup(Level.Trial)
   public void setUp() {
     keySet = KeySet.builder().build();
-    keySet.getServerKey().use();
+    keySet.getCompressedServerKey().use();
     publicKey = new PublicKey(keySet.getClientKey());
     c1 = FheUint8.encrypt((byte) 5, publicKey);
     c2 = FheUint8.encrypt((byte) 10, publicKey);

@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
 import io.github.rdlopes.tfhe.utils.Generated;
 
 import io.github.rdlopes.tfhe.api.AbstractFheType;
@@ -22,10 +24,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheInt128 extends AbstractFheType<I128, FheInt128, CompressedFheInt128>
   implements FheSignedInteger<I128, FheInt128, CompressedFheInt128> {
-
-  static {
-    FheRegistry.registerFactory(FheInt128.class, FheInt128::new);
-  }
 
   static final FheTypeHandles<I128> HANDLES = new FheTypeHandles<>(
     new FheValueKind.Wide<>(I128::newEmpty),
@@ -116,6 +114,11 @@ public final class FheInt128 extends AbstractFheType<I128, FheInt128, Compressed
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_int128,
           TfheHeader::fhe_int128_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheInt128.class, FheInt128::new);
+    FheRegistry.registerHandles(FheInt128.class, HANDLES);
+  }
+
   FheInt128() { super(TfheHeader::fhe_int128_destroy); }
 
   @Override protected FheTypeHandles<I128> handles()      { return HANDLES; }
@@ -123,19 +126,24 @@ public final class FheInt128 extends AbstractFheType<I128, FheInt128, Compressed
   @Override protected CompressedFheInt128   newCompressed() { return new CompressedFheInt128(); }
 
   public static FheInt128 encrypt(I128 clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheInt128::new);
+    return Fhe.encrypt(clearValue, clientKey, FheInt128.class);
   }
   public static FheInt128 encrypt(I128 clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheInt128::new);
+    return Fhe.encrypt(clearValue, publicKey, FheInt128.class);
   }
   public static FheInt128 encrypt(I128 clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheInt128::new);
+    return Fhe.encrypt(clearValue, FheInt128.class);
   }
   public static FheInt128 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheInt128::new);
+    return Fhe.deserialize(buffer, serverKey, FheInt128.class);
   }
   public static FheInt128 ifThenElse(FheBool condition, FheInt128 thenValue, FheInt128 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheInt128::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
+
+  @Override
+  public FheInt128 abs() {
+    return absImpl();
+  }
 }

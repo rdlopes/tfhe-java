@@ -31,19 +31,50 @@ This requires a <<Key switching Key,key switching key>>.
 
 === Key Types and Their Roles
 
-TFHE employs multiple key types, each serving a specific purpose in the encryption workflow:
+TFHE employs multiple key types, each serving a specific purpose in the encryption workflow.
+Understanding which key belongs to whom, and which one to share, is essential for building correct client/server architectures.
 
-* **<<Client Key,Client Key>>**: The secret key used for encryption and decryption.
-This key must remain private and secure on the client side.
-It serves as the root of trust for all cryptographic operations.
+[cols="2,1,1,4", options="header"]
+|===
+| Class | Secret? | Shareable? | Role
 
-* **<<Server Key,Server Key>>**: A public evaluation key that enables <<Homomorphic Operation,homomorphic operations>> on encrypted data.
-The server can perform computations without being able to decrypt the data, ensuring privacy.
+| `ClientKey`
+| ✅ Yes
+| ❌ Never
+| Root of trust. Used by the client to **encrypt** plaintext values and **decrypt** computation results.
+Generated once; must never be transmitted outside the client.
 
-* **<<Public Key,Public Key>>**: An optional key derived from the <<Client Key,client key>> that allows third parties to encrypt data without possessing the secret key.
-Useful for scenarios where multiple parties need to encrypt data for a single recipient.
+| `CompressedServerKey`
+| ❌ No
+| ✅ Yes — to server
+| **Canonical server key.** Compact representation from which both a CPU `ServerKey` and a GPU `CudaServerKey` can be derived.
+This is the key format to serialize and transmit to a remote server.
+Calling `.use()` activates FHE evaluation transparently: CPU by default, or CPU+GPU when `-Dtfhe.gpu=true` is set — with no code changes required on either side.
 
-* **<<Bootstrapping Key,Bootstrapping Key>>** and **<<Key switching Key,Key Switching Key>>**: Specialized evaluation keys required for advanced operations like <<PBS,programmable bootstrapping>> and <<Keyswitch,keyswitch>> operations.
+| `ServerKey`
+| ❌ No
+| ✅ Yes
+| Decompressed **CPU-only** evaluation key. Obtained from a `CompressedServerKey` via `.decompress()`.
+Used as a conformant key when deserializing ciphertexts.
+Does **not** support GPU activation.
+
+| `PublicKey`
+| ❌ No
+| ✅ Yes
+| Derived from `ClientKey`. Allows **third parties to encrypt data** without possessing the secret key.
+Useful when multiple parties need to produce ciphertexts for a single recipient.
+
+| `CompressedCompactPublicKey`
+| ❌ No
+| ✅ Yes
+| Compact public key used in zero-knowledge proof workflows and compact ciphertext list scenarios.
+|===
+
+[TIP]
+====
+Always serialize a `CompressedServerKey` — not a `ServerKey` — when sending the server key to a remote machine.
+This preserves the ability to activate GPU acceleration on the server without any change to the client or the serialized format.
+====
 
 === Security Foundation
 

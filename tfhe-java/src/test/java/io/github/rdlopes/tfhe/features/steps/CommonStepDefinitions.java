@@ -1,17 +1,12 @@
 package io.github.rdlopes.tfhe.features.steps;
 
 import io.cucumber.java.After;
-import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.ffm.NativeAddress;
-import org.junit.jupiter.api.Assumptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
 
 public class CommonStepDefinitions {
 
@@ -22,22 +17,7 @@ public class CommonStepDefinitions {
   public CommonStepDefinitions(TfheTestContext context) {
     this.context = context;
   }
-
-  @Before
-  public void skipUnsupportedScenarios(Scenario scenario) {
-    if (Boolean.getBoolean("tfhe.gpu")) {
-      Collection<String> tags = scenario.getSourceTagNames();
-      if (tags.contains("@compact-list")
-          || tags.contains("@advanced-workflows")
-          || tags.contains("@fhe-shortint")
-          || tags.contains("@benchmarks")
-          || tags.contains("@standard-workflow")) {
-        logger.info("Skipping CPU-only scenario '{}' in GPU mode", scenario.getName());
-        Assumptions.assumeTrue(false, "Skipping CPU-only scenario in GPU mode");
-      }
-    }
-  }
-
+  
   @After
   public void tearDown() {
     logger.trace("Tear down scenario - cleaning up native resources");
@@ -60,7 +40,7 @@ public class CommonStepDefinitions {
   @Given("a ClientKey and a PublicKey are initialized")
   public void aClientKeyAndAPublicKeyAreInitialized() {
     context.keySet = KeySet.builder().build();
-    context.keySet.getServerKey().use();
+    context.keySet.getCompressedServerKey().use();
     context.publicKey = context.track(new PublicKey(context.keySet.getClientKey()));
   }
 }

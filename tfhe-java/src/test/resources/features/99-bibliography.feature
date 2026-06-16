@@ -1,6 +1,7 @@
 @asciidoc
 @order-99
 @bibliography
+@gpu
 Feature: Bibliography
 
   [bibliography]

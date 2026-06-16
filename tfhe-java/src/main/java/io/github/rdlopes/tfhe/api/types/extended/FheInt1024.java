@@ -3,6 +3,9 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -23,10 +26,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheInt1024 extends AbstractFheType<I1024, FheInt1024, CompressedFheInt1024>
   implements FheSignedInteger<I1024, FheInt1024, CompressedFheInt1024> {
-
-  static {
-    FheRegistry.registerFactory(FheInt1024.class, FheInt1024::new);
-  }
 
   static final FheTypeHandles<I1024> HANDLES = new FheTypeHandles<>(
     new FheValueKind.Wide<>(I1024::newEmpty),
@@ -117,6 +116,11 @@ public final class FheInt1024 extends AbstractFheType<I1024, FheInt1024, Compres
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_int1024,
           TfheHeader::fhe_int1024_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheInt1024.class, FheInt1024::new);
+    FheRegistry.registerHandles(FheInt1024.class, HANDLES);
+  }
+
   FheInt1024() { super(TfheHeader::fhe_int1024_destroy); }
 
   @Override protected FheTypeHandles<I1024> handles()      { return HANDLES; }
@@ -124,19 +128,24 @@ public final class FheInt1024 extends AbstractFheType<I1024, FheInt1024, Compres
   @Override protected CompressedFheInt1024   newCompressed() { return new CompressedFheInt1024(); }
 
   public static FheInt1024 encrypt(I1024 clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheInt1024::new);
+    return Fhe.encrypt(clearValue, clientKey, FheInt1024.class);
   }
   public static FheInt1024 encrypt(I1024 clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheInt1024::new);
+    return Fhe.encrypt(clearValue, publicKey, FheInt1024.class);
   }
   public static FheInt1024 encrypt(I1024 clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheInt1024::new);
+    return Fhe.encrypt(clearValue, FheInt1024.class);
   }
   public static FheInt1024 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheInt1024::new);
+    return Fhe.deserialize(buffer, serverKey, FheInt1024.class);
   }
   public static FheInt1024 ifThenElse(FheBool condition, FheInt1024 thenValue, FheInt1024 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheInt1024::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
+
+  @Override
+  public FheInt1024 abs() {
+    return absImpl();
+  }
 }

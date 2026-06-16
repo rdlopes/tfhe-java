@@ -3,6 +3,9 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -17,10 +20,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheInt2 extends AbstractFheType<Byte, FheInt2, CompressedFheInt2>
   implements FheSignedInteger<Byte, FheInt2, CompressedFheInt2> {
-
-  static {
-    FheRegistry.registerFactory(FheInt2.class, FheInt2::new);
-  }
 
   static final FheTypeHandles<Byte> HANDLES = new FheTypeHandles<>(
       FheValueKind.BYTE,
@@ -93,6 +92,11 @@ public final class FheInt2 extends AbstractFheType<Byte, FheInt2, CompressedFheI
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_int2,
           TfheHeader::fhe_int2_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheInt2.class, FheInt2::new);
+    FheRegistry.registerHandles(FheInt2.class, HANDLES);
+  }
+
   FheInt2() { super(TfheHeader::fhe_int2_destroy); }
 
   @Override protected FheTypeHandles<Byte> handles()      { return HANDLES; }
@@ -100,19 +104,24 @@ public final class FheInt2 extends AbstractFheType<Byte, FheInt2, CompressedFheI
   @Override protected CompressedFheInt2   newCompressed() { return new CompressedFheInt2(); }
 
   public static FheInt2 encrypt(Byte clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheInt2::new);
+    return Fhe.encrypt(clearValue, clientKey, FheInt2.class);
   }
   public static FheInt2 encrypt(Byte clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheInt2::new);
+    return Fhe.encrypt(clearValue, publicKey, FheInt2.class);
   }
   public static FheInt2 encrypt(Byte clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheInt2::new);
+    return Fhe.encrypt(clearValue, FheInt2.class);
   }
   public static FheInt2 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheInt2::new);
+    return Fhe.deserialize(buffer, serverKey, FheInt2.class);
   }
   public static FheInt2 ifThenElse(FheBool condition, FheInt2 thenValue, FheInt2 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheInt2::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
+
+  @Override
+  public FheInt2 abs() {
+    return absImpl();
+  }
 }

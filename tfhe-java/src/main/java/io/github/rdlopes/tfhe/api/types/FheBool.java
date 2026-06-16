@@ -1,7 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.Fhe;
 import io.github.rdlopes.tfhe.utils.Generated;
-
 import io.github.rdlopes.tfhe.api.FheBoolean;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
@@ -153,8 +153,13 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
     return result;
   }
 
+  @Override
+  public FheBool ifThenElse(FheBool condition, FheBool elseValue) {
+    return condition.bitAnd(this).bitOr(condition.bitNot().bitAnd(elseValue));
+  }
+
   public static FheBool ifThenElse(FheBool condition, FheBool thenValue, FheBool elseValue) {
-    return condition.bitAnd(thenValue).bitOr(condition.bitNot().bitAnd(elseValue));
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
   @Override
@@ -186,27 +191,19 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
   }
 
   public static FheBool deserialize(DynamicBuffer dynamicBuffer, ServerKey serverKey) {
-    FheBool deserialized = new FheBool();
-    execute(() -> fhe_bool_safe_deserialize_conformant(dynamicBuffer.getAddress(), MAX_SERIALIZATION_SIZE, serverKey.getValue(), deserialized.getAddress()));
-    return deserialized;
+    return Fhe.deserialize(dynamicBuffer, serverKey, FheBool.class);
   }
 
   public static FheBool encrypt(Boolean clearValue, ClientKey clientKey) {
-    FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_with_client_key_bool(clearValue, clientKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+    return Fhe.encrypt(clearValue, clientKey, FheBool.class);
   }
 
   public static FheBool encrypt(Boolean clearValue, PublicKey publicKey) {
-    FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_with_public_key_bool(clearValue, publicKey.getValue(), encrypted.getAddress()));
-    return encrypted;
+    return Fhe.encrypt(clearValue, publicKey, FheBool.class);
   }
 
   public static FheBool encrypt(Boolean clearValue) {
-    FheBool encrypted = new FheBool();
-    execute(() -> fhe_bool_try_encrypt_trivial_bool(clearValue, encrypted.getAddress()));
-    return encrypted;
+    return Fhe.encrypt(clearValue, FheBool.class);
   }
 
   @Override
@@ -241,8 +238,11 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
 
   @Override
   public CompressedFheBool compress() {
+    // compress() is not supported by the TFHE-rs CUDA backend — always use CPU.
     CompressedFheBool compressed = new CompressedFheBool();
-    execute(() -> H.compress.apply(getValue(), compressed.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(
+        io.github.rdlopes.tfhe.ffm.GpuRouter.Capability.CPU,
+        () -> H.compress.apply(getValue(), compressed.getAddress()));
     return compressed;
   }
 

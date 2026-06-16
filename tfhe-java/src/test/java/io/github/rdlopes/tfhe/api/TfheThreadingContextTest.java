@@ -3,7 +3,6 @@ package io.github.rdlopes.tfhe.api;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.types.FheUint8;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -12,7 +11,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TfheThreadingContextTest {
 
   @Test
-  @DisabledIfSystemProperty(named = "tfhe.gpu", matches = "true")
   void testThreadingContextExecution() {
     try (KeySet keySet = KeySet.builder().build()) {
       FheUint8 lhs = FheUint8.encrypt((byte) 10, keySet.getClientKey());

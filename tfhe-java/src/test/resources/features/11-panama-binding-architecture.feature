@@ -2,6 +2,7 @@
 @order-11
 @section-PanamaBinding
 @appendix
+@gpu
 Feature: Project Panama and FFM Binding Architecture
 
   === Project Panama & FFM API

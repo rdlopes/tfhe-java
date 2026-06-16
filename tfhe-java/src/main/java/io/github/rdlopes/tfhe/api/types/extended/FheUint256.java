@@ -3,6 +3,9 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
@@ -24,10 +27,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheUint256 extends AbstractFheUnsignedInteger<U256, FheUint256, CompressedFheUint256>
     implements FheUnsignedInteger<U256, FheUint256, CompressedFheUint256> {
-
-  static {
-    FheRegistry.registerFactory(FheUint256.class, FheUint256::new);
-  }
 
   static final FheTypeHandles<U256> HANDLES = new FheTypeHandles<>(
     new FheValueKind.Wide<>(U256::newEmpty),
@@ -118,6 +117,11 @@ public final class FheUint256 extends AbstractFheUnsignedInteger<U256, FheUint25
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_uint256,
           TfheHeader::fhe_uint256_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheUint256.class, FheUint256::new);
+    FheRegistry.registerHandles(FheUint256.class, HANDLES);
+  }
+
   FheUint256() { super(TfheHeader::fhe_uint256_destroy); }
 
   @Override protected FheTypeHandles<U256> handles()      { return HANDLES; }
@@ -125,19 +129,19 @@ public final class FheUint256 extends AbstractFheUnsignedInteger<U256, FheUint25
   @Override protected CompressedFheUint256   newCompressed() { return new CompressedFheUint256(); }
 
   public static FheUint256 encrypt(U256 clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheUint256::new);
+    return Fhe.encrypt(clearValue, clientKey, FheUint256.class);
   }
   public static FheUint256 encrypt(U256 clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheUint256::new);
+    return Fhe.encrypt(clearValue, publicKey, FheUint256.class);
   }
   public static FheUint256 encrypt(U256 clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheUint256::new);
+    return Fhe.encrypt(clearValue, FheUint256.class);
   }
   public static FheUint256 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheUint256::new);
+    return Fhe.deserialize(buffer, serverKey, FheUint256.class);
   }
   public static FheUint256 ifThenElse(FheBool condition, FheUint256 thenValue, FheUint256 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheUint256::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
 }
