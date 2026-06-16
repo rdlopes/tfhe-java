@@ -6,7 +6,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 public enum CustomParameters {
 
-  SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128()),
+  SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128(loadLibraryAndGet(() -> SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128())),
   SHORTINT_V0_11_PARAM_MESSAGE_1_CARRY_0_KS_PBS_GAUSSIAN_2M64(SHORTINT_V0_11_PARAM_MESSAGE_1_CARRY_0_KS_PBS_GAUSSIAN_2M64()),
   SHORTINT_V0_11_PARAM_MESSAGE_1_CARRY_1_COMPACT_PK_KS_PBS_GAUSSIAN_2M64(SHORTINT_V0_11_PARAM_MESSAGE_1_CARRY_1_COMPACT_PK_KS_PBS_GAUSSIAN_2M64()),
   SHORTINT_V0_11_PARAM_MESSAGE_1_CARRY_1_COMPACT_PK_PBS_KS_GAUSSIAN_2M64(SHORTINT_V0_11_PARAM_MESSAGE_1_CARRY_1_COMPACT_PK_PBS_KS_GAUSSIAN_2M64()),
@@ -448,6 +448,11 @@ public enum CustomParameters {
 
   public MemorySegment address() {
     return address;
+  }
+
+  private static MemorySegment loadLibraryAndGet(java.util.function.Supplier<MemorySegment> supplier) {
+    io.github.rdlopes.tfhe.ffm.NativeLibrary.load();
+    return supplier.get();
   }
 
 }
