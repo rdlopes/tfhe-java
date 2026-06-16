@@ -2,6 +2,7 @@ package io.github.rdlopes.tfhe.api.shortint;
 
 import io.github.rdlopes.tfhe.api.keys.CustomParameters;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,19 @@ class ShortintCiphertextTest {
     clientKey = ShortintClientKey.generate(CustomParameters.SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128);
     serverKey = ShortintServerKey.generate(clientKey);
     publicKey = ShortintPublicKey.generate(clientKey);
+  }
+
+  @AfterEach
+  void tearDown() {
+    if (clientKey != null) {
+      clientKey.destroy();
+    }
+    if (serverKey != null) {
+      serverKey.destroy();
+    }
+    if (publicKey != null) {
+      publicKey.destroy();
+    }
   }
 
   @Test
