@@ -5,6 +5,7 @@ import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.FheBool;
+import io.github.rdlopes.tfhe.api.types.FheUint32;
 import io.github.rdlopes.tfhe.ffm.*;
 import io.github.rdlopes.tfhe.utils.FheRegistry;
 
@@ -207,22 +208,40 @@ public abstract class AbstractFheType<
   @Override public final T                    negate()                   { return unary(handles().arithmetic().neg()); }
 
   /// `ilog2()` — native returns `FheUint32` but the interface declares `T`.
-/// The native pointer is stored in a `T` wrapper following the same
-/// convention as the existing hand-written boilerplate.
+  /// The native pointer is stored in a `T` wrapper following the same
+  /// convention as the existing hand-written boilerplate.
   @Override
+  @SuppressWarnings("unchecked")
   public T ilog2() {
-    T r = newInstance();
-    execute(() -> handles().arithmetic().ilog2().apply(getValue(), r.getAddress()));
-    return r;
+    if (this instanceof FheUint32) {
+      T r = newInstance();
+      execute(() -> handles().arithmetic().ilog2().apply(getValue(), r.getAddress()));
+      return r;
+    }
+
+    try (FheUint32 u32 = FheRegistry.getFactory(FheUint32.class).get()) {
+      execute(() -> handles().arithmetic().ilog2().apply(getValue(), u32.getAddress()));
+      return u32.castInto((Class<T>) this.getClass());
+    }
   }
 
   /// `checked_ilog2` — same convention as [ilog2()].
   @Override
+  @SuppressWarnings("unchecked")
   public CheckedResult<T> ilog2WithCheck() {
-    T r = newInstance();
+    if (this instanceof FheUint32) {
+      T r = newInstance();
+      FheBool flag = FheBool.newEmpty();
+      execute(() -> handles().arithmetic().checkedIlog2().apply(getValue(), r.getAddress(), flag.getAddress()));
+      return new CheckedResult<>(r, flag);
+    }
+
     FheBool flag = FheBool.newEmpty();
-    execute(() -> handles().arithmetic().checkedIlog2().apply(getValue(), r.getAddress(), flag.getAddress()));
-    return new CheckedResult<>(r, flag);
+    try (FheUint32 u32 = FheRegistry.getFactory(FheUint32.class).get()) {
+      execute(() -> handles().arithmetic().checkedIlog2().apply(getValue(), u32.getAddress(), flag.getAddress()));
+      T r = u32.castInto((Class<T>) this.getClass());
+      return new CheckedResult<>(r, flag);
+    }
   }
   
   /// `abs()` — only valid for signed types; exposed via [FheSignedInteger].

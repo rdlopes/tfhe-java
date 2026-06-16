@@ -946,10 +946,26 @@ class FheTypesTest {
           }
         }
         
-        try (AutoCloseable ilog2Val = (AutoCloseable) arith1.ilog2()) {
-          assertThat(ilog2Val).isNotNull();
+        BigInteger val1BI = toBigInteger(val1);
+        if (val1BI.compareTo(BigInteger.ZERO) > 0) {
+          int expectedILog2 = val1BI.bitLength() - 1;
+          try (AutoCloseable ilog2Val = (AutoCloseable) arith1.ilog2()) {
+            assertThat(ilog2Val).isNotNull();
+            assertThat(ilog2Val.getClass()).isEqualTo(enc1.getClass());
+            Object decrypted = decrypt(ilog2Val);
+            assertThat(toBigInteger(decrypted)).isEqualTo(BigInteger.valueOf(expectedILog2));
+          }
+
+          FheArithmetics.CheckedResult<?> checkedResult = arith1.ilog2WithCheck();
+          assertThat(checkedResult).isNotNull();
+          try (AutoCloseable checkedVal = (AutoCloseable) checkedResult.result()) {
+            assertThat(checkedVal).isNotNull();
+            assertThat(checkedVal.getClass()).isEqualTo(enc1.getClass());
+            Object decrypted = decrypt(checkedVal);
+            assertThat(toBigInteger(decrypted)).isEqualTo(BigInteger.valueOf(expectedILog2));
+            assertThat(decrypt(checkedResult.check())).isEqualTo(true);
+          }
         }
-        assertThat(arith1.ilog2WithCheck()).isNotNull();
       }
       
       if (signed && enc1 instanceof AbstractFheType<?, ?, ?> fheType) {
@@ -1043,6 +1059,19 @@ class FheTypesTest {
         }
       }
     }
+  }
+
+  private BigInteger toBigInteger(Object val) {
+    if (val instanceof BigInteger) {
+      return (BigInteger) val;
+    }
+    if (val instanceof io.github.rdlopes.tfhe.api.values.AbstractValue) {
+      return ((io.github.rdlopes.tfhe.api.values.AbstractValue) val).asBigInteger();
+    }
+    if (val instanceof Number) {
+      return BigInteger.valueOf(((Number) val).longValue());
+    }
+    throw new IllegalArgumentException("Unknown type: " + val.getClass());
   }
 
   private AutoCloseable cloneHelper(AutoCloseable enc) {
