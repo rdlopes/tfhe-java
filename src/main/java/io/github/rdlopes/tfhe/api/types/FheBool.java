@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.FheBoolean;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
@@ -22,6 +24,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
 @SuppressWarnings({"java:S2975", "java:S1182"})
+@Generated
 public class FheBool extends NativePointer implements FheBoolean<FheBool, CompressedFheBool> {
   private static final Logger logger = LoggerFactory.getLogger(FheBool.class);
 // @formatter:on

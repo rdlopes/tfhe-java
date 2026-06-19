@@ -1,5 +1,6 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.types.extended.*;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

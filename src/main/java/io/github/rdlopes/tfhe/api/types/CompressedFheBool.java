@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.CompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -15,6 +17,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 
 // @formatter:off
 @SuppressWarnings({"java:S2975", "java:S1182"})
+@Generated
 public class CompressedFheBool extends NativePointer implements CompressedFheType<Boolean, FheBool, CompressedFheBool> {
   private static final Logger logger = LoggerFactory.getLogger(CompressedFheBool.class);
 // @formatter:on

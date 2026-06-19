@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.AbstractCompressedFheType;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -9,6 +11,7 @@ import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
 /// Compressed encrypted signed 128-bit integer.
+@Generated
 public final class CompressedFheInt128 extends AbstractCompressedFheType<I128, FheInt128, CompressedFheInt128> {
 
   static final Handles<I128> H = new Handles<>(

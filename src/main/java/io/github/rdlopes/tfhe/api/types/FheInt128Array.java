@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
@@ -13,6 +15,7 @@ import java.util.List;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int128_sum;
 
+@Generated
 public final class FheInt128Array extends NativeArray implements FheArray<FheInt128, FheInt128Array> {
 
   public FheInt128Array(Collection<FheInt128> elements) { super(elements); }

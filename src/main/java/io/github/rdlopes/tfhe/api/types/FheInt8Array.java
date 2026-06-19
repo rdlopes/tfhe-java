@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
@@ -17,6 +19,7 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.fhe_int8_sum;
 /// Signed arrays do not have native `containsArray`/`equalsArray` operations.
 /// These are implemented by casting each element to [FheUint8] and delegating
 /// to [FheUint8Array], exactly as in the original boilerplate.
+@Generated
 public final class FheInt8Array extends NativeArray implements FheArray<FheInt8, FheInt8Array> {
 
   public FheInt8Array(Collection<FheInt8> elements) {

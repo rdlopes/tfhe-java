@@ -82,7 +82,12 @@ class ShortintCiphertextTest {
       try (ShortintCiphertext neg = ct1.smartNeg(serverKey)) {
         assertThat(clientKey.decrypt(neg)).isEqualTo(3L); // mod 4 arithmetic: -1 = 3
       }
+    }
+  }
 
+  @Test
+  void testM_SmartScalarArithmetic() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L)) {
       // Smart Scalar Arithmetic
       try (ShortintCiphertext scalarSum = ct2.smartScalarAdd(serverKey, (byte) 1)) {
         assertThat(clientKey.decrypt(scalarSum)).isEqualTo(3L);
@@ -93,7 +98,13 @@ class ShortintCiphertextTest {
       try (ShortintCiphertext scalarProd = ct2.smartScalarMul(serverKey, (byte) 1)) {
         assertThat(clientKey.decrypt(scalarProd)).isEqualTo(2L);
       }
+    }
+  }
 
+  @Test
+  void testM_UncheckedArithmetic() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L);
+         ShortintCiphertext ct1 = clientKey.encrypt(1L)) {
       // Unchecked Arithmetic
       try (ShortintCiphertext sumUnchecked = ct2.uncheckedAdd(serverKey, ct1)) {
         assertThat(clientKey.decrypt(sumUnchecked)).isEqualTo(3L);
@@ -107,7 +118,12 @@ class ShortintCiphertextTest {
       try (ShortintCiphertext negUnchecked = ct1.uncheckedNeg(serverKey)) {
         assertThat(clientKey.decrypt(negUnchecked)).isEqualTo(3L);
       }
+    }
+  }
 
+  @Test
+  void testM_UncheckedScalarArithmetic() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L)) {
       // Unchecked Scalar Arithmetic
       try (ShortintCiphertext scalarSumUnchecked = ct2.uncheckedScalarAdd(serverKey, (byte) 1)) {
         assertThat(clientKey.decrypt(scalarSumUnchecked)).isEqualTo(3L);
@@ -124,7 +140,13 @@ class ShortintCiphertextTest {
       try (ShortintCiphertext scalarModUnchecked = ct2.uncheckedScalarMod(serverKey, (byte) 3)) {
         assertThat(clientKey.decrypt(scalarModUnchecked)).isEqualTo(2L);
       }
+    }
+  }
 
+  @Test
+  void testM_BitwiseAndShifts() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L);
+         ShortintCiphertext ct1 = clientKey.encrypt(1L)) {
       // Bitwise
       try (ShortintCiphertext ct3 = clientKey.encrypt(3L)) {
         try (ShortintCiphertext bitAnd = ct2.smartBitAnd(serverKey, ct3)) {
@@ -145,7 +167,13 @@ class ShortintCiphertextTest {
           assertThat(clientKey.decrypt(shiftRight)).isOne();
         }
       }
+    }
+  }
 
+  @Test
+  void testM_ComparisonsAndPbs() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L);
+         ShortintCiphertext ct1 = clientKey.encrypt(1L)) {
       // Comparisons
       try (ShortintCiphertext cmpLess = ct2.smartLess(serverKey, ct1)) {
         assertThat(clientKey.decrypt(cmpLess)).isZero(); // false
@@ -333,7 +361,12 @@ class ShortintCiphertextTest {
         serverKey.smartNegAssign(ct);
         assertThat(clientKey.decrypt(ct)).isEqualTo(3L);
       }
+    }
+  }
 
+  @Test
+  void testAssignScalarOperations() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L)) {
       // smartScalarAddAssign
       try (ShortintCiphertext ct = ct2.clone()) {
         ct.smartScalarAddAssign(serverKey, (byte) 1);
@@ -363,7 +396,13 @@ class ShortintCiphertextTest {
         serverKey.smartScalarMulAssign(ct, (byte) 1);
         assertThat(clientKey.decrypt(ct)).isEqualTo(2L);
       }
+    }
+  }
 
+  @Test
+  void testAssignUncheckedOperations() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L);
+         ShortintCiphertext ct1 = clientKey.encrypt(1L)) {
       // uncheckedAddAssign
       try (ShortintCiphertext ct = ct2.clone()) {
         ct.uncheckedAddAssign(serverKey, ct1);
@@ -403,7 +442,12 @@ class ShortintCiphertextTest {
         serverKey.uncheckedNegAssign(ct);
         assertThat(clientKey.decrypt(ct)).isEqualTo(3L);
       }
+    }
+  }
 
+  @Test
+  void testAssignUncheckedScalarOperations() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L)) {
       // uncheckedScalarAddAssign
       try (ShortintCiphertext ct = ct2.clone()) {
         ct.uncheckedScalarAddAssign(serverKey, (byte) 1);
@@ -453,7 +497,12 @@ class ShortintCiphertextTest {
         serverKey.uncheckedScalarModAssign(ct, (byte) 3);
         assertThat(clientKey.decrypt(ct)).isEqualTo(2L);
       }
+    }
+  }
 
+  @Test
+  void testAssignBitwiseOperations() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L)) {
       // smartBitAndAssign, smartBitOrAssign, smartBitXorAssign
       try (ShortintCiphertext ct3 = clientKey.encrypt(3L)) {
         try (ShortintCiphertext ct = ct2.clone()) {
@@ -483,7 +532,13 @@ class ShortintCiphertextTest {
           assertThat(clientKey.decrypt(ct)).isOne();
         }
       }
+    }
+  }
 
+  @Test
+  void testAssignShiftsAndPbs() {
+    try (ShortintCiphertext ct2 = clientKey.encrypt(2L);
+         ShortintCiphertext ct1 = clientKey.encrypt(1L)) {
       // Shifts assign
       try (ShortintCiphertext ct = ct1.clone()) {
         ct.smartScalarLeftShiftAssign(serverKey, (byte) 1);

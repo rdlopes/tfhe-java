@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.test.assertions;
 
 import io.github.rdlopes.tfhe.api.values.*;
+import io.github.rdlopes.tfhe.api.values.extended.*;
 import org.assertj.core.api.Assertions;
 
 public class TfheAssertions extends Assertions {

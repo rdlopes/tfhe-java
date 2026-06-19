@@ -8,8 +8,8 @@ import io.github.rdlopes.tfhe.api.keys.ConfigBuilder;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
-import io.github.rdlopes.tfhe.api.types.CompressedFheUint32;
-import io.github.rdlopes.tfhe.api.types.FheUint32;
+import io.github.rdlopes.tfhe.api.types.extended.CompressedFheUint32;
+import io.github.rdlopes.tfhe.api.types.extended.FheUint32;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

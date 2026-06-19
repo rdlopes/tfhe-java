@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.AbstractFheArray;
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -11,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 /// Array of encrypted unsigned 8-bit integers.
+@Generated
 public final class FheUint8Array extends AbstractFheArray<FheUint8, FheUint8Array>
     implements FheArray<FheUint8, FheUint8Array> {
 

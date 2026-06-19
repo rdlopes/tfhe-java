@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -17,6 +19,7 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 /// All FHE operations are implemented in [AbstractFheType]. This class
 /// supplies only the static [HANDLES] metadata record and type-specific
 /// factory methods.
+@Generated
 public final class FheInt128 extends AbstractFheType<I128, FheInt128, CompressedFheInt128>
   implements FheSignedInteger<I128, FheInt128, CompressedFheInt128> {
 

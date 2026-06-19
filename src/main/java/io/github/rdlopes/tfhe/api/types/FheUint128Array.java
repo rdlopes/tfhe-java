@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.AbstractFheArray;
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -11,6 +13,7 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import java.util.Collection;
 import java.util.List;
 
+@Generated
 public final class FheUint128Array extends AbstractFheArray<FheUint128, FheUint128Array>
     implements FheArray<FheUint128, FheUint128Array> {
 

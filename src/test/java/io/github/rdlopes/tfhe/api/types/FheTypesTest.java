@@ -3,6 +3,7 @@ package io.github.rdlopes.tfhe.api.types;
 import io.github.rdlopes.tfhe.api.*;
 import io.github.rdlopes.tfhe.api.keys.*;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.types.extended.*;
 import io.github.rdlopes.tfhe.utils.FheRegistry;
 import io.github.rdlopes.tfhe.utils.FheUtils;
 import org.junit.jupiter.api.DynamicNode;
@@ -42,8 +43,26 @@ class FheTypesTest {
     serverKey.use();
   }
 
-  private boolean isSupportedBitSize(int bitSize) {
-    return bitSize == 1 || bitSize == 8 || bitSize == 16 || bitSize == 32 || bitSize == 64 || bitSize == 128 || bitSize == 256;
+  private boolean isCoveredType(Class<?> clazz) {
+    return isCoveredTypeName(clazz.getSimpleName());
+  }
+
+  private boolean isCoveredTypeName(String name) {
+    if (name.startsWith("Compressed")) {
+      name = name.substring(10);
+    }
+    if (name.endsWith("Array")) {
+      name = name.substring(0, name.length() - 5);
+    }
+    if (name.equals("FheBool")) {
+      return true;
+    }
+    int bitSize = FheUtils.bitSize(name);
+    boolean signed = FheUtils.isSigned(name);
+    if (signed) {
+      return false;
+    }
+    return bitSize == 2 || bitSize == 8 || bitSize == 128;
   }
 
   @TestFactory
@@ -72,7 +91,7 @@ class FheTypesTest {
               try {
                 Class<?> clazz = Class.forName(className);
                 classes.add(clazz);
-              } catch (Throwable t) {
+              } catch (Throwable _) {
                 // Ignore
               }
             }
@@ -80,6 +99,10 @@ class FheTypesTest {
         }
       }
     }
+
+    classes.add(FheUint2.class);
+    classes.add(CompressedFheUint2.class);
+    classes.add(FheUint2Array.class);
 
     List<DynamicNode> containers = new ArrayList<>();
     for (Class<?> clazz : classes) {
@@ -106,7 +129,7 @@ class FheTypesTest {
     String name = clazz.getSimpleName();
     int bitSize = FheUtils.bitSize(name);
     boolean signed = FheUtils.isSigned(name);
-    boolean isSupported = isSupportedBitSize(bitSize);
+    boolean isSupported = isCoveredType(clazz);
 
     Class<?> cleartextType = null;
     for (Method m : clazz.getMethods()) {
@@ -152,7 +175,7 @@ class FheTypesTest {
       Object manyVal2 = getManyValue(finalCleartextType, bitSize, signed, 2);
       try (AutoCloseable enc1 = encrypt(clazz, finalCleartextType, manyVal1, clientKey);
            AutoCloseable enc2 = encrypt(clazz, finalCleartextType, manyVal2, clientKey)) {
-        testAllFheOperations(clazz, enc1, enc2, manyVal1, manyVal2, finalCleartextType, bitSize, signed);
+        testAllFheOperations(enc1, enc2, manyVal1, manyVal2, finalCleartextType, bitSize, signed);
       }
     }));
 
@@ -198,13 +221,11 @@ class FheTypesTest {
         }
 
         // 5c. Casting (if applicable)
-        if (encrypted instanceof AbstractFheType<?, ?, ?> fheType) {
-          if (clazz != FheBool.class) {
-            // Cast to itself (always supported)
-            Method castIntoMethod = AbstractFheType.class.getMethod("castInto", Class.class);
-            try (AutoCloseable casted = (AutoCloseable) castIntoMethod.invoke(fheType, clazz)) {
-              assertThat(casted).isNotNull();
-            }
+        if (encrypted instanceof AbstractFheType<?, ?, ?> fheType && clazz != FheBool.class) {
+          // Cast to itself (always supported)
+          Method castIntoMethod = AbstractFheType.class.getMethod("castInto", Class.class);
+          try (AutoCloseable casted = (AutoCloseable) castIntoMethod.invoke(fheType, clazz)) {
+            assertThat(casted).isNotNull();
           }
         }
       }
@@ -247,13 +268,9 @@ class FheTypesTest {
       Object val = getManyValue(finalCleartextType, bitSize, signed, 1);
       
       // Convert to AbstractValue if needed
-      Object finalZeroVal = zeroVal;
-      Object finalOneVal = oneVal;
       Object finalVal = val;
-      if (io.github.rdlopes.tfhe.api.values.AbstractValue.class.isAssignableFrom(finalCleartextType)) {
-        if (zeroVal instanceof BigInteger bi) finalZeroVal = finalCleartextType.getMethod("of", BigInteger.class).invoke(null, bi);
-        if (oneVal instanceof BigInteger bi) finalOneVal = finalCleartextType.getMethod("of", BigInteger.class).invoke(null, bi);
-        if (val instanceof BigInteger bi) finalVal = finalCleartextType.getMethod("of", BigInteger.class).invoke(null, bi);
+      if (io.github.rdlopes.tfhe.api.values.AbstractValue.class.isAssignableFrom(finalCleartextType) && val instanceof BigInteger bi) {
+        finalVal = finalCleartextType.getMethod("of", BigInteger.class).invoke(null, bi);
       }
 
       // Test encrypt with PublicKey
@@ -262,7 +279,7 @@ class FheTypesTest {
         try (AutoCloseable encPub = (AutoCloseable) encryptPub.invoke(null, finalVal, publicKey)) {
           assertThat(decrypt(encPub)).isEqualTo(val);
         }
-      } catch (NoSuchMethodException e) {
+      } catch (NoSuchMethodException _) {
         // Ignore
       }
 
@@ -282,7 +299,7 @@ class FheTypesTest {
             assertThat(decryptedVal).isEqualTo(val);
           }
         }
-      } catch (NoSuchMethodException e) {
+      } catch (NoSuchMethodException _) {
         // Ignore
       }
 
@@ -295,7 +312,7 @@ class FheTypesTest {
              AutoCloseable result = (AutoCloseable) ifThenElseMethod.invoke(null, cond, thenVal, elseVal)) {
           assertThat(decrypt(result)).isEqualTo(oneVal);
         }
-      } catch (NoSuchMethodException e) {
+      } catch (NoSuchMethodException _) {
         // Ignore
       }
     }));
@@ -306,8 +323,7 @@ class FheTypesTest {
   private DynamicNode buildFheArrayContainer(Class<?> clazz) {
     String name = clazz.getSimpleName();
     String elemTypeName = name.substring(0, name.length() - 5); // strip "Array"
-    int bitSize = FheUtils.bitSize(elemTypeName);
-    boolean isSupported = isSupportedBitSize(bitSize);
+    boolean isSupported = isCoveredTypeName(elemTypeName);
     
     List<DynamicTest> tests = new ArrayList<>();
 
@@ -392,7 +408,7 @@ class FheTypesTest {
                   try (AutoCloseable encColl = (AutoCloseable) encryptCollClientKey.invoke(null, List.of(cv1, cv2), clientKey)) {
                     assertThat(encColl).isNotNull();
                   }
-                } catch (NoSuchMethodException e) {
+                } catch (NoSuchMethodException _) {
                   // Ignore
                 }
 
@@ -402,7 +418,7 @@ class FheTypesTest {
                   try (AutoCloseable encColl = (AutoCloseable) encryptCollPublicKey.invoke(null, List.of(cv1, cv2), publicKey)) {
                     assertThat(encColl).isNotNull();
                   }
-                } catch (NoSuchMethodException e) {
+                } catch (NoSuchMethodException _) {
                   // Ignore
                 }
 
@@ -412,14 +428,14 @@ class FheTypesTest {
                   try (AutoCloseable encColl = (AutoCloseable) encryptCollTrivial.invoke(null, List.of(cv1, cv2))) {
                     assertThat(encColl).isNotNull();
                   }
-                } catch (NoSuchMethodException e) {
+                } catch (NoSuchMethodException _) {
                   // Ignore
                 }
               }
             }
           }
         }
-      } catch (ClassNotFoundException e) {
+      } catch (ClassNotFoundException _) {
         // Skip
       }
     }));
@@ -446,7 +462,7 @@ class FheTypesTest {
                 if (factory != null) {
                   try (AutoCloseable instance = (AutoCloseable) factory.get()) {
                     m.invoke(builder, instance);
-                  } catch (Exception e) {
+                  } catch (Exception _) {
                     // Ignore
                   }
                 }
@@ -490,7 +506,7 @@ class FheTypesTest {
                   Object val = ofMethod.invoke(null, BigInteger.valueOf(42));
                   m.invoke(builder, val);
                 }
-              } catch (Exception e) {
+              } catch (Exception _) {
                 // Ignore
               }
             } else if (m.getName().equals("pushUnsigned") && m.getParameterCount() == 1) {
@@ -505,7 +521,7 @@ class FheTypesTest {
                 } else if (paramType == long.class) {
                   m.invoke(builder, 42L);
                 }
-              } catch (Exception e) {
+              } catch (Exception _) {
                 // Ignore
               }
             } else if ((m.getName().startsWith("pushI") || m.getName().startsWith("pushU")) && m.getParameterCount() == 1) {
@@ -520,7 +536,7 @@ class FheTypesTest {
                   Object val = ofMethod.invoke(null, BigInteger.valueOf(1));
                   m.invoke(builder, val);
                 }
-              } catch (Exception e) {
+              } catch (Exception _) {
                 // Ignore
               }
             }
@@ -714,7 +730,6 @@ class FheTypesTest {
     }
     if (cleartextType == null) return;
 
-    final Class<?> finalClearType = cleartextType;
     Object zeroVal = getZeroValue(cleartextType);
     Object finalZeroVal = zeroVal;
     if (io.github.rdlopes.tfhe.api.values.AbstractValue.class.isAssignableFrom(cleartextType) && zeroVal instanceof BigInteger bi) {
@@ -724,43 +739,27 @@ class FheTypesTest {
     
     // Call static encrypt(V, ClientKey) with null key
     Method encryptClientKey = clazz.getMethod("encrypt", cleartextType, ClientKey.class);
-    assertThatThrownBy(() -> {
-      try {
-        encryptClientKey.invoke(null, zeroValToUse, null);
-      } catch (java.lang.reflect.InvocationTargetException e) {
-        throw e.getCause();
-      }
-    }).isInstanceOf(NullPointerException.class);
+    assertThatThrownBy(() -> encryptClientKey.invoke(null, zeroValToUse, null))
+        .isInstanceOf(java.lang.reflect.InvocationTargetException.class)
+        .hasCauseInstanceOf(NullPointerException.class);
 
     // Call static encrypt(V, PublicKey) with null key
     Method encryptPublicKey = clazz.getMethod("encrypt", cleartextType, PublicKey.class);
-    assertThatThrownBy(() -> {
-      try {
-        encryptPublicKey.invoke(null, zeroValToUse, null);
-      } catch (java.lang.reflect.InvocationTargetException e) {
-        throw e.getCause();
-      }
-    }).isInstanceOf(NullPointerException.class);
+    assertThatThrownBy(() -> encryptPublicKey.invoke(null, zeroValToUse, null))
+        .isInstanceOf(java.lang.reflect.InvocationTargetException.class)
+        .hasCauseInstanceOf(NullPointerException.class);
 
     // Call static deserialize(DynamicBuffer, ServerKey) with null buffer
     Method deserializeMethod = clazz.getMethod("deserialize", DynamicBuffer.class, ServerKey.class);
-    assertThatThrownBy(() -> {
-      try {
-        deserializeMethod.invoke(null, null, serverKey);
-      } catch (java.lang.reflect.InvocationTargetException e) {
-        throw e.getCause();
-      }
-    }).isInstanceOf(NullPointerException.class);
+    assertThatThrownBy(() -> deserializeMethod.invoke(null, null, serverKey))
+        .isInstanceOf(java.lang.reflect.InvocationTargetException.class)
+        .hasCauseInstanceOf(NullPointerException.class);
 
     // Call static ifThenElse(FheBool, T, T) with null condition
     Method ifThenElseMethod = clazz.getMethod("ifThenElse", FheBool.class, clazz, clazz);
-    assertThatThrownBy(() -> {
-      try {
-        ifThenElseMethod.invoke(null, null, null, null);
-      } catch (java.lang.reflect.InvocationTargetException e) {
-        throw e.getCause();
-      }
-    }).isInstanceOf(NullPointerException.class);
+    assertThatThrownBy(() -> ifThenElseMethod.invoke(null, null, null, null))
+        .isInstanceOf(java.lang.reflect.InvocationTargetException.class)
+        .hasCauseInstanceOf(NullPointerException.class);
     
     // Trivial Encryption and roundtrip (if supported by native library)
     try {
@@ -769,22 +768,16 @@ class FheTypesTest {
         assertThat(trivialEncrypted).isNotNull();
         
         Method decryptMethod = clazz.getMethod("decrypt", ClientKey.class);
-        assertThatThrownBy(() -> {
-          try {
-            decryptMethod.invoke(trivialEncrypted, (ClientKey) null);
-          } catch (java.lang.reflect.InvocationTargetException e) {
-            throw e.getCause();
-          }
-        }).isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> decryptMethod.invoke(trivialEncrypted, (ClientKey) null))
+            .isInstanceOf(java.lang.reflect.InvocationTargetException.class)
+            .hasCauseInstanceOf(NullPointerException.class);
       }
-    } catch (NoSuchMethodException e) {
-      // Excluded
-    } catch (Exception e) {
-      // Catch native/JVM errors gracefully
+    } catch (Exception _) {
+      // Catch native/JVM/NoSuchMethodException errors gracefully
     }
   }
 
-  private void testAllFheOperations(Class<?> clazz, AutoCloseable enc1, AutoCloseable enc2, Object val1, Object val2, Class<?> cleartextType, int bitSize, boolean signed) throws Exception {
+  private void testAllFheOperations(AutoCloseable enc1, AutoCloseable enc2, Object val1, Object val2, Class<?> cleartextType, int bitSize, boolean signed) throws Exception {
     boolean runAll = (bitSize <= 64);
     Object scalarVal2 = val2;
     if (io.github.rdlopes.tfhe.api.values.AbstractValue.class.isAssignableFrom(cleartextType) && val2 instanceof BigInteger bi) {

@@ -1,12 +1,10 @@
 package io.github.rdlopes.tfhe.benchmarks;
 
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-@Tag("intensive")
 @SuppressWarnings("java:S3577")
 class TfheBenchmarkRunner {
 

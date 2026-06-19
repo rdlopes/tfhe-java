@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -16,6 +18,7 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 /// All FHE operations are implemented in [AbstractFheType]. This class
 /// supplies only the static [HANDLES] metadata record and type-specific
 /// factory methods. The entire business logic is ~25 lines.
+@Generated
 public final class FheInt8 extends AbstractFheType<Byte, FheInt8, CompressedFheInt8>
   implements FheSignedInteger<Byte, FheInt8, CompressedFheInt8> {
 

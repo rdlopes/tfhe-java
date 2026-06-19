@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
@@ -18,6 +20,7 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 /// All FHE operations are implemented in [AbstractFheType]. This class
 /// supplies only the static [HANDLES] metadata record and type-specific
 /// factory methods.
+@Generated
 public final class FheUint128 extends AbstractFheUnsignedInteger<U128, FheUint128, CompressedFheUint128>
     implements FheUnsignedInteger<U128, FheUint128, CompressedFheUint128> {
 

@@ -5,7 +5,7 @@ import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.FheBool;
-import io.github.rdlopes.tfhe.api.types.FheUint32;
+import io.github.rdlopes.tfhe.api.types.extended.FheUint32;
 import io.github.rdlopes.tfhe.ffm.*;
 import io.github.rdlopes.tfhe.utils.FheRegistry;
 
@@ -329,12 +329,12 @@ public abstract class AbstractFheType<
         try (java.lang.foreign.Arena arena = java.lang.foreign.Arena.ofConfined()) {
           MemorySegment memorySegment = arena.allocate(
               switch (javaType) {
-                case Class<?> type when type == Boolean.class -> TfheHeader.C_BOOL;
-                case Class<?> type when type == Byte.class -> TfheHeader.C_CHAR;
-                case Class<?> type when type == Short.class -> TfheHeader.C_SHORT;
-                case Class<?> type when type == Integer.class -> TfheHeader.C_INT;
-                case Class<?> type when type == Long.class -> TfheHeader.C_LONG_LONG;
-                default -> TfheHeader.C_POINTER;
+                case Class<?> type when type == Boolean.class -> TfheHeader$shared.C_BOOL;
+                case Class<?> type when type == Byte.class -> TfheHeader$shared.C_CHAR;
+                case Class<?> type when type == Short.class -> TfheHeader$shared.C_SHORT;
+                case Class<?> type when type == Integer.class -> TfheHeader$shared.C_INT;
+                case Class<?> type when type == Long.class -> TfheHeader$shared.C_LONG_LONG;
+                default -> TfheHeader$shared.C_POINTER;
               }
           );
           int status = op.apply(getValue(), memorySegment);
@@ -347,12 +347,12 @@ public abstract class AbstractFheType<
             yield java.util.Optional.empty();
           }
           var result = switch (javaType) {
-            case Class<?> type when type == Boolean.class -> memorySegment.get(TfheHeader.C_BOOL, 0);
-            case Class<?> type when type == Byte.class -> memorySegment.get(TfheHeader.C_CHAR, 0);
-            case Class<?> type when type == Short.class -> memorySegment.get(TfheHeader.C_SHORT, 0);
-            case Class<?> type when type == Integer.class -> memorySegment.get(TfheHeader.C_INT, 0);
-            case Class<?> type when type == Long.class -> memorySegment.get(TfheHeader.C_LONG_LONG, 0);
-            default -> memorySegment.get(TfheHeader.C_POINTER, 0);
+            case Class<?> type when type == Boolean.class -> memorySegment.get(TfheHeader$shared.C_BOOL, 0);
+            case Class<?> type when type == Byte.class -> memorySegment.get(TfheHeader$shared.C_CHAR, 0);
+            case Class<?> type when type == Short.class -> memorySegment.get(TfheHeader$shared.C_SHORT, 0);
+            case Class<?> type when type == Integer.class -> memorySegment.get(TfheHeader$shared.C_INT, 0);
+            case Class<?> type when type == Long.class -> memorySegment.get(TfheHeader$shared.C_LONG_LONG, 0);
+            default -> memorySegment.get(TfheHeader$shared.C_POINTER, 0);
           };
           yield java.util.Optional.of(javaType.cast(result));
         }

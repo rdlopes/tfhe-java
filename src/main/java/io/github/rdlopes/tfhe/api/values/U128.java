@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.values;
 
+import io.github.rdlopes.tfhe.utils.Generated;
+
 import org.jspecify.annotations.NonNull;
 
 import java.math.BigInteger;
@@ -7,6 +9,7 @@ import java.math.BigInteger;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
+@Generated
 public final class U128 extends AbstractValue {
   public static final int BIT_SIZE = 128;
   public static final BigInteger MIN_VALUE = ZERO;

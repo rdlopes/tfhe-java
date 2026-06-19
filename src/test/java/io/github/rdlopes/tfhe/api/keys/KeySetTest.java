@@ -1,10 +1,10 @@
 package io.github.rdlopes.tfhe.api.keys;
 
-import io.github.rdlopes.tfhe.api.types.CompressedFheUint256;
-import io.github.rdlopes.tfhe.api.types.CompressedFheUint32;
-import io.github.rdlopes.tfhe.api.types.FheUint256;
-import io.github.rdlopes.tfhe.api.types.FheUint32;
-import io.github.rdlopes.tfhe.api.values.U256;
+import io.github.rdlopes.tfhe.api.types.extended.CompressedFheUint256;
+import io.github.rdlopes.tfhe.api.types.extended.CompressedFheUint32;
+import io.github.rdlopes.tfhe.api.types.extended.FheUint256;
+import io.github.rdlopes.tfhe.api.types.extended.FheUint32;
+import io.github.rdlopes.tfhe.api.values.extended.U256;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

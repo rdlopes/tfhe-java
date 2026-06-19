@@ -37,7 +37,7 @@ public abstract class AbstractValue extends NativeAddress implements FheValue {
   /// @param maxValue     the maximum representable value (used for range validation)
   /// @param initialValue the value to store; must be within {minValue, maxValue}
   /// @throws IllegalArgumentException if `initialValue` is out of range
-  AbstractValue(
+  protected AbstractValue(
     Function<SegmentAllocator, MemorySegment> allocator,
     int bitSize,
     boolean signed,

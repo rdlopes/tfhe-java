@@ -1,6 +1,7 @@
 package io.github.rdlopes.tfhe.utils;
 
 import io.github.rdlopes.tfhe.api.values.*;
+import io.github.rdlopes.tfhe.api.values.extended.*;
 
 import java.util.Arrays;
 

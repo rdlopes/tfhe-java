@@ -7,7 +7,8 @@ import io.cucumber.java.en.When;
 import io.github.rdlopes.tfhe.api.keys.*;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.*;
-import io.github.rdlopes.tfhe.api.values.U256;
+import io.github.rdlopes.tfhe.api.types.extended.*;
+import io.github.rdlopes.tfhe.api.values.extended.U256;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

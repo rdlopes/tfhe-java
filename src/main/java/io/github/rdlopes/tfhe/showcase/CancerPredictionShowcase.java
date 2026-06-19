@@ -4,7 +4,7 @@ import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.types.FheBool;
-import io.github.rdlopes.tfhe.api.types.FheInt32;
+import io.github.rdlopes.tfhe.api.types.extended.FheInt32;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,6 +3,7 @@ package io.github.rdlopes.tfhe.api.types;
 import io.github.rdlopes.tfhe.api.keys.CompactPkeCrs;
 import io.github.rdlopes.tfhe.api.keys.CompactPublicKey;
 import io.github.rdlopes.tfhe.api.values.*;
+import io.github.rdlopes.tfhe.api.values.extended.*;
 import io.github.rdlopes.tfhe.ffm.NativePointer;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 import org.slf4j.Logger;
