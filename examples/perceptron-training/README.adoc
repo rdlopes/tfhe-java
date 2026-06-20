@@ -1,0 +1,68 @@
+= Privacy-Preserving Perceptron Training
+:toc:
+:toc-title: Table of Contents
+
+== Overview
+
+This example demonstrates **homomorphic machine learning**: training a single-layer perceptron
+on an **encrypted 2D dataset** using TFHE. The training server never decrypts the data — all
+weight updates and activation computations happen entirely in the encrypted domain.
+
+== Architecture
+
+The showcase follows a clean client-server separation:
+
+[plantuml, perceptron-architecture, svg]
+....
+@startuml
+actor Client
+participant DataEncryptor
+participant PerceptronTrainer as Server
+participant WeightDecryptor
+
+Client -> DataEncryptor : DataPoint[] (cleartext)
+DataEncryptor -> Server : EncryptedDataPoint[] + EncryptedWeights
+Server -> WeightDecryptor : EncryptedWeights (trained)
+WeightDecryptor -> Client : TrainedWeights (cleartext)
+@enduml
+....
+
+== Package Structure
+
+[source]
+----
+io.github.rdlopes.tfhe.examples.perceptron
+├── model/
+│   ├── DataPoint.java             — cleartext 2D training point (record)
+│   ├── EncryptedDataPoint.java    — FHE-encrypted point (AutoCloseable)
+│   ├── EncryptedWeights.java      — mutable encrypted weights (AutoCloseable)
+│   └── TrainedWeights.java        — decrypted weight result (record)
+├── client/
+│   ├── TrainingDataset.java       — 10-point linearly separable 2D dataset
+│   ├── DataEncryptor.java         — encrypts dataset + initializes weights
+│   └── WeightDecryptor.java       — decrypts trained weights
+├── server/
+│   ├── PerceptronTrainer.java     — homomorphic training loop (8 epochs)
+│   └── ConvergenceVerifier.java   — verifies classification on cleartext values
+└── Main.java                       — entry point
+----
+
+== Training Algorithm
+
+The perceptron learning rule applied homomorphically:
+
+----
+activation = w1*x1 + w2*x2 + bias
+y_hat      = (activation >= 0) ? 1 : 0
+error      = label - y_hat
+w1        += error * x1
+w2        += error * x2
+bias      += error
+----
+
+== How to Run
+
+[source,shell]
+----
+mvn exec:java -pl examples/perceptron-training -Dexec.mainClass=io.github.rdlopes.tfhe.examples.perceptron.Main
+----

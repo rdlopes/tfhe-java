@@ -1,0 +1,90 @@
+= Privacy-Preserving Breast Cancer Prediction
+:toc:
+:toc-title: Table of Contents
+
+== Overview
+
+This example demonstrates how to perform **privacy-preserving medical inference** using Torus Fully Homomorphic Encryption (TFHE).
+A pre-trained linear classification model is evaluated **entirely on encrypted patient data** — the server never sees the underlying medical records.
+
+The dataset is derived from the enriched Breast Cancer Wisconsin dataset, with 12 features per patient.
+The model uses pre-trained integer weights and a bias to classify patients as benign or malignant.
+
+== Architecture
+
+[plantuml, cancer-prediction-architecture, svg]
+....
+@startuml
+actor Client
+participant "PatientEncryptor" as Enc
+participant "HomomorphicEvaluator" as Server
+participant "PredictionDecryptor" as Dec
+
+Client -> Enc : PatientRecord[] (cleartext)
+Enc -> Server : EncryptedPatientRecord[] (ciphertext)
+Server -> Dec : List<FheBool> predictions + List<FheInt32> scores
+Dec -> Client : PredictionResult[] (cleartext predictions)
+@enduml
+....
+
+== Package Structure
+
+[source]
+----
+io.github.rdlopes.tfhe.examples.cancer
+├── model/
+│   ├── PatientRecord.java           — cleartext patient features (record)
+│   ├── EncryptedPatientRecord.java  — FHE-encrypted features (AutoCloseable)
+│   └── PredictionResult.java        — decrypted result (record)
+├── client/
+│   ├── PatientDataset.java          — loads sample patient data
+│   ├── PatientEncryptor.java        — encrypts PatientRecord → EncryptedPatientRecord
+│   └── PredictionDecryptor.java     — decrypts predictions → PredictionResult
+├── server/
+│   ├── CancerModel.java             — pre-trained weights and bias
+│   └── HomomorphicEvaluator.java   — server-side homomorphic dot-product evaluation
+└── Main.java                        — entry point
+----
+
+== Model
+
+The linear model computes:
+
+----
+score = sum(WEIGHTS[i] * features[i]) + BIAS
+prediction = (score >= 0) ? MALIGNANT : BENIGN
+----
+
+.Pre-trained weights
+[cols="2,1"]
+|===
+| Feature | Weight
+| Clump Thickness | 2
+| Uniformity of Cell Size | 12
+| Uniformity of Cell Shape | 6
+| Marginal Adhesion | 5
+| Single Epithelial Cell Size | -8
+| Bare Nuclei | 12
+| Bland Chromatin | -3
+| Normal Nucleoli | 6
+| Mitoses | 1
+| Age Scale (age/10) | -29
+| Genetic Risk | 9
+| Family History | 10
+|===
+
+Bias: -46
+
+== How to Run
+
+Prerequisites: the native `.native/` bundle must be present at the project root (run `mvn initialize -Plocal` from the root or follow the main README).
+
+[source,shell]
+----
+# From the project root
+mvn exec:java -pl examples/cancer-prediction -Dexec.mainClass=io.github.rdlopes.tfhe.examples.cancer.Main
+----
+
+== Expected Output
+
+The showcase logs each patient's decrypted score, predicted label, true label, and verification status. All 4 test patients are predicted correctly.

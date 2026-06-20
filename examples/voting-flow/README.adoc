@@ -1,0 +1,86 @@
+= Privacy-Preserving Voting Flow
+:toc:
+:toc-title: Table of Contents
+
+== Overview
+
+This example demonstrates a **complete FHE-based e-voting protocol** using TFHE.
+Voters encrypt their choices and generate **Zero-Knowledge Proofs (ZKPs)** to prove
+ballot validity without revealing their vote. The tally server verifies ZKPs and
+aggregates votes homomorphically — it never sees individual choices.
+
+== Architecture
+
+[plantuml, voting-architecture, svg]
+....
+@startuml
+actor Voter
+participant BallotCaster
+participant TallyServer as Server
+participant ResultDecryptor
+actor Authority
+
+Voter -> BallotCaster : Vote (cleartext)
+BallotCaster -> Server : Ballot (encrypted + ZK proof)
+Server -> ResultDecryptor : ElectionTallies (encrypted)
+ResultDecryptor -> Authority : ElectionResult (cleartext)
+@enduml
+....
+
+== Package Structure
+
+[source]
+----
+io.github.rdlopes.tfhe.examples.voting
+├── model/
+│   ├── Candidate.java          — enum: ALICE, BOB, CHARLIE
+│   ├── Vote.java               — cleartext vote (record, factory methods)
+│   ├── Ballot.java             — sealed ZK-proven ballot (record)
+│   ├── ElectionTallies.java    — mutable encrypted tallies (AutoCloseable)
+│   └── ElectionResult.java     — decrypted final result (record)
+├── client/
+│   ├── ElectionSetup.java      — CRS + key generation (AutoCloseable)
+│   ├── BallotCaster.java       — encrypts votes + generates ZK proofs
+│   └── ResultDecryptor.java    — decrypts final tallies
+├── server/
+│   └── TallyServer.java        — ZK verification + homomorphic aggregation
+└── Main.java                    — entry point
+----
+
+== Ballot Validity
+
+A ballot is considered **valid** if and only if exactly one of the three choices is `true`.
+The server homomorphically computes:
+
+----
+sum      = choiceA + choiceB + choiceC
+isValid  = (sum == 1)
+contribX = isValid ? choiceX : 0
+isInvalid = 1 - isValid
+----
+
+This ensures that double-votes and spoiled ballots are silently discarded without
+revealing which voters submitted invalid ballots.
+
+== Test Scenario
+
+[cols="2,2,1"]
+|===
+| Voter | Choice | Valid?
+| Alice | Alice | Yes
+| Bob | Bob | Yes
+| Charlie | Charlie | Yes
+| Dave | Alice | Yes
+| Eve | (none) | No — spoiled
+| Frank | Alice + Bob | No — double vote
+| Grace | Charlie | Yes
+|===
+
+Expected result: Alice=2, Bob=1, Charlie=2, Invalid=2.
+
+== How to Run
+
+[source,shell]
+----
+mvn exec:java -pl examples/voting-flow -Dexec.mainClass=io.github.rdlopes.tfhe.examples.voting.Main
+----
