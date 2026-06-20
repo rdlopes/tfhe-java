@@ -1,6 +1,7 @@
 @asciidoc
 @order-98
 @glossary
+@gpu
 Feature: Glossary
 
   [glossary]
@@ -17,11 +18,21 @@ Feature: Glossary
   [[carry,Carry]]Carry::
   Extra bits that may be needed when operations on encrypted values exceed the original interval. TFHE-rs uses padding bits on the most significant bits to accommodate carries.
 
+  [[compressed-server-key,CompressedServerKey]]CompressedServerKey::
+  The **canonical server key** in TFHE-Java. A compact representation from which both a CPU `ServerKey`
+  and a GPU `CudaServerKey` can be derived via decompression.
+  This is the key format that clients should serialize and send to remote servers.
+  Calling `.use()` on a `CompressedServerKey` activates FHE operations transparently:
+  it always sets the CPU server key, and additionally sets the CUDA server key when `tfhe.gpu=true`.
+  See also: <<server-key,Server Key>>, <<client-key,Client Key>>.
+
   [[ciphertext,Ciphertext]]Ciphertext::
   An encrypted value consisting of a mask and body, computed using an LWE secret key. Fresh ciphertexts result from encryption, while derived ciphertexts result from operations.
 
   [[client-key,Client Key]]Client Key::
-  The secret key used by the client to encrypt and decrypt data. It must be kept private and secure.
+  The secret key used by the client to encrypt and decrypt data. It must be kept private and never shared.
+  It is the root of trust: all other keys are ultimately derived from it.
+  See also: <<compressed-server-key,CompressedServerKey>>, <<public-key,Public Key>>.
 
   [[fhe,FHE]]FHE::
   Fully Homomorphic Encryption - a cryptographic scheme that allows arbitrary computations on encrypted data without decrypting it.
@@ -75,7 +86,11 @@ Feature: Glossary
   The private key consisting of n random integers used to encrypt and decrypt LWE ciphertexts. Also known as the LWE secret key.
 
   [[server-key,Server Key]]Server Key::
-  The public evaluation key used by the server to perform homomorphic operations on encrypted data without being able to decrypt it.
+  A CPU-only decompressed evaluation key obtained from a `CompressedServerKey` via `.decompress()`.
+  Enables the server to perform homomorphic operations on encrypted data without being able to decrypt it.
+  Used primarily as a **conformant key** when deserializing ciphertexts.
+  Does not support GPU activation — use `CompressedServerKey.use()` for transparent CPU/GPU activation.
+  See also: <<compressed-server-key,CompressedServerKey>>.
 
   [[tfhe,TFHE]]TFHE::
   Torus Fully Homomorphic Encryption - a FHE scheme that enables fast homomorphic operations on booleans, integers, and reals using Learning With Errors over the torus.

@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
 import io.github.rdlopes.tfhe.utils.Generated;
 
 import io.github.rdlopes.tfhe.api.AbstractFheType;
@@ -21,10 +23,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheInt8 extends AbstractFheType<Byte, FheInt8, CompressedFheInt8>
   implements FheSignedInteger<Byte, FheInt8, CompressedFheInt8> {
-
-  static {
-    FheRegistry.registerFactory(FheInt8.class, FheInt8::new);
-  }
 
   // ── Static metadata — resolved once at class-loading via invokedynamic ──────
 
@@ -101,6 +99,11 @@ public final class FheInt8 extends AbstractFheType<Byte, FheInt8, CompressedFheI
 
   // ── Constructor (package-private — use static factories) ─────────────────────
 
+  static {
+    FheRegistry.registerFactory(FheInt8.class, FheInt8::new);
+    FheRegistry.registerHandles(FheInt8.class, HANDLES);
+  }
+
   FheInt8() {
     super(TfheHeader::fhe_int8_destroy);
   }
@@ -114,24 +117,29 @@ public final class FheInt8 extends AbstractFheType<Byte, FheInt8, CompressedFheI
   // ── Static factories ──────────────────────────────────────────────────────────
 
   public static FheInt8 encrypt(Byte clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheInt8::new);
+    return Fhe.encrypt(clearValue, clientKey, FheInt8.class);
   }
 
   public static FheInt8 encrypt(Byte clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheInt8::new);
+    return Fhe.encrypt(clearValue, publicKey, FheInt8.class);
   }
 
   public static FheInt8 encrypt(Byte clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheInt8::new);
+    return Fhe.encrypt(clearValue, FheInt8.class);
   }
 
   public static FheInt8 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheInt8::new);
+    return Fhe.deserialize(buffer, serverKey, FheInt8.class);
   }
 
   public static FheInt8 ifThenElse(FheBool condition, FheInt8 thenValue, FheInt8 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheInt8::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
 
+
+  @Override
+  public FheInt8 abs() {
+    return absImpl();
+  }
 }

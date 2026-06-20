@@ -3,6 +3,9 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
@@ -24,10 +27,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheUint2048 extends AbstractFheUnsignedInteger<U2048, FheUint2048, CompressedFheUint2048>
     implements FheUnsignedInteger<U2048, FheUint2048, CompressedFheUint2048> {
-
-  static {
-    FheRegistry.registerFactory(FheUint2048.class, FheUint2048::new);
-  }
 
   static final FheTypeHandles<U2048> HANDLES = new FheTypeHandles<>(
     new FheValueKind.Wide<>(U2048::newEmpty),
@@ -118,6 +117,11 @@ public final class FheUint2048 extends AbstractFheUnsignedInteger<U2048, FheUint
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_uint2048,
           TfheHeader::fhe_uint2048_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheUint2048.class, FheUint2048::new);
+    FheRegistry.registerHandles(FheUint2048.class, HANDLES);
+  }
+
   FheUint2048() { super(TfheHeader::fhe_uint2048_destroy); }
 
   @Override protected FheTypeHandles<U2048> handles()      { return HANDLES; }
@@ -125,19 +129,19 @@ public final class FheUint2048 extends AbstractFheUnsignedInteger<U2048, FheUint
   @Override protected CompressedFheUint2048   newCompressed() { return new CompressedFheUint2048(); }
 
   public static FheUint2048 encrypt(U2048 clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheUint2048::new);
+    return Fhe.encrypt(clearValue, clientKey, FheUint2048.class);
   }
   public static FheUint2048 encrypt(U2048 clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheUint2048::new);
+    return Fhe.encrypt(clearValue, publicKey, FheUint2048.class);
   }
   public static FheUint2048 encrypt(U2048 clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheUint2048::new);
+    return Fhe.encrypt(clearValue, FheUint2048.class);
   }
   public static FheUint2048 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheUint2048::new);
+    return Fhe.deserialize(buffer, serverKey, FheUint2048.class);
   }
   public static FheUint2048 ifThenElse(FheBool condition, FheUint2048 thenValue, FheUint2048 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheUint2048::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
 }

@@ -71,7 +71,7 @@ class KeySetTest {
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build()) {
-      ks.getServerKey().use();
+      ks.getCompressedServerKey().use();
       
       // In-memory compression & direct decompression
       FheUint32 clientCiphertext = FheUint32.encrypt(100, ks.getClientKey());
@@ -96,7 +96,7 @@ class KeySetTest {
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build()) {
-      ks.getServerKey().use();
+      ks.getCompressedServerKey().use();
       
       // In-memory compression & direct decompression
       io.github.rdlopes.tfhe.api.types.FheBool clientCiphertext = io.github.rdlopes.tfhe.api.types.FheBool.encrypt(true, ks.getClientKey());
@@ -116,11 +116,11 @@ class KeySetTest {
   }
 
   @Test
-  void testFheUint32() {
+  void encryptsAndDecryptsFheUint32() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build()) {
-      ks.getServerKey().use();
+      ks.getCompressedServerKey().use();
       FheUint32 clientCiphertext = FheUint32.encrypt(100, ks.getClientKey());
       
       try (io.github.rdlopes.tfhe.api.serde.DynamicBuffer serialized = clientCiphertext.serialize()) {
@@ -134,12 +134,12 @@ class KeySetTest {
   }
 
   @Test
-  void testFheUint32WithCompression() {
+  void encryptsAndDecryptsFheUint32WithCompressedCiphertext() {
     try (KeySet ks = KeySet.builder()
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build()) {
-      ks.getServerKey().use();
+      ks.getCompressedServerKey().use();
       FheUint32 clientCiphertext = FheUint32.encrypt(100, ks.getClientKey());
       
       try (io.github.rdlopes.tfhe.api.serde.DynamicBuffer serialized = clientCiphertext.serialize()) {
@@ -158,7 +158,7 @@ class KeySetTest {
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build()) {
-      ks.getServerKey().use();
+      ks.getCompressedServerKey().use();
       
       // In-memory compression & direct decompression
       io.github.rdlopes.tfhe.api.types.FheUint8 clientCiphertext = io.github.rdlopes.tfhe.api.types.FheUint8.encrypt((byte) 100, ks.getClientKey());
@@ -183,7 +183,7 @@ class KeySetTest {
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build()) {
-      ks.getServerKey().use();
+      ks.getCompressedServerKey().use();
       
       U256 value = U256.of(BigInteger.valueOf(100));
       

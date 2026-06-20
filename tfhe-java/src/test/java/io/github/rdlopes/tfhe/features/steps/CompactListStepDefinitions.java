@@ -39,7 +39,7 @@ public class CompactListStepDefinitions {
                            .useCustomParameters(SHORTINT_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .enableCompression(SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build();
-    context.keySet.getServerKey().use();
+    context.keySet.getCompressedServerKey().use();
   }
 
   @Given("a compact PKE CRS is created")

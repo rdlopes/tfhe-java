@@ -39,12 +39,24 @@ Feature: Standard TFHE Workflow
 
 
   === 1. Key Generation (Client-Side)
-  The client defines the configuration and generates the private `ClientKey` and evaluation `ServerKey`.
+  The client builds a `KeySet` which bundles a private `ClientKey` with a `CompressedServerKey`.
+  The `CompressedServerKey` is the canonical server key — it can produce both a CPU `ServerKey`
+  and a GPU `CudaServerKey`, and is the key to send to the server.
   [source,java]
   ----
   KeySet keys = KeySet.builder().build();
   ClientKey clientKey = keys.getClientKey();
-  ServerKey serverKey = keys.getServerKey();
+  CompressedServerKey compressedKey = keys.getCompressedServerKey();
+
+  // Activate for local computation (CPU, or CPU+GPU with -Dtfhe.gpu=true)
+  compressedKey.use();
+  ----
+
+  The `ServerKey` (CPU-only, decompressed view) remains accessible for use as a conformant key
+  when deserializing ciphertexts:
+  [source,java]
+  ----
+  ServerKey serverKey = keys.getServerKey(); // CPU key for ciphertext deserialization
   ----
 
   Here are the unit tests validating key set generation and customization:
@@ -61,33 +73,49 @@ Feature: Standard TFHE Workflow
   ----
 
   === 3. Secure Transmission
-  The client serializes the ciphertexts and the `ServerKey` into byte buffers, which are transmitted to the server. The secret `ClientKey` never leaves the client.
+  The client serializes the ciphertexts and the **`CompressedServerKey`** — not the `ServerKey` — into byte buffers.
+  Sending the `CompressedServerKey` allows the server to activate GPU acceleration independently.
+  The secret `ClientKey` never leaves the client.
   [source,java]
   ----
-  DynamicBuffer serializedData = encrypted.serialize();
-  DynamicBuffer serializedServerKey = serverKey.serialize();
+  DynamicBuffer serializedData      = encrypted.serialize();
+  DynamicBuffer serializedServerKey = keys.getCompressedServerKey().serialize();
   ----
 
   === 4. Homomorphic Computation (Server-Side)
-  The server deserializes the server key and ciphertexts. It calls `.use()` on the server key to set it as the active evaluation key, then executes arithmetic, bitwise, or comparison operations.
+  The server deserializes the `CompressedServerKey` and calls `.use()` to activate it.
+  This single call transparently sets both the CPU and GPU server keys based on the JVM configuration.
+  The server then deserializes ciphertexts using a decompressed CPU `ServerKey` as the conformant key,
+  and executes arithmetic, bitwise, or comparison operations.
   [source,java]
   ----
-  ServerKey serverKey = ServerKey.deserialize(serializedServerKey);
-  serverKey.use();
+  CompressedServerKey serverKey = CompressedServerKey.deserialize(serializedServerKey);
+  serverKey.use(); // activates CPU, or CPU+GPU when -Dtfhe.gpu=true
 
-  FheUint32 val1 = FheUint32.deserialize(serializedData1, serverKey);
-  FheUint32 val2 = FheUint32.deserialize(serializedData2, serverKey);
+  ServerKey conformantKey = serverKey.decompress(); // needed for ciphertext deserialization
+  FheUint32 val1 = FheUint32.deserialize(serializedData1, conformantKey);
+  FheUint32 val2 = FheUint32.deserialize(serializedData2, conformantKey);
 
   FheUint32 result = val1.add(val2);
   ----
 
   === 5. Result Decryption (Client-Side)
-  The server serializes the result and returns it to the client. The client deserializes the ciphertext and decrypts it using the private `ClientKey`.
+  The server serializes the result and returns it to the client. The client deserializes the ciphertext
+  using its own `ServerKey` (from `keys.getServerKey()`) and decrypts it using the private `ClientKey`.
   [source,java]
   ----
-  FheUint32 finalResult = FheUint32.deserialize(serializedResult, serverKey);
+  FheUint32 finalResult = FheUint32.deserialize(serializedResult, keys.getServerKey());
   int plainValue = finalResult.decrypt(clientKey);
   ----
+
+  === GPU Acceleration
+  No code changes are required to enable GPU acceleration. Simply set the `tfhe.gpu` system property:
+  [source,bash]
+  ----
+  java -Dtfhe.gpu=true -jar my-app.jar
+  ----
+  Both `KeySet.getCompressedServerKey().use()` (client-side) and `CompressedServerKey.deserialize(...).use()` (server-side)
+  will then automatically activate the CUDA server key in addition to the CPU server key.
 
   === Performance & Multi-Threading Warnings
   While homomorphic evaluations are CPU-intensive, managing native threads correctly is critical to optimize performance and prevent contention.
@@ -100,7 +128,7 @@ Feature: Standard TFHE Workflow
 [source,java]
 ----
 try (TfheThreadingContext threadContext = new TfheThreadingContext(numThreads)) {
-  threadContext.setServerKey(serverKey);
+  threadContext.setServerKey(keys.getServerKey());
   threadContext.run(() -> {
     // Execute parallel operations securely
   });

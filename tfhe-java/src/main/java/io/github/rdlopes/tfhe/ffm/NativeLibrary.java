@@ -15,7 +15,7 @@ public final class NativeLibrary {
     // Utility class
   }
   
-  public static final String NAME = "tfhe";
+  public static final String NAME = Boolean.getBoolean("tfhe.gpu") ? "tfhe-gpu" : "tfhe";
   private static final Logger logger = LoggerFactory.getLogger(NativeLibrary.class);
   private static volatile boolean loaded = false;
 

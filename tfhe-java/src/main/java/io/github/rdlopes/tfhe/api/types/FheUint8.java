@@ -3,11 +3,13 @@ package io.github.rdlopes.tfhe.api.types;
 import io.github.rdlopes.tfhe.utils.Generated;
 
 import io.github.rdlopes.tfhe.api.AbstractFheUnsignedInteger;
+import io.github.rdlopes.tfhe.api.Fhe;
 import io.github.rdlopes.tfhe.api.FheUnsignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
+import io.github.rdlopes.tfhe.api.types.FheBool;
 import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
 import io.github.rdlopes.tfhe.ffm.FheValueKind;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
@@ -17,10 +19,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheUint8 extends AbstractFheUnsignedInteger<Byte, FheUint8, CompressedFheUint8>
     implements FheUnsignedInteger<Byte, FheUint8, CompressedFheUint8> {
-
-  static {
-    FheRegistry.registerFactory(FheUint8.class, FheUint8::new);
-  }
 
   static final FheTypeHandles<Byte> HANDLES = new FheTypeHandles<>(
       FheValueKind.BYTE,
@@ -93,6 +91,11 @@ public final class FheUint8 extends AbstractFheUnsignedInteger<Byte, FheUint8, C
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_uint8,
           TfheHeader::fhe_uint8_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheUint8.class, FheUint8::new);
+    FheRegistry.registerHandles(FheUint8.class, HANDLES);
+  }
+
   FheUint8() {
     super(TfheHeader::fhe_uint8_destroy);
   }
@@ -102,23 +105,23 @@ public final class FheUint8 extends AbstractFheUnsignedInteger<Byte, FheUint8, C
   @Override protected CompressedFheUint8   newCompressed() { return new CompressedFheUint8(); }
 
   public static FheUint8 encrypt(Byte clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheUint8::new);
+    return Fhe.encrypt(clearValue, clientKey, FheUint8.class);
   }
 
   public static FheUint8 encrypt(Byte clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheUint8::new);
+    return Fhe.encrypt(clearValue, publicKey, FheUint8.class);
   }
 
   public static FheUint8 encrypt(Byte clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheUint8::new);
+    return Fhe.encrypt(clearValue, FheUint8.class);
   }
 
   public static FheUint8 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheUint8::new);
+    return Fhe.deserialize(buffer, serverKey, FheUint8.class);
   }
 
   public static FheUint8 ifThenElse(FheBool condition, FheUint8 thenValue, FheUint8 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheUint8::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
 }

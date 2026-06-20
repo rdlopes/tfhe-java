@@ -2,6 +2,7 @@
 @order-04
 @core-api
 @fhe-bool
+@gpu
 Feature: Boolean Logic and Casting
 
   This chapter describes boolean logic operations and type-casting within the high-level integer API of the TFHE-Java library.

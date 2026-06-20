@@ -2,6 +2,7 @@
 @order-05
 @core-api
 @fhe-integers
+@gpu
 Feature: High-Level Integer API (FheInt* and FheUint*)
 
   This chapter describes the high-level integer API of the TFHE-Java library, which supports type-safe homomorphic arithmetic, bitwise, comparison, and conditional operations on signed and unsigned integers of varying bit widths.

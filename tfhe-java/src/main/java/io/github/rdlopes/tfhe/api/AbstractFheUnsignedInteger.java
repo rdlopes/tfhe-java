@@ -21,12 +21,5 @@ public abstract class AbstractFheUnsignedInteger<
     super(destroyRef);
   }
 
-  /// `abs()` is not defined for unsigned integers — they are always ≥ 0.
-///
-/// @throws UnsupportedOperationException always
-  @Override
-  public final T abs() {
-    throw new UnsupportedOperationException(
-        "abs() is not defined for unsigned type " + getClass().getSimpleName());
-  }
+
 }

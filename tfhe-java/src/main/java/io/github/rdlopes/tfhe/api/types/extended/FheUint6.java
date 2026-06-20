@@ -3,6 +3,9 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
+
 import io.github.rdlopes.tfhe.utils.FheRegistry;
 
 import io.github.rdlopes.tfhe.api.*;
@@ -17,10 +20,6 @@ import io.github.rdlopes.tfhe.ffm.TfheHeader;
 @Generated
 public final class FheUint6 extends AbstractFheUnsignedInteger<Byte, FheUint6, CompressedFheUint6>
     implements FheUnsignedInteger<Byte, FheUint6, CompressedFheUint6> {
-
-  static {
-    FheRegistry.registerFactory(FheUint6.class, FheUint6::new);
-  }
 
   static final FheTypeHandles<Byte> HANDLES = new FheTypeHandles<>(
       FheValueKind.BYTE,
@@ -93,6 +92,11 @@ public final class FheUint6 extends AbstractFheUnsignedInteger<Byte, FheUint6, C
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_uint6,
           TfheHeader::fhe_uint6_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheUint6.class, FheUint6::new);
+    FheRegistry.registerHandles(FheUint6.class, HANDLES);
+  }
+
   FheUint6() { super(TfheHeader::fhe_uint6_destroy); }
 
   @Override protected FheTypeHandles<Byte>  handles()      { return HANDLES; }
@@ -100,19 +104,19 @@ public final class FheUint6 extends AbstractFheUnsignedInteger<Byte, FheUint6, C
   @Override protected CompressedFheUint6   newCompressed() { return new CompressedFheUint6(); }
 
   public static FheUint6 encrypt(Byte clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheUint6::new);
+    return Fhe.encrypt(clearValue, clientKey, FheUint6.class);
   }
   public static FheUint6 encrypt(Byte clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheUint6::new);
+    return Fhe.encrypt(clearValue, publicKey, FheUint6.class);
   }
   public static FheUint6 encrypt(Byte clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheUint6::new);
+    return Fhe.encrypt(clearValue, FheUint6.class);
   }
   public static FheUint6 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheUint6::new);
+    return Fhe.deserialize(buffer, serverKey, FheUint6.class);
   }
   public static FheUint6 ifThenElse(FheBool condition, FheUint6 thenValue, FheUint6 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheUint6::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
 }

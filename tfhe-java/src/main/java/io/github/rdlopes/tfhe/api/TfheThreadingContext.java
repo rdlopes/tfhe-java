@@ -15,6 +15,8 @@ import static io.github.rdlopes.tfhe.ffm.TfheHeader.*;
 public class TfheThreadingContext extends NativePointer implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(TfheThreadingContext.class);
 
+  public static final ThreadLocal<Boolean> IN_THREADING_CONTEXT = ThreadLocal.withInitial(() -> false);
+
   public TfheThreadingContext(long numThreads) {
     super(context -> {
       tfhe_threading_context_destroy(context);
@@ -34,11 +36,14 @@ public class TfheThreadingContext extends NativePointer implements AutoCloseable
     try (Arena arena = Arena.ofConfined()) {
       MemorySegment stub = tfhe_threading_context_run$func.allocate(_ -> {
         try {
+          IN_THREADING_CONTEXT.set(true);
           task.run();
           return 0; // Success
         } catch (Exception e) {
           logger.error("Error running task in threading context", e);
           return 1; // Error
+        } finally {
+          IN_THREADING_CONTEXT.remove();
         }
       }, arena);
 

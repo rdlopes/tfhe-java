@@ -3,6 +3,8 @@ package io.github.rdlopes.tfhe.utils;
 import io.github.rdlopes.tfhe.ffm.FheOps;
 import io.github.rdlopes.tfhe.ffm.TfheHeader;
 
+import io.github.rdlopes.tfhe.ffm.FheTypeHandles;
+
 import java.lang.foreign.MemorySegment;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -40,28 +42,24 @@ public final class FheRegistry {
   // ── Sentinels for "no native method found" ────────────────────────────────
   
   /// Sentinel stored when a cast op does not exist for a given type pair.
-  @SuppressWarnings("rawtypes")
   private static final FheOps.UnaryOp CAST_ABSENT =
     (a, b) -> {
       throw new AssertionError("CAST_ABSENT sentinel invoked");
     };
   
   /// Sentinel stored when a list-get op does not exist for a given type.
-  @SuppressWarnings("rawtypes")
   private static final FheOps.ListGetOp LIST_GET_ABSENT =
     (list, idx, result) -> {
       throw new AssertionError("LIST_GET_ABSENT sentinel invoked");
     };
   
   /// Sentinel stored when a try-decrypt op does not exist for a given type.
-  @SuppressWarnings("rawtypes")
   private static final FheOps.TryDecryptPrimitiveOp TRY_DECRYPT_PRIM_ABSENT =
     (enc, out) -> {
       throw new AssertionError("TRY_DECRYPT_PRIM_ABSENT sentinel invoked");
     };
   
   /// Sentinel stored when a wide try-decrypt op does not exist for a given type.
-  @SuppressWarnings("rawtypes")
   private static final FheOps.TryDecryptWideOp TRY_DECRYPT_WIDE_ABSENT =
     (enc, out) -> {
       throw new AssertionError("TRY_DECRYPT_WIDE_ABSENT sentinel invoked");
@@ -71,6 +69,7 @@ public final class FheRegistry {
   
   private static final Map<ClassPair, FheOps.UnaryOp> CAST_OPS = new ConcurrentHashMap<>();
   private static final Map<Class<?>, Supplier<?>> FACTORIES = new ConcurrentHashMap<>();
+  private static final Map<Class<?>, FheTypeHandles<?>> HANDLES = new ConcurrentHashMap<>();
   private static final Map<Class<?>, FheOps.ListGetOp> COMPRESSED_GET_OPS = new ConcurrentHashMap<>();
   private static final Map<Class<?>, FheOps.ListGetOp> COMPACT_GET_OPS = new ConcurrentHashMap<>();
   private static final Map<Class<?>, FheOps.TryDecryptPrimitiveOp> TRY_DECRYPT_PRIM = new ConcurrentHashMap<>();
@@ -97,6 +96,24 @@ public final class FheRegistry {
       // Class might not exist or be generated yet, ignore
     }
     return (Supplier<T>) FACTORIES.get(clazz);
+  }
+
+  // ── Handles registration ──────────────────────────────────────────────────
+
+  @SuppressWarnings("PMD.EmptyCatchBlock")
+  public static <V> void registerHandles(Class<?> clazz, FheTypeHandles<V> handles) {
+    HANDLES.put(clazz, handles);
+  }
+
+  @SuppressWarnings({"unchecked", "PMD.EmptyCatchBlock"})
+  public static <V> FheTypeHandles<V> getHandles(Class<?> clazz) {
+    try {
+      // Ensure the class's static initializer has run (registers the handles).
+      Class.forName(clazz.getName(), true, clazz.getClassLoader());
+    } catch (ClassNotFoundException _) {
+      // Class might not exist or be generated yet, ignore
+    }
+    return (FheTypeHandles<V>) HANDLES.get(clazz);
   }
   
   // ── Cast ops ──────────────────────────────────────────────────────────────

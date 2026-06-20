@@ -17,7 +17,7 @@ public class CommonStepDefinitions {
   public CommonStepDefinitions(TfheTestContext context) {
     this.context = context;
   }
-
+  
   @After
   public void tearDown() {
     logger.trace("Tear down scenario - cleaning up native resources");
@@ -40,7 +40,7 @@ public class CommonStepDefinitions {
   @Given("a ClientKey and a PublicKey are initialized")
   public void aClientKeyAndAPublicKeyAreInitialized() {
     context.keySet = KeySet.builder().build();
-    context.keySet.getServerKey().use();
+    context.keySet.getCompressedServerKey().use();
     context.publicKey = context.track(new PublicKey(context.keySet.getClientKey()));
   }
 }

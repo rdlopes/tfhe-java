@@ -40,7 +40,7 @@ class FheTypesTest {
     clientKey = keySet.getClientKey();
     serverKey = keySet.getServerKey();
     publicKey = new PublicKey(clientKey);
-    serverKey.use();
+    keySet.getCompressedServerKey().use();
   }
 
   private boolean isCoveredType(Class<?> clazz) {
@@ -961,13 +961,10 @@ class FheTypesTest {
         }
       }
       
-      if (signed && enc1 instanceof AbstractFheType<?, ?, ?> fheType) {
-        try (AutoCloseable absResult = (AutoCloseable) fheType.abs()) {
+      if (enc1 instanceof FheSignedInteger<?, ?, ?> signedType) {
+        try (AutoCloseable absResult = (AutoCloseable) signedType.abs()) {
           assertThat(absResult).isNotNull();
         }
-      } else if (!signed && enc1 instanceof AbstractFheType<?, ?, ?> fheType) {
-        assertThatThrownBy(fheType::abs)
-            .isInstanceOf(UnsupportedOperationException.class);
       }
     }
     

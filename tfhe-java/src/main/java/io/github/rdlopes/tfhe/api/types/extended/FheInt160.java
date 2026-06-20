@@ -3,6 +3,9 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
+
 import io.github.rdlopes.tfhe.api.AbstractFheType;
 import io.github.rdlopes.tfhe.api.FheSignedInteger;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
@@ -23,10 +26,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheInt160 extends AbstractFheType<I256, FheInt160, CompressedFheInt160>
   implements FheSignedInteger<I256, FheInt160, CompressedFheInt160> {
-
-  static {
-    FheRegistry.registerFactory(FheInt160.class, FheInt160::new);
-  }
 
   static final FheTypeHandles<I256> HANDLES = new FheTypeHandles<>(
     new FheValueKind.Wide<>(I256::newEmpty),
@@ -117,6 +116,11 @@ public final class FheInt160 extends AbstractFheType<I256, FheInt160, Compressed
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_int160,
           TfheHeader::fhe_int160_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheInt160.class, FheInt160::new);
+    FheRegistry.registerHandles(FheInt160.class, HANDLES);
+  }
+
   FheInt160() { super(TfheHeader::fhe_int160_destroy); }
 
   @Override protected FheTypeHandles<I256> handles()      { return HANDLES; }
@@ -124,19 +128,24 @@ public final class FheInt160 extends AbstractFheType<I256, FheInt160, Compressed
   @Override protected CompressedFheInt160   newCompressed() { return new CompressedFheInt160(); }
 
   public static FheInt160 encrypt(I256 clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheInt160::new);
+    return Fhe.encrypt(clearValue, clientKey, FheInt160.class);
   }
   public static FheInt160 encrypt(I256 clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheInt160::new);
+    return Fhe.encrypt(clearValue, publicKey, FheInt160.class);
   }
   public static FheInt160 encrypt(I256 clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheInt160::new);
+    return Fhe.encrypt(clearValue, FheInt160.class);
   }
   public static FheInt160 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheInt160::new);
+    return Fhe.deserialize(buffer, serverKey, FheInt160.class);
   }
   public static FheInt160 ifThenElse(FheBool condition, FheInt160 thenValue, FheInt160 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheInt160::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
+
+  @Override
+  public FheInt160 abs() {
+    return absImpl();
+  }
 }

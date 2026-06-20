@@ -4,6 +4,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
+import io.github.rdlopes.tfhe.api.keys.CompressedServerKey;
 import io.github.rdlopes.tfhe.api.keys.ConfigBuilder;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.ServerKey;
@@ -17,30 +18,32 @@ public class WorkflowStepDefinitions {
 
   private final TfheTestContext context;
 
-  // Local state for the scenario
+  // Client-side state
   private ClientKey clientKey;
-  private ServerKey serverKey;
-  
+  private ServerKey serverKey;               // CPU key — used as conformant key for deserialization
+
   private FheUint32 clientCiphertext;
   private DynamicBuffer serializedCiphertext;
-  private DynamicBuffer serializedServerKey;
-  
-  private ServerKey serverServerKey;
+  private DynamicBuffer serializedCompressedKey;  // We serialize the CompressedServerKey, not the CPU ServerKey
+
+  // Server-side state
+  private CompressedServerKey serverCompressedKey; // received from client
+  private ServerKey serverDecompressionKey;        // CPU key for ciphertext deserialization
   private FheUint32 serverCiphertext1;
   private FheUint32 serverCiphertext2;
   private FheUint32 serverResult;
   private DynamicBuffer serializedResult;
-  
+
   private FheUint32 clientResultCiphertext;
   private int finalResult;
-  
-  // Compression state
+
+  // Compression workflow state
   private CompressedFheUint32 compressedCiphertext;
   private DynamicBuffer serializedCompressed;
   private CompressedFheUint32 serverCompressed;
   private FheUint32 decompressedCiphertext;
 
-  // Trivial state
+  // Trivial workflow state
   private FheUint32 trivialCiphertext;
 
   public WorkflowStepDefinitions(TfheTestContext context) {
@@ -60,16 +63,16 @@ public class WorkflowStepDefinitions {
                            .enableCompression(io.github.rdlopes.tfhe.api.keys.CompressionParameters.SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128)
                            .build();
     clientKey = context.keySet.getClientKey();
-    serverKey = context.keySet.getServerKey();
-    serverKey.use();
+    serverKey = context.keySet.getServerKey();                 // CPU key for conformant deserialization
+    context.keySet.getCompressedServerKey().use();             // activates CPU + GPU transparently
   }
 
-  @Then("the ClientKey and ServerKey are initialized and ready")
-  public void theClientKeyAndServerKeyAreInitializedAndReady() {
+  @Then("the ClientKey and CompressedServerKey are initialized and ready")
+  public void theClientKeyAndCompressedServerKeyAreInitializedAndReady() {
     assertThat(clientKey).isNotNull();
     assertThat(clientKey.getValue()).isNotNull();
-    assertThat(serverKey).isNotNull();
-    assertThat(serverKey.getValue()).isNotNull();
+    assertThat(context.keySet.getCompressedServerKey()).isNotNull();
+    assertThat(context.keySet.getCompressedServerKey().getValue()).isNotNull();
   }
 
   @When("I encrypt {int} as a FheUint32 ciphertext on the client side")
@@ -84,28 +87,36 @@ public class WorkflowStepDefinitions {
     context.track(compressedCiphertext);
   }
 
+  // The client serializes the ciphertext and the CompressedServerKey (not the CPU ServerKey)
+  // so that the server can activate GPU support if needed.
   @When("I serialize the client data and server key for transmission")
   public void iSerializeTheClientDataAndServerKeyForTransmission() {
     serializedCiphertext = clientCiphertext.serialize();
-    serializedServerKey = serverKey.serialize();
+    serializedCompressedKey = context.keySet.getCompressedServerKey().serialize();
     context.track(serializedCiphertext);
-    context.track(serializedServerKey);
+    context.track(serializedCompressedKey);
   }
 
+  // The server deserializes the CompressedServerKey, activates it (CPU + optional GPU),
+  // then decompresses a CPU ServerKey for use as a conformant key in ciphertext deserialization.
   @When("I deserialize them on the server side")
   public void iDeserializeThemOnTheServerSide() {
-    serverServerKey = ServerKey.deserialize(serializedServerKey);
-    serverCiphertext1 = FheUint32.deserialize(serializedCiphertext, serverServerKey);
-    serverCiphertext2 = FheUint32.deserialize(serializedCiphertext, serverServerKey);
-    
-    context.track(serverServerKey);
+    serverCompressedKey = CompressedServerKey.deserialize(serializedCompressedKey);
+    serverCompressedKey.use();                                          // activates CPU + optional GPU
+    serverDecompressionKey = serverCompressedKey.decompress();          // conformant key for deserialization
+
+    serverCiphertext1 = FheUint32.deserialize(serializedCiphertext, serverDecompressionKey);
+    serverCiphertext2 = FheUint32.deserialize(serializedCiphertext, serverDecompressionKey);
+
+    context.track(serverCompressedKey);
+    context.track(serverDecompressionKey);
     context.track(serverCiphertext1);
     context.track(serverCiphertext2);
   }
 
   @When("I perform homomorphic addition of the value with itself on the server side")
   public void iPerformHomomorphicAdditionOfTheValueWithItselfOnTheServerSide() {
-    serverServerKey.use();
+    // Server key is already active from the deserialization step
     serverResult = serverCiphertext1.add(serverCiphertext2);
     context.track(serverResult);
   }
@@ -162,7 +173,7 @@ public class WorkflowStepDefinitions {
     assertThat(decrypted).isEqualTo(expected);
   }
 
-  // Trivial steps
+  // Trivial ciphertext steps
   @When("I create a trivial FheUint32 ciphertext from public value {int}")
   public void iCreateATrivialFheUint32CiphertextFromPublicValue(int val) {
     trivialCiphertext = FheUint32.encrypt(val);

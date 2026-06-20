@@ -2,6 +2,7 @@
 @order-10
 @section-PredefinedParameters
 @appendix
+@gpu
 Feature: Predefined Parameters and Cryptographic Types
 
   === Predefined Shortint Parameters

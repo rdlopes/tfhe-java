@@ -15,6 +15,7 @@ import java.util.function.Function;
 import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.ffm.NativeCall.*;
 
+
 /// Abstract base class for all FHE encrypted integer types (signed and unsigned).
 ///
 /// Every one of the 13 native call patterns is implemented exactly once here
@@ -49,6 +50,24 @@ public abstract class AbstractFheType<
   /// Allocates a new empty output slot of type `C`.
   protected abstract C newCompressed();
 
+  /// Returns the GPU routing [GpuRouter.Capability] for operations on this type.
+  ///
+  /// - [GpuRouter.Capability#GPU] — the type is supported by the TFHE-rs CUDA backend
+  ///   (all `FheUint*` types).
+  /// - [GpuRouter.Capability#CPU] — the type is CPU-only; it must not be dispatched to the
+  ///   GPU executor thread (all `FheInt*` types, since the TFHE-rs CUDA backend
+  ///   does not implement signed-integer operations).
+  ///
+  /// Subclasses may override this method to enforce CPU-only routing.
+  /// Note that [#compress()] and [#multiplyWithOverflow(T)] are **always** CPU-only
+  /// regardless of what this method returns.
+  protected io.github.rdlopes.tfhe.ffm.GpuRouter.Capability gpuCapability() {
+    // FheSignedInteger types are not supported by the TFHE-rs CUDA backend
+    return (this instanceof FheSignedInteger<?, ?, ?>)
+        ? io.github.rdlopes.tfhe.ffm.GpuRouter.Capability.CPU
+        : io.github.rdlopes.tfhe.ffm.GpuRouter.Capability.GPU;
+  }
+
   // ── Constructor ─────────────────────────────────────────────────────────────
 
   /// @param destroyRef method reference to the type-specific destroy function,
@@ -66,53 +85,53 @@ public abstract class AbstractFheType<
   /// P7 — unary → T result
   private T unary(FheOps.UnaryOp op) {
     T r = newInstance();
-    execute(() -> op.apply(getValue(), r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), r.getAddress()));
     return r;
   }
 
   /// P1 — binary → T result
   private T binary(FheOps.BinaryOp op, T other) {
     T r = newInstance();
-    execute(() -> op.apply(getValue(), other.getValue(), r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), other.getValue(), r.getAddress()));
     return r;
   }
 
   /// P2/P3 — scalar → T result
   private T scalar(FheOps.ScalarOp<V> op, V v) {
     T r = newInstance();
-    execute(() -> op.apply(getValue(), v, r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), v, r.getAddress()));
     return r;
   }
 
   /// P1 → FheBool result
   private FheBool binaryBool(FheOps.BinaryOp op, T other) {
     FheBool r = FheBool.newEmpty();
-    execute(() -> op.apply(getValue(), other.getValue(), r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), other.getValue(), r.getAddress()));
     return r;
   }
 
   /// P2/P3 → FheBool result
   private FheBool scalarBool(FheOps.ScalarOp<V> op, V v) {
     FheBool r = FheBool.newEmpty();
-    execute(() -> op.apply(getValue(), v, r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), v, r.getAddress()));
     return r;
   }
 
   /// P4 — assign binary
   private void assignBinary(FheOps.AssignOp op, T other) {
-    execute(() -> op.apply(getValue(), other.getValue()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), other.getValue()));
   }
 
   /// P5/P6 — assign scalar
   private void assignScalar(FheOps.ScalarAssignOp<V> op, V v) {
-    execute(() -> op.apply(getValue(), v));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), v));
   }
 
   /// P8 — checked binary → [CheckedResult]
   private CheckedResult<T> checked(FheOps.CheckedOp op, T other) {
     T r = newInstance();
     FheBool flag = FheBool.newEmpty();
-    execute(() -> op.apply(getValue(), other.getValue(), r.getAddress(), flag.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), other.getValue(), r.getAddress(), flag.getAddress()));
     return new CheckedResult<>(r, flag);
   }
 
@@ -120,7 +139,7 @@ public abstract class AbstractFheType<
   private QuotientAndRemainder<T> divRem(FheOps.CheckedOp op, T other) {
     T q = newInstance();
     T r = newInstance();
-    execute(() -> op.apply(getValue(), other.getValue(), q.getAddress(), r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), other.getValue(), q.getAddress(), r.getAddress()));
     return new QuotientAndRemainder<>(q, r);
   }
 
@@ -128,7 +147,7 @@ public abstract class AbstractFheType<
   private QuotientAndRemainder<T> scalarDivRem(FheOps.ScalarCheckedOp<V> op, V v) {
     T q = newInstance();
     T r = newInstance();
-    execute(() -> op.apply(getValue(), v, q.getAddress(), r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> op.apply(getValue(), v, q.getAddress(), r.getAddress()));
     return new QuotientAndRemainder<>(q, r);
   }
 
@@ -191,7 +210,15 @@ public abstract class AbstractFheType<
   @Override public final void                 subtractAssign(T o)        { assignBinary(handles().arithmetic().subAssign(), o); }
   @Override public final void                 subtractScalarAssign(V o)  { assignScalar(handles().arithmetic().scalarSubAssign(), o); }
   @Override public final T                    multiply(T o)              { return binary(handles().arithmetic().mul(), o); }
-  @Override public final CheckedResult<T>     multiplyWithOverflow(T o)  { return checked(handles().arithmetic().overflowingMul(), o); }
+  @Override public final CheckedResult<T>     multiplyWithOverflow(T o)  {
+    // overflowing_mul is not supported by the TFHE-rs CUDA backend — always use CPU.
+    T r = newInstance();
+    FheBool flag = FheBool.newEmpty();
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(
+        io.github.rdlopes.tfhe.ffm.GpuRouter.Capability.CPU,
+        () -> handles().arithmetic().overflowingMul().apply(getValue(), o.getValue(), r.getAddress(), flag.getAddress()));
+    return new CheckedResult<>(r, flag);
+  }
   @Override public final T                    multiplyScalar(V o)        { return scalar(handles().arithmetic().scalarMul(), o); }
   @Override public final void                 multiplyAssign(T o)        { assignBinary(handles().arithmetic().mulAssign(), o); }
   @Override public final void                 multiplyScalarAssign(V o)  { assignScalar(handles().arithmetic().scalarMulAssign(), o); }
@@ -215,12 +242,12 @@ public abstract class AbstractFheType<
   public T ilog2() {
     if (this instanceof FheUint32) {
       T r = newInstance();
-      execute(() -> handles().arithmetic().ilog2().apply(getValue(), r.getAddress()));
+      io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> handles().arithmetic().ilog2().apply(getValue(), r.getAddress()));
       return r;
     }
 
     try (FheUint32 u32 = FheRegistry.getFactory(FheUint32.class).get()) {
-      execute(() -> handles().arithmetic().ilog2().apply(getValue(), u32.getAddress()));
+      io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> handles().arithmetic().ilog2().apply(getValue(), u32.getAddress()));
       return u32.castInto((Class<T>) this.getClass());
     }
   }
@@ -232,21 +259,20 @@ public abstract class AbstractFheType<
     if (this instanceof FheUint32) {
       T r = newInstance();
       FheBool flag = FheBool.newEmpty();
-      execute(() -> handles().arithmetic().checkedIlog2().apply(getValue(), r.getAddress(), flag.getAddress()));
+      io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> handles().arithmetic().checkedIlog2().apply(getValue(), r.getAddress(), flag.getAddress()));
       return new CheckedResult<>(r, flag);
     }
 
     FheBool flag = FheBool.newEmpty();
     try (FheUint32 u32 = FheRegistry.getFactory(FheUint32.class).get()) {
-      execute(() -> handles().arithmetic().checkedIlog2().apply(getValue(), u32.getAddress(), flag.getAddress()));
+      io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> handles().arithmetic().checkedIlog2().apply(getValue(), u32.getAddress(), flag.getAddress()));
       T r = u32.castInto((Class<T>) this.getClass());
       return new CheckedResult<>(r, flag);
     }
   }
   
-  /// `abs()` — only valid for signed types; exposed via [FheSignedInteger].
-  /// Overridden in [AbstractFheUnsignedInteger] to throw [UnsupportedOperationException].
-  public T abs() {
+  /// `absImpl()` — only valid for signed types; exposed via [FheSignedInteger].
+  protected final T absImpl() {
     return unary(handles().arithmetic().abs());
   }
 
@@ -281,8 +307,11 @@ public abstract class AbstractFheType<
 
   @Override
   public final C compress() {
+    // compress() is not supported by the TFHE-rs CUDA backend — always use CPU.
     C r = newCompressed();
-    execute(() -> handles().lifecycle().compress().apply(getValue(), r.getAddress()));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(
+        io.github.rdlopes.tfhe.ffm.GpuRouter.Capability.CPU,
+        () -> handles().lifecycle().compress().apply(getValue(), r.getAddress()));
     return r;
   }
 
@@ -383,14 +412,14 @@ public abstract class AbstractFheType<
   /// Returns a new random encrypted value using the given 128-bit seed.
   public final T random(long seedLow, long seedHigh) {
     T r = newInstance();
-    execute(() -> handles().misc().random().apply(r.getAddress(), seedLow, seedHigh));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> handles().misc().random().apply(r.getAddress(), seedLow, seedHigh));
     return r;
   }
   
   /// Returns a new random encrypted value bounded to `bitsCount` significant bits.
   public final T random(long seedLow, long seedHigh, long bitsCount) {
     T r = newInstance();
-    execute(() -> handles().misc().randomBounded().apply(r.getAddress(), seedLow, seedHigh, bitsCount));
+    io.github.rdlopes.tfhe.ffm.GpuRouter.execute(gpuCapability(), () -> handles().misc().randomBounded().apply(r.getAddress(), seedLow, seedHigh, bitsCount));
     return r;
   }
 
@@ -399,8 +428,8 @@ public abstract class AbstractFheType<
   // ══════════════════════════════════════════════════════════════════════════
 
   /// Encrypt a value with a client key.
-/// Dispatches on [FheValueKind] to handle primitive vs. wide types.
-  protected static <V, T extends AbstractFheType<V, T, ?>> T encryptClientKey(
+  /// Dispatches on [FheValueKind] to handle primitive vs. wide types.
+  static <V, T extends AbstractFheType<V, T, ?>> T encryptClientKey(
       FheTypeHandles<V> h, V clear, ClientKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
@@ -414,7 +443,7 @@ public abstract class AbstractFheType<
   }
 
   /// Encrypt a value with a public key.
-  protected static <V, T extends AbstractFheType<V, T, ?>> T encryptPublicKey(
+  static <V, T extends AbstractFheType<V, T, ?>> T encryptPublicKey(
       FheTypeHandles<V> h, V clear, PublicKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
@@ -428,7 +457,7 @@ public abstract class AbstractFheType<
   }
 
   /// Encrypt a value trivially (no key).
-  protected static <V, T extends AbstractFheType<V, T, ?>> T encryptTrivial(
+  static <V, T extends AbstractFheType<V, T, ?>> T encryptTrivial(
       FheTypeHandles<V> h, V clear, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> switch (h.valueKind()) {
@@ -442,7 +471,7 @@ public abstract class AbstractFheType<
   }
 
   /// Deserialize from a [DynamicBuffer].
-  protected static <V, T extends AbstractFheType<V, T, ?>> T deserialize(
+  static <V, T extends AbstractFheType<V, T, ?>> T deserialize(
       FheTypeHandles<V> h, DynamicBuffer buf, ServerKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
     execute(() -> h.lifecycle()
@@ -451,12 +480,15 @@ public abstract class AbstractFheType<
     return r;
   }
 
-  /// Evaluate a homomorphic if-then-else.
-  protected static <V, T extends AbstractFheType<V, T, ?>> T ifThenElse(
-      FheTypeHandles<V> h, FheBool condition, T thenVal, T elseVal, java.util.function.Supplier<T> factory) {
-    T r = factory.get();
-    execute(() -> h.misc().ifThenElse().apply(
-        condition.getValue(), thenVal.getValue(), elseVal.getValue(), r.getAddress()));
+  // ══════════════════════════════════════════════════════════════════════════
+  // FheConditional
+  // ══════════════════════════════════════════════════════════════════════════
+
+  @Override
+  public final T ifThenElse(FheBool condition, T elseValue) {
+    T r = newInstance();
+    execute(() -> handles().misc().ifThenElse().apply(
+        condition.getValue(), getValue(), elseValue.getValue(), r.getAddress()));
     return r;
   }
 

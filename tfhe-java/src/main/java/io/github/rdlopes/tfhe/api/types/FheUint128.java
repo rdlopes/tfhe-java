@@ -1,5 +1,7 @@
 package io.github.rdlopes.tfhe.api.types;
 
+import io.github.rdlopes.tfhe.api.Fhe;
+import io.github.rdlopes.tfhe.api.types.FheBool;
 import io.github.rdlopes.tfhe.utils.Generated;
 
 import io.github.rdlopes.tfhe.api.AbstractFheType;
@@ -23,10 +25,6 @@ import io.github.rdlopes.tfhe.utils.FheRegistry;
 @Generated
 public final class FheUint128 extends AbstractFheUnsignedInteger<U128, FheUint128, CompressedFheUint128>
     implements FheUnsignedInteger<U128, FheUint128, CompressedFheUint128> {
-
-  static {
-    FheRegistry.registerFactory(FheUint128.class, FheUint128::new);
-  }
 
   static final FheTypeHandles<U128> HANDLES = new FheTypeHandles<>(
     new FheValueKind.Wide<>(U128::newEmpty),
@@ -117,6 +115,11 @@ public final class FheUint128 extends AbstractFheUnsignedInteger<U128, FheUint12
           TfheHeader::generate_oblivious_pseudo_random_bounded_fhe_uint128,
           TfheHeader::fhe_uint128_if_then_else));
 
+  static {
+    FheRegistry.registerFactory(FheUint128.class, FheUint128::new);
+    FheRegistry.registerHandles(FheUint128.class, HANDLES);
+  }
+
   FheUint128() { super(TfheHeader::fhe_uint128_destroy); }
 
   @Override protected FheTypeHandles<U128> handles()      { return HANDLES; }
@@ -124,19 +127,19 @@ public final class FheUint128 extends AbstractFheUnsignedInteger<U128, FheUint12
   @Override protected CompressedFheUint128   newCompressed() { return new CompressedFheUint128(); }
 
   public static FheUint128 encrypt(U128 clearValue, ClientKey clientKey) {
-    return encryptClientKey(HANDLES, clearValue, clientKey, FheUint128::new);
+    return Fhe.encrypt(clearValue, clientKey, FheUint128.class);
   }
   public static FheUint128 encrypt(U128 clearValue, PublicKey publicKey) {
-    return encryptPublicKey(HANDLES, clearValue, publicKey, FheUint128::new);
+    return Fhe.encrypt(clearValue, publicKey, FheUint128.class);
   }
   public static FheUint128 encrypt(U128 clearValue) {
-    return encryptTrivial(HANDLES, clearValue, FheUint128::new);
+    return Fhe.encrypt(clearValue, FheUint128.class);
   }
   public static FheUint128 deserialize(DynamicBuffer buffer, ServerKey serverKey) {
-    return deserialize(HANDLES, buffer, serverKey, FheUint128::new);
+    return Fhe.deserialize(buffer, serverKey, FheUint128.class);
   }
   public static FheUint128 ifThenElse(FheBool condition, FheUint128 thenValue, FheUint128 elseValue) {
-    return ifThenElse(HANDLES, condition, thenValue, elseValue, FheUint128::new);
+    return thenValue.ifThenElse(condition, elseValue);
   }
 
 }

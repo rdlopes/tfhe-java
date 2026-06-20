@@ -2,6 +2,7 @@
 @order-12
 @section-NativeCompilation
 @appendix
+@gpu
 Feature: Native Compilation and Binding Generation
 
   === Dynamic C-API Compilation (Rust)
