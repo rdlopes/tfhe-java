@@ -43,10 +43,6 @@
     <sonar.cpd.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.cpd.exclusions>
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-    <!-- Dependency versions not managed by maven-root-pom BOMs -->
-    <commons-io.version>2.22.0</commons-io.version>
-    <!-- JMH version -->
-    <jmh.version>1.37</jmh.version>
     <surefire.skip>false</surefire.skip>
   </properties>
 
