@@ -12,6 +12,10 @@
   <name>TFHE Java :: Core</name>
   <description>TFHE FFM wrapper — low-level bindings to the native tfhe-rs library</description>
 
+  <properties>
+    <native.basedir>${project.basedir}/../.native</native.basedir>
+  </properties>
+
   <dependencies>
     <!-- Main scope -->
     <dependency>
@@ -66,6 +70,7 @@
             <configuration>
               <sources>
                 <source>${project.build.directory}/generated-sources/tfhe-rs</source>
+                <source>${native.basedir}/bindings</source>
               </sources>
             </configuration>
           </execution>

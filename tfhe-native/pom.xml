@@ -12,7 +12,17 @@
   <name>TFHE Java :: Native Libraries</name>
   <description>Native tfhe-rs libraries packaged as JAR resources</description>
 
+  <properties>
+    <native.basedir>${project.basedir}/../.native</native.basedir>
+  </properties>
+
   <build>
+    <resources>
+      <resource>
+        <targetPath>native</targetPath>
+        <directory>${native.basedir}/libs</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
