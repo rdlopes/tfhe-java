@@ -35,15 +35,13 @@
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <!-- Sonar configuration -->
     <sonar.organization>rdlopes</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.projectKey>io.github.rdlopes:tfhe-java</sonar.projectKey>
     <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
     <sonar.scm.disabled>true</sonar.scm.disabled>
-    <sonar.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.exclusions>
-    <sonar.cpd.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.cpd.exclusions>
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
     <surefire.skip>false</surefire.skip>
+    <jmh.version>1.37</jmh.version>
   </properties>
 
   <dependencyManagement>
@@ -55,6 +53,18 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>${jmh.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>${jmh.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -62,26 +72,11 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <configuration>
-            <excludes>
-              <exclude>io/github/rdlopes/tfhe/core/ffm/**/*</exclude>
-              <exclude>**/types/extended/**/*</exclude>
-              <exclude>**/values/extended/**/*</exclude>
-            </excludes>
-          </configuration>
-        </plugin>
-        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <skip>${surefire.skip}</skip>
           </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
         </plugin>
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
@@ -109,6 +104,15 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <annotationProcessorPaths>
+              <path>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+              </path>
+            </annotationProcessorPaths>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

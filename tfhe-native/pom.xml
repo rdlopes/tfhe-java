@@ -13,7 +13,7 @@
   <description>Native tfhe-rs libraries packaged as JAR resources</description>
 
   <properties>
-    <native.basedir>${project.basedir}/../.native</native.basedir>
+    <native.basedir>${project.basedir}/../native-bundle</native.basedir>
   </properties>
 
   <build>

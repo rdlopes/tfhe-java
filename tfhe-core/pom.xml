@@ -13,11 +13,13 @@
   <description>TFHE FFM wrapper — low-level bindings to the native tfhe-rs library</description>
 
   <properties>
-    <native.basedir>${project.basedir}/../.native</native.basedir>
+    <native.basedir>${project.basedir}/../native-bundle</native.basedir>
+    <tfhe.sources.dir>${native.basedir}/bindings</tfhe.sources.dir>
+    <sonar.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/build/**/*</sonar.exclusions>
+    <sonar.cpd.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/build/**/*</sonar.cpd.exclusions>
   </properties>
 
   <dependencies>
-    <!-- Main scope -->
     <dependency>
       <groupId>io.github.rdlopes</groupId>
       <artifactId>tfhe-native</artifactId>
@@ -43,7 +45,7 @@
       <artifactId>logback-classic</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!-- Test scope -->
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -56,7 +58,15 @@
 
   <build>
     <plugins>
-      <!-- 1. Generated sources from jextract -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>io/github/rdlopes/tfhe/core/ffm/**/*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -69,24 +79,12 @@
             <phase>generate-sources</phase>
             <configuration>
               <sources>
-                <source>${project.build.directory}/generated-sources/tfhe-rs</source>
-                <source>${native.basedir}/bindings</source>
+                <source>${tfhe.sources.dir}</source>
               </sources>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      <!-- 2. Compilation -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <!-- 3. Tests unitaires -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <!-- 4. Javadoc -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -97,6 +95,9 @@
   <profiles>
     <profile>
       <id>local</id>
+      <properties>
+        <tfhe.sources.dir>${project.build.directory}/generated-sources/tfhe-rs</tfhe.sources.dir>
+      </properties>
       <build>
         <plugins>
           <plugin>

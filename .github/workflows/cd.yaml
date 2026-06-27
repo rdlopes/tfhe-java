@@ -45,19 +45,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Install Native Bundle
-        run: |
-          mkdir -p .native/libs
-          cp -r native-bundle/libs/* .native/libs/
-          mkdir -p .native/bindings
-          cp -r native-bundle/bindings/* .native/bindings/
-
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
       - name: Release With Maven
         run: |
-          ./mvnw --batch-mode release:prepare release:perform -Darguments="-Dnative.basedir=${{github.workspace}}/.native"
+          ./mvnw --batch-mode release:prepare release:perform -Darguments="-Dnative.basedir=${{github.workspace}}/native-bundle"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

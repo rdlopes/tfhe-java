@@ -12,8 +12,12 @@
   <name>TFHE Java :: API</name>
   <description>Homomorphic encryption operations — types, keys, and computations</description>
 
+  <properties>
+    <sonar.exclusions>**/types/extended/**/*,**/values/extended/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/build/**/*</sonar.exclusions>
+    <sonar.cpd.exclusions>**/types/extended/**/*,**/values/extended/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/build/**/*</sonar.cpd.exclusions>
+  </properties>
+
   <dependencies>
-    <!-- Main scope -->
     <dependency>
       <groupId>io.github.rdlopes</groupId>
       <artifactId>tfhe-core</artifactId>
@@ -31,7 +35,6 @@
       <artifactId>logback-classic</artifactId>
       <scope>runtime</scope>
     </dependency>
-    <!-- Test scope -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
@@ -72,46 +75,28 @@
 
   <build>
     <plugins>
-      <!-- 1. JaCoCo — coverage des tests API -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-      <!-- 2. Surefire — tests unitaires -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <!-- 3. Failsafe — tests d'intégration (Cucumber BDD) -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
       </plugin>
-      <!-- 4. Sonar — analyse de qualité + coverage -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
       </plugin>
-      <!-- 5. Cukedoctor — documentation vivante BDD -->
       <plugin>
         <groupId>com.github.cukedoctor</groupId>
         <artifactId>cukedoctor-maven-plugin</artifactId>
       </plugin>
-      <!-- 6. Compiler — avec JMH annotation processor -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
         <configuration>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.openjdk.jmh</groupId>
-              <artifactId>jmh-generator-annprocess</artifactId>
-              <version>${jmh.version}</version>
-            </path>
-          </annotationProcessorPaths>
+          <excludes>
+            <exclude>**/types/extended/**/*</exclude>
+            <exclude>**/values/extended/**/*</exclude>
+          </excludes>
         </configuration>
       </plugin>
-      <!-- 7. Javadoc -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
