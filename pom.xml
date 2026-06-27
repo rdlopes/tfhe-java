@@ -47,6 +47,7 @@
     <commons-io.version>2.22.0</commons-io.version>
     <!-- JMH version -->
     <jmh.version>1.37</jmh.version>
+    <surefire.skip>false</surefire.skip>
   </properties>
 
   <dependencyManagement>
@@ -78,6 +79,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+            <skip>${surefire.skip}</skip>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
