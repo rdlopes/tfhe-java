@@ -7,7 +7,7 @@
     <version>2.3.0</version>
   </parent>
 
-  <artifactId>tfhe-java-parent</artifactId>
+  <artifactId>tfhe-java</artifactId>
   <version>0.17.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>TFHE Java</name>
@@ -15,7 +15,10 @@
   <url>https://github.com/rdlopes/tfhe-java</url>
 
   <modules>
-    <module>tfhe-java</module>
+    <module>tfhe-bom</module>
+    <module>tfhe-native</module>
+    <module>tfhe-core</module>
+    <module>tfhe-api</module>
     <module>examples</module>
   </modules>
 
@@ -27,18 +30,6 @@
   </scm>
 
   <properties>
-    <!-- Native build paths (resolved relative to reactor root) -->
-    <native.basedir>${maven.multiModuleProjectDirectory}/.native</native.basedir>
-    <native-libs.basedir>${native.basedir}/libs</native-libs.basedir>
-    <native-bindings.basedir>${native.basedir}/bindings</native-bindings.basedir>
-    <native-libs.output.directory>${project.build.outputDirectory}/native</native-libs.output.directory>
-    <generated.output.directory>${project.build.directory}/generated-sources</generated.output.directory>
-    <generated.test.output.directory>${project.build.directory}/generated-test-sources</generated.test.output.directory>
-    <native-bindings.output.directory>${generated.output.directory}/tfhe-rs</native-bindings.output.directory>
-    <tfhe-rs.basedir>${native.basedir}/tfhe-rs</tfhe-rs.basedir>
-    <rust-backtrace>0</rust-backtrace>
-    <!--suppress XmlUnresolvedReference -->
-    <java.library.path>${native-libs.basedir}/${os.detected.name}/${os.detected.arch}</java.library.path>
     <!-- Plugin versions -->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
@@ -48,8 +39,8 @@
     <sonar.projectKey>io.github.rdlopes:tfhe-java</sonar.projectKey>
     <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
     <sonar.scm.disabled>true</sonar.scm.disabled>
-    <sonar.exclusions>**/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.exclusions>
-    <sonar.cpd.exclusions>**/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.cpd.exclusions>
+    <sonar.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.exclusions>
+    <sonar.cpd.exclusions>**/core/ffm/**/*,**/target/generated-sources/**/*,**/generated-sources/**/*,**/types/extended/**/*,**/values/extended/**/*,**/build/**/*</sonar.cpd.exclusions>
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
     <!-- Dependency versions not managed by maven-root-pom BOMs -->
@@ -60,30 +51,12 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- commons-io: absent from all grand-parent BOMs (assertj-bom, cucumber-bom, junit-bom, spring-boot-dependencies) -->
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${commons-io.version}</version>
-      </dependency>
-      <!-- Core module self-reference -->
       <dependency>
         <groupId>io.github.rdlopes</groupId>
-        <artifactId>tfhe-java</artifactId>
+        <artifactId>tfhe-bom</artifactId>
         <version>${project.version}</version>
-      </dependency>
-      <!-- JMH: absent from all grand-parent BOMs -->
-      <dependency>
-        <groupId>org.openjdk.jmh</groupId>
-        <artifactId>jmh-core</artifactId>
-        <version>${jmh.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.openjdk.jmh</groupId>
-        <artifactId>jmh-generator-annprocess</artifactId>
-        <version>${jmh.version}</version>
-        <scope>test</scope>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -96,7 +69,7 @@
           <artifactId>jacoco-maven-plugin</artifactId>
           <configuration>
             <excludes>
-              <exclude>io/github/rdlopes/tfhe/ffm/**/*</exclude>
+              <exclude>io/github/rdlopes/tfhe/core/ffm/**/*</exclude>
               <exclude>**/types/extended/**/*</exclude>
               <exclude>**/values/extended/**/*</exclude>
             </excludes>
@@ -105,22 +78,10 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <environmentVariables>
-              <RUST_BACKTRACE>${rust-backtrace}</RUST_BACKTRACE>
-            </environmentVariables>
-            <argLine>@{surefireArgLine} -Djava.library.path=${java.library.path}</argLine>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <configuration>
-            <environmentVariables>
-              <RUST_BACKTRACE>${rust-backtrace}</RUST_BACKTRACE>
-            </environmentVariables>
-            <argLine>@{failsafeArgLine} -Djava.library.path=${java.library.path}</argLine>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
@@ -147,100 +108,13 @@
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>copy-native-bindings</id>
-              <goals>
-                <goal>copy-resources</goal>
-              </goals>
-              <phase>generate-sources</phase>
-              <configuration>
-                <outputDirectory>${native-bindings.output.directory}</outputDirectory>
-                <resources>
-                  <resource>
-                    <directory>${native-bindings.basedir}</directory>
-                    <includes>
-                      <include>**/*.java</include>
-                    </includes>
-                  </resource>
-                </resources>
-              </configuration>
-            </execution>
-            <execution>
-              <id>copy-native-libs</id>
-              <goals>
-                <goal>copy-resources</goal>
-              </goals>
-              <phase>generate-resources</phase>
-              <configuration>
-                <outputDirectory>${native-libs.output.directory}</outputDirectory>
-                <resources>
-                  <resource>
-                    <directory>${native-libs.basedir}</directory>
-                    <includes>
-                      <include>LICENSE</include>
-                      <include>**/*.h</include>
-                      <include>**/*.dylib</include>
-                      <include>**/*.so</include>
-                      <include>**/*.dll</include>
-                    </includes>
-                  </resource>
-                </resources>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>add-generated-classes</id>
-              <goals>
-                <goal>add-source</goal>
-              </goals>
-              <phase>process-resources</phase>
-              <configuration>
-                <sources>
-                  <source>${native-bindings.output.directory}</source>
-                  <source>${generated.output.directory}/tfhe-java</source>
-                </sources>
-              </configuration>
-            </execution>
-            <execution>
-              <id>add-generated-test-classes</id>
-              <goals>
-                <goal>add-test-source</goal>
-              </goals>
-              <phase>process-resources</phase>
-              <configuration>
-                <sources>
-                  <source>${generated.test.output.directory}/tfhe-java</source>
-                </sources>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <compilerArgs>--enable-preview</compilerArgs>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>org.openjdk.jmh</groupId>
-                <artifactId>jmh-generator-annprocess</artifactId>
-                <version>${jmh.version}</version>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <configuration>
-            <excludePackageNames>io.github.rdlopes.tfhe.ffm</excludePackageNames>
+            <excludePackageNames>io.github.rdlopes.tfhe.core.ffm</excludePackageNames>
             <doclint>none</doclint>
           </configuration>
         </plugin>
@@ -254,28 +128,5 @@
       </extension>
     </extensions>
   </build>
-
-  <profiles>
-    <profile>
-      <id>local</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-clean-plugin</artifactId>
-            <configuration>
-              <excludeDefaultDirectories>false</excludeDefaultDirectories>
-              <force>true</force>
-              <filesets>
-                <fileset>
-                  <directory>${native.basedir}</directory>
-                </fileset>
-              </filesets>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
 </project>

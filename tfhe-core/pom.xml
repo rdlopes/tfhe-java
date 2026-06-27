@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.github.rdlopes</groupId>
+    <artifactId>tfhe-java</artifactId>
+    <version>0.17.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>tfhe-core</artifactId>
+  <packaging>jar</packaging>
+  <name>TFHE Java :: Core</name>
+  <description>TFHE FFM wrapper — low-level bindings to the native tfhe-rs library</description>
+
+  <dependencies>
+    <!-- Main scope -->
+    <dependency>
+      <groupId>io.github.rdlopes</groupId>
+      <artifactId>tfhe-native</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jspecify</groupId>
+      <artifactId>jspecify</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Test scope -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- 1. Generated sources from jextract -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-generated-sources</id>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/tfhe-rs</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- 2. Compilation -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <!-- 3. Tests unitaires -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <!-- 4. Javadoc -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>local</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>generate-bindings</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <workingDirectory>${project.basedir}</workingDirectory>
+                  <executable>java</executable>
+                  <arguments>
+                    <argument>script/GenerateBindings.java</argument>
+                    <argument>--output</argument>
+                    <argument>${project.build.directory}/generated-sources/tfhe-rs</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

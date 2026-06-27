@@ -8,8 +8,8 @@ import io.github.rdlopes.tfhe.api.keys.ConfigBuilder;
 import io.github.rdlopes.tfhe.api.keys.KeySet;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 
-import static io.github.rdlopes.tfhe.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.ffm.TfheHeader.use_dedicated_compact_public_key_parameters;
+import static io.github.rdlopes.tfhe.core.ffm.NativeCall.execute;
+import static io.github.rdlopes.tfhe.core.ffm.TfheHeader.use_dedicated_compact_public_key_parameters;
 
 /// Performs the one-time cryptographic setup for the election:
 /// generates keys, creates the Common Reference String (CRS),

@@ -34,9 +34,16 @@ jobs:
         run: |
           RUN_ID=$(gh run list --workflow "Native Libraries Bundle" --status success --limit 1 --json databaseId --jq ".[0].databaseId")
           echo "Latest successful run ID: $RUN_ID"
-          gh run download $RUN_ID -n native-bundle -D .native
+          gh run download $RUN_ID -n native-bundle -D native-bundle
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Install Native Bundle
+        run: |
+          mkdir -p tfhe-native/target/classes/native
+          cp -r native-bundle/libs/* tfhe-native/target/classes/native/
+          mkdir -p tfhe-core/target/generated-sources/tfhe-rs
+          cp -r native-bundle/bindings/* tfhe-core/target/generated-sources/tfhe-rs/
 
       - name: Compile with Maven
         run: ./mvnw package
@@ -64,9 +71,16 @@ jobs:
         run: |
           RUN_ID=$(gh run list --workflow "Native Libraries Bundle" --status success --limit 1 --json databaseId --jq ".[0].databaseId")
           echo "Latest successful run ID: $RUN_ID"
-          gh run download $RUN_ID -n native-bundle -D .native
+          gh run download $RUN_ID -n native-bundle -D native-bundle
         env:
           GH_TOKEN: ${{ github.token }}
+
+      - name: Install Native Bundle
+        run: |
+          mkdir -p tfhe-native/target/classes/native
+          cp -r native-bundle/libs/* tfhe-native/target/classes/native/
+          mkdir -p tfhe-core/target/generated-sources/tfhe-rs
+          cp -r native-bundle/bindings/* tfhe-core/target/generated-sources/tfhe-rs/
 
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
@@ -78,6 +92,6 @@ jobs:
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: 'tfhe-java/target/cukedoctor'
+          path: 'tfhe-api/target/cukedoctor'
       - id: deployment
         uses: actions/deploy-pages@v5

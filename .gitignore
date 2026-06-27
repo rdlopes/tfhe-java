@@ -13,13 +13,7 @@ pom.xml.versionsBackup
 .junie/
 *.iml
 
-### Jextract CICD ###
-jextract-22/
-jextract.tar.gz
-.jextract/
 
-### Native libs ###
-.native
 
 ### VS Code ###
 .vscode/

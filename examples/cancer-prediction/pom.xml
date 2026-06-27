@@ -20,7 +20,7 @@
   <dependencies>
     <dependency>
       <groupId>io.github.rdlopes</groupId>
-      <artifactId>tfhe-java</artifactId>
+      <artifactId>tfhe-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

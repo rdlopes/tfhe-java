@@ -38,14 +38,30 @@ This library enables developers to perform computations on encrypted data withou
 
 == Installation
 
-Add the following dependency to your `pom.xml`:
+First, import the Bill of Materials (BOM) in your `pom.xml`'s `<dependencyManagement>` section:
+
+[source,xml]
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>io.github.rdlopes</groupId>
+            <artifactId>tfhe-bom</artifactId>
+            <version>[VERSION]</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
+Then, add the `tfhe-api` dependency to your `<dependencies>`:
 
 [source,xml]
 ----
 <dependency>
     <groupId>io.github.rdlopes</groupId>
-    <artifactId>tfhe-java</artifactId>
-    <version>[VERSION]</version>
+    <artifactId>tfhe-api</artifactId>
 </dependency>
 ----
 
@@ -69,6 +85,19 @@ The `local` profile performs the following steps in `initialize` phase:
 1. **TFHE-rs download**: Downloads the tfhe-rs source from GitHub
 2. **Rust compilation**: Compiles the TFHE Rust library with C API
 3. **Binding generation**: Uses jextract to generate Java bindings from C headers
+
+=== Project Structure
+
+The project is organized as a multi-module Maven build:
+
+* **`tfhe-bom`**: Bill of Materials — centralizes version management for all modules
+* **`tfhe-native`**: Pre-compiled native tfhe-rs libraries packaged as JAR resources
+* **`tfhe-core`**: FFM wrapper — low-level Java bindings to the native library via the Foreign Function & Memory API
+* **`tfhe-api`**: Homomorphic encryption API — types, keys, operations, and computations
+* **`examples/`**: Showcase applications (cancer prediction, perceptron training, voting flow)
+
+The dependency chain is: `tfhe-api` → `tfhe-core` → `tfhe-native`.
+End users should depend on `tfhe-api`, which transitively provides all required modules.
 
 === Performance Tips
 
