@@ -1,7 +1,6 @@
 package io.github.rdlopes.tfhe.core.ffm;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,21 +76,22 @@ public final class NativeLibrary {
   private static String osName() {
     logger.trace("osName");
 
-    if (SystemUtils.IS_OS_MAC) {
+    String name = System.getProperty("os.name").toLowerCase();
+    if (name.contains("mac")) {
       return "osx";
-    } else if (SystemUtils.IS_OS_WINDOWS) {
+    } else if (name.contains("win")) {
       return "windows";
-    } else if (SystemUtils.IS_OS_LINUX) {
+    } else if (name.contains("nux")) {
       return "linux";
     }
     
-    throw new UnsupportedOperationException("Unsupported operating system: " + SystemUtils.OS_NAME);
+    throw new UnsupportedOperationException("Unsupported operating system: " + name);
   }
 
   private static String osArch() {
     logger.trace("osArch");
 
-    String osArch = SystemUtils.OS_ARCH.toLowerCase();
+    String osArch = System.getProperty("os.arch").toLowerCase();
     if (osArch.contains("aarch64") || osArch.contains("arm64")) {
       return "aarch_64";
     } else if (osArch.contains("amd64") || osArch.contains("x86_64")) {

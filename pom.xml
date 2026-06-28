@@ -35,7 +35,6 @@
     <native.bindings>${native.basedir}/bindings</native.bindings>
     <native.libs>${native.basedir}/libs</native.libs>
     <!-- Plugin versions -->
-    <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <!-- Sonar configuration -->
     <sonar.organization>rdlopes</sonar.organization>
@@ -130,13 +129,6 @@
         </configuration>
       </plugin>
     </plugins>
-    <extensions>
-      <extension>
-        <groupId>kr.motd.maven</groupId>
-        <artifactId>os-maven-plugin</artifactId>
-        <version>${os-maven-plugin.version}</version>
-      </extension>
-    </extensions>
   </build>
 
   <profiles>

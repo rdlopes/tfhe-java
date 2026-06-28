@@ -98,26 +98,29 @@ public class InitializeNativeLibraries {
                 "-p", "tfhe");
     }
 
+    // --- Platform detection ---
+
+    private static String normalizedOs() {
+        String name = System.getProperty("os.name").toLowerCase();
+        if (name.contains("mac")) return "osx";
+        if (name.contains("win")) return "windows";
+        if (name.contains("nux")) return "linux";
+        throw new UnsupportedOperationException("Unsupported OS: " + name);
+    }
+
+    private static String normalizedArch() {
+        String arch = System.getProperty("os.arch").toLowerCase();
+        if (arch.contains("aarch64") || arch.contains("arm64")) return "aarch_64";
+        if (arch.contains("amd64") || arch.contains("x86_64")) return "x86_64";
+        throw new UnsupportedOperationException("Unsupported architecture: " + arch);
+    }
+
     // --- Copy libraries ---
 
     private static void copyLibraries() throws Exception {
         LOG.log(System.Logger.Level.INFO, "Copying native libraries...");
 
-        String osName = System.getProperty("os.name").toLowerCase();
-        String osArch = System.getProperty("os.arch").toLowerCase();
-
-        String targetOs;
-        if (osName.contains("win")) targetOs = "windows";
-        else if (osName.contains("mac")) targetOs = "osx";
-        else if (osName.contains("nux")) targetOs = "linux";
-        else throw new UnsupportedOperationException("Unsupported OS: " + osName);
-
-        String targetArch;
-        if (osArch.contains("aarch64") || osArch.contains("arm64")) targetArch = "aarch_64";
-        else if (osArch.contains("amd64") || osArch.contains("x86_64")) targetArch = "x86_64";
-        else throw new UnsupportedOperationException("Unsupported arch: " + osArch);
-
-        Path destDir = LIBS_DIR.resolve(targetOs).resolve(targetArch);
+        Path destDir = LIBS_DIR.resolve(normalizedOs()).resolve(normalizedArch());
         Files.createDirectories(destDir);
 
         Path releaseDir = TFHE_RS_DIR.resolve("target").resolve("release");
@@ -152,12 +155,7 @@ public class InitializeNativeLibraries {
     private static void generateBindings() throws Exception {
         LOG.log(System.Logger.Level.INFO, "Generating Java FFM bindings...");
 
-        String osName = System.getProperty("os.name").toLowerCase();
-        String osArch = System.getProperty("os.arch").toLowerCase();
-        String targetOs = osName.contains("win") ? "windows" : (osName.contains("mac") ? "osx" : "linux");
-        String targetArch = (osArch.contains("aarch64") || osArch.contains("arm64")) ? "aarch_64" : "x86_64";
-
-        Path headerFile = LIBS_DIR.resolve(targetOs).resolve(targetArch).resolve("tfhe.h");
+        Path headerFile = LIBS_DIR.resolve(normalizedOs()).resolve(normalizedArch()).resolve("tfhe.h");
         Path bindingsDir = NATIVE_BUNDLE.resolve("bindings");
 
         run(Path.of("."),
