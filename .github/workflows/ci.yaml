@@ -41,16 +41,6 @@ jobs:
       - name: Compile with Maven
         run: ./mvnw package
 
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: build-targets
-          path: |
-            **/target/
-            native-bundle/
-          include-hidden-files: true
-          retention-days: 1
-
   document:
     name: Living Documentation
     runs-on: ubuntu-latest
@@ -69,11 +59,6 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: 'maven'
-
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v8
-        with:
-          name: build-targets
 
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
