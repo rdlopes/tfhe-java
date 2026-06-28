@@ -63,6 +63,14 @@ jobs:
       - name: Install Graphviz
         run: sudo apt-get update && sudo apt-get install -y graphviz
 
+      - name: Download Native Bundle
+        run: |
+          RUN_ID=$(gh run list --workflow "Native Libraries Bundle" --status success --limit 1 --json databaseId --jq ".[0].databaseId")
+          echo "Latest successful run ID: $RUN_ID"
+          gh run download $RUN_ID -n native-bundle -D native-bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - run: ./mvnw verify -DskipTests
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
