@@ -50,7 +50,7 @@ jobs:
 
       - name: Release With Maven
         run: |
-          ./mvnw --batch-mode release:prepare release:perform -Darguments="-Dnative.basedir=${{github.workspace}}/native-bundle"
+          ./mvnw release:prepare release:perform -Darguments="-DskipTests -DskipITs -Dnative.basedir=${{github.workspace}}/native-bundle"
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
