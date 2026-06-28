@@ -12,11 +12,6 @@
   <name>TFHE Java :: Examples :: Cancer Prediction</name>
   <description>Privacy-preserving breast cancer prediction using TFHE homomorphic evaluation</description>
 
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-    <sonar.skip>true</sonar.skip>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>io.github.rdlopes</groupId>

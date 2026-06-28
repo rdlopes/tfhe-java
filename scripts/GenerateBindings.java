@@ -7,17 +7,13 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Bootstraps jextract and generates Panama FFM Java bindings from the tfhe-rs C header.
- * <p>
- * Run directly via: {@code java script/GenerateBindings.java [options]}
- * <p>
- * Options:
- * <ul>
- *   <li>{@code --header <path>} — path to tfhe.h (auto-detected if omitted)</li>
- *   <li>{@code --output <path>} — bindings output directory (default: target/generated-sources/tfhe-rs)</li>
- * </ul>
- */
+/// Bootstraps jextract and generates Panama FFM Java bindings from the tfhe-rs C header.
+///
+/// Run directly via: `java scripts/GenerateBindings.java [options]`
+///
+/// Options:
+/// - `--header <path>` — path to tfhe.h (auto-detected if omitted)
+/// - `--output <path>` — bindings output directory (default: `native-bundle/bindings`)
 public class GenerateBindings {
 
     private static final String JEXTRACT_VERSION = "25+2-4";
@@ -28,7 +24,7 @@ public class GenerateBindings {
     public static void main(String[] args) {
         try {
             Path customHeader = null;
-            Path outputDir = Path.of("target", "generated-sources", "tfhe-rs");
+            Path outputDir = Path.of("native-bundle", "bindings");
 
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
@@ -53,10 +49,10 @@ public class GenerateBindings {
 
     private static void printHelp() {
         LOG.log(System.Logger.Level.INFO, """
-                Usage: java script/GenerateBindings.java [options]
+                Usage: java scripts/GenerateBindings.java [options]
                 Options:
                   --header <path>   Path to tfhe.h header file (auto-detected if omitted)
-                  --output <path>   Bindings output directory (default: target/generated-sources/tfhe-rs)
+                  --output <path>   Bindings output directory (default: native-bundle/bindings)
                   --help, -h        Print this help message
                 """);
     }
@@ -64,7 +60,7 @@ public class GenerateBindings {
     // --- jextract bootstrap ---
 
     private static Path bootstrapJextract() throws Exception {
-        Path cacheDir = Path.of("target", "jextract");
+        Path cacheDir = Path.of("native-bundle", "jextract");
         Path jextractBinDir = cacheDir.resolve("jextract-25").resolve("bin");
         boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
         Path jextractExec = jextractBinDir.resolve(isWindows ? "jextract.bat" : "jextract");
@@ -128,10 +124,9 @@ public class GenerateBindings {
         String targetOs = osName.contains("win") ? "windows" : (osName.contains("mac") ? "osx" : "linux");
         String targetArch = (osArch.contains("aarch64") || osArch.contains("arm64")) ? "aarch_64" : "x86_64";
 
-        // Look in sibling tfhe-native module's output
         List<Path> candidates = List.of(
-                Path.of("..", "tfhe-native", "target", "classes", "native", targetOs, targetArch, "tfhe.h"),
-                Path.of("..", "tfhe-native", "target", "native", "tfhe-rs", "target", "release", "tfhe.h")
+                Path.of("native-bundle", "libs", targetOs, targetArch, "tfhe.h"),
+                Path.of("native-bundle", "tfhe-rs", "target", "release", "tfhe.h")
         );
 
         for (Path candidate : candidates) {
@@ -155,33 +150,39 @@ public class GenerateBindings {
         Path rawIncludes = workingDir.resolve("jextract-includes.txt");
         Path filteredIncludes = workingDir.resolve("jextract-includes-filtered.txt");
 
-        // 1. Dump includes
-        LOG.log(System.Logger.Level.INFO, "Dumping includes list...");
-        run(workingDir,
-                jextractExec.toAbsolutePath().toString(),
-                headerFile.getFileName().toString(),
-                "--dump-includes", rawIncludes.getFileName().toString());
+        try {
+            // 1. Dump includes
+            LOG.log(System.Logger.Level.INFO, "Dumping includes list...");
+            run(workingDir,
+                    jextractExec.toAbsolutePath().toString(),
+                    headerFile.getFileName().toString(),
+                    "--dump-includes", rawIncludes.getFileName().toString());
 
-        // 2. Filter to tfhe-related includes only
-        LOG.log(System.Logger.Level.INFO, "Filtering includes...");
-        List<String> filteredLines = Files.readAllLines(rawIncludes).stream()
-                .filter(line -> line.contains("tfhe"))
-                .toList();
-        Files.write(filteredIncludes, filteredLines);
-        LOG.log(System.Logger.Level.INFO, "Filtered {0} includes from {1} total",
-                filteredLines.size(), Files.readAllLines(rawIncludes).size());
+            // 2. Filter to tfhe-related includes only
+            LOG.log(System.Logger.Level.INFO, "Filtering includes...");
+            List<String> filteredLines = Files.readAllLines(rawIncludes).stream()
+                    .filter(line -> line.contains("tfhe"))
+                    .toList();
+            Files.write(filteredIncludes, filteredLines);
+            LOG.log(System.Logger.Level.INFO, "Filtered {0} includes from {1} total",
+                    filteredLines.size(), Files.readAllLines(rawIncludes).size());
 
-        // 3. Generate FFM Java bindings
-        LOG.log(System.Logger.Level.INFO, "Running jextract...");
-        run(workingDir,
-                jextractExec.toAbsolutePath().toString(),
-                "@" + filteredIncludes.getFileName().toString(),
-                headerFile.getFileName().toString(),
-                "--header-class-name", "TfheHeader",
-                "--target-package", "io.github.rdlopes.tfhe.core.ffm",
-                "--output", outputDir.toAbsolutePath().toString());
+            // 3. Generate FFM Java bindings
+            LOG.log(System.Logger.Level.INFO, "Running jextract...");
+            run(workingDir,
+                    jextractExec.toAbsolutePath().toString(),
+                    "@" + filteredIncludes.getFileName().toString(),
+                    headerFile.getFileName().toString(),
+                    "--header-class-name", "TfheHeader",
+                    "--target-package", "io.github.rdlopes.tfhe.core.ffm",
+                    "--output", outputDir.toAbsolutePath().toString());
 
-        LOG.log(System.Logger.Level.INFO, "Java bindings generated in: {0}", outputDir.toAbsolutePath());
+            LOG.log(System.Logger.Level.INFO, "Java bindings generated in: {0}", outputDir.toAbsolutePath());
+        } finally {
+            // Clean up temporary include files
+            Files.deleteIfExists(rawIncludes);
+            Files.deleteIfExists(filteredIncludes);
+        }
     }
 
     // --- Utilities ---

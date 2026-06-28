@@ -12,11 +12,6 @@
   <name>TFHE Java :: Examples :: Voting Flow</name>
   <description>Privacy-preserving e-voting with ZK proofs using TFHE</description>
 
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-    <sonar.skip>true</sonar.skip>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>io.github.rdlopes</groupId>

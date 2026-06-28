@@ -30,6 +30,10 @@
   </scm>
 
   <properties>
+    <!-- Native bundle paths -->
+    <native.basedir>${maven.multiModuleProjectDirectory}/native-bundle</native.basedir>
+    <native.bindings>${native.basedir}/bindings</native.bindings>
+    <native.libs>${native.basedir}/libs</native.libs>
     <!-- Plugin versions -->
     <os-maven-plugin.version>1.7.1</os-maven-plugin.version>
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
@@ -114,16 +118,18 @@
             </annotationProcessorPaths>
           </configuration>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <configuration>
-            <excludePackageNames>io.github.rdlopes.tfhe.core.ffm</excludePackageNames>
-            <doclint>none</doclint>
-          </configuration>
-        </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <excludePackageNames>io.github.rdlopes.tfhe.core.ffm</excludePackageNames>
+          <doclint>none</doclint>
+        </configuration>
+      </plugin>
+    </plugins>
     <extensions>
       <extension>
         <groupId>kr.motd.maven</groupId>
@@ -132,5 +138,36 @@
       </extension>
     </extensions>
   </build>
+
+  <profiles>
+    <profile>
+      <id>local</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>initialize-native-libs</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>initialize</phase>
+                <configuration>
+                  <executable>java</executable>
+                  <workingDirectory>${maven.multiModuleProjectDirectory}</workingDirectory>
+                  <arguments>
+                    <argument>scripts/InitializeNativeLibraries.java</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

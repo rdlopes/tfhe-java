@@ -71,7 +71,7 @@ jobs:
           distribution: 'temurin'
       - name: Generate Bindings
         run: |
-          java tfhe-core/script/GenerateBindings.java --header native-libs/tfhe.h --output native-bundle/bindings
+          java scripts/GenerateBindings.java --header native-libs/tfhe.h --output native-bundle/bindings
       - name: Upload Native Libraries Bundle
         uses: actions/upload-artifact@v7
         with:
