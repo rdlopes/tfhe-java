@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 /// - `--output <path>` — bindings output directory (default: `native-bundle/bindings`)
 public class GenerateBindings {
 
-    private static final String JEXTRACT_VERSION = "25+2-4";
     private static final String JEXTRACT_BASE_URL = "https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_";
 
     private static final System.Logger LOG = System.getLogger(GenerateBindings.class.getName());
@@ -28,8 +27,8 @@ public class GenerateBindings {
 
             for (int i = 0; i < args.length; i++) {
                 switch (args[i]) {
-                    case "--header" -> { if (i + 1 < args.length) customHeader = Path.of(args[++i]); }
-                    case "--output" -> { if (i + 1 < args.length) outputDir = Path.of(args[++i]); }
+                    case "--header" when (i + 1 < args.length) -> { customHeader = Path.of(args[++i]); }
+                    case "--output" when (i + 1 < args.length) -> { outputDir = Path.of(args[++i]); }
                     case "--help", "-h" -> { printHelp(); return; }
                 }
             }
@@ -141,6 +140,21 @@ public class GenerateBindings {
                 candidates.stream().map(p -> "  - " + p.toAbsolutePath()).collect(Collectors.joining("\n")));
     }
 
+    private static String getClangTargetTriple() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        String osArch = System.getProperty("os.arch").toLowerCase();
+        boolean isArm = osArch.contains("aarch64") || osArch.contains("arm64");
+
+        if (osName.contains("win")) {
+            return "x86_64-pc-windows-msvc";
+        } else if (osName.contains("mac")) {
+            return isArm ? "arm64-apple-macosx" : "x86_64-apple-darwin";
+        } else if (osName.contains("nux")) {
+            return isArm ? "aarch64-unknown-linux-gnu" : "x86_64-unknown-linux-gnu";
+        }
+        return null;
+    }
+
     // --- Binding generation ---
 
     private static void generateBindings(Path jextractExec, Path headerFile, Path outputDir) throws Exception {
@@ -149,8 +163,15 @@ public class GenerateBindings {
         Path workingDir = headerFile.getParent();
         Path rawIncludes = workingDir.resolve("jextract-includes.txt");
         Path filteredIncludes = workingDir.resolve("jextract-includes-filtered.txt");
+        Path compileFlagsFile = workingDir.resolve("compile_flags.txt");
 
         try {
+            // Write compile_flags.txt with clang target triple
+            String targetTriple = getClangTargetTriple();
+            if (targetTriple != null) {
+                Files.write(compileFlagsFile, List.of("-target", targetTriple));
+            }
+
             // 1. Dump includes
             LOG.log(System.Logger.Level.INFO, "Dumping includes list...");
             run(workingDir,
@@ -179,9 +200,10 @@ public class GenerateBindings {
 
             LOG.log(System.Logger.Level.INFO, "Java bindings generated in: {0}", outputDir.toAbsolutePath());
         } finally {
-            // Clean up temporary include files
+            // Clean up temporary files
             Files.deleteIfExists(rawIncludes);
             Files.deleteIfExists(filteredIncludes);
+            Files.deleteIfExists(compileFlagsFile);
         }
     }
 
