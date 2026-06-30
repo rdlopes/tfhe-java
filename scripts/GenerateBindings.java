@@ -26,10 +26,14 @@ public class GenerateBindings {
             Path outputDir = Path.of("native-bundle", "bindings");
 
             for (int i = 0; i < args.length; i++) {
-                switch (args[i]) {
-                    case "--header" when (i + 1 < args.length) -> { customHeader = Path.of(args[++i]); }
-                    case "--output" when (i + 1 < args.length) -> { outputDir = Path.of(args[++i]); }
-                    case "--help", "-h" -> { printHelp(); return; }
+                String arg = args[i];
+                if ("--header".equals(arg) && i + 1 < args.length) {
+                    customHeader = Path.of(args[++i]);
+                } else if ("--output".equals(arg) && i + 1 < args.length) {
+                    outputDir = Path.of(args[++i]);
+                } else if ("--help".equals(arg) || "-h".equals(arg)) {
+                    printHelp();
+                    return;
                 }
             }
 

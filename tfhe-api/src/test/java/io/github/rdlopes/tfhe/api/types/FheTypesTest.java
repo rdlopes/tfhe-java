@@ -956,7 +956,7 @@ class FheTypesTest {
             assertThat(checkedVal.getClass()).isEqualTo(enc1.getClass());
             Object decrypted = decrypt(checkedVal);
             assertThat(toBigInteger(decrypted)).isEqualTo(BigInteger.valueOf(expectedILog2));
-            assertThat(decrypt(checkedResult.check())).isEqualTo(true);
+            assertThat((Boolean) decrypt(checkedResult.check())).isTrue();
           }
         }
       }

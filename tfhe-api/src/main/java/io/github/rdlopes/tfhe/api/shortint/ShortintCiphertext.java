@@ -40,10 +40,19 @@ public class ShortintCiphertext extends NativePointer {
     return deserialized;
   }
 
+  /// Clones this ciphertext.
+  ///
+  /// This operation performs a deep copy of the underlying LWE ciphertext
+  /// using the native C API function `shortint_ciphertext_clone` to avoid
+  /// the overhead of serialization and deserialization.
+  ///
+  /// @return a new independent `ShortintCiphertext` containing the same encrypted value
   @Override
   @SuppressWarnings("MethodDoesntCallSuperMethod")
   public ShortintCiphertext clone() {
-    return deserialize(serialize());
+    ShortintCiphertext result = new ShortintCiphertext();
+    execute(() -> shortint_ciphertext_clone(getValue(), result.getAddress()));
+    return result;
   }
 
   // ==========================================

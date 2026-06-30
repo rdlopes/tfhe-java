@@ -34,6 +34,16 @@ Feature: Low-Level Shortint API and Programmable Bootstrapping (PBS)
   The `shortint` API is recommended for building custom circuits, optimized state machines, or complex non-linear functions (like activation functions in neural networks).
   ====
 
+  === Cloning Ciphertexts
+  Both `ShortintCiphertext` and `ShortintCompressedCiphertext` support deep copying using native Rust cloning operations (`shortint_ciphertext_clone` and `shortint_compressed_ciphertext_clone`).
+  This avoids the CPU and memory overhead of the traditional serialization/deserialization workaround.
+
+  [source,java]
+  ----
+  // Deep clone a ciphertext natively
+  ShortintCiphertext copy = ciphertext.clone();
+  ----
+
   Scenario: Initializing client, server, and public keys with custom parameters
     Given a shortint configuration is prepared with custom parameters
     Then the shortint client, server, and public keys are initialized successfully
@@ -129,3 +139,13 @@ Feature: Low-Level Shortint API and Programmable Bootstrapping (PBS)
     And I encrypt 1 as another shortint ciphertext
     And I generate a bivariate lookup table for f(x, y) = (x + y) % 4
     Then evaluating the bivariate lookup table on the ciphertexts yields 3
+
+  Scenario: Cloning shortint ciphertexts and compressed ciphertexts
+    Given a shortint configuration is prepared with custom parameters
+    When I encrypt 2 as a shortint ciphertext
+    And I clone the latest shortint ciphertext
+    Then the cloned shortint ciphertext decrypted using the client key is 2
+    When I encrypt 3 as a compressed shortint ciphertext
+    And I clone the latest compressed shortint ciphertext
+    And I decompress the cloned compressed shortint ciphertext
+    Then the decompressed shortint ciphertext decrypted using the client key is 3

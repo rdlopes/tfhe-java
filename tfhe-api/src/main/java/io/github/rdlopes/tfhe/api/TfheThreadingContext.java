@@ -12,6 +12,7 @@ import java.lang.foreign.MemorySegment;
 import static io.github.rdlopes.tfhe.core.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.core.ffm.TfheHeader.*;
 
+@SuppressWarnings({"java:S100", "java:S115", "java:S1192", "java:S7467"})
 public class TfheThreadingContext extends NativePointer implements AutoCloseable {
   private static final Logger logger = LoggerFactory.getLogger(TfheThreadingContext.class);
 

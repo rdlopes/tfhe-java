@@ -570,5 +570,48 @@ class ShortintCiphertextTest {
       }
     }
   }
+
+  @Test
+  void testCiphertextCloning() {
+    try (ShortintCiphertext original = clientKey.encrypt(2L)) {
+      assertThat(original).isNotNull();
+      assertThat(clientKey.decrypt(original)).isEqualTo(2L);
+
+      try (ShortintCiphertext cloned = original.clone()) {
+        assertThat(cloned).isNotNull();
+        // The cloned one should have the same decrypted value
+        assertThat(clientKey.decrypt(cloned)).isEqualTo(2L);
+
+        // They must point to different memory segment addresses (independent handles)
+        assertThat(cloned.getValue().address()).isNotEqualTo(original.getValue().address());
+
+        // Modifying the clone (e.g. setting its degree) must not affect the original
+        long originalDegree = original.getDegree();
+        cloned.setDegree(originalDegree + 1);
+        assertThat(cloned.getDegree()).isEqualTo(originalDegree + 1);
+        assertThat(original.getDegree()).isEqualTo(originalDegree);
+      }
+    }
+  }
+
+  @Test
+  void testCompressedCiphertextCloning() {
+    try (ShortintCompressedCiphertext originalComp = clientKey.encryptCompressed(3L)) {
+      assertThat(originalComp).isNotNull();
+
+      try (ShortintCompressedCiphertext clonedComp = originalComp.clone()) {
+        assertThat(clonedComp).isNotNull();
+
+        // They must point to different memory segment addresses
+        assertThat(clonedComp.getValue().address()).isNotEqualTo(originalComp.getValue().address());
+
+        // Decompressing the cloned one should yield 3
+        try (ShortintCiphertext decompressed = clonedComp.decompress()) {
+          assertThat(decompressed).isNotNull();
+          assertThat(clientKey.decrypt(decompressed)).isEqualTo(3L);
+        }
+      }
+    }
+  }
 }
 

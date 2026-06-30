@@ -430,4 +430,28 @@ public class ShortintStepDefinitions {
     context.shortintServerKey.bivariateProgrammableBootstrapAssign(ctLeftCopy, ctRight, context.shortintBivariateLut);
     assertThat(context.shortintClientKey.decrypt(ctLeftCopy)).isEqualTo(expected);
   }
+
+  @When("I clone the latest shortint ciphertext")
+  public void iCloneLatestShortintCiphertext() {
+    ShortintCiphertext latest = context.shortintCiphertexts.get(context.shortintCiphertexts.size() - 1);
+    context.shortintCiphertexts.add(context.track(latest.clone()));
+  }
+
+  @When("I clone the latest compressed shortint ciphertext")
+  public void iCloneLatestCompressedShortintCiphertext() {
+    ShortintCompressedCiphertext latest = context.shortintCompressedCiphertexts.get(context.shortintCompressedCiphertexts.size() - 1);
+    context.shortintCompressedCiphertexts.add(context.track(latest.clone()));
+  }
+
+  @When("I decompress the cloned compressed shortint ciphertext")
+  public void iDecompressClonedCompressedShortintCiphertext() {
+    iDecompressCompressedShortintCiphertext();
+  }
+
+  @Then("the cloned shortint ciphertext decrypted using the client key is {long}")
+  public void theClonedShortintCiphertextDecryptedUsingTheClientKeyIs(long expected) {
+    ShortintCiphertext latestCloned = context.shortintCiphertexts.get(context.shortintCiphertexts.size() - 1);
+    long decrypted = context.shortintClientKey.decrypt(latestCloned);
+    assertThat(decrypted).isEqualTo(expected);
+  }
 }

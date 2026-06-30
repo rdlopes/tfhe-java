@@ -12,7 +12,7 @@ import java.util.*;
 public class InitializeNativeLibraries {
 
     private static final String TFHE_RS_REPO = "https://github.com/zama-ai/tfhe-rs.git";
-    private static final String TFHE_RS_COMMIT = "407fa762bce85df9f5e4485c8573672a005d3c6a";
+    private static final String TFHE_RS_COMMIT = "eb4dd07fe0c619f1cccd83908e76e98698d3ef26";
 
     private static final Path NATIVE_BUNDLE = Path.of("native-bundle");
     private static final Path TFHE_RS_DIR = NATIVE_BUNDLE.resolve("tfhe-rs");
