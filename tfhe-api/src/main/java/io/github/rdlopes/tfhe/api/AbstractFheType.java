@@ -301,6 +301,16 @@ public abstract class AbstractFheType<
     return r;
   }
 
+  @Override
+  public final void cloneFrom(T source) {
+    var op = io.github.rdlopes.tfhe.core.utils.FheRegistry.getCloneFromOp(this.getClass());
+    if (op == null) {
+      throw new UnsupportedOperationException(
+          "cloneFrom is not supported by the native library for " + this.getClass().getName());
+    }
+    execute(() -> op.apply(this.getValue(), source.getValue()));
+  }
+
   // ══════════════════════════════════════════════════════════════════════════
   // FheDecryption — dispatches on valueKind
   // ══════════════════════════════════════════════════════════════════════════

@@ -10,7 +10,7 @@ import static io.github.rdlopes.tfhe.core.ffm.NativeCall.execute;
 import static io.github.rdlopes.tfhe.core.ffm.TfheHeader.*;
 
 @SuppressWarnings({"java:S2975", "java:S1182"})
-public class ShortintCiphertext extends NativePointer {
+public class ShortintCiphertext extends NativePointer implements io.github.rdlopes.tfhe.api.FheCloneable<ShortintCiphertext> {
 
   public ShortintCiphertext() {
     super(TfheHeader::shortint_destroy_ciphertext);
@@ -53,6 +53,11 @@ public class ShortintCiphertext extends NativePointer {
     ShortintCiphertext result = new ShortintCiphertext();
     execute(() -> shortint_ciphertext_clone(getValue(), result.getAddress()));
     return result;
+  }
+
+  @Override
+  public void cloneFrom(ShortintCiphertext source) {
+    execute(() -> shortint_ciphertext_clone_from(this.getValue(), source.getValue()));
   }
 
   // ==========================================

@@ -117,4 +117,9 @@ public CompressedFheBool clone(){
     return cloned;
 
 }
+
+@Override
+public void cloneFrom(CompressedFheBool source) {
+    execute(() -> compressed_fhe_bool_clone_from(this.getValue(), source.getValue()));
+}
 }

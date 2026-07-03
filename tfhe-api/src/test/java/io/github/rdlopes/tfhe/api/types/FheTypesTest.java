@@ -220,6 +220,24 @@ class FheTypesTest {
           }
         }
 
+        // 5d. CloneFrom
+        if (encrypted instanceof FheCloneable<?> fc) {
+          try (AutoCloseable cloned = cloneHelper(encrypted)) {
+            assertThat(decrypt(cloned)).isEqualTo(clearVal);
+
+            Object otherVal = getZeroValue(finalCleartextType);
+            if (clearVal.equals(otherVal)) {
+              otherVal = getOneValue(finalCleartextType);
+            }
+
+            try (AutoCloseable newDest = encrypt(clazz, finalCleartextType, otherVal, clientKey)) {
+              assertThat(decrypt(newDest)).isEqualTo(otherVal);
+              cloneFromHelper(newDest, encrypted);
+              assertThat(decrypt(newDest)).isEqualTo(clearVal);
+            }
+          }
+        }
+
         // 5c. Casting (if applicable)
         if (encrypted instanceof AbstractFheType<?, ?, ?> fheType && clazz != FheBool.class) {
           // Cast to itself (always supported)
@@ -1072,6 +1090,15 @@ class FheTypesTest {
       return (AutoCloseable) fc.clone();
     }
     throw new IllegalArgumentException("Not cloneable: " + enc);
+  }
+
+  @SuppressWarnings("unchecked")
+  private void cloneFromHelper(AutoCloseable dest, AutoCloseable src) {
+    if (dest instanceof FheCloneable fc) {
+      fc.cloneFrom(src);
+      return;
+    }
+    throw new IllegalArgumentException("Not cloneable: " + dest);
   }
 }
 

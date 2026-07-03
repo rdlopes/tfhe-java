@@ -218,6 +218,11 @@ public class FheBool extends NativePointer implements FheBoolean<FheBool, Compre
   }
 
   @Override
+  public void cloneFrom(FheBool source) {
+    execute(() -> fhe_bool_clone_from(this.getValue(), source.getValue()));
+  }
+
+  @Override
   public Boolean decrypt(ClientKey clientKey) {
     return executeAndReturn(Boolean.class, address -> H.decryptPrimitive.apply(getValue(), clientKey.getValue(), address));
   }

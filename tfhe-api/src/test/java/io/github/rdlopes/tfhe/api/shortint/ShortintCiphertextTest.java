@@ -591,6 +591,13 @@ class ShortintCiphertextTest {
         assertThat(cloned.getDegree()).isEqualTo(originalDegree + 1);
         assertThat(original.getDegree()).isEqualTo(originalDegree);
       }
+
+      // Test in-place cloning
+      try (ShortintCiphertext dest = clientKey.encrypt(0L)) {
+        assertThat(clientKey.decrypt(dest)).isEqualTo(0L);
+        dest.cloneFrom(original);
+        assertThat(clientKey.decrypt(dest)).isEqualTo(2L);
+      }
     }
   }
 

@@ -71,6 +71,12 @@ public final class FheRegistry {
     (enc, out) -> {
       throw new AssertionError("TRY_DECRYPT_WIDE_ABSENT sentinel invoked");
     };
+
+  /// Sentinel stored when a clone_from op does not exist for a given type.
+  private static final FheOps.AssignOp CLONE_FROM_ABSENT =
+    (dest, src) -> {
+      throw new AssertionError("CLONE_FROM_ABSENT sentinel invoked");
+    };
   
   // ── Caches ────────────────────────────────────────────────────────────────
   
@@ -80,6 +86,7 @@ public final class FheRegistry {
   private static final Map<Class<?>, FheOps.ListGetOp> COMPACT_GET_OPS = new ConcurrentHashMap<>();
   private static final Map<Class<?>, FheOps.TryDecryptPrimitiveOp> TRY_DECRYPT_PRIM = new ConcurrentHashMap<>();
   private static final Map<Class<?>, FheOps.TryDecryptWideOp> TRY_DECRYPT_WIDE = new ConcurrentHashMap<>();
+  private static final Map<Class<?>, FheOps.AssignOp> CLONE_FROM_OPS = new ConcurrentHashMap<>();
   
   private static final MethodHandles.Lookup LOOKUP = MethodHandles.publicLookup();
   
@@ -170,6 +177,17 @@ public final class FheRegistry {
         .orElse(TRY_DECRYPT_WIDE_ABSENT));
     return op == TRY_DECRYPT_WIDE_ABSENT ? null : op;
   }
+
+  /// Returns the clone_from assign op for the given type,
+  /// or `null` if the native library does not expose one.
+  public static FheOps.AssignOp getCloneFromOp(Class<?> clazz) {
+    FheOps.AssignOp op = CLONE_FROM_OPS.computeIfAbsent(
+      clazz,
+      c -> resolveAssignOp(
+        FheRegistry.nativeType(c.getSimpleName()) + "_clone_from")
+        .orElse(CLONE_FROM_ABSENT));
+    return op == CLONE_FROM_ABSENT ? null : op;
+  }
   
   // ── Resolution helpers ────────────────────────────────────────────────────
   
@@ -222,6 +240,28 @@ public final class FheRegistry {
   
   private static FheOps.TryDecryptWideOp toTryDecryptWide(FheOps.UnaryOp op) {
     return op::apply;
+  }
+
+  /// Looks up a static `(MemorySegment, MemorySegment) -> int` method on
+  /// [TfheHeader] via [MethodHandle]. Returns [Optional#empty()]
+  /// when no such method exists.
+  private static Optional<FheOps.AssignOp> resolveAssignOp(String methodName) {
+    try {
+      MethodHandle mh = LOOKUP.findStatic(
+        TfheHeader.class,
+        methodName,
+        MethodType.methodType(int.class, MemorySegment.class, MemorySegment.class));
+      return Optional.of((lhs, rhs) -> {
+        try {
+          return (int) mh.invokeExact(lhs, rhs);
+        } catch (Throwable t) {
+          throw new IllegalStateException("Native call failed: " + methodName, t);
+        }
+      });
+    } catch (NoSuchMethodException | IllegalAccessException _) {
+      // Method doesn't exist in native, ignore
+      return Optional.empty();
+    }
   }
   
   // ── Key types ─────────────────────────────────────────────────────────────
