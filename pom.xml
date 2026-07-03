@@ -34,6 +34,8 @@
     <native.basedir>${maven.multiModuleProjectDirectory}/native-bundle</native.basedir>
     <native.bindings>${native.basedir}/bindings</native.bindings>
     <native.libs>${native.basedir}/libs</native.libs>
+      <jmh.version>1.37</jmh.version>
+      <surefire.skip>false</surefire.skip>
     <!-- Plugin versions -->
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <!-- Sonar configuration -->
@@ -43,7 +45,6 @@
     <sonar.scm.disabled>true</sonar.scm.disabled>
     <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
-    <jmh.version>1.37</jmh.version>
   </properties>
 
   <dependencyManagement>
