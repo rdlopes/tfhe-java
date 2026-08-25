@@ -65,7 +65,7 @@ jobs:
           cp native-libs/tfhe.h native-bundle/libs/windows/x86_64
           cp native-libs/*.dll native-bundle/libs/windows/x86_64
       - run: cp native-libs/LICENSE native-bundle/libs
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v6
         with:
           java-version: '25'
           distribution: 'temurin'
