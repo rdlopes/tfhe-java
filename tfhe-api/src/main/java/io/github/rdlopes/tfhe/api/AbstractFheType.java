@@ -479,6 +479,18 @@ public abstract class AbstractFheType<
     return r;
   }
 
+  /// Evaluates a homomorphic conditional selection (CMUX).
+  /// Returns `this` if `condition` is true, or `elseVal` if `condition` is false.
+  @SuppressWarnings("unchecked")
+  public final T ifThenElse(FheBool condition, T elseVal) {
+    return ifThenElse(handles(), condition, (T) this, elseVal, this::newInstance);
+  }
+
+  /// Encrypt a cleartext value trivially (no keys required).
+  public final T trivialEncrypt(V clear) {
+    return encryptTrivial(handles(), clear, this::newInstance);
+  }
+
   /// Cast this value to a different FHE type.
   /// Used by concrete type `castInto*()` one-liners.
   /// The destroy function is provided by the target type's own constructor;
