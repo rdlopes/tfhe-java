@@ -9,9 +9,10 @@ This document outlines the actionable enhancement roadmap for **TFHE-Java** (`tf
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │  Phase 1: High-Level Cryptographic Completeness & Immediate Fixes      │
+│  [COMPLETED]                                                           │
 │  • Radix Programmable Bootstrapping (LUT on FheIntegers)               │
-│  • Native Signed Array Operations (remove unsigned cast overhead)      │
-│  • Parameter Sets Alignment & Synchronization                          │
+│  • Native Signed Array Operations (zero-cast FFM pointer segment pass) │
+│  • Parameter Sets Alignment & Parity (100% TfheHeader parity)         │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │
                                     ▼
@@ -33,56 +34,38 @@ This document outlines the actionable enhancement roadmap for **TFHE-Java** (`tf
 
 ---
 
-## Phase 1: High-Level Cryptographic Completeness & Immediate Optimizations
+## Completed: Phase 1 (High-Level Cryptographic Completeness & Parity)
+
+The first phase of the roadmap focused on high-level feature parity, memory optimization, and parameter synchronization without modifying upstream `tfhe-rs`:
 
 ### 1.1 High-Level Integer Programmable Bootstrapping (Radix LUTs)
-* **Status**: Proposed
-* **Priority**: High
-* **Target Modules**: `tfhe-core`, `tfhe-api`
+* **Status**: Completed
+* **Implemented in**: `tfhe-core`, `tfhe-api` ([`FheInteger`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/FheInteger.java), [`AbstractFheType`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/AbstractFheType.java))
+* **Summary**:
+  - Implemented `applyLookupTable(LongUnaryOperator)` and `applyBivariateLookupTable(T other, LongBinaryOperator)` (with bounded domain overloads) on all radix integers.
+  - Uses binary decision-tree CMUX decomposition (`ifThenElse`) across radix values with automatic scoped destruction of intermediate nodes in `finally` blocks, preserving zero modification to `tfhe-rs`.
+  - Validated by unit tests in [`FheLookupTableTest`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/test/java/io/github/rdlopes/tfhe/api/types/FheLookupTableTest.java).
 
-#### Rationale
-Currently, Programmable Bootstrapping (PBS) via lookup tables is fully supported at the low-level `ShortintCiphertext` layer (`ShortintServerKey.generateLookupTable(...)`), but is not directly accessible on high-level integer types (`FheUint*`, `FheInt*`). In modern `tfhe-rs`, evaluating arbitrary univariate functions (activation functions, non-linear mathematical transforms, custom cryptographic primitives) across multi-block radix integers is a standard high-level operation.
-
-#### Description & Scope
-- Expose univariate and bivariate Radix LUT generation and evaluation from `tfhe-rs` `integer` module through the C-API (`high-level-c-api`).
-- Extend `FheOps` and `FheTypeHandles` in `tfhe-core` to dispatch downcalls to `fhe_*_apply_lookup_table`.
-- Add public API methods on `AbstractFheType<T, V>`:
-  ```java
-  public T applyLookupTable(LongUnaryOperator mapping);
-  public T applyBivariateLookupTable(T other, LongBinaryOperator mapping);
-  ```
-- Support automatic decomposition across radix blocks and carry resolution.
-
----
-
-### 1.2 Native Signed Array Equality and Slicing
-* **Status**: Proposed
-* **Priority**: Medium
-* **Target Modules**: `tfhe-api`, `tfhe-native`
-
-#### Rationale
-Currently, `containsArray` and `equalsArray` in signed array types (`FheInt*Array`) are simulated by temporarily casting all elements to their unsigned counterparts (`FheUint*Array`), invoking the native C function, and destroying intermediate native allocations. This introduces unnecessary memory allocations and downcall overhead.
-
-#### Description & Scope
-- Update `scripts/InitializeNativeLibraries.java` and `tfhe-c-api` patch to directly export signed slice equality (`fhe_int*_array_eq`) and substring matching (`fhe_int*_array_contains`).
-- Refactor `AbstractFheArray` to invoke direct native handles for signed array comparisons, eliminating intermediate dynamic casting.
-
----
+### 1.2 Native Signed Array Zero-Cast Operations
+* **Status**: Completed
+* **Implemented in**: `tfhe-api` ([`AbstractFheArray`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/AbstractFheArray.java), [`FheInt8Array`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/types/FheInt8Array.java), [`FheInt128Array`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/types/FheInt128Array.java), and extended arrays)
+* **Summary**:
+  - Unified both signed (`FheInt*Array`) and unsigned (`FheUint*Array`) implementations under a modernized `AbstractFheArray`.
+  - Eliminated element-wise `castInto` overhead by directly passing contiguous off-heap pointer segments to `TfheHeader::fhe_uint*_array_*`, leveraging identical ciphertext radix layouts.
+  - Large bitwidth arrays (`FheInt160Array` to `FheInt2048Array`) compare elements natively without intermediate casting.
+  - Validated by unit tests in [`FheArraySignedTest`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/test/java/io/github/rdlopes/tfhe/api/types/FheArraySignedTest.java).
 
 ### 1.3 Upstream Parameter Set Synchronization
-* **Status**: Ongoing
-* **Priority**: Medium
-* **Target Modules**: `tfhe-api` (`io.github.rdlopes.tfhe.api.keys`)
-
-#### Rationale
-`tfhe-rs` regularly updates cryptographic parameter profiles (e.g. `CompactPublicKeyEncryptionParameters`, `CustomParameters`, `CompressionParameters`) to balance noise growth, security levels (128-bit vs. 64-bit), and key sizes across releases V0.11 through V1.8. Keeping these enums synchronized with upstream releases ensures zero-gap cross-compatibility when exchanging serialized ciphertexts between Rust and Java environments.
-
-#### Description & Scope
-- Automate extraction of predefined parameters during `scripts/GenerateBindings.java` execution.
-- Maintain parameter profile test matrices in Cucumber living documentation (`10-predefined-parameters-and-types.feature`).
-- Ensure all PKE parameters (`SHORTINT_V1_*_PARAM_PKE_...`) have 1:1 parity with Zama releases.
+* **Status**: Completed
+* **Implemented in**: `tfhe-api` ([`CustomParameters`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/keys/CustomParameters.java), [`CompactPublicKeyEncryptionParameters`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/keys/CompactPublicKeyEncryptionParameters.java), [`CompressionParameters`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/keys/CompressionParameters.java))
+* **Summary**:
+  - Added all missing `SHORTINT_V1_5_*` and `SHORTINT_V1_6_*` parameter sets (144 parameters).
+  - Achieved 100% parity across all 596 `SHORTINT_` static methods declared in `TfheHeader`.
+  - Added reflection-based test in [`ParametersTest`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/test/java/io/github/rdlopes/tfhe/api/keys/ParametersTest.java) ensuring every header parameter maps to an enum with a valid, non-zero memory segment.
 
 ---
+
+## Active Roadmap: Phase 2 & Phase 3
 
 ## Phase 2: JVM Ergonomics & Ecosystem Integration
 
@@ -186,21 +169,21 @@ Most enterprise Java deployments run on Spring Boot or Micronaut. Providing turn
 
 #### Description & Scope
 - Auto-configure `ServerKey` and `TfheThreadingContext` based on `application.yml` properties.
-- Provide custom Jackson serializers and deserializers for `AbstractFheType`, `CompactCiphertextList`, and `ProvenCompactCiphertextList`.
+- Provide custom Jackson serializers and deserializers for `AbstractFheType`, `CompactCiphertextList`, and `ProvenCompactCiphertextList` phases.
 - Provide Spring Web filter / interceptor that sets and unsets thread-local `ServerKey` for homomorphic request processing.
 
 ---
 
 ## Tracking & Prioritization Matrix
 
-| Roadmap Item | Complexity | Impact | Target Milestone |
-| :--- | :---: | :---: | :---: |
-| **1.1 Radix Programmable Bootstrapping** | High | High | `v0.24.0` |
-| **1.2 Native Signed Array Optimization** | Medium | Medium | `v0.24.0` |
-| **1.3 Upstream Parameter Sets Sync** | Low | High | `v0.24.0` |
-| **2.1 Java 21 LTS Compatibility Support** | High | High | `v0.25.0` |
-| **2.2 Functional Stream & Collector APIs** | Medium | High | `v0.25.0` |
-| **2.3 Noise-Aware Expression Evaluator** | High | Medium | `v0.26.0` |
-| **3.1 GPU / CUDA Native Acceleration Profile** | High | High | `v0.26.0` |
-| **3.2 Threshold FHE (tTFHE) Bindings** | High | High | `v1.0.0` |
-| **3.3 Enterprise Framework Starters** | Low | Medium | `v1.0.0` |
+| Roadmap Item | Complexity | Impact | Target Milestone | Status |
+| :--- | :---: | :---: | :---: | :---: |
+| **1.1 Radix Programmable Bootstrapping** | High | High | `v0.23.0` | **Completed** |
+| **1.2 Native Signed Array Optimization** | Medium | Medium | `v0.23.0` | **Completed** |
+| **1.3 Upstream Parameter Sets Sync** | Low | High | `v0.23.0` | **Completed** |
+| **2.1 Java 21 LTS Compatibility Support** | High | High | `v0.24.0` | Proposed |
+| **2.2 Functional Stream & Collector APIs** | Medium | High | `v0.24.0` | Proposed |
+| **2.3 Noise-Aware Expression Evaluator** | High | Medium | `v0.25.0` | Proposed |
+| **3.1 GPU / CUDA Native Acceleration Profile** | High | High | `v0.25.0` | Proposed |
+| **3.2 Threshold FHE (tTFHE) Bindings** | High | High | `v1.0.0` | Proposed |
+| **3.3 Enterprise Framework Starters** | Low | Medium | `v1.0.0` | Proposed |
