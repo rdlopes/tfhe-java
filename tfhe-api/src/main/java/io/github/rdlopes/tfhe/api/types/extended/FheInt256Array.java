@@ -3,76 +3,28 @@ package io.github.rdlopes.tfhe.api.types.extended;
 import io.github.rdlopes.tfhe.api.types.*;
 import io.github.rdlopes.tfhe.core.utils.Generated;
 
+import io.github.rdlopes.tfhe.api.AbstractFheArray;
 import io.github.rdlopes.tfhe.api.FheArray;
 import io.github.rdlopes.tfhe.api.keys.ClientKey;
 import io.github.rdlopes.tfhe.api.keys.PublicKey;
 import io.github.rdlopes.tfhe.api.values.extended.I256;
-import io.github.rdlopes.tfhe.core.ffm.NativeArray;
+import io.github.rdlopes.tfhe.core.ffm.FheOps;
+import io.github.rdlopes.tfhe.core.ffm.TfheHeader;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static io.github.rdlopes.tfhe.core.ffm.NativeCall.execute;
-import static io.github.rdlopes.tfhe.core.ffm.TfheHeader.fhe_int256_sum;
-
 @Generated
-public final class FheInt256Array extends NativeArray implements FheArray<FheInt256, FheInt256Array> {
+public final class FheInt256Array extends AbstractFheArray<FheInt256, FheInt256Array>
+    implements FheArray<FheInt256, FheInt256Array> {
 
   public FheInt256Array(Collection<FheInt256> elements) { super(elements); }
 
-  @Override
-  public FheBool containsArray(FheInt256Array other) {
-    List<FheUint256> lhsU = this.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
-    List<FheUint256> rhsU = other.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
-    try (FheUint256Array lhsArr = new FheUint256Array(lhsU);
-         FheUint256Array rhsArr = new FheUint256Array(rhsU)) {
-      FheBool result = lhsArr.containsArray(rhsArr);
-      lhsU.forEach(FheUint256::destroy);
-      rhsU.forEach(FheUint256::destroy);
-      return result;
-    }
-  }
-
-  @Override
-  public FheBool equalsArray(FheInt256Array other) {
-    List<FheUint256> lhsU = this.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
-    List<FheUint256> rhsU = other.<FheInt256>getElements().stream().map(e -> e.castInto(FheUint256.class)).toList();
-    try (FheUint256Array lhsArr = new FheUint256Array(lhsU);
-         FheUint256Array rhsArr = new FheUint256Array(rhsU)) {
-      FheBool result = lhsArr.equalsArray(rhsArr);
-      lhsU.forEach(FheUint256::destroy);
-      rhsU.forEach(FheUint256::destroy);
-      return result;
-    }
-  }
-
-  @Override
-  public FheInt256 sum() {
-    FheInt256 result = new FheInt256();
-    execute(() -> fhe_int256_sum(getAddress(), getSize(), result.getAddress()));
-    return result;
-  }
-
-  @Override
-  public FheInt256Array add(FheInt256Array other) {
-    if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt256> a = this.getElements();
-    List<FheInt256> b = other.getElements();
-    List<FheInt256> r = new ArrayList<>(a.size());
-    for (int i = 0; i < a.size(); i++) r.add(a.get(i).add(b.get(i)));
-    return new FheInt256Array(r);
-  }
-
-  @Override
-  public FheInt256Array subtract(FheInt256Array other) {
-    if (getSize() != other.getSize()) throw new IllegalArgumentException("Array sizes must match");
-    List<FheInt256> a = this.getElements();
-    List<FheInt256> b = other.getElements();
-    List<FheInt256> r = new ArrayList<>(a.size());
-    for (int i = 0; i < a.size(); i++) r.add(a.get(i).subtract(b.get(i)));
-    return new FheInt256Array(r);
-  }
+  @Override protected FheOps.ArrayBinaryOp containsArrayOp() { return TfheHeader::fhe_uint256_array_contains_sub_slice; }
+  @Override protected FheOps.ArrayBinaryOp equalsArrayOp()   { return TfheHeader::fhe_uint256_array_eq; }
+  @Override protected FheOps.ArraySumOp    sumOp()           { return TfheHeader::fhe_int256_sum; }
+  @Override protected FheInt256           newElement()       { return new FheInt256(); }
+  @Override protected FheInt256Array      newArray(List<FheInt256> elements) { return new FheInt256Array(elements); }
 
   public static FheInt256Array encrypt(Collection<I256> values, ClientKey clientKey) {
     return new FheInt256Array(values.stream().map(v -> FheInt256.encrypt(v, clientKey)).toList());

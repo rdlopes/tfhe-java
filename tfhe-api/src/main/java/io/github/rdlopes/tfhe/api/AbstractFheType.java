@@ -6,11 +6,25 @@ import io.github.rdlopes.tfhe.api.keys.ServerKey;
 import io.github.rdlopes.tfhe.api.serde.DynamicBuffer;
 import io.github.rdlopes.tfhe.api.types.FheBool;
 import io.github.rdlopes.tfhe.api.types.extended.FheUint32;
+import io.github.rdlopes.tfhe.api.utils.FheUtils;
+import io.github.rdlopes.tfhe.api.values.I128;
+import io.github.rdlopes.tfhe.api.values.U128;
+import io.github.rdlopes.tfhe.api.values.extended.I1024;
+import io.github.rdlopes.tfhe.api.values.extended.I2048;
+import io.github.rdlopes.tfhe.api.values.extended.I256;
+import io.github.rdlopes.tfhe.api.values.extended.I512;
+import io.github.rdlopes.tfhe.api.values.extended.U1024;
+import io.github.rdlopes.tfhe.api.values.extended.U2048;
+import io.github.rdlopes.tfhe.api.values.extended.U256;
+import io.github.rdlopes.tfhe.api.values.extended.U512;
 import io.github.rdlopes.tfhe.core.ffm.*;
 import io.github.rdlopes.tfhe.core.utils.FheRegistry;
 
 import java.lang.foreign.MemorySegment;
+import java.math.BigInteger;
 import java.util.function.Function;
+import java.util.function.LongBinaryOperator;
+import java.util.function.LongUnaryOperator;
 
 import static io.github.rdlopes.tfhe.api.serde.DynamicBuffer.MAX_SERIALIZATION_SIZE;
 import static io.github.rdlopes.tfhe.core.ffm.NativeCall.*;
@@ -38,7 +52,7 @@ public abstract class AbstractFheType<
     extends NativePointer
     implements FheInteger<V, T, C> {
 
-  // ── Subclass contract — pure metadata, zero logic ───────────────────────────
+  // ── Subclass contract — pure metadata, zero logic ──────────────────────────
 
   /// Returns the per-type handles instance (stored as a `static final` field).
   protected abstract FheTypeHandles<V> handles();
@@ -49,19 +63,19 @@ public abstract class AbstractFheType<
   /// Allocates a new empty output slot of type `C`.
   protected abstract C newCompressed();
 
-  // ── Constructor ─────────────────────────────────────────────────────────────
+  // ── Constructor ────────────────────────────────────────────────────────────
 
   /// @param destroyRef method reference to the type-specific destroy function,
-/// passed explicitly so no virtual method is called during
-/// `super()` construction.
-/// Example: `TfheHeader::fhe_int8_destroy`
+  /// passed explicitly so no virtual method is called during
+  /// `super()` construction.
+  /// Example: `TfheHeader::fhe_int8_destroy`
   protected AbstractFheType(Function<MemorySegment, Integer> destroyRef) {
     super(destroyRef);
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // Private dispatch helpers — one per call shape
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   /// P7 — unary → T result
   private T unary(FheOps.UnaryOp op) {
@@ -132,9 +146,9 @@ public abstract class AbstractFheType<
     return new QuotientAndRemainder<>(q, r);
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheLogic
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   @Override public final T    bitAnd(T o)             { return binary(handles().logic().bitAnd(), o); }
   @Override public final T    bitAndScalar(V o)       { return scalar(handles().logic().scalarBitAnd(), o); }
@@ -150,19 +164,14 @@ public abstract class AbstractFheType<
   @Override public final void bitXorScalarAssign(V o) { assignScalar(handles().logic().scalarBitXorAssign(), o); }
   @Override public final T    bitNot()                { return unary(handles().logic().bitNot()); }
 
-  // ══════════════════════════════════════════════════════════════════════════
-  // FheEquality
-  // ══════════════════════════════════════════════════════════════════════════
-
-  @Override public final FheBool equalTo(T o)          { return binaryBool(handles().equality().eq(), o); }
-  @Override public final FheBool equalToScalar(V o)    { return scalarBool(handles().equality().scalarEq(), o); }
-  @Override public final FheBool notEqualTo(T o)       { return binaryBool(handles().equality().ne(), o); }
-  @Override public final FheBool notEqualToScalar(V o) { return scalarBool(handles().equality().scalarNe(), o); }
-
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheComparison
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
+  @Override public final FheBool equalTo(T o)                    { return binaryBool(handles().equality().eq(), o); }
+  @Override public final FheBool equalToScalar(V o)              { return scalarBool(handles().equality().scalarEq(), o); }
+  @Override public final FheBool notEqualTo(T o)                 { return binaryBool(handles().equality().ne(), o); }
+  @Override public final FheBool notEqualToScalar(V o)           { return scalarBool(handles().equality().scalarNe(), o); }
   @Override public final FheBool lessThan(T o)                   { return binaryBool(handles().comparison().lt(), o); }
   @Override public final FheBool lessThanScalar(V o)             { return scalarBool(handles().comparison().scalarLt(), o); }
   @Override public final FheBool lessThanOrEqualTo(T o)          { return binaryBool(handles().comparison().le(), o); }
@@ -176,9 +185,9 @@ public abstract class AbstractFheType<
   @Override public final T       max(T o)                        { return binary(handles().comparison().max(), o); }
   @Override public final T       maxScalar(V o)                  { return scalar(handles().comparison().scalarMax(), o); }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheArithmetics
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   @Override public final T                    add(T o)                   { return binary(handles().arithmetic().add(), o); }
   @Override public final CheckedResult<T>     addWithOverflow(T o)       { return checked(handles().arithmetic().overflowingAdd(), o); }
@@ -250,9 +259,9 @@ public abstract class AbstractFheType<
     return unary(handles().arithmetic().abs());
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheBitwise
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   @Override public final T    shiftLeft(T o)                { return binary(handles().bitwise().shl(), o); }
   @Override public final T    shiftLeftScalar(V o)          { return scalar(handles().bitwise().scalarShl(), o); }
@@ -275,9 +284,9 @@ public abstract class AbstractFheType<
   @Override public final T    trailingOnes()                { return unary(handles().bitwise().trailingOnes()); }
   @Override public final T    trailingZeros()               { return unary(handles().bitwise().trailingZeros()); }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheType (compress, serialize, clone)
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   @Override
   public final C compress() {
@@ -311,9 +320,9 @@ public abstract class AbstractFheType<
     execute(() -> op.apply(this.getValue(), source.getValue()));
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheDecryption — dispatches on valueKind
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   @Override
   public final V decrypt(ClientKey clientKey) {
@@ -386,9 +395,9 @@ public abstract class AbstractFheType<
     };
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // FheRandom
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   
   /// Returns a new random encrypted value using the given 128-bit seed.
   public final T random(long seedLow, long seedHigh) {
@@ -404,12 +413,12 @@ public abstract class AbstractFheType<
     return r;
   }
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
   // Protected helpers for concrete-class static factory methods
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════════
 
   /// Encrypt a value with a client key.
-/// Dispatches on [FheValueKind] to handle primitive vs. wide types.
+  /// Dispatches on [FheValueKind] to handle primitive vs. wide types.
   protected static <V, T extends AbstractFheType<V, T, ?>> T encryptClientKey(
       FheTypeHandles<V> h, V clear, ClientKey key, java.util.function.Supplier<T> factory) {
     T r = factory.get();
@@ -491,5 +500,142 @@ public abstract class AbstractFheType<
     R r = factory.get();
     execute(() -> castOp.apply(getValue(), r.getAddress()));
     return r;
+  }
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // Programmable Bootstrapping / Lookup Tables (Radix LUTs)
+  // ════════════════════════════════════════════════════════════════════════════
+
+  @Override
+  public final T applyLookupTable(LongUnaryOperator mapping) {
+    String typeName = getClass().getSimpleName();
+    int bitSize = FheUtils.bitSize(typeName);
+    if (bitSize > 8) {
+      throw new IllegalArgumentException(
+          "Unbounded applyLookupTable is only supported for bitwidths <= 8 (" + typeName
+          + " has " + bitSize + " bits). Please specify explicit [minDomain, maxDomain] bounds.");
+    }
+    long minDomain;
+    long maxDomain;
+    if (FheUtils.isSigned(typeName)) {
+      minDomain = -(1L << (bitSize - 1));
+      maxDomain = (1L << (bitSize - 1)) - 1;
+    } else {
+      minDomain = 0;
+      maxDomain = (1L << bitSize) - 1;
+    }
+    return applyLookupTable(mapping, minDomain, maxDomain);
+  }
+
+  @Override
+  public final T applyLookupTable(LongUnaryOperator mapping, long minDomain, long maxDomain) {
+    if (minDomain > maxDomain) {
+      throw new IllegalArgumentException("minDomain (" + minDomain + ") cannot exceed maxDomain (" + maxDomain + ")");
+    }
+    return evaluateLutSubtree(mapping, minDomain, maxDomain);
+  }
+
+  private T evaluateLutSubtree(LongUnaryOperator mapping, long low, long high) {
+    if (low == high) {
+      long resultVal = mapping.applyAsLong(low);
+      return encryptTrivial(handles(), toClearValue(resultVal), this::newInstance);
+    }
+    long mid = low + (high - low) / 2;
+    T left = evaluateLutSubtree(mapping, low, mid);
+    T right = evaluateLutSubtree(mapping, mid + 1, high);
+    FheBool cond = this.lessThanOrEqualToScalar(toClearValue(mid));
+    try {
+      return ifThenElse(handles(), cond, left, right, this::newInstance);
+    } finally {
+      left.destroy();
+      right.destroy();
+      cond.destroy();
+    }
+  }
+
+  @Override
+  public final T applyBivariateLookupTable(T other, LongBinaryOperator mapping) {
+    String typeName = getClass().getSimpleName();
+    int bitSize = FheUtils.bitSize(typeName);
+    if (bitSize > 4) {
+      throw new IllegalArgumentException(
+          "Unbounded applyBivariateLookupTable is only supported for bitwidths <= 4 (" + typeName
+          + " has " + bitSize + " bits). Please specify explicit domain bounds.");
+    }
+    long minX;
+    long maxX;
+    if (FheUtils.isSigned(typeName)) {
+      minX = -(1L << (bitSize - 1));
+      maxX = (1L << (bitSize - 1)) - 1;
+    } else {
+      minX = 0;
+      maxX = (1L << bitSize) - 1;
+    }
+    return applyBivariateLookupTable(other, mapping, minX, maxX, minX, maxX);
+  }
+
+  @Override
+  public final T applyBivariateLookupTable(T other, LongBinaryOperator mapping,
+                                          long minDomainX, long maxDomainX,
+                                          long minDomainY, long maxDomainY) {
+    if (minDomainX > maxDomainX || minDomainY > maxDomainY) {
+      throw new IllegalArgumentException("Invalid domain bounds");
+    }
+    return evaluateBivariateLutSubtree(other, mapping, minDomainX, maxDomainX, minDomainY, maxDomainY);
+  }
+
+  private T evaluateBivariateLutSubtree(T other, LongBinaryOperator mapping,
+                                       long lowX, long highX,
+                                       long minY, long maxY) {
+    if (lowX == highX) {
+      long x = lowX;
+      return other.applyLookupTable(y -> mapping.applyAsLong(x, y), minY, maxY);
+    }
+    long midX = lowX + (highX - lowX) / 2;
+    T left = evaluateBivariateLutSubtree(other, mapping, lowX, midX, minY, maxY);
+    T right = evaluateBivariateLutSubtree(other, mapping, midX + 1, highX, minY, maxY);
+    FheBool cond = this.lessThanOrEqualToScalar(toClearValue(midX));
+    try {
+      return ifThenElse(handles(), cond, left, right, this::newInstance);
+    } finally {
+      left.destroy();
+      right.destroy();
+      cond.destroy();
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  protected V toClearValue(long val) {
+    return switch (handles().valueKind()) {
+      case FheValueKind.Primitive<V> p -> {
+        Class<V> cls = p.javaType();
+        if (cls == Byte.class) yield (V) Byte.valueOf((byte) val);
+        if (cls == Short.class) yield (V) Short.valueOf((short) val);
+        if (cls == Integer.class) yield (V) Integer.valueOf((int) val);
+        if (cls == Long.class) yield (V) Long.valueOf(val);
+        if (cls == Boolean.class) yield (V) Boolean.valueOf(val != 0);
+        throw new UnsupportedOperationException("Unsupported primitive type: " + cls);
+      }
+      case FheValueKind.Wide<V> _ -> {
+        String typeName = getClass().getSimpleName();
+        BigInteger bi = BigInteger.valueOf(val);
+        if (typeName.contains("128")) {
+          yield (V) (FheUtils.isSigned(typeName) ? I128.of(bi) : U128.of(bi));
+        }
+        if (typeName.contains("256")) {
+          yield (V) (FheUtils.isSigned(typeName) ? I256.of(bi) : U256.of(bi));
+        }
+        if (typeName.contains("512")) {
+          yield (V) (FheUtils.isSigned(typeName) ? I512.of(bi) : U512.of(bi));
+        }
+        if (typeName.contains("1024")) {
+          yield (V) (FheUtils.isSigned(typeName) ? I1024.of(bi) : U1024.of(bi));
+        }
+        if (typeName.contains("2048")) {
+          yield (V) (FheUtils.isSigned(typeName) ? I2048.of(bi) : U2048.of(bi));
+        }
+        throw new UnsupportedOperationException("Unsupported wide type: " + typeName);
+      }
+    };
   }
 }

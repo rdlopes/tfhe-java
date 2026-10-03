@@ -71,14 +71,6 @@ public class TfheHeaderExtension {
     return findCompressionParam("SHORTINT_V1_8_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
   }
 
-  public static MemorySegment SHORTINT_V1_9_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
-    return findCompressionParam("SHORTINT_V1_9_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
-  }
-
-  public static MemorySegment SHORTINT_V1_9_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
-    return findCompressionParam("SHORTINT_V1_9_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
-  }
-
   @SuppressWarnings("unused")
   public static class CompressionParameters {
 

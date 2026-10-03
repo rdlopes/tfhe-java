@@ -11,16 +11,17 @@ import java.util.List;
 
 import static io.github.rdlopes.tfhe.core.ffm.NativeCall.execute;
 
-/// Abstract base for unsigned FHE array types (e.g. `FheUint8Array`).
+/// Abstract base for FHE array types (e.g. `FheUint8Array`, `FheInt8Array`).
 ///
-/// Unsigned arrays have native `containsArray`, `equalsArray`,
-/// and `sum` operations. Signed arrays do <em>not</em> extend this class
-/// — they delegate via cast to their unsigned counterpart.
+/// Arrays wrap a contiguous native array of element pointers (`NativeArray`).
+/// Unsigned and signed arrays both extend this class and invoke the corresponding
+/// native `containsArray`, `equalsArray`, and `sum` operations directly on their
+/// pointer segments without intermediate casts.
 ///
 /// `add` and `subtract` are element-wise operations that delegate
 /// to the element type and are implemented here for all array types.
 ///
-/// @param <E> the element type (e.g. `FheUint8`)
+/// @param <E> the element type (e.g. `FheUint8`, `FheInt8`)
 /// @param <A> the array type itself
 public abstract class AbstractFheArray<
     E extends AbstractFheType<?, E, ?>,
@@ -32,7 +33,7 @@ public abstract class AbstractFheArray<
     super(elements);
   }
 
-  // ── Subclass metadata ────────────────────────────────────────────────────
+  // ── Subclass metadata ──────────────────────────────────────────
 
   /// Native operation for array sub-slice containment.
   protected abstract ArrayBinaryOp containsArrayOp();
@@ -49,9 +50,9 @@ public abstract class AbstractFheArray<
   /// Creates a new array from a list of elements.
   protected abstract A newArray(List<E> elements);
 
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════
   // FheArray interface — all final
-  // ══════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════
 
   @Override
   public final FheBool containsArray(A other) {
@@ -100,7 +101,7 @@ public abstract class AbstractFheArray<
     return newArray(result);
   }
 
-  // ── Helpers ───────────────────────────────────────────────────────────────
+  // ── Helpers ──────────────────────────────────────────────────
 
   private void sizeCheck(A other) {
     if (getSize() != other.getSize()) {

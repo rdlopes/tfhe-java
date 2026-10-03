@@ -23,28 +23,44 @@ public final class FheInt1024Array extends NativeArray implements FheArray<FheIn
 
   @Override
   public FheBool containsArray(FheInt1024Array other) {
-    List<FheUint1024> lhsU = this.<FheInt1024>getElements().stream().map(e -> e.castInto(FheUint1024.class)).toList();
-    List<FheUint1024> rhsU = other.<FheInt1024>getElements().stream().map(e -> e.castInto(FheUint1024.class)).toList();
-    try (FheUint1024Array lhsArr = new FheUint1024Array(lhsU);
-         FheUint1024Array rhsArr = new FheUint1024Array(rhsU)) {
-      FheBool result = lhsArr.containsArray(rhsArr);
-      lhsU.forEach(FheUint1024::destroy);
-      rhsU.forEach(FheUint1024::destroy);
-      return result;
+    int lhsLen = (int) getSize();
+    int rhsLen = (int) other.getSize();
+    if (rhsLen > lhsLen) {
+      return FheBool.encrypt(false);
     }
+    List<FheInt1024> a = this.getElements();
+    List<FheInt1024> b = other.getElements();
+    FheBool result = FheBool.encrypt(false);
+    for (int offset = 0; offset <= lhsLen - rhsLen; offset++) {
+      FheBool eq = a.get(offset).equalTo(b.get(0));
+      for (int j = 1; j < rhsLen; j++) {
+        FheBool eq2 = a.get(offset + j).equalTo(b.get(j));
+        eq.bitAndAssign(eq2);
+        eq2.destroy();
+      }
+      result.bitOrAssign(eq);
+      eq.destroy();
+    }
+    return result;
   }
 
   @Override
   public FheBool equalsArray(FheInt1024Array other) {
-    List<FheUint1024> lhsU = this.<FheInt1024>getElements().stream().map(e -> e.castInto(FheUint1024.class)).toList();
-    List<FheUint1024> rhsU = other.<FheInt1024>getElements().stream().map(e -> e.castInto(FheUint1024.class)).toList();
-    try (FheUint1024Array lhsArr = new FheUint1024Array(lhsU);
-         FheUint1024Array rhsArr = new FheUint1024Array(rhsU)) {
-      FheBool result = lhsArr.equalsArray(rhsArr);
-      lhsU.forEach(FheUint1024::destroy);
-      rhsU.forEach(FheUint1024::destroy);
-      return result;
+    if (getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match: " + getSize() + " vs " + other.getSize());
     }
+    List<FheInt1024> a = this.getElements();
+    List<FheInt1024> b = other.getElements();
+    if (a.isEmpty()) {
+      return FheBool.encrypt(true);
+    }
+    FheBool result = a.get(0).equalTo(b.get(0));
+    for (int i = 1; i < a.size(); i++) {
+      FheBool eq = a.get(i).equalTo(b.get(i));
+      result.bitAndAssign(eq);
+      eq.destroy();
+    }
+    return result;
   }
 
   @Override

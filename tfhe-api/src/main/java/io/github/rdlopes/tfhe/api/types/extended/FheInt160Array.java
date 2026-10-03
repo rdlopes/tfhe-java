@@ -23,28 +23,44 @@ public final class FheInt160Array extends NativeArray implements FheArray<FheInt
 
   @Override
   public FheBool containsArray(FheInt160Array other) {
-    List<FheUint160> lhsU = this.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
-    List<FheUint160> rhsU = other.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
-    try (FheUint160Array lhsArr = new FheUint160Array(lhsU);
-         FheUint160Array rhsArr = new FheUint160Array(rhsU)) {
-      FheBool result = lhsArr.containsArray(rhsArr);
-      lhsU.forEach(FheUint160::destroy);
-      rhsU.forEach(FheUint160::destroy);
-      return result;
+    int lhsLen = (int) getSize();
+    int rhsLen = (int) other.getSize();
+    if (rhsLen > lhsLen) {
+      return FheBool.encrypt(false);
     }
+    List<FheInt160> a = this.getElements();
+    List<FheInt160> b = other.getElements();
+    FheBool result = FheBool.encrypt(false);
+    for (int offset = 0; offset <= lhsLen - rhsLen; offset++) {
+      FheBool eq = a.get(offset).equalTo(b.get(0));
+      for (int j = 1; j < rhsLen; j++) {
+        FheBool eq2 = a.get(offset + j).equalTo(b.get(j));
+        eq.bitAndAssign(eq2);
+        eq2.destroy();
+      }
+      result.bitOrAssign(eq);
+      eq.destroy();
+    }
+    return result;
   }
 
   @Override
   public FheBool equalsArray(FheInt160Array other) {
-    List<FheUint160> lhsU = this.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
-    List<FheUint160> rhsU = other.<FheInt160>getElements().stream().map(e -> e.castInto(FheUint160.class)).toList();
-    try (FheUint160Array lhsArr = new FheUint160Array(lhsU);
-         FheUint160Array rhsArr = new FheUint160Array(rhsU)) {
-      FheBool result = lhsArr.equalsArray(rhsArr);
-      lhsU.forEach(FheUint160::destroy);
-      rhsU.forEach(FheUint160::destroy);
-      return result;
+    if (getSize() != other.getSize()) {
+      throw new IllegalArgumentException("Array sizes must match: " + getSize() + " vs " + other.getSize());
     }
+    List<FheInt160> a = this.getElements();
+    List<FheInt160> b = other.getElements();
+    if (a.isEmpty()) {
+      return FheBool.encrypt(true);
+    }
+    FheBool result = a.get(0).equalTo(b.get(0));
+    for (int i = 1; i < a.size(); i++) {
+      FheBool eq = a.get(i).equalTo(b.get(i));
+      result.bitAndAssign(eq);
+      eq.destroy();
+    }
+    return result;
   }
 
   @Override
