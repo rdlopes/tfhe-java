@@ -13,22 +13,22 @@ This document outlines the actionable enhancement roadmap for **TFHE-Java** (`tf
 │  • Radix Programmable Bootstrapping (LUT on FheIntegers)               │
 │  • Native Signed Array Operations (zero-cast FFM pointer segment pass) │
 │  • Parameter Sets Alignment & Parity (100% TfheHeader parity)         │
-└──────────────────────────────────┬─────────────────────────────────────┘
+└──────────────────────────────────────────────────────────────────┬─────┘
                                    │
                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────────────┴─────┐
 │  Phase 2: JVM Ergonomics & Ecosystem Integration                       │
 │  [COMPLETED]                                                           │
 │  • Java Stream Collectors (FheCollectors) with Tree Reduction          │
 │  • Expression Evaluator / Noise-Aware AST Optimizer & Builder          │
-└──────────────────────────────────┬─────────────────────────────────────┘
+└──────────────────────────────────────────────────────────────────┬─────┘
                                    │
                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│  Phase 3: Hardware Acceleration & Advanced Protocols                   │
-│  • GPU / CUDA Acceleration Profile (tfhe-native-cuda)                  │
-│  • Threshold FHE (tTFHE) & Multi-Party KMS Decryption                  │
-│  • Enterprise Spring Boot / Micronaut Confidential Computing Starters  │
+┌──────────────────────────────────────────────────────────────────┴─────┐
+│  Phase 3: Advanced Protocols & Threshold FHE (tTFHE)                   │
+│  • Ciphertext Noise Squashing & Compression Primitives                 │
+│  • Partial Decryption Shares (DecryptionShare) & Quorum Aggregation    │
+│  • Distributed Key Generation (DKG) & Verified KeySet Protocol         │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -93,54 +93,52 @@ The second phase brings idiomatic Java patterns, stream collectors, and AST alge
 
 ---
 
-## Active Roadmap: Phase 3
+## Active Roadmap: Phase 3 (Advanced Protocols & Threshold FHE)
 
-## Phase 3: Hardware Acceleration & Advanced Protocols
-
-### 3.1 GPU / CUDA Native Acceleration Profile (`tfhe-native-cuda`)
+### 3.1 Ciphertext Noise Squashing & Packing Primitives
 * **Status**: Proposed
 * **Priority**: High
-* **Target Modules**: `tfhe-native`, `scripts/InitializeNativeLibraries.java`
+* **Target Modules**: `tfhe-core`, `tfhe-api`
 
 #### Rationale
-Homomorphic operations (especially multi-bit PBS and high-bitwidth integer multiplications) are compute-heavy. `tfhe-rs` provides state-of-the-art GPU acceleration via CUDA (`--features=gpu`). Providing a CUDA-enabled native library allows Java server applications to achieve orders-of-magnitude faster throughput.
+Before homomorphically evaluated ciphertexts can be safely passed to multi-party threshold decryption or compact storage networks, their noise must be bounded and squashed (modulus transition from 64-bit to 128-bit) to prevent side-channel leakage through noise variations.
 
 #### Description & Scope
-- Introduce a Maven profile `-Pcuda` in `scripts/InitializeNativeLibraries.java` that compiles `tfhe-rs` with `--features=gpu,high-level-c-api`.
-- Create a dedicated artifact `tfhe-native-cuda` containing CUDA-linked shared libraries (`libtfhe_cuda.so`, `tfhe_cuda.dll`).
-- Implement dynamic runtime fallback in `NativeLibrary.load()`: use GPU acceleration if CUDA drivers are present, falling back to CPU vector instructions (AVX-512 / NEON) otherwise.
+- Expose upstream `squash_noise` operations for `FheUint*` and `FheBool` types.
+- Introduce Java types `SquashedNoiseFheUint`, `SquashedNoiseFheBool`, and `CompressedSquashedNoiseCiphertextList`.
+- Implement off-heap lifecycle management, serialization, and deserialization through `DynamicBuffer`.
 
 ---
 
-### 3.2 Threshold FHE (tTFHE) & Distributed Key Generation Bindings
+### 3.2 Threshold FHE (tTFHE) Partial Decryption & Quorum Aggregation
+* **Status**: Proposed
+* **Priority**: High
+* **Target Modules**: `tfhe-core`, `tfhe-api`
+
+#### Rationale
+In decentralized, privacy-preserving systems, confidential smart contracts (e.g. fhEVM), and multi-cloud KMS architectures, data cannot be decrypted by any single entity. Secret keys are split among $n$ nodes and a threshold quorum of $t$ partial decryptions must be combined to reconstruct plaintexts without reconstructing the private key.
+
+#### Description & Scope
+- Track and expose Zama's threshold FHE C-API bindings as they stabilize.
+- Implement Java abstractions:
+  - `ClientKeyShare`: Private key share possessed by an individual KMS node.
+  - `DecryptionShare`: Partial decryption share computed over a squashed ciphertext.
+  - `DecryptionShareAggregator`: Quorum combiner collecting $t$-of-$n$ shares to reconstruct plaintexts.
+- Add comprehensive multi-party workflow unit tests and living documentation.
+
+---
+
+### 3.3 Distributed Key Generation (DKG) & KeySet Verification Protocols
 * **Status**: Proposed
 * **Priority**: Medium
 * **Target Modules**: `tfhe-core`, `tfhe-api`
 
 #### Rationale
-In decentralized, privacy-preserving systems and multi-cloud architectures, data cannot be decrypted by any single entity. Zama's `tfhe-rs` contains cryptographic building blocks for threshold FHE, where private keys are split among $n$ nodes and $(t, n)$ partial decryptions must be combined.
+Threshold operations require verifiable key distribution so that individual nodes can verify that collective public keys and server evaluation keys were correctly generated from standard domain separators according to the [Threshold FHE specification](https://eprint.iacr.org/2025/699).
 
 #### Description & Scope
-- Track and expose Zama's threshold FHE C-API bindings as they stabilize.
-- Implement Java wrappers for:
-  - Distributed Key Generation (DKG) configuration.
-  - Partial decryption shares (`DecryptionShare`).
-  - Aggregation of shares to reconstruct plaintexts.
-
----
-
-### 3.3 Spring Boot & Micronaut Integration Starters
-* **Status**: Proposed
-* **Priority**: Medium
-* **Target Modules**: `examples/`, new `tfhe-spring-boot-starter`
-
-#### Rationale
-Most enterprise Java deployments run on Spring Boot or Micronaut. Providing turnkey autoconfiguration for server key injection, thread-local evaluation contexts, and Jackson/JSON serializers for compact ciphertexts simplifies production adoption.
-
-#### Description & Scope
-- Auto-configure `ServerKey` and `TfheThreadingContext` based on `application.yml` properties.\
-- Provide custom Jackson serializers and deserializers for `AbstractFheType`, `CompactCiphertextList`, and `ProvenCompactCiphertextList` phases.\
-- Provide Spring Web filter / interceptor that sets and unsets thread-local `ServerKey` for homomorphic request processing.
+- Bind `CompressedXofKeySet` and verifiable generation using domain separators (`TFHEKGen`, `TFHE_GEN`).
+- Expose Java configuration objects for threshold committee parameters ($t$, $n$, security bounds).
 
 ---
 
@@ -153,6 +151,6 @@ Most enterprise Java deployments run on Spring Boot or Micronaut. Providing turn
 | **1.3 Upstream Parameter Sets Sync** | Low | High | `v0.23.0` | **Completed** |
 | **2.1 Functional Stream & Collector APIs** | Medium | High | `v0.24.0` | **Completed** |
 | **2.2 Noise-Aware Expression Evaluator** | High | Medium | `v0.24.0` | **Completed** |
-| **3.1 GPU / CUDA Native Acceleration Profile** | High | High | `v0.25.0` | Proposed |
-| **3.2 Threshold FHE (tTFHE) Bindings** | High | High | `v1.0.0` | Proposed |
-| **3.3 Enterprise Framework Starters** | Low | Medium | `v1.0.0` | Proposed |
+| **3.1 Noise Squashing & Packing Primitives** | Medium | High | `v0.25.0` | Proposed |
+| **3.2 Threshold Decryption & Share Aggregator** | High | High | `v0.25.0` | Proposed |
+| **3.3 DKG & Verifiable KeySet Protocols** | Medium | Medium | `v1.0.0` | Proposed |
