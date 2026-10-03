@@ -12,7 +12,7 @@ import java.util.*;
 public class InitializeNativeLibraries {
 
     private static final String TFHE_RS_REPO = "https://github.com/zama-ai/tfhe-rs.git";
-    private static final String TFHE_RS_COMMIT = "7bb30bc0d7c5b324505fbce38cf064689c91accf";
+    private static final String TFHE_RS_COMMIT = "dc2309261a24a5b14d8218e785d7d218bd8c8a4c"; // tfhe-rs-1.8.1
 
     private static final Path NATIVE_BUNDLE = Path.of("native-bundle");
     private static final Path TFHE_RS_DIR = NATIVE_BUNDLE.resolve("tfhe-rs");
@@ -92,9 +92,9 @@ public class InitializeNativeLibraries {
     private static void buildWithCargo() throws Exception {
         LOG.log(System.Logger.Level.INFO, "Building tfhe-rs C API (profile: release)...");
         run(TFHE_RS_DIR,
-                "cargo", "+nightly-2026-04-22", "build",
+                "cargo", "+nightly-2026-07-15", "build",
                 "--profile", "release",
-                "--features=boolean-c-api,shortint-c-api,high-level-c-api,zk-pok,experimental-force_fft_algo_dif4",
+                "--features=boolean-c-api,shortint-c-api,high-level-c-api,zk-pok,extended-types,experimental-force_fft_algo_dif4",
                 "-p", "tfhe");
     }
 

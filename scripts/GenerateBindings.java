@@ -145,18 +145,9 @@ public class GenerateBindings {
     }
 
     private static String getClangTargetTriple() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        String osArch = System.getProperty("os.arch").toLowerCase();
-        boolean isArm = osArch.contains("aarch64") || osArch.contains("arm64");
-
-        if (osName.contains("win")) {
-            return "x86_64-pc-windows-msvc";
-        } else if (osName.contains("mac")) {
-            return isArm ? "arm64-apple-macosx" : "x86_64-apple-darwin";
-        } else if (osName.contains("nux")) {
-            return isArm ? "aarch64-unknown-linux-gnu" : "x86_64-unknown-linux-gnu";
-        }
-        return null;
+        // Enforcing LLP64 (MSVC) ensures 64-bit integers and size_t map uniformly to C_LONG_LONG
+        // (ValueLayout.OfLong), preventing ABI mismatches between Windows and Linux/macOS.
+        return "x86_64-pc-windows-msvc";
     }
 
     // --- Binding generation ---
@@ -202,12 +193,47 @@ public class GenerateBindings {
                     "--target-package", "io.github.rdlopes.tfhe.core.ffm",
                     "--output", outputDir.toAbsolutePath().toString());
 
+            postProcessBindings(outputDir);
+
             LOG.log(System.Logger.Level.INFO, "Java bindings generated in: {0}", outputDir.toAbsolutePath());
         } finally {
             // Clean up temporary files
             Files.deleteIfExists(rawIncludes);
             Files.deleteIfExists(filteredIncludes);
             Files.deleteIfExists(compileFlagsFile);
+        }
+    }
+
+    private static void postProcessBindings(Path outputDir) throws IOException {
+        LOG.log(System.Logger.Level.INFO, "Post-processing generated bindings for cross-platform compatibility...");
+        try (var stream = Files.walk(outputDir)) {
+            stream.filter(Files::isRegularFile)
+                  .filter(p -> p.getFileName().toString().endsWith(".java"))
+                  .forEach(file -> {
+                      try {
+                          String content = Files.readString(file);
+                          boolean changed = false;
+                          if (file.getFileName().toString().equals("TfheHeader$shared.java")) {
+                              String updated = content.replaceAll(
+                                      "public static final ValueLayout\\.Of(Int|Long) C_LONG = \\(ValueLayout\\.Of\\1\\) Linker\\.nativeLinker\\(\\)\\.canonicalLayouts\\(\\)\\.get\\(\"long\"\\);",
+                                      "public static final ValueLayout C_LONG = (ValueLayout) Linker.nativeLinker().canonicalLayouts().get(\"long\");"
+                              );
+                              if (!updated.equals(content)) {
+                                  content = updated;
+                                  changed = true;
+                              }
+                          }
+                          if (content.contains("TfheHeader.C_LONG") && !file.getFileName().toString().equals("TfheHeader$shared.java")) {
+                              content = content.replaceAll("\\bTfheHeader\\.C_LONG\\b", "TfheHeader.C_LONG_LONG");
+                              changed = true;
+                          }
+                          if (changed) {
+                              Files.writeString(file, content);
+                          }
+                      } catch (IOException e) {
+                          throw new UncheckedIOException(e);
+                      }
+                  });
         }
     }
 

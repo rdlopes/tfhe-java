@@ -34,8 +34,8 @@
     <native.basedir>${maven.multiModuleProjectDirectory}/native-bundle</native.basedir>
     <native.bindings>${native.basedir}/bindings</native.bindings>
     <native.libs>${native.basedir}/libs</native.libs>
-      <jmh.version>1.37</jmh.version>
-      <surefire.skip>false</surefire.skip>
+    <jmh.version>1.37</jmh.version>
+    <surefire.skip>false</surefire.skip>
     <!-- Plugin versions -->
     <sonar-maven-plugin.version>5.7.0.6970</sonar-maven-plugin.version>
     <!-- Sonar configuration -->

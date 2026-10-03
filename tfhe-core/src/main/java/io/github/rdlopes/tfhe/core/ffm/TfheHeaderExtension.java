@@ -15,52 +15,68 @@ public class TfheHeaderExtension {
     // Should not be called directly
   }
 
-  public static MemorySegment SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+  private static MemorySegment findCompressionParam(String name) {
     return SymbolLookup.loaderLookup()
-                       .find("SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128")
-                       .orElseThrow(() -> new RuntimeException("Symbol SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 not found"))
+                       .find(name)
+                       .orElseThrow(() -> new RuntimeException("Symbol " + name + " not found"))
                        .reinterpret(CompressionParameters.layout()
                                                          .byteSize());
+  }
+
+  public static MemorySegment SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
   }
 
   public static MemorySegment SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64() {
-    return SymbolLookup.loaderLookup()
-                       .find("SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64")
-                       .orElseThrow(() -> new RuntimeException("Symbol SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64 not found"))
-                       .reinterpret(CompressionParameters.layout()
-                                                         .byteSize());
+    return findCompressionParam("SHORTINT_V0_11_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M64");
   }
 
   public static MemorySegment SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
-    return SymbolLookup.loaderLookup()
-                       .find("SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128")
-                       .orElseThrow(() -> new RuntimeException("Symbol SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 not found"))
-                       .reinterpret(CompressionParameters.layout()
-                                                         .byteSize());
+    return findCompressionParam("SHORTINT_V1_0_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
   }
 
   public static MemorySegment SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
-    return SymbolLookup.loaderLookup()
-                       .find("SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128")
-                       .orElseThrow(() -> new RuntimeException("Symbol SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 not found"))
-                       .reinterpret(CompressionParameters.layout()
-                                                         .byteSize());
+    return findCompressionParam("SHORTINT_V1_1_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
   }
 
   public static MemorySegment SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
-    return SymbolLookup.loaderLookup()
-                       .find("SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128")
-                       .orElseThrow(() -> new RuntimeException("Symbol SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 not found"))
-                       .reinterpret(CompressionParameters.layout()
-                                                         .byteSize());
+    return findCompressionParam("SHORTINT_V1_2_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
   }
 
   public static MemorySegment SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
-    return SymbolLookup.loaderLookup()
-                       .find("SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128")
-                       .orElseThrow(() -> new RuntimeException("Symbol SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128 not found"))
-                       .reinterpret(CompressionParameters.layout()
-                                                         .byteSize());
+    return findCompressionParam("SHORTINT_V1_3_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_4_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_4_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_5_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_5_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_6_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_6_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_7_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_7_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_8_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_8_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_8_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_8_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_9_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_9_COMP_PARAM_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
+  }
+
+  public static MemorySegment SHORTINT_V1_9_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128() {
+    return findCompressionParam("SHORTINT_V1_9_COMP_PARAM_GPU_MULTI_BIT_GROUP_4_MESSAGE_2_CARRY_2_KS_PBS_TUNIFORM_2M128");
   }
 
   @SuppressWarnings("unused")
