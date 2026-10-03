@@ -13,17 +13,17 @@ This document outlines the actionable enhancement roadmap for **TFHE-Java** (`tf
 │  • Radix Programmable Bootstrapping (LUT on FheIntegers)               │
 │  • Native Signed Array Operations (zero-cast FFM pointer segment pass) │
 │  • Parameter Sets Alignment & Parity (100% TfheHeader parity)         │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │  Phase 2: JVM Ergonomics & Ecosystem Integration                       │
-│  • Java Stream Collectors (FheCollectors)                              │
-│  • Expression Evaluator / Noise-Aware AST Builder                      │
-│  • Java 21 LTS Compatibility / Multi-Release Architecture              │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-                                    ▼
+│  [COMPLETED]                                                           │
+│  • Java Stream Collectors (FheCollectors) with Tree Reduction          │
+│  • Expression Evaluator / Noise-Aware AST Optimizer & Builder          │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
 ┌────────────────────────────────────────────────────────────────────────┐
 │  Phase 3: Hardware Acceleration & Advanced Protocols                   │
 │  • GPU / CUDA Acceleration Profile (tfhe-native-cuda)                  │
@@ -65,65 +65,35 @@ The first phase of the roadmap focused on high-level feature parity, memory opti
 
 ---
 
-## Active Roadmap: Phase 2 & Phase 3
+## Completed: Phase 2 (JVM Ergonomics & Ecosystem Integration)
 
-## Phase 2: JVM Ergonomics & Ecosystem Integration
+The second phase brings idiomatic Java patterns, stream collectors, and AST algebraic optimization into `tfhe-api` while targeting Java 25 as the modern baseline:
 
-### 2.1 Java 21 LTS Compatibility & Multi-Release Architecture
-* **Status**: Proposed
-* **Priority**: High
-* **Target Modules**: `pom.xml`, `tfhe-core`
+### 2.1 Functional Stream & Collector APIs (`FheCollectors`)
+* **Status**: Completed
+* **Implemented in**: `tfhe-api` ([`FheCollectors`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/stream/FheCollectors.java), [`TreeReductionAccumulator`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/stream/TreeReductionAccumulator.java))
+* **Summary**:
+  - Implemented parallel-ready Java stream collectors: `sum()`, `product()`, `min()`, `max()`, `and()`, `or()`, `xor()`, `countTrue()`, `counting(predicate)`, and `reducing(identity, op)`.
+  - Engineered logarithmic stack tree-reduction (`TreeReductionAccumulator`) reducing circuit depth from $O(N)$ to $O(\log N)$, dramatically lowering multiplicative noise growth.
+  - Implemented eager native off-heap ciphertext recycling during reduction folds to prevent memory exhaustion on large stream inputs.
+  - Validated by comprehensive unit tests in [`FheCollectorsTest`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/test/java/io/github/rdlopes/tfhe/api/stream/FheCollectorsTest.java).
 
-#### Rationale
-`tfhe-java` currently targets OpenJDK 25 (`temurin-25`). While this leverages the latest Foreign Function & Memory (FFM) API refinements, many enterprise organizations require Long-Term Support (LTS) runtimes (specifically Java 21 LTS). Broadening support to Java 21 LTS unlocks massive production adoption.
-
-#### Description & Scope
-- Evaluate Multi-Release JAR packaging (`META-INF/versions/21`, `META-INF/versions/25`) or a dedicated `java-21` compatibility branch.
-- Abstract minor differences between Java 21 FFM (preview / JEP 442) and Java 22+ finalized FFM (JEP 454).
-- Ensure maven compilation profiles (`-Pjdk21`, `-Pjdk25`) pass full test suites cleanly.
-
----
-
-### 2.2 Functional Stream & Collector APIs (`FheCollectors`)
-* **Status**: Proposed
-* **Priority**: Medium
-* **Target Modules**: `tfhe-api`
-
-#### Rationale
-Data processing pipelines in Java naturally rely on `java.util.stream.Stream`. Performing homomorphic reductions (summation, finding min/max, conditional filtering) over collections of ciphertexts currently requires manual iterative loops.
-
-#### Description & Scope
-- Implement `FheCollectors` utility providing parallel-ready Java `Collector` implementations:
-  ```java
-  FheUint32 total = transactions.stream()
-      .map(Transaction::amount)
-      .collect(FheCollectors.sum());
-
-  FheUint32 maximum = transactions.stream()
-      .map(Transaction::amount)
-      .collect(FheCollectors.max());
-  ```
-- Support tree-reduction algorithms to minimize sequential multiplicative/additive noise depth.
+### 2.2 Noise-Aware Expression Evaluator / AST Builder
+* **Status**: Completed
+* **Implemented in**: `tfhe-api` ([`FheExpression`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/dsl/FheExpression.java), [`FheNode`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/dsl/FheNode.java), [`AstOptimizer`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/dsl/AstOptimizer.java), [`AstEvaluator`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/main/java/io/github/rdlopes/tfhe/api/dsl/AstEvaluator.java))
+* **Summary**:
+  - Introduced fluent expression DSL with sealed AST hierarchy (`FheNode.LeafNode`, `ScalarNode`, `UnaryNode`, `BinaryNode`, `TernaryNode`).
+  - Added AST optimization pass:
+    - **Constant Folding**: Pure scalar subtrees evaluated eagerly at compile-time.
+    - **Identity Simplification**: `x + 0 -> x`, `x * 1 -> x`, `x * 0 -> 0`.
+    - **Scalar Grouping**: Reordering associative scalar operations `(x + s1) + s2 -> x + (s1 + s2)` to minimize native ciphertext-scalar dispatches.
+    - **Associative Tree Rebalancing**: Linear chains transformed into balanced binary trees minimizing noise depth.
+  - Automatic intermediate off-heap buffer reclamation during evaluation via `closeIfIntermediate()`.
+  - Validated by unit tests in [`FheExpressionTest`](file:///D:/rdlopes/tfhe-java/tfhe-api/src/test/java/io/github/rdlopes/tfhe/api/dsl/FheExpressionTest.java).
 
 ---
 
-### 2.3 Noise-Aware Expression Evaluator / AST Builder
-* **Status**: Proposed
-* **Priority**: Low / Exploratory
-* **Target Modules**: `tfhe-api`
-
-#### Rationale
-Because Java lacks operator overloading, complex homomorphic expressions result in verbose call chains (`a.multiply(b).add(c.divide(d))`). In FHE, the order of evaluation strongly impacts noise accumulation and the required number of programmable bootstrappings (PBS).
-
-#### Description & Scope
-- Introduce a lazy evaluation DSL:
-  ```java
-  FheExpression.of(a).times(b).plus(c).eval();
-  ```
-- Optimize AST evaluation order (e.g., performing scalar additions and linear operations before costly PBS multiplications).
-- Automatically recycle intermediate off-heap memory buffers using scoped memory arenas.
-
----
+## Active Roadmap: Phase 3
 
 ## Phase 3: Hardware Acceleration & Advanced Protocols
 
@@ -168,8 +138,8 @@ In decentralized, privacy-preserving systems and multi-cloud architectures, data
 Most enterprise Java deployments run on Spring Boot or Micronaut. Providing turnkey autoconfiguration for server key injection, thread-local evaluation contexts, and Jackson/JSON serializers for compact ciphertexts simplifies production adoption.
 
 #### Description & Scope
-- Auto-configure `ServerKey` and `TfheThreadingContext` based on `application.yml` properties.
-- Provide custom Jackson serializers and deserializers for `AbstractFheType`, `CompactCiphertextList`, and `ProvenCompactCiphertextList` phases.
+- Auto-configure `ServerKey` and `TfheThreadingContext` based on `application.yml` properties.\
+- Provide custom Jackson serializers and deserializers for `AbstractFheType`, `CompactCiphertextList`, and `ProvenCompactCiphertextList` phases.\
 - Provide Spring Web filter / interceptor that sets and unsets thread-local `ServerKey` for homomorphic request processing.
 
 ---
@@ -181,9 +151,8 @@ Most enterprise Java deployments run on Spring Boot or Micronaut. Providing turn
 | **1.1 Radix Programmable Bootstrapping** | High | High | `v0.23.0` | **Completed** |
 | **1.2 Native Signed Array Optimization** | Medium | Medium | `v0.23.0` | **Completed** |
 | **1.3 Upstream Parameter Sets Sync** | Low | High | `v0.23.0` | **Completed** |
-| **2.1 Java 21 LTS Compatibility Support** | High | High | `v0.24.0` | Proposed |
-| **2.2 Functional Stream & Collector APIs** | Medium | High | `v0.24.0` | Proposed |
-| **2.3 Noise-Aware Expression Evaluator** | High | Medium | `v0.25.0` | Proposed |
+| **2.1 Functional Stream & Collector APIs** | Medium | High | `v0.24.0` | **Completed** |
+| **2.2 Noise-Aware Expression Evaluator** | High | Medium | `v0.24.0` | **Completed** |
 | **3.1 GPU / CUDA Native Acceleration Profile** | High | High | `v0.25.0` | Proposed |
 | **3.2 Threshold FHE (tTFHE) Bindings** | High | High | `v1.0.0` | Proposed |
 | **3.3 Enterprise Framework Starters** | Low | Medium | `v1.0.0` | Proposed |
